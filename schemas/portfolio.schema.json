@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gilead-public.github.io/gsm.dash/schemas/portfolio.schema.json",
+  "title": "gsm.dash portfolio manifest",
+  "type": "object",
+  "required": ["schemaVersion", "generated", "studies", "metrics"],
+  "properties": {
+    "schemaVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "generated": { "type": "string", "format": "date-time" },
+    "studies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["StudyID", "params", "snapshots", "files"],
+        "properties": {
+          "StudyID": { "type": "string", "minLength": 1 },
+          "params": {
+            "type": "object",
+            "description": "Wide study metadata, pivoted from Reporting_Groups Study rows. Open key set.",
+            "additionalProperties": { "type": ["string", "number"] }
+          },
+          "snapshots": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "format": "date" }
+          },
+          "files": {
+            "type": "object",
+            "description": "SnapshotDate -> relative path of the study-snapshot JSON",
+            "additionalProperties": { "type": "string" }
+          }
+        }
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "description": "One entry per MetricID, mirroring Reporting_Metrics. Additional meta keys pass through.",
+        "required": ["MetricID", "GroupLevel", "Abbreviation", "Metric"],
+        "properties": {
+          "MetricID": { "type": "string", "minLength": 1 },
+          "GroupLevel": { "enum": ["Site", "Country", "Study"] },
+          "Abbreviation": { "type": "string" },
+          "Metric": { "type": "string" },
+          "Threshold": { "type": "string", "description": "Comma-delimited, as in Reporting_Metrics" },
+          "Flag": { "type": "string", "description": "Comma-delimited, as in Reporting_Metrics" },
+          "Priority": { "type": "number" },
+          "Active": { "type": "boolean" }
+        },
+        "additionalProperties": true
+      }
+    }
+  }
+}

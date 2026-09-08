@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gilead-public.github.io/gsm.dash/schemas/study-snapshot.schema.json",
+  "title": "gsm.dash study snapshot",
+  "description": "One study x one snapshot date. Column names mirror the gsm.core reporting data model exactly (DataModel.Rmd); no renames.",
+  "type": "object",
+  "required": ["schemaVersion", "StudyID", "SnapshotDate", "results"],
+  "properties": {
+    "schemaVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "StudyID": { "type": "string", "minLength": 1 },
+    "SnapshotDate": { "type": "string", "format": "date" },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["GroupID", "GroupLevel", "MetricID", "Numerator", "Denominator"],
+        "properties": {
+          "GroupID": { "type": "string" },
+          "GroupLevel": { "enum": ["Site", "Country", "Study"] },
+          "MetricID": { "type": "string" },
+          "Numerator": { "type": "number" },
+          "Denominator": { "type": "number" },
+          "Metric": { "type": ["number", "null"] },
+          "Score": { "type": ["number", "null"] },
+          "Flag": { "type": ["number", "null"] },
+          "StudyID": { "type": "string" },
+          "SnapshotDate": { "type": "string" }
+        }
+      }
+    },
+    "groups": {
+      "type": "array",
+      "description": "Reporting_Groups EAV rows for this study's groups",
+      "items": {
+        "type": "object",
+        "required": ["GroupID", "GroupLevel", "Param", "Value"],
+        "properties": {
+          "GroupID": { "type": "string" },
+          "GroupLevel": { "type": "string" },
+          "Param": { "type": "string" },
+          "Value": { "type": ["string", "number"] }
+        }
+      }
+    },
+    "details": {
+      "type": "array",
+      "description": "Phase 2 (Q8 option A): categorical breakdown counts aggregated from Mapped-layer frames at export. Counts only; no participant rows.",
+      "items": {
+        "type": "object",
+        "required": ["MetricID", "Category", "Numerator"],
+        "properties": {
+          "MetricID": { "type": "string" },
+          "Category": { "type": "string" },
+          "GroupID": { "type": "string" },
+          "Numerator": { "type": "number" },
+          "Denominator": { "type": "number" }
+        }
+      }
+    }
+  }
+}
