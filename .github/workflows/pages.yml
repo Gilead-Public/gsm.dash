@@ -1,0 +1,57 @@
+name: Deploy demo to GitHub Pages
+
+# Publishes the app shell running on the SYNTHETIC example portfolio
+# (scripts/generate-example-data.mjs) — gsm.dash never ships with or fetches
+# real study data, so there is nothing sensitive in this deployment.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment at a time; a newer push supersedes an in-flight one
+# rather than queuing behind it.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run generate-data
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+      # base_path handles the org/project-page subpath (e.g. /gsm.dash/)
+      # so the vendored gsm.viz script/CSS and the built asset URLs resolve
+      # correctly once served from Pages.
+      - run: npx vite build --base="${{ steps.pages.outputs.base_path }}/"
+      # The app fetches its data as `examples/data/portfolio.json`, a path
+      # relative to index.html (see src/data/load.js) — so this only needs
+      # to sit alongside the build output, not be baked into it.
+      - run: mkdir -p dist/examples && cp -r examples/data dist/examples/data
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
