@@ -1,5 +1,6 @@
 import { orderMetrics, normalizeMetric, pivotGroups, indexResults } from './normalize.js';
 import { selectLatestSnapshots, poolResults, flagDistribution, bucketStudies, filterStudies } from './rollup.js';
+import { nextSort } from './sort.js';
 
 /**
  * PortfolioStore owns the loaded data and all view state for the program page.
@@ -28,15 +29,56 @@ export class PortfolioStore extends EventTarget {
     }
 
     this.state = {
-      show: 'rate', // 'rate' | 'count' | 'trend'
-      heatmap: 'share', // 'none' | 'share' | 'dist'
+      show: new Set(['num', 'rate']), // any of num | den | rate | flagged | red | dist | trend; cells stack what's on
+      heatmap: 'flagged', // 'none' | 'num' | 'den' | 'rate' | 'flagged' | 'red' — the measure that drives cell shading (and metric sorting)
       ramp: 'blue', // heatmap palette: 'blue' | 'teal' | 'purple' | 'grey'
       groupBy: 'none', // 'none' (one row per study) | a study param
       filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set() },
       hiddenMetrics: new Set(), // MetricIDs the user has switched off
       expanded: new Set(),
-      asOf: null,
+      sort: { key: null, dir: null }, // key: 'label' | 'meta' | a MetricID
+      detail: { metricId: null, tab: 'viz-bar' }, // study-page drill-in panel (W4)
+      tileViews: new Map(), // MetricID -> the view currently shown in its tile
+      groupByCategory: true, // study page: lifecycle rows (meta.Category) vs one flat grid
+      selectedSite: null, // GroupID highlighted across every site-level chart at once
+      asOf: null, // view the portfolio as of this date; the study page's visit scrubber drives it
     };
+  }
+
+  /**
+   * Highlight one site everywhere. Selecting the already-selected site clears
+   * it, so clicking the same point twice is the way back to the default view.
+   */
+  selectSite(groupId) {
+    this.state.selectedSite = this.state.selectedSite === groupId ? null : groupId;
+    this.#emit();
+  }
+
+  setTileView(metricId, viewName) {
+    this.state.tileViews.set(metricId, viewName);
+    this.#emit();
+  }
+
+  /** Page every tile to one view; null returns each metric to its default view. */
+  setAllTileViews(viewName) {
+    this.state.tileViews = viewName ? new Map(this.metrics.map((m) => [m.MetricID, viewName])) : new Map();
+    this.#emit();
+  }
+
+  /**
+   * Replace the whole tile-view map in one shot — one 'change' for the batch
+   * rather than one per tile. Which views a metric actually has depends on the
+   * widget registry, so the caller supplies the [MetricID, viewName] pairs.
+   */
+  setTileViews(entries) {
+    this.state.tileViews = new Map(entries);
+    this.#emit();
+  }
+
+  /** Header click: cycle the sort for a column ('label'/'meta' are text/numeric row attributes; anything else is a MetricID). */
+  toggleSort(key, { numeric = true } = {}) {
+    this.state.sort = nextSort(this.state.sort, key, { numeric });
+    this.#emit();
   }
 
   /**
@@ -82,6 +124,12 @@ export class PortfolioStore extends EventTarget {
   toggleFilter(param, value) {
     const set = this.state.filters[param];
     set.has(value) ? set.delete(value) : set.add(value);
+    this.#emit();
+  }
+
+  toggleShow(part) {
+    const set = this.state.show;
+    set.has(part) ? set.delete(part) : set.add(part);
     this.#emit();
   }
 
@@ -144,6 +192,71 @@ export class PortfolioStore extends EventTarget {
   detailRows(studyId, date, metricId) {
     const details = this.#entry(studyId, date)?.snapshot.details ?? [];
     return details.filter((d) => d.MetricID === metricId);
+  }
+
+  /** Reporting_Bounds rows for one metric (scatter envelope); empty when the snapshot has none. */
+  boundsRows(studyId, date, metricId) {
+    const bounds = this.#entry(studyId, date)?.snapshot.bounds ?? [];
+    return bounds.filter((b) => b.MetricID === metricId);
+  }
+
+  /** Reporting_Groups EAV rows for the snapshot — gsm.viz's groupMetadata format as-is. */
+  groupRows(studyId, date) {
+    return this.#entry(studyId, date)?.snapshot.groups ?? [];
+  }
+
+  /**
+   * Study-level Reporting_Groups params as of ONE snapshot, pivoted wide.
+   * The manifest's `params` are the study's most recent snapshot; these track
+   * whichever snapshot the view is showing, so they respect `asOf`. Falls back
+   * to the manifest when a snapshot carries no Study-level group rows.
+   */
+  studyParamsAt(studyId, date) {
+    return (
+      this.#entry(studyId, date)?.groupParams.get(studyId) ??
+      this.studies.find((s) => s.StudyID === studyId)?.params ??
+      {}
+    );
+  }
+
+  /**
+   * Participants enrolled across a set of studies, each at its own latest
+   * snapshot — the same snapshot selection the metric rollups use, so the
+   * enrollment column and the metric columns always describe the same extract.
+   * Summed from Reporting_Groups `ParticipantCount`; `ParticipantTarget` comes
+   * along for the "n of target" context.
+   *
+   * `enrolled` is null when no study in the set reports a count, so a missing
+   * value is never rendered as a real zero.
+   */
+  enrollment(studies) {
+    let enrolled = 0;
+    let target = 0;
+    let counted = 0;
+    const latest = this.latestFor(studies);
+    for (const [studyId, date] of latest) {
+      const params = this.studyParamsAt(studyId, date);
+      const n = Number(params.ParticipantCount);
+      const t = Number(params.ParticipantTarget);
+      if (Number.isFinite(n)) {
+        enrolled += n;
+        counted += 1;
+      }
+      if (Number.isFinite(t)) target += t;
+    }
+    return {
+      enrolled: counted ? enrolled : null,
+      target: target || null,
+      nStudies: latest.size,
+      nCounted: counted,
+    };
+  }
+
+  /** Site rows for one metric across every snapshot of the study (time series input). */
+  siteRowsHistory(studyId, metricId) {
+    const study = this.studies.find((s) => s.StudyID === studyId);
+    if (!study) return [];
+    return study.snapshots.flatMap((date) => this.siteRows(studyId, date, metricId));
   }
 
   /** Derived study rate across this study's own snapshots (tile trend). */

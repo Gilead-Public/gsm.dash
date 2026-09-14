@@ -5,10 +5,8 @@
 > simulated.
 
 Executive dashboard components and app shell for the gsm ecosystem.
-Implements gsm.roadmap#53 (Exec Dashboard Analytics Framework). The
-requirement and design docs live in the internal `gsm.roadmap` repository
-(`requirements/design/53_design.md`); references in code comments to
-"design doc §n", "Qn" and "Wn" point at those internal documents.
+References in code comments to "design doc §n", "Qn" and "Wn" point at this
+project's internal requirements and design documentation.
 
 gsm.dash consumes **standardized metric outputs from the gsm.reporting data
 model** — never raw clinical data. It is a framework-free web-component
@@ -36,7 +34,11 @@ npm test           # rollup/normalize units + contract schema conformance
   target.
 - `src/components/` — light-DOM custom elements: `<gsm-filter-bar>` (D2),
   `<gsm-portfolio-table>` (D1/D3/D4 + D5 trend row), and `<gsm-study-page>`,
-  which composes the study view from widgets.
+  which composes the study view from widgets. The table carries an **Enrolled**
+  column — `Reporting_Groups` `ParticipantCount` summed over the row's studies
+  at the same latest snapshots the metric rollups use — and every metric header
+  carries an ⓘ with that metric's definition from `Reporting_Metrics`
+  (numerator, denominator, model, score, thresholds, accrual rule).
 - `src/widgets/` — the **widget framework** (see the Widget Framework
   proposal artifact): a build-time registry of small composable views. Each
   widget declares a `dataSpec` naming the contract layers it needs; the host
@@ -48,6 +50,35 @@ npm test           # rollup/normalize units + contract schema conformance
   (default), `breakdown-bar` (contract `details`), `link-out`, and
   `threshold-list` (watch sites — its derivation is a pure, unit-tested
   export per the "widgets render, the pipeline computes" boundary).
+- `src/widgets/views/` — the **standard tile views** every site-level metric
+  gets for free from the reporting layer: Overview (text), Details, Scatter
+  (n vs d), Numerator by site, Outlier sites, Flag distribution, Trend over
+  time. A metric tile pages through these (and any custom views bound to the
+  metric) with ‹ › arrows. Each tile carries a **Standard / Custom** badge
+  derived from the data layers the view declares: reporting-layer-only
+  (`results`, `history`, `bounds`, `groups`) is Standard; anything reading
+  `details`, `listings` or an external link is Custom. These small views
+  live here for now; their long-term home is gsm.viz.
+- `src/widgets/viz/` — **gsm.viz adapters**: the standard KRI-report charts
+  as widgets (`viz-bar`, `viz-scatter`, `viz-timeseries`), fed by the same
+  site-level rows, group metadata, bounds and snapshot history the contract
+  already carries. On the study page every metric tile opens a drill-in
+  panel with these as tabs. Each adapter guards the gsm.viz call and
+  degrades to a labeled placeholder if a chart cannot run in widget mode.
+  gsm.viz 2.3.0 is vendored under `public/vendor/` (see its README) until
+  it ships as an ESM package.
+
+### Known gsm.viz widget-mode gaps (to raise upstream)
+
+- Ships only as an IIFE global (`window.gsmViz.default`); no ESM/npm build.
+- Charts are not theme-aware (Chart.js default inks), so the adapters place
+  them on a light card even in dark mode.
+- `scatterPlot` sizes points by `ParticipantCount` from group metadata; when
+  the key is absent the radius is `NaN` and points vanish instead of
+  falling back to a default size.
+- `groupOverview` hardcodes gsm.kri's site-risk-score metric ID and docs
+  URL as defaults (harmless when the metric is absent — the column is
+  simply omitted).
 - `src/scales/flags.js` — the single flag scale; colors live in CSS tokens.
 - `src/charts/sparkline.js` — D5 renderer. Deliberate seam: swaps to
   `@gilead-biostats/gsm.viz`'s `sparkline` once gsm.viz ships as an ESM

@@ -49,6 +49,7 @@ export function renderThresholdList(el, data, config = {}) {
 
 registerWidget({
   name: 'threshold-list',
+  label: 'Watch sites',
   version: '0.1.0',
   dataSpec: { results: 'all-site' },
   render: renderThresholdList,

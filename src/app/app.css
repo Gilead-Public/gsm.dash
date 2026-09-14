@@ -159,7 +159,7 @@ header.app .tag {
 }
 .seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 7px; overflow: hidden; }
 .sb-body .seg { display: flex; }
-.sb-body .seg button { flex: 1; padding-left: 6px; padding-right: 6px; }
+.sb-body .seg button { flex: 1; padding-left: 5px; padding-right: 5px; font-size: 12px; white-space: nowrap; }
 .seg button {
   font: inherit;
   font-size: 13px;
@@ -212,6 +212,13 @@ table.po thead th {
   background: var(--panel);
 }
 table.po th.grp, table.po td.grp { text-align: left; position: sticky; left: 0; background: var(--panel); min-width: 160px; }
+table.po th.sortable { cursor: pointer; user-select: none; }
+table.po th.sortable:hover, table.po th.active { color: var(--accent); }
+table.po th .si { font-size: 8px; margin-left: 3px; vertical-align: 1px; }
+table.po td .cell { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; line-height: 1.25; }
+table.po td .cell-nums { font-variant-numeric: tabular-nums; }
+table.po td .cell-rate.secondary { font-size: 11.5px; color: var(--ink-2); }
+table.po td .cell .spark { margin-top: 2px; }
 table.po td { border-bottom: 1px solid var(--line); }
 tr.total td { font-weight: 600; background: var(--panel-2); }
 tr.total td.grp { background: var(--panel-2); }
@@ -238,8 +245,13 @@ td.hot2 { background: var(--ramp2); }
 td.hot3 { background: var(--ramp3); }
 td.hot4 { background: var(--ramp4); }
 .nstud { color: var(--ink-3); font-size: 12px; }
-.cellbar { display: flex; gap: 2px; height: 5px; margin-top: 3px; border-radius: 3px; overflow: hidden; }
+table.po td.enroll, table.po th.enroll { font-variant-numeric: tabular-nums; border-right: 1px solid var(--line-2); }
+table.po th .info { cursor: help; }
+.cellbar { display: flex; gap: 2px; height: 5px; margin-top: 3px; border-radius: 3px; overflow: hidden; width: 56px; }
 .cellbar i { display: block; height: 100%; border-radius: 2px; }
+.cell-flags { display: flex; gap: 7px; font-size: 11px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.cell-flags .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 3px; vertical-align: 0; }
+.cell-flags .dot.pair { margin-left: -5px; box-shadow: 0 0 0 1px var(--panel); }
 .flag-red { background: var(--crit); }
 .flag-amber { background: var(--warn); }
 .flag-green { background: var(--good); }
@@ -271,6 +283,48 @@ gsm-study-page .back { color: var(--accent); text-decoration: none; font-size: 1
 .dd-head .study { font-family: "Archivo", sans-serif; font-size: 21px; font-weight: 700; }
 .dd-head .meta { font-size: 13.5px; color: var(--ink-2); }
 .dd-head .meta b { color: var(--ink); font-weight: 600; }
+.dd-controls { margin-left: auto; display: inline-flex; align-items: center; gap: 18px; }
+.dd-head .all-views, .dd-head .toggle { display: inline-flex; align-items: center; gap: 8px; font-family: "Archivo", sans-serif; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-3); cursor: pointer; }
+.dd-head .toggle input { margin: 0; accent-color: var(--accent); width: 14px; height: 14px; }
+.dd-head .all-views select { font-family: "Source Sans 3", sans-serif; text-transform: none; letter-spacing: 0; font-weight: 400; }
+.dd-head .randomize {
+  font-family: "Archivo", sans-serif; font-size: 10.5px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-3);
+  background: none; border: 1px solid var(--line-2); border-radius: 5px;
+  padding: 4px 9px; cursor: pointer;
+}
+.dd-head .randomize:hover { color: var(--accent); border-color: var(--accent); }
+
+/* --- visit scrubber + cross-chart site highlight --- */
+.dd-head .visits { display: inline-flex; align-items: center; gap: 9px; }
+.dd-head .visits .play {
+  font: inherit; font-size: 11px; line-height: 1; width: 24px; height: 24px; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: none; border: 1px solid var(--line-2); border-radius: 50%;
+  color: var(--ink-2); cursor: pointer; padding: 0;
+}
+.dd-head .visits .play:hover { color: var(--accent); border-color: var(--accent); }
+.dd-head .visits .play.on { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+.dd-head .visits input[type="range"] { width: 116px; accent-color: var(--accent); margin: 0; cursor: pointer; }
+.sitechip {
+  display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px;
+  background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 3px 5px 3px 10px;
+}
+.sitechip i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
+.sitechip .nm { color: var(--ink-2); max-width: 22ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sitechip button {
+  font: inherit; font-size: 11px; line-height: 1; background: none; border: 0; cursor: pointer;
+  color: var(--accent); padding: 3px 5px; border-radius: 50%;
+}
+.sitechip button:hover { background: var(--panel); }
+
+/* Marks opt into the highlight only while a site is selected. */
+svg.mini .pt, svg.mini .bar { cursor: pointer; }
+svg.mini .is-dim { opacity: 0.22; }
+svg.mini .is-sel { stroke: var(--ink); stroke-width: 1.5; paint-order: stroke; }
+.hbar .r { cursor: pointer; border-radius: 4px; }
+.hbar .r.is-dim { opacity: 0.3; }
+.hbar .r.is-sel { background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
 .dd-row { padding: 14px 0 4px; }
 .rowlab { font-family: "Archivo", sans-serif; font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3); margin-bottom: 10px; }
 .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)); gap: 12px; margin-bottom: 10px; }
@@ -291,7 +345,73 @@ gsm-study-page .back { color: var(--accent); text-decoration: none; font-size: 1
 .hbar .r > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .hbar .btrack { background: var(--panel-2); border-radius: 3px; }
 .hbar .b { height: 9px; border-radius: 3px; background: var(--accent); opacity: 0.85; }
+.hbar .b.flag-red { background: var(--crit); } .hbar .b.flag-amber { background: var(--warn); }
+.hbar .b.flag-green { background: var(--good); } .hbar .b.flag-na { background: var(--na); }
 .hbar .v { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
+.tile { position: relative; }
+.tile.wide { grid-column: span 2; }
+.tile .tile-body { display: flex; flex-direction: column; gap: 8px; flex: 1; min-height: 150px; }
+
+/* tile header: metric identity (always shown) + Standard/Custom badge */
+.tile-head { display: flex; align-items: center; gap: 8px; }
+.tile-head .abbr { font-family: "IBM Plex Mono", monospace; font-size: 11px; background: var(--panel-2); border-radius: 4px; padding: 1px 6px; color: var(--ink-2); flex: none; }
+.tile-head .name { font-size: 12.5px; color: var(--ink); font-weight: 600; line-height: 1.25; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tile-head .kind { flex: none; }
+/* The ⓘ is a flex item here, so the shared margin-left would double the gap. */
+.tile-head .info, .detail-head .info { flex: none; margin-left: 0; }
+.sub-h { font-family: "Archivo", sans-serif; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
+
+/* Standard vs Custom — derived from the data layers the view declares */
+.kind { font-family: "Archivo", sans-serif; font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; border-radius: 4px; padding: 2px 7px; border: 1px solid; cursor: help; }
+.kind-standard { color: var(--accent); background: var(--accent-soft); border-color: transparent; }
+.kind-custom { color: var(--warn-ink); background: transparent; border-color: var(--warn); }
+.detail-head .kind { margin-left: 2px; }
+
+/* view paging footer */
+.tile-foot { display: flex; align-items: center; gap: 4px; border-top: 1px solid var(--line); padding-top: 7px; margin-top: 2px; }
+.vbtn { font: inherit; font-size: 15px; line-height: 1; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line-2); border-radius: 6px; background: var(--panel); color: var(--ink-2); cursor: pointer; padding: 0; }
+.vbtn:hover { color: var(--accent); border-color: var(--accent); }
+.view-name { font-size: 11.5px; color: var(--ink-2); flex: 1; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.view-name .muted { font-size: 10.5px; }
+.tile-more { font: inherit; font-size: 11.5px; color: var(--accent); background: none; border: 1px solid transparent; border-radius: 6px; padding: 2px 6px; cursor: pointer; white-space: nowrap; }
+.tile-more:hover, .tile-more.on { border-color: var(--accent); background: var(--accent-soft); }
+
+/* mini SVG charts (standard tile views) */
+.mini { display: block; }
+.mini .axis { stroke: var(--line-2); stroke-width: 1; }
+.mini .lbl { font-family: "IBM Plex Mono", monospace; font-size: 9px; fill: var(--ink-3); }
+.mini .axis-title { font-family: "Source Sans 3", sans-serif; font-size: 9px; }
+.mini .trend-line { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.mini .trend-dot { fill: var(--accent); }
+.svg-flag-red { fill: var(--crit); } .svg-flag-amber { fill: var(--warn); } .svg-flag-green { fill: var(--good); } .svg-flag-na { fill: var(--na); }
+.mini circle, .mini rect { stroke: var(--panel); stroke-width: 0.8; }
+.kv { display: grid; grid-template-columns: max-content 1fr; gap: 3px 10px; margin: 2px 0 0; font-size: 13px; }
+.kv dt { color: var(--ink-3); }
+.kv dd { margin: 0; font-variant-numeric: tabular-nums; }
+.kv dd .muted { font-size: 11.5px; }
+.hbar-tight .r { grid-template-columns: 28px 1fr 26px; }
+
+/* drill-in panel: the standard KRI-report charts for one metric (W4) */
+.detail { grid-column: 1 / -1; margin: 2px 0 14px; border: 1px solid var(--accent); border-radius: 10px; background: var(--panel); box-shadow: var(--shadow); overflow: hidden; }
+.detail-head { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--panel-2); }
+.detail-head .abbr { font-family: "IBM Plex Mono", monospace; font-size: 11px; background: var(--panel); border-radius: 4px; padding: 1px 6px; color: var(--ink-2); }
+.detail-title { font-family: "Archivo", sans-serif; font-weight: 600; font-size: 14px; }
+.tabs { display: inline-flex; margin-left: auto; border: 1px solid var(--line-2); border-radius: 7px; overflow: hidden; }
+.tabs button { font: inherit; font-size: 12.5px; padding: 4px 11px; background: var(--panel); color: var(--ink-2); border: none; border-right: 1px solid var(--line); cursor: pointer; }
+.tabs button:last-child { border-right: none; }
+.tabs button.on { background: var(--accent); color: #fff; }
+.detail-close { font: inherit; font-size: 13px; line-height: 1; padding: 4px 8px; background: none; border: 1px solid var(--line-2); border-radius: 6px; color: var(--ink-2); cursor: pointer; }
+.detail-close:hover { color: var(--accent); border-color: var(--accent); }
+.detail-body { padding: 14px 16px 10px; }
+/* gsm.viz 2.3.0 charts are not theme-aware (Chart.js default inks), so they
+   always sit on a light card — a known widget-mode gap to raise upstream. */
+.viz { background: #ffffff; border-radius: 6px; position: relative; }
+.viz-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; padding: 20px; color: #1b2320; border: 1px dashed var(--line-2); font-size: 14px; }
+.viz-placeholder .mono { font-size: 12px; color: #55605b; max-width: 60ch; }
+.viz-placeholder .muted { font-size: 12.5px; color: #7d8883; }
+.viz-cap { font-size: 11px; color: var(--ink-3); margin-top: 6px; font-family: "IBM Plex Mono", monospace; }
+.small { font-size: 13px; }
+
 .minitbl { width: 100%; border-collapse: collapse; font-size: 12.5px; font-variant-numeric: tabular-nums; }
 .minitbl td { padding: 4px 4px; border-bottom: 1px solid var(--line); color: var(--ink-2); }
 .minitbl td:last-child { text-align: right; color: var(--ink); }

@@ -3,8 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Executive dashboard components and app shell for the gsm ecosystem (gsm.roadmap#53)",
-  "repository": { "type": "git", "url": "https://github.com/Gilead-Public/gsm.dash.git" },
+  "description": "Executive dashboard components and app shell for the gsm ecosystem",
+  "license": "Apache-2.0",
+  "author": "Gilead Sciences",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Gilead-Public/gsm.dash.git"
+  },
   "scripts": {
     "dev": "npm run generate-data && vite",
     "build": "vite build",

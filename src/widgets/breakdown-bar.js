@@ -18,7 +18,7 @@ export function renderBreakdownBar(el, data) {
     )
     .join('');
   el.innerHTML = `
-    <div class="trow"><span class="abbr">${esc(metric.Abbreviation)}</span><span class="name">${esc(metric.Metric)} — by source</span></div>
+    <div class="sub-h">By source (Mapped-layer counts)</div>
     <div><span class="big">${study ? fmtInt(study.Numerator) : '—'}</span>
       <span class="nd">${study ? `of ${fmtInt(study.Denominator)} · ${fmtPct(study.Metric)}` : 'no data'}</span></div>
     ${rows ? `<div class="hbar">${rows}</div>` : '<div class="nd">no detail rows in this snapshot</div>'}`;
@@ -26,6 +26,7 @@ export function renderBreakdownBar(el, data) {
 
 registerWidget({
   name: 'breakdown-bar',
+  label: 'By source (Mapped layer)',
   version: '0.1.0',
   dataSpec: { results: 'self', details: 'self' },
   fallback: 'scalar-tile',

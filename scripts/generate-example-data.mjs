@@ -48,6 +48,9 @@ export const METRICS = [
   Metric,
   Numerator: 'Events',
   Denominator: 'Exposure',
+  Model: 'Normal Approximation',
+  AnalysisType: 'rate',
+  Score: 'Adjusted Z-Score',
   Threshold: '-2,-1,2,3',
   Flag: '-2,-1,0,1,2',
   Priority,
@@ -109,9 +112,30 @@ function scoreToFlag(score) {
   return 0;
 }
 
-export function generateSnapshot(study, snapshotDate, snapIndex, metrics = METRICS) {
+/**
+ * Simulated Reporting_Bounds for the scatter plot envelope: the normal
+ * approximation gsm uses — for a pooled rate p and denominator d, the numerator
+ * at threshold z is p·d + z·sqrt(p(1−p)d). Threshold 0 is the trend line.
+ */
+function generateBounds(metricId, rate, siteDens, thresholds = [-2, -1, 0, 2, 3]) {
+  const lo = Math.max(1, Math.min(...siteDens));
+  const hi = Math.max(...siteDens);
+  const p = Math.min(0.999, Math.max(0.001, rate));
+  const rows = [];
+  for (let i = 0; i < 14; i += 1) {
+    const d = Math.round(lo * Math.pow(hi / lo, i / 13)); // log-spaced, matching the log x-axis
+    for (const z of thresholds) {
+      const n = Math.max(0, p * d + z * Math.sqrt(p * (1 - p) * d));
+      rows.push({ MetricID: metricId, Threshold: z, Denominator: d, LogDenominator: +Math.log10(d).toFixed(4), Numerator: +n.toFixed(2), Metric: +(n / d).toFixed(4) });
+    }
+  }
+  return rows;
+}
+
+export function generateSnapshot(study, snapshotDate, snapIndex, metrics = METRICS, { withBounds = false } = {}) {
   const results = [];
   const details = [];
+  const bounds = [];
   for (const m of metrics) {
     const studyRate = Math.max(0.005, m.base * study.factor * (1 + study.drift * snapIndex));
     if (m.GroupLevel === 'Study') {
@@ -161,6 +185,10 @@ export function generateSnapshot(study, snapshotDate, snapIndex, metrics = METRI
       StudyID: study.StudyID,
       SnapshotDate: snapshotDate,
     });
+    if (withBounds && studyDen > 0) {
+      const siteDens = results.filter((r) => r.MetricID === m.MetricID && r.GroupLevel === 'Site').map((r) => r.Denominator);
+      bounds.push(...generateBounds(m.MetricID, studyNum / studyDen, siteDens));
+    }
     if (m.Abbreviation === 'IE') {
       // Category counts must reconcile with the study-level numerator.
       const c1 = Math.round(studyNum * (0.4 + R() * 0.2));
@@ -178,9 +206,17 @@ export function generateSnapshot(study, snapshotDate, snapIndex, metrics = METRI
       Param,
       Value,
     })),
-    ...study.sites.map((site) => ({ GroupID: site, GroupLevel: 'Site', Param: 'Country', Value: pick(['US', 'DE', 'JP', 'BR', 'PL']) })),
+    // Site metadata as Reporting_Groups carries it: gsm.viz reads ParticipantCount
+    // (point sizing) and a label key from these rows.
+    ...study.sites.flatMap((site, i) => [
+      { GroupID: site, GroupLevel: 'Site', Param: 'Country', Value: pick(['US', 'DE', 'JP', 'BR', 'PL']) },
+      { GroupID: site, GroupLevel: 'Site', Param: 'ParticipantCount', Value: 8 + Math.floor(R() * 60) },
+      { GroupID: site, GroupLevel: 'Site', Param: 'InvestigatorLastName', Value: `Investigator ${String.fromCharCode(65 + (i % 26))}` },
+    ]),
   ];
-  return { schemaVersion: SCHEMA_VERSION, StudyID: study.StudyID, SnapshotDate: snapshotDate, results, groups, details };
+  const snapshot = { schemaVersion: SCHEMA_VERSION, StudyID: study.StudyID, SnapshotDate: snapshotDate, results, groups, details };
+  if (withBounds) snapshot.bounds = bounds;
+  return snapshot;
 }
 
 export function generatePortfolio() {
@@ -196,7 +232,11 @@ export function generatePortfolio() {
     })),
     metrics: METRICS.map(({ base, ...m }) => m),
   };
-  const snapshots = studies.flatMap((s) => s.snapshots.map((d, i) => generateSnapshot(s, d, i)));
+  // Bounds are single-snapshot by design (Reporting_Bounds); emitting them only
+  // for each study's latest snapshot keeps the example data small.
+  const snapshots = studies.flatMap((s) =>
+    s.snapshots.map((d, i) => generateSnapshot(s, d, i, METRICS, { withBounds: i === s.snapshots.length - 1 }))
+  );
   return { manifest, snapshots };
 }
 

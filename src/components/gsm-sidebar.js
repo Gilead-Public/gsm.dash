@@ -28,12 +28,15 @@ export class GsmSidebar extends StoreElement {
       if (seg) return this.store.set(seg.dataset.seg, seg.dataset.value);
       const chip = e.target.closest('button[data-filter]');
       if (chip) return this.store.toggleFilter(chip.dataset.filter, chip.dataset.value);
+      const show = e.target.closest('button[data-show]');
+      if (show) return this.store.toggleShow(show.dataset.show);
       if (e.target.closest('button[data-clear]')) return this.store.clearFilters();
       const all = e.target.closest('button[data-metrics-all]');
       if (all) return this.store.setAllMetrics(all.dataset.metricsAll === 'on');
     });
     this.addEventListener('change', (e) => {
       if (e.target.matches('select[data-groupby]')) this.store.set('groupBy', e.target.value);
+      if (e.target.matches('select[data-heatmap]')) this.store.set('heatmap', e.target.value);
       if (e.target.matches('input[data-metric]')) this.store.toggleMetric(e.target.dataset.metric);
     });
     // <details> toggle doesn't bubble; capture it so re-renders keep section state.
@@ -78,8 +81,17 @@ export class GsmSidebar extends StoreElement {
     }
 
     const config =
-      `<div class="ctl"><label>Show</label>${this.#seg('show', [['rate', 'Rate'], ['count', 'Σn / Σd'], ['trend', 'Trend']])}</div>` +
-      `<div class="ctl"><label>Heatmap</label>${this.#seg('heatmap', [['none', 'None'], ['share', 'Flag share'], ['dist', 'Distribution']])}</div>` +
+      `<div class="ctl"><label>Show in each cell</label><div class="chips">${[
+        ['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate'],
+        ['flagged', '% Flagged'], ['red', '% Red'], ['dist', 'Distribution'], ['trend', 'Trend'],
+      ]
+        .map(([k, label]) => `<button type="button" class="chip ${state.show.has(k) ? 'on' : ''}" data-show="${k}" aria-pressed="${state.show.has(k)}">${label}</button>`)
+        .join('')}</div></div>` +
+      `<div class="ctl"><label>Heatmap (also drives column sort)</label><select data-heatmap>${[
+        ['none', 'None'], ['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate'], ['flagged', '% Flagged (red or amber)'], ['red', '% Red'],
+      ]
+        .map(([k, label]) => `<option value="${k}" ${state.heatmap === k ? 'selected' : ''}>${label}</option>`)
+        .join('')}</select></div>` +
       `<div class="ctl"><label>Heatmap color</label>${this.#seg('ramp', RAMPS)}</div>` +
       `<div class="ctl"><label>Group rows by</label><select data-groupby>${GROUP_BY_OPTIONS.map(
         ([value, label]) => `<option value="${value}" ${value === state.groupBy ? 'selected' : ''}>${label}</option>`

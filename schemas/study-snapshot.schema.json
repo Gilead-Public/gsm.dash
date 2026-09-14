@@ -42,6 +42,22 @@
         }
       }
     },
+    "bounds": {
+      "type": "array",
+      "description": "Reporting_Bounds rows — predicted numerator bounds per threshold across denominators, for the scatter plot envelope. Single study, single snapshot by design.",
+      "items": {
+        "type": "object",
+        "required": ["MetricID", "Threshold", "Denominator", "Numerator"],
+        "properties": {
+          "MetricID": { "type": "string" },
+          "Threshold": { "type": "number" },
+          "Denominator": { "type": "number" },
+          "LogDenominator": { "type": "number" },
+          "Numerator": { "type": "number" },
+          "Metric": { "type": ["number", "null"] }
+        }
+      }
+    },
     "details": {
       "type": "array",
       "description": "Phase 2 (Q8 option A): categorical breakdown counts aggregated from Mapped-layer frames at export. Counts only; no participant rows.",

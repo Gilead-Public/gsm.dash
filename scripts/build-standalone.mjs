@@ -16,12 +16,19 @@ const jsonBlock = (kind, obj) =>
 
 let html = readFileSync(join(DIST, 'index.html'), 'utf8');
 
-// Inline the built assets in place of their references.
+// Inline the built assets in place of their references: the app module, the
+// vendored gsm.viz classic script, and both stylesheets. A "</script" inside
+// inlined JS would end the tag early, so escape it defensively.
+const safeJs = (js) => js.replace(/<\/script/gi, '<\\/script');
 html = html.replace(/<script type="module"[^>]*src="([^"]+)"><\/script>/g, (_, src) => {
   const js = readFileSync(join(DIST, src.replace(/^\//, '')), 'utf8');
-  return `<script type="module">\n${js}\n</script>`;
+  return `<script type="module">\n${safeJs(js)}\n</script>`;
 });
-html = html.replace(/<link rel="stylesheet"[^>]*href="(\/assets\/[^"]+\.css)"[^>]*>/g, (_, href) => {
+html = html.replace(/<script src="(\/vendor\/[^"]+\.js)"><\/script>/g, (_, src) => {
+  const js = readFileSync(join(DIST, src.replace(/^\//, '')), 'utf8');
+  return `<script>\n${safeJs(js)}\n</script>`;
+});
+html = html.replace(/<link rel="stylesheet"[^>]*href="(\/(?:assets|vendor)\/[^"]+\.css)"[^>]*>/g, (_, href) => {
   const css = readFileSync(join(DIST, href.replace(/^\//, '')), 'utf8');
   return `<style>\n${css}\n</style>`;
 });

@@ -22,7 +22,6 @@ export function renderScalarTile(el, data) {
     .map((s) => `<i class="flag-${s}" style="flex:${f[s]}"></i>`)
     .join('');
   el.innerHTML = `
-    <div class="trow"><span class="abbr">${esc(metric.Abbreviation)}</span><span class="name">${esc(metric.Metric)}</span></div>
     <div><span class="big">${fmtPct(study?.Metric)}</span>
       <span class="nd">${study ? `${fmtInt(study.Numerator)} / ${fmtInt(study.Denominator)}` : 'no data'}</span></div>
     <div class="flags"><div class="fbar">${segs}</div>
@@ -34,6 +33,7 @@ export function renderScalarTile(el, data) {
 
 registerWidget({
   name: 'scalar-tile',
+  label: 'Details',
   version: '0.1.0',
   dataSpec: { results: 'self' },
   render: renderScalarTile,
