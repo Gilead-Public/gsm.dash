@@ -433,6 +433,7 @@ svg.mini .is-sel { stroke: var(--ink); stroke-width: 1.5; paint-order: stroke; }
 
 .hbtn { font: 600 12px "Source Sans 3", sans-serif; color: var(--ink-2); background: var(--panel); border: 1px solid var(--line-2); border-radius: 7px; padding: 4px 10px; cursor: pointer; }
 .hbtn:hover { color: var(--accent); border-color: var(--accent); }
+a.hbtn { text-decoration: none; display: inline-block; }
 
 .pill { display: inline-block; margin-left: 6px; font: 700 9px "Archivo", sans-serif; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; padding: 2px 5px 1px; vertical-align: 1px; line-height: 1.2; }
 .pill.new { color: var(--new); background: var(--new-soft); }
