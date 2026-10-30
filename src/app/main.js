@@ -3,6 +3,8 @@ import { PortfolioStore } from '../data/store.js';
 import '../components/gsm-sidebar.js';
 import '../components/gsm-portfolio-table.js';
 import '../components/gsm-study-page.js';
+import { openGlossary } from '../components/glossary.js';
+import { initAnnotations } from './annotations.js';
 
 const THEME_KEY = 'gsm-dash-theme';
 
@@ -67,8 +69,10 @@ async function main() {
     document.addEventListener('studySelected', (e) => {
       location.hash = `#/study/${encodeURIComponent(e.detail.StudyID)}`;
     });
+    document.getElementById('glossaryBtn').addEventListener('click', () => openGlossary(store));
     window.addEventListener('hashchange', () => renderPage(root, store));
     renderPage(root, store);
+    initAnnotations();
   } catch (err) {
     root.innerHTML = `<p class="muted">Failed to load portfolio data: ${err.message}. Run <code>npm run generate-data</code>.</p>`;
     throw err;

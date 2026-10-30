@@ -1,5 +1,5 @@
 import { registerWidget } from '../registry.js';
-import { esc, fmtPct, fmtInt } from '../../util/format.js';
+import { esc, fmtInt, fmtRate } from '../../util/format.js';
 import { svgOpen, svgClose, linear, sevClass, selClass, text } from '../../charts/mini.js';
 
 // Numerator vs denominator, one point per site, colored by flag. The small
@@ -17,7 +17,7 @@ export function renderScatterMini(el, data) {
     .map(
       (r) => `<circle data-site="${esc(r.GroupID)}" cx="${x(r.Denominator).toFixed(1)}" cy="${y(r.Numerator).toFixed(1)}" r="${
         r.GroupID === selectedSite ? 5.5 : 3.5
-      }" class="pt ${sevClass(r.Flag)}${selClass(r.GroupID, selectedSite)}"><title>${esc(r.GroupID)} · ${fmtInt(r.Numerator)} / ${fmtInt(r.Denominator)} = ${fmtPct(r.Metric)} · flag ${r.Flag ?? 'NA'}</title></circle>`
+      }" class="pt ${sevClass(r.Flag)}${selClass(r.GroupID, selectedSite)}"><title>${esc(r.GroupID)} · ${fmtInt(r.Numerator)} / ${fmtInt(r.Denominator)} = ${fmtRate(metric, r.Metric)} · flag ${r.Flag ?? 'NA'}</title></circle>`
     )
     .join('');
   el.innerHTML = `

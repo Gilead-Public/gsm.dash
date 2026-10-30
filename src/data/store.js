@@ -1,6 +1,7 @@
 import { orderMetrics, normalizeMetric, pivotGroups, indexResults } from './normalize.js';
 import { selectLatestSnapshots, poolResults, flagDistribution, bucketStudies, filterStudies } from './rollup.js';
 import { nextSort } from './sort.js';
+import { STATUS_ORDER, CATEGORY_ORDER, groupByCategory } from './catalog.js';
 
 /**
  * PortfolioStore owns the loaded data and all view state for the program page.
@@ -42,6 +43,9 @@ export class PortfolioStore extends EventTarget {
       groupByCategory: true, // study page: lifecycle rows (meta.Category) vs one flat grid
       selectedSite: null, // GroupID highlighted across every site-level chart at once
       asOf: null, // view the portfolio as of this date; the study page's visit scrubber drives it
+      cellMode: 'defined', // 'defined' — each metric shows its glossary display rule | 'custom' — the `show` stack for every metric
+      statuses: new Set(STATUS_ORDER), // glossary Status values to show (Released | New | Planned)
+      collapsedGroups: new Set(), // program table: categories folded to one summary column
     };
   }
 
@@ -98,7 +102,33 @@ export class PortfolioStore extends EventTarget {
 
   /** Supported catalog minus user-hidden metrics — what views should render. */
   visibleMetrics() {
-    return this.supportedMetrics().filter((m) => !this.state.hiddenMetrics.has(m.MetricID));
+    return this.supportedMetrics().filter(
+      (m) => !this.state.hiddenMetrics.has(m.MetricID) && this.state.statuses.has(m.Status ?? 'Released')
+    );
+  }
+
+  /** Visible metrics banded by glossary Category, in catalog category order. */
+  metricCategories(metrics = this.visibleMetrics()) {
+    return groupByCategory(metrics, CATEGORY_ORDER);
+  }
+
+  toggleStatus(status) {
+    const set = this.state.statuses;
+    set.has(status) ? set.delete(status) : set.add(status);
+    this.#emit();
+  }
+
+  /** Fold / unfold one category band in the program table. */
+  toggleGroup(category) {
+    const set = this.state.collapsedGroups;
+    set.has(category) ? set.delete(category) : set.add(category);
+    this.#emit();
+  }
+
+  /** Show or hide a batch of metrics in one change (sidebar category toggles). */
+  setMetricsVisible(metricIds, visible) {
+    for (const id of metricIds) visible ? this.state.hiddenMetrics.delete(id) : this.state.hiddenMetrics.add(id);
+    this.#emit();
   }
 
   toggleMetric(metricId) {
@@ -250,6 +280,29 @@ export class PortfolioStore extends EventTarget {
       nStudies: latest.size,
       nCounted: counted,
     };
+  }
+
+  /**
+   * Participant populations (P4) across a set of studies at their latest
+   * snapshots: Screened / Enrolled / Dosed from Reporting_Groups
+   * `ScreenedCount` / `ParticipantCount` / `DosedCount`. Each is null when no
+   * study in the set reports it.
+   */
+  population(studies) {
+    const totals = { screened: 0, enrolled: 0, dosed: 0 };
+    const counted = { screened: 0, enrolled: 0, dosed: 0 };
+    const keys = { screened: 'ScreenedCount', enrolled: 'ParticipantCount', dosed: 'DosedCount' };
+    for (const [studyId, date] of this.latestFor(studies)) {
+      const params = this.studyParamsAt(studyId, date);
+      for (const [k, param] of Object.entries(keys)) {
+        const n = Number(params[param]);
+        if (params[param] != null && Number.isFinite(n)) {
+          totals[k] += n;
+          counted[k] += 1;
+        }
+      }
+    }
+    return Object.fromEntries(Object.keys(keys).map((k) => [k, counted[k] ? totals[k] : null]));
   }
 
   /** Site rows for one metric across every snapshot of the study (time series input). */
