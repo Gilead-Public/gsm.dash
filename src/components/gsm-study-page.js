@@ -1,5 +1,5 @@
 import { StoreElement, esc } from './util.js';
-import { attachHoverTooltip, metricInfoIcon } from './tooltip.js';
+import { attachHoverTooltip, metricInfoIcon, statusPill } from './tooltip.js';
 import { resolveWidget, resolveData, getWidget } from '../widgets/index.js';
 import { STUDY_PAGE_SPEC, EXEC_ALLOW_LIST, DETAIL_TABS, STANDARD_TILE_VIEWS, KIND_HELP } from '../app/study-page-spec.js';
 
@@ -249,7 +249,7 @@ export class GsmStudyPage extends StoreElement {
       'afterbegin',
       `<div class="tile-head"><span class="abbr">${esc(metric.Abbreviation)}</span><span class="name">${esc(
         metric.Metric
-      )}</span>${metricInfoIcon(metric)}${this.#kindBadge(def)}</div>`
+      )}</span>${metricInfoIcon(metric)}${statusPill(metric)}${this.#kindBadge(def)}</div>`
     );
     tile.insertAdjacentHTML(
       'beforeend',
@@ -309,7 +309,8 @@ export class GsmStudyPage extends StoreElement {
       if (!categories.has(row)) categories.set(row, []);
       categories.get(row).push(metric);
     }
-    const rowLabel = (row) => (grouped ? (/quality/i.test(row) ? row : `${row} quality`) : `${row} · ${visible.length}`);
+    for (const [row, list] of categories) if (!list.length && !spec.pageWidgets.some((w) => w.row === row)) categories.delete(row);
+    const rowLabel = (row) => (grouped ? `${row} · ${categories.get(row).length}` : `${row} · ${visible.length}`);
 
     const allViews = this.#allViewsValue(visible);
     const viewOptions = [

@@ -36,6 +36,9 @@ export function orderMetrics(metrics = []) {
 /** Normalize one metric entry: parsed threshold/flag lists alongside the raw fields. */
 export function normalizeMetric(metric) {
   return {
+    // Glossary defaults: catalogs without display metadata render as before.
+    Display: 'pct',
+    Status: 'Released',
     ...metric,
     thresholds: parseListField(metric.Threshold),
     flagValues: parseListField(metric.Flag),
