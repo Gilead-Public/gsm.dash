@@ -40,7 +40,7 @@ export class GsmViewSwitch extends StoreElement {
           ? 'Every category open · click a band to fold it'
           : `<b>Mixed</b>: ${open.map(esc).join(', ')} open`;
     const legend = dist ? `<span class="legend"><span class="lk"><i class="pline"></i>portfolio</span><span class="lk"><i class="dmd"></i>highlighted study</span></span>` : '';
-    this.innerHTML = `<div class="viewbar" data-anno="views">
+    this.innerHTML = `<div class="viewbar">
       <div class="tabs" role="tablist" aria-label="Program view">
         <span class="tset"><span class="cap">Table</span>${VIEWS.map(btn).join('')}</span>
         <span class="tset">${btn(['distribution', 'Distribution', 'Each metric as a strip plot of studies'])}</span>

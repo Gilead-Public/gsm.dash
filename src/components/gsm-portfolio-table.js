@@ -226,14 +226,13 @@ export class GsmPortfolioTable extends StoreElement {
     const measureLabel = { num: 'numerator', den: 'denominator', rate: 'rate' }[sortMeasure];
     const popCols = [
       ['pop:screened', 'Scr.', 'Screened', 'ScreenedCount', ''],
-      ['enroll', 'Enr.', 'Enrolled', 'ParticipantCount', ''],
-      ['pop:dosed', 'Dosed', 'Dosed', 'DosedCount', 'pop-last'],
+      ['enroll', 'Enr.', 'Enrolled', 'ParticipantCount', 'pop-last'],
     ];
     const bandRow =
-      `<tr class="band" data-anno="bands">` +
+      `<tr class="band">` +
       `${th('label', flat ? 'Study' : 'Group', { classes: 'grp', attrs: 'rowspan="2"' })}` +
       `${th('meta', flat ? 'Snapshot' : 'Studies', { attrs: 'rowspan="2"' })}` +
-      `<th colspan="3" class="bandh pop gs" data-anno="population">Population</th>` +
+      `<th colspan="2" class="bandh pop gs">Population</th>` +
       groups
         .map((g) => {
           const n = g.metrics.length;
@@ -344,7 +343,7 @@ export class GsmPortfolioTable extends StoreElement {
     const hlStudy = filtered.find((s) => s.StudyID === state.highlightStudy);
     const hlNote = hlStudy ? ` · highlighting <b>${esc(hlStudy.StudyID)}${hlStudy.params?.nickname ? ` ${esc(hlStudy.params.nickname)}` : ''}</b>` : '';
     this.innerHTML = `
-      <div class="showing" data-anno="showing">Showing ${filtered.length} / ${store.studies.length} studies · ${metrics.length} / ${
+      <div class="showing">Showing ${filtered.length} / ${store.studies.length} studies · ${metrics.length} / ${
         store.supportedMetrics().length
       } site-level metrics (${statusCounts}) · ${mode} · each study at its own latest snapshot${hlNote}${sortNote}</div>
       <div class="tblwrap"><table class="po">${head}<tbody>${body}</tbody></table></div>`;

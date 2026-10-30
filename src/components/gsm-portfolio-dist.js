@@ -92,10 +92,10 @@ export class GsmPortfolioDist extends StoreElement {
       .join('');
     const hl = sel ? ` · highlighting <b>${esc(label(sel))}</b>` : '';
     this.innerHTML = `
-      <div class="showing" data-anno="showing">Showing ${studies.length} / ${store.studies.length} studies · ${store.visibleMetrics().length} / ${
+      <div class="showing">Showing ${studies.length} / ${store.studies.length} studies · ${store.visibleMetrics().length} / ${
         store.supportedMetrics().length
       } site-level metrics · each study at its own latest snapshot${hl}</div>
-      <div class="dist" data-anno="dist">${html || '<p class="muted">No metrics selected.</p>'}</div>
+      <div class="dist">${html || '<p class="muted">No metrics selected.</p>'}</div>
       <p class="notes"><span><b>Dot</b> = one study's value; the black rule is the pooled portfolio value.</span><span><b>Click</b> a dot to highlight that study, a category to fold it.</span></p>`;
   }
 }

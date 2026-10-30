@@ -423,17 +423,16 @@ svg.mini .is-sel { stroke: var(--ink); stroke-width: 1.5; paint-order: stroke; }
 
 /* ---------------------------------------------------------------------------
    CTQ glossary iteration (P1–P7): header buttons, banded columns, units,
-   status pills, population columns, folded categories, glossary, annotations.
+   status pills, population columns, folded categories, glossary.
    --------------------------------------------------------------------------- */
-:root { --planned: #8a6a12; --planned-soft: rgba(138, 106, 18, 0.1); --new: #2c5f9e; --new-soft: rgba(44, 95, 158, 0.1); --anno: #c2410c; --anno-q: #7c3aed; }
-:root[data-theme="dark"] { --planned: #d0a93a; --planned-soft: rgba(208, 169, 58, 0.14); --new: #7aa7e0; --new-soft: rgba(122, 167, 224, 0.14); --anno: #fb923c; --anno-q: #a78bfa; }
+:root { --planned: #8a6a12; --planned-soft: rgba(138, 106, 18, 0.1); --new: #2c5f9e; --new-soft: rgba(44, 95, 158, 0.1); }
+:root[data-theme="dark"] { --planned: #d0a93a; --planned-soft: rgba(208, 169, 58, 0.14); --new: #7aa7e0; --new-soft: rgba(122, 167, 224, 0.14); }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --planned: #d0a93a; --planned-soft: rgba(208, 169, 58, 0.14); --new: #7aa7e0; --new-soft: rgba(122, 167, 224, 0.14); --anno: #fb923c; --anno-q: #a78bfa; }
+  :root:not([data-theme="light"]) { --planned: #d0a93a; --planned-soft: rgba(208, 169, 58, 0.14); --new: #7aa7e0; --new-soft: rgba(122, 167, 224, 0.14); }
 }
 
 .hbtn { font: 600 12px "Source Sans 3", sans-serif; color: var(--ink-2); background: var(--panel); border: 1px solid var(--line-2); border-radius: 7px; padding: 4px 10px; cursor: pointer; }
 .hbtn:hover { color: var(--accent); border-color: var(--accent); }
-.hbtn.anno-toggle.on { color: var(--anno); border-color: var(--anno); background: color-mix(in srgb, var(--anno) 8%, var(--panel)); }
 
 .pill { display: inline-block; margin-left: 6px; font: 700 9px "Archivo", sans-serif; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; padding: 2px 5px 1px; vertical-align: 1px; line-height: 1.2; }
 .pill.new { color: var(--new); background: var(--new-soft); }
@@ -595,28 +594,3 @@ table.gloss tr.planned td:first-child { box-shadow: inset 3px 0 0 var(--planned)
 table.gloss tr.new td:first-child { box-shadow: inset 3px 0 0 var(--new); }
 table.gloss a { color: var(--accent); }
 
-/* design-review annotations */
-#anno-layer { position: fixed; inset: 0; pointer-events: none; z-index: 40; }
-.anno-pin { position: fixed; pointer-events: auto; transform: translate(-50%, -50%); min-width: 22px; height: 18px; padding: 0 5px; border-radius: 9px; border: 2px solid var(--panel); background: var(--anno); color: #fff; font: 700 10px "IBM Plex Mono", monospace; cursor: pointer; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); line-height: 1; }
-.anno-pin.question { background: var(--anno-q); }
-.anno-pin:hover, .anno-pin.open { transform: translate(-50%, -50%) scale(1.15); }
-.anno-target { outline: 2px dashed var(--anno) !important; outline-offset: 2px; }
-#anno-legend { position: fixed; right: 16px; bottom: 16px; z-index: 41; width: 300px; max-height: 48vh; overflow: auto; background: var(--panel); border: 1px solid var(--line-2); border-top: 3px solid var(--anno); border-radius: 10px; box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18); padding: 10px 12px; font-size: 12.5px; }
-#anno-legend .anno-lh { display: flex; align-items: baseline; gap: 8px; }
-#anno-legend .anno-lh .muted { font-size: 11.5px; }
-#anno-legend .anno-min { margin-left: auto; border: none; background: none; color: var(--ink-3); cursor: pointer; font-size: 15px; line-height: 1; }
-#anno-legend ol { list-style: none; margin: 8px 0 6px; padding: 0; }
-#anno-legend li button { display: flex; gap: 8px; align-items: center; width: 100%; text-align: left; border: none; background: none; padding: 3px 2px; font: inherit; color: var(--ink); cursor: pointer; border-radius: 5px; }
-#anno-legend li button:hover { background: var(--panel-2); }
-#anno-legend p { margin: 0; font-size: 11.5px; line-height: 1.35; }
-#anno-legend.min ol, #anno-legend.min p { display: none; }
-#anno-legend.min { width: auto; }
-.anno-badge { flex: none; display: inline-block; min-width: 26px; text-align: center; border-radius: 9px; background: var(--anno); color: #fff; font: 700 10px "IBM Plex Mono", monospace; padding: 2px 5px; }
-.anno-badge.question { background: var(--anno-q); }
-#anno-card { position: fixed; z-index: 42; width: 340px; background: var(--panel); color: var(--ink); border: 1px solid var(--line-2); border-left: 4px solid var(--anno); border-radius: 10px; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22); padding: 11px 14px 12px; font-size: 13px; line-height: 1.45; }
-#anno-card .anno-ch { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
-#anno-card .anno-x { margin-left: auto; border: none; background: none; color: var(--ink-3); cursor: pointer; }
-#anno-card code { font-size: 11.5px; background: var(--panel-2); padding: 0 4px; border-radius: 3px; }
-#anno-card a { color: var(--accent); }
-#anno-card .anno-src { margin-top: 8px; padding-top: 7px; border-top: 1px dashed var(--line); font-size: 12px; color: var(--ink-2); }
-@media print { #anno-layer, #anno-legend, #anno-card { display: none; } }

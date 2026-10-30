@@ -95,8 +95,8 @@ export class GsmSidebar extends StoreElement {
     // the current view stays visible but disabled, with the reason under it.
     const dist = state.programView === 'distribution';
     const overview = !dist && this.store.tableZoom() === 'overview';
-    const ctl = (body, { anno = '', na = '' } = {}) =>
-      `<div class="ctl ${na ? 'na' : ''}"${anno ? ` data-anno="${anno}"` : ''}${na ? ' aria-disabled="true"' : ''}>${body}${
+    const ctl = (body, { na = '' } = {}) =>
+      `<div class="ctl ${na ? 'na' : ''}"${na ? ' aria-disabled="true"' : ''}>${body}${
         na.trim() ? `<p class="sb-why">${na}</p>` : ''
       }</div>`;
     const tableOnly = dist ? 'Table only: the distribution plots every study on each metric’s line.' : '';
@@ -111,8 +111,7 @@ export class GsmSidebar extends StoreElement {
               st.params?.nickname ? ` · ${esc(st.params.nickname)}` : ''
             }</option>`
         )
-        .join('')}</select><p class="sb-hint">Marks the study in every view. Click a row or a dot to pick one.</p>`,
-      { anno: 'highlight' }
+        .join('')}</select><p class="sb-hint">Marks the study in every view. Click a row or a dot to pick one.</p>`
     );
 
     // P2: cells follow each metric's glossary display rule by default; the
@@ -134,7 +133,7 @@ export class GsmSidebar extends StoreElement {
             ? ''
             : `<p class="sb-hint">${defined ? 'Each metric as its glossary defines it: n (%), per 28 days, or %.' : 'The same numbers stacked in every cell.'}</p>`
         }`,
-        { anno: 'cellmode', na: cellsNa }
+        { na: cellsNa }
       ) +
       ctl(
         `<label>${defined ? 'Also show' : 'Show in each cell'}</label><div class="chips">${(defined
@@ -166,14 +165,14 @@ export class GsmSidebar extends StoreElement {
     const visible = this.store.visibleMetrics().length;
     const statusCount = (st) => supported.filter((m) => (m.Status ?? 'Released') === st).length;
     const metrics =
-      `<div class="ctl" data-anno="status"><label>Status</label><div class="chips">${STATUS_ORDER.filter(statusCount)
+      `<div class="ctl"><label>Status</label><div class="chips">${STATUS_ORDER.filter(statusCount)
         .map(
           (st) =>
             `<button type="button" class="chip ${state.statuses.has(st) ? 'on' : ''}" data-status="${st}" aria-pressed="${state.statuses.has(st)}">${st}<span class="cnt">${statusCount(st)}</span></button>`
         )
         .join('')}</div></div>` +
       `<div class="sb-actions"><button type="button" class="linkbtn" data-metrics-all="on">All</button><button type="button" class="linkbtn" data-metrics-all="off">None</button></div>` +
-      `<div class="metric-list" data-anno="metriclist">${this.store
+      `<div class="metric-list">${this.store
         .metricCategories(supported)
         .map((g) => {
           const on = g.metrics.filter((m) => !state.hiddenMetrics.has(m.MetricID)).length;
