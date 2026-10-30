@@ -1,5 +1,5 @@
 // Design-review annotations: numbered pins over the live prototype that tie
-// each change to its proposal (P1–P7) or open question (Q1–Q10) in the
+// each change to its proposal (P1–P10) or open question (Q1–Q10) in the
 // portfolio design doc. Purely presentational: pins are positioned over
 // whatever the components rendered, so they never touch the store. Toggle with
 // the header button; the choice is remembered.
@@ -20,15 +20,15 @@ export const ANNOTATIONS = [
     source: 'Tracker columns: Metric, Numerator, Denominator, COD Display, Status.',
   },
   {
-    id: 'P2', page: 'program', kind: 'proposal', targets: [['th[data-abbr="AE"]', 'th[data-abbr="PD"]']],
+    id: 'P2', page: 'program', kind: 'proposal', targets: [['[data-abbr="AE"]', '[data-abbr="PD"]']],
     title: 'Metric-specific cell formats',
-    body: `Exposure metrics (AE, SAE, PD, IPD) read as <b>events per 28 days</b> of exposure. Participant metrics read as <b>n (%)</b>, and data-quality metrics as <b>%</b>. The 28-day factor is display only: flags, heatmap bins and sort order are unchanged. Switch back with <i>Cell display → Custom</i> in the sidebar.`,
+    body: `Exposure metrics (AE, SAE, PD, IPD) read as <b>events per 28 days</b> of exposure. Participant metrics read as <b>n (%)</b>, and data-quality metrics as <b>%</b>. The 28-day factor is display only: heatmap bins and sort order are unchanged. In Details, switch back with <i>Cell display → Custom</i> in the sidebar.`,
     source: 'Tracker "COD Display": count (%) · 28-day "month" rate.',
   },
   {
-    id: 'P3', page: 'program', kind: 'proposal', at: 'in-right', targets: [['th[data-band]']],
-    title: 'Grouped columns with unit headers',
-    body: `Five category bands: Disposition · Early events · Eligibility &amp; integrity · Safety &amp; deviations · Data quality. Each metric header states its unit. Click <b>▾</b> on a band to fold it into one summary column (dots = metrics with many flagged sites). The study page uses the same categories for its tile rows.`,
+    id: 'P3', page: 'program', kind: 'proposal', at: 'in-right', targets: [['th[data-band]', '.dcat']],
+    title: 'Category bands fold to headline tiles',
+    body: `Five category bands: Disposition · Early events · Eligibility &amp; integrity · Safety &amp; deviations · Data quality. A <b>folded</b> band shows one tile per metric with its headline value (rate per 28 days or %), labelled with the abbreviation. An <b>open</b> band shows full cells with unit headers. Click a band to switch. The study page uses the same categories for its tile rows.`,
     source: 'Category grouping is this proposal’s own (Q6).',
   },
   {
@@ -44,7 +44,7 @@ export const ANNOTATIONS = [
     source: 'Open question Q8: hide Planned, or show as "coming soon"?',
   },
   {
-    id: 'P6', page: 'program', kind: 'proposal', at: 'out', targets: [['th[data-abbr="SDSC"] .info', 'th[data-abbr] .info'], ['#glossaryBtn']],
+    id: 'P6', page: 'program', kind: 'proposal', at: 'out', targets: [['th[data-abbr="SDSC"] .info', 'th[data-abbr] .info', '.mn .info', '.tlab'], ['#glossaryBtn']],
     title: 'Glossary tooltips and panel',
     body: `Hover any ⓘ for the glossary entry: definition, numerator, denominator, display rule, flagging, owning Requirement. <b>Metric glossary</b> in the header opens the whole tracker as a searchable page, with links to each Requirement (e.g. ${REQ(61)}).`,
     source: 'Definitions are empty in the tracker (Q2).',
@@ -52,35 +52,51 @@ export const ANNOTATIONS = [
   {
     id: 'P7', page: 'program', kind: 'proposal', at: 'in-right', targets: [['[data-anno="cellmode"]'], ['[data-anno="status"]']],
     title: 'Sidebar reorganised around the glossary',
-    body: `<b>Cell display</b>: <i>As defined</i> (glossary rule plus optional flag extras) or <i>Custom</i> (the previous numerator / denominator / rate stack). The <b>Status</b> filter and a metric list grouped by category, with per-group all/none and status pills.`,
+    body: `<b>Cell display</b>: <i>As defined</i> (glossary rule, optional trend) or <i>Custom</i> (the previous numerator / denominator / rate stack). The <b>Status</b> filter and a metric list grouped by category, with per-group all/none and status pills. One sidebar drives every view; controls that don't apply are greyed with the reason underneath. Site-flag options (% flagged, % red, flag distribution) are gone from the program page.`,
   },
   {
-    id: 'Q1', page: 'program', kind: 'question', targets: [['th[data-abbr="SF"]']],
+    id: 'P8', page: 'program', kind: 'proposal', at: 'in-right', targets: [['[data-anno="views"] .tabs']],
+    title: 'Overview · Details · Distribution',
+    body: `Three views share one sidebar. <b>Overview</b> (the landing view) folds every category to headline tiles so the whole portfolio fits on one screen. <b>Details</b> opens every category to full cells. They are two zoom levels of one table: open a single band and both buttons are outlined (<i>mixed</i>). <b>Distribution</b> is its own tab. The view, open bands and highlighted study are kept in the URL, so a link reopens the same view.`,
+    source: 'Design iteration 2: options #2 (Overview), #1 (Details), #5 (Distribution) combined.',
+  },
+  {
+    id: 'P9', page: 'program', kind: 'proposal', at: 'in-right', targets: [['[data-anno="dist"] .track']],
+    title: 'Distribution strip plots',
+    body: `One line per metric, one dot per study (scale 0 → max). The black rule is the pooled portfolio value; the accent diamond is the highlighted study, with its value. Categories fold independently of the table. No flag colouring: position on the line is the signal.`,
+  },
+  {
+    id: 'P10', page: 'program', kind: 'proposal', at: 'in-right', targets: [['[data-anno="highlight"]']],
+    title: 'Highlight a study everywhere',
+    body: `Pick a study here, click its row in the table, or click its dot in Distribution. It stays marked as you switch views. Click the study ID to open its study page.`,
+  },
+  {
+    id: 'Q1', page: 'program', kind: 'question', targets: [['[data-abbr="SF"]']],
     title: 'Screen failure appears twice',
     body: `The Released "Screen Failure Rate" divides by total screened. The Planned "Screen Failure" divides by all enrolled. Screen-failed participants are never enrolled, so the prototype keeps one column, ÷ screened. Is that right?`,
   },
   {
-    id: 'Q3', page: 'program', kind: 'question', targets: [['th[data-abbr="SAE"]']],
+    id: 'Q3', page: 'program', kind: 'question', targets: [['[data-abbr="SAE"]']],
     title: '“/ 28 d” or “per month”?',
     body: `The 28-day rescale is display only (flags are computed per day upstream). Which label do users prefer?`,
   },
   {
-    id: 'Q4', page: 'program', kind: 'question', targets: [['th[data-band="Data quality"]']],
+    id: 'Q4', page: 'program', kind: 'question', targets: [['[data-band="Data quality"]']],
     title: 'Data quality display',
     body: `The tracker gives no COD Display for the data-quality metrics. They stay as %. Should they move to count (%)?`,
   },
   {
-    id: 'Q5', page: 'program', kind: 'question', targets: [['th[data-abbr="TDSC"]']],
+    id: 'Q5', page: 'program', kind: 'question', targets: [['[data-abbr="TDSC"]']],
     title: 'TDSC denominator is changing',
     body: `Marked "changed-in-dev" with denominator <b>All dosed</b> (${REQ(90)}). The prototype already divides by dosed. When does the released gsm.kri metric change?`,
   },
   {
-    id: 'Q9', page: 'program', kind: 'question', targets: [['th[data-abbr="DTH30"]']],
+    id: 'Q9', page: 'program', kind: 'question', targets: [['[data-abbr="DTH30"]']],
     title: 'Early deaths: 30 and 90 days',
     body: `Two adjacent columns as shown, or one column with a 30 / 90 switch? (${REQ(121)})`,
   },
   {
-    id: 'Q10', page: 'program', kind: 'question', targets: [['th[data-abbr="STRAT"]']],
+    id: 'Q10', page: 'program', kind: 'question', targets: [['[data-abbr="STRAT"]']],
     title: 'Site-level availability',
     body: `The portfolio rolls up site-level rows. Will the Planned workflows (stratification, PFS censoring, IP non-starters) emit site-level results, or only study or participant level?`,
   },
@@ -109,7 +125,8 @@ const current = () => ANNOTATIONS.filter((a) => a.page === page());
 
 function findTarget(selectors) {
   for (const sel of selectors) {
-    const el = document.querySelector(`#app ${sel}, header.app ${sel}`);
+    // Skip matches inside a hidden view (the table and distribution share the page).
+    const el = [...document.querySelectorAll(`#app ${sel}, header.app ${sel}`)].find((e) => e.getClientRects().length);
     if (el) return el;
   }
   return null;

@@ -1,7 +1,7 @@
 import { StoreElement, esc, fmtPct, fmtInt } from './util.js';
-import { attachHoverTooltip, metricInfoIcon, statusPill } from './tooltip.js';
+import { attachHoverTooltip, metricInfoIcon, metricTip, statusPill } from './tooltip.js';
 import { fmtMetric, fmtRate, metricUnit, displayLabel, DAYS_PER_MONTH } from '../util/format.js';
-import { shareBin, relativeBin, heatValue, RELATIVE_MEASURES, SEVERITY_ORDER } from '../scales/flags.js';
+import { relativeBin, heatValue, RELATIVE_MEASURES } from '../scales/flags.js';
 import { sparkline } from '../charts/sparkline.js';
 import { sortRows } from '../data/sort.js';
 
@@ -12,7 +12,11 @@ import { sortRows } from '../data/sort.js';
  * a rollup over site-level rows — one study or many, same math. Dispatches a
  * bubbling `studySelected` CustomEvent ({detail: {StudyID}}) when a study
  * link is clicked — extending the gsm.viz event vocabulary
- * (riskSignalSelected / groupSelected).
+ * (riskSignalSelected / groupSelected). Clicking anywhere else on a study row
+ * highlights that study in every program view.
+ *
+ * One table serves both Overview and Details: a folded category shows one
+ * headline value per metric (tiles); an open one shows full cells.
  */
 export class GsmPortfolioTable extends StoreElement {
   connectedCallback() {
@@ -26,15 +30,17 @@ export class GsmPortfolioTable extends StoreElement {
         );
         return;
       }
-      const fold = e.target.closest('button[data-fold]');
+      // The metric-definition icon lives inside sortable / foldable headers;
+      // hovering it is the point, so a click on it must do nothing else.
+      if (e.target.closest('.info')) return;
+      const fold = e.target.closest('[data-fold]');
       if (fold) return this.store.toggleGroup(fold.dataset.fold);
       const bucketCell = e.target.closest('tr[data-bucket] td.grp');
       if (bucketCell) return this.store.toggleExpanded(bucketCell.parentElement.dataset.bucket);
-      // The metric-definition icon lives inside a sortable header; hovering it
-      // is the point, so a click on it must not also re-sort the column.
-      if (e.target.closest('.info')) return;
       const th = e.target.closest('th[data-sort]');
-      if (th) this.store.toggleSort(th.dataset.sort, { numeric: th.dataset.sort !== 'label' });
+      if (th) return this.store.toggleSort(th.dataset.sort, { numeric: th.dataset.sort !== 'label' });
+      const row = e.target.closest('tr[data-hl]');
+      if (row) this.store.highlight(row.dataset.hl);
     });
     attachHoverTooltip(this);
   }
@@ -44,7 +50,7 @@ export class GsmPortfolioTable extends StoreElement {
   /**
    * One cell. In "defined" mode (P2) the first line is the metric's glossary
    * display rule — n (%), per 28 days, or % — and the sidebar's "also show"
-   * extras stack under it. In "custom" mode every metric shows the same
+   * trend stacks under it. In "custom" mode every metric shows the same
    * numerator / denominator / rate stack, as before the glossary review.
    */
   #cell(rollup, metric, label, heatClass, studies) {
@@ -59,23 +65,6 @@ export class GsmPortfolioTable extends StoreElement {
       }
       if (show.has('rate')) lines.push(`<span class="cell-rate ${lines.length ? 'secondary' : ''}">${fmtRate(metric, rollup.Rate)}</span>`);
     }
-    const f = rollup.flags;
-    if (show.has('flagged') || show.has('red')) {
-      // Share of contributing sites flagged (red or amber) / flagged red; NA sites count in the denominator.
-      const parts = [];
-      if (show.has('flagged')) {
-        parts.push(`<span><i class="dot flag-red"></i><i class="dot flag-amber pair"></i>${fmtPct(heatValue('flagged', rollup), 0)}</span>`);
-      }
-      if (show.has('red')) {
-        parts.push(`<span><i class="dot flag-red"></i>${fmtPct(heatValue('red', rollup), 0)}</span>`);
-      }
-      lines.push(`<span class="cell-flags">${parts.join('')}</span>`);
-    }
-    if (show.has('dist')) {
-      lines.push(`<span class="cellbar">${SEVERITY_ORDER.filter((s) => f[s] > 0)
-        .map((s) => `<i class="flag-${s}" style="flex:${f[s]}"></i>`)
-        .join('')}</span>`);
-    }
     if (show.has('trend')) {
       // The series is computed now; the SVG is drawn after the DOM exists.
       const idx = this.#sparks.push({ series: this.store.trendSeries(metric.MetricID, studies), label }) - 1;
@@ -89,7 +78,6 @@ export class GsmPortfolioTable extends StoreElement {
       `Σn/Σd = ${fmtInt(rollup.Numerator)} / ${fmtInt(rollup.Denominator)}${
         per28 ? ` = ${(rollup.Rate).toFixed(4)} / day × ${DAYS_PER_MONTH}` : ` = ${fmtPct(rollup.Rate)}`
       }<br>` +
-      `sites: ${f.red}R · ${f.amber}A · ${f.green}G · ${f.na}NA (${fmtPct(heatValue('flagged', rollup), 0)} flagged)<br>` +
       `${this.#snapshotNote(rollup.NumStudies)}` +
       (metric.Status === 'Planned' ? `<br><span class="tip-warn">Planned metric — values are simulated</span>` : '');
     const planned = metric.Status === 'Planned' ? 'planned' : '';
@@ -97,27 +85,24 @@ export class GsmPortfolioTable extends StoreElement {
   }
 
   /**
-   * A folded category (P3): one dot per metric whose flagged-site share is
-   * notable (red > 25%, amber 10–25%), and "k / n metrics" above 10%.
+   * A folded category (Overview): one headline tile per metric — the rate in
+   * its display unit (per 28 days or %). Counts need the open category.
    */
-  #summary(row, group) {
-    const shares = group.metrics.map((m) => ({ m, share: heatValue('flagged', row.rollup(m.MetricID)) }));
-    const hot = shares.filter((x) => x.share > 0.1);
-    const dots = hot
-      .sort((a, b) => b.share - a.share)
-      .map((x) => `<i class="${x.share > 0.25 ? 'flag-red' : 'flag-amber'}"></i>`)
+  #tiles(row, group, heatClass) {
+    const tiles = group.metrics
+      .map((m) => {
+        const rollup = row.rollup(m.MetricID);
+        const tip =
+          `<b>${esc(row.label)} · ${esc(m.Abbreviation)}</b><br>` +
+          `<span class="tip-muted">${esc(m.Metric)}</span><br>` +
+          `${esc(fmtMetric(m, rollup).text)} <span class="tip-muted">— ${esc(displayLabel(m))}</span><br>` +
+          `Σn/Σd = ${fmtInt(rollup.Numerator)} / ${fmtInt(rollup.Denominator)}` +
+          (m.Status === 'Planned' ? `<br><span class="tip-warn">Planned metric — values are simulated</span>` : '');
+        const planned = m.Status === 'Planned' ? 'pl' : '';
+        return `<span class="otile ${planned} ${heatClass(row, m)}" data-tip="${esc(tip)}">${fmtRate(m, rollup.Rate)}</span>`;
+      })
       .join('');
-    const tip =
-      `<b>${esc(row.label)} · ${esc(group.category)}</b><br>` +
-      shares.map((x) => `${esc(x.m.Abbreviation)}: ${x.share == null ? '—' : `${fmtPct(x.share, 0)} sites flagged`}`).join('<br>') +
-      `<br><span class="tip-muted">Dots: red > 25%, amber 10–25% of sites flagged</span>`;
-    return `<td class="sum gs" data-tip="${esc(tip)}"><span class="dots">${dots}</span><span class="k">${hot.length}/${group.metrics.length}</span></td>`;
-  }
-
-  /** Sort value for a folded category: metrics over 10% flagged, ties by the mean share. */
-  #summaryValue(row, group) {
-    const shares = group.metrics.map((m) => heatValue('flagged', row.rollup(m.MetricID)) ?? 0);
-    return shares.filter((v) => v > 0.1).length + shares.reduce((a, v) => a + v, 0) / (shares.length * 10);
+    return `<td class="cat gs"><span class="otiles">${tiles}</span></td>`;
   }
 
   /** "1 study at its latest snapshot" / "n studies, each at its latest snapshot". */
@@ -162,7 +147,6 @@ export class GsmPortfolioTable extends StoreElement {
     const { sort, heatmap } = state;
     const metrics = store.visibleMetrics();
     const groups = store.metricCategories(metrics).map((g) => ({ ...g, collapsed: state.collapsedGroups.has(g.category) }));
-    const shownMetrics = groups.filter((g) => !g.collapsed).flatMap((g) => g.metrics);
     const filtered = store.filteredStudies();
     const latest = store.latestFor(filtered);
     const flat = state.groupBy === 'none';
@@ -192,10 +176,6 @@ export class GsmPortfolioTable extends StoreElement {
       if (sort.key === 'meta') return row.meta;
       if (sort.key === 'enroll') return row.population().enrolled;
       if (sort.key?.startsWith('pop:')) return row.population()[sort.key.slice(4)];
-      if (sort.key?.startsWith('cat:')) {
-        const group = groups.find((g) => g.category === sort.key.slice(4));
-        return group ? this.#summaryValue(row, group) : null;
-      }
       return heatValue(sortMeasure, row.rollup(sort.key));
     };
     const sorted = (rows) => sortRows(rows, sort, sortValue);
@@ -215,23 +195,19 @@ export class GsmPortfolioTable extends StoreElement {
       );
     }
 
-    // --- heatmap: absolute bins for flag shares, column-relative bins otherwise ---
+    // --- heatmap: column-relative bins (folded tiles shade the same way) ---
     const domains = new Map();
     if (RELATIVE_MEASURES.has(heatmap)) {
-      for (const m of shownMetrics) {
+      for (const m of metrics) {
         const values = primary.map((r) => heatValue(heatmap, r.rollup(m.MetricID))).filter((v) => v != null);
         domains.set(m.MetricID, { min: Math.min(...values), max: Math.max(...values) });
       }
     }
     const heatClass = (row, metric) => {
-      if (heatmap === 'none') return '';
-      const value = heatValue(heatmap, row.rollup(metric.MetricID));
-      if (RELATIVE_MEASURES.has(heatmap)) {
-        // The total row is a sum — not comparable to its members on counts.
-        if (row.kind === 'total' && heatmap !== 'rate') return '';
-        return relativeBin(value, domains.get(metric.MetricID));
-      }
-      return shareBin(value);
+      if (!RELATIVE_MEASURES.has(heatmap)) return '';
+      // The total row is a sum — not comparable to its members on counts.
+      if (row.kind === 'total' && heatmap !== 'rate') return '';
+      return relativeBin(heatValue(heatmap, row.rollup(metric.MetricID)), domains.get(metric.MetricID));
     };
 
     // --- header: a category band row over a metric row (P3) ---
@@ -247,7 +223,7 @@ export class GsmPortfolioTable extends StoreElement {
         active ? `<span class="si" aria-hidden="true">${sort.dir === 'asc' ? '▲' : '▼'}</span>` : ''
       }</th>`;
     };
-    const measureLabel = { num: 'numerator', den: 'denominator', rate: 'rate', flagged: '% flagged', red: '% red' }[sortMeasure];
+    const measureLabel = { num: 'numerator', den: 'denominator', rate: 'rate' }[sortMeasure];
     const popCols = [
       ['pop:screened', 'Scr.', 'Screened', 'ScreenedCount', ''],
       ['enroll', 'Enr.', 'Enrolled', 'ParticipantCount', ''],
@@ -261,10 +237,21 @@ export class GsmPortfolioTable extends StoreElement {
       groups
         .map((g) => {
           const n = g.metrics.length;
-          const btn = `<button type="button" class="fold" data-fold="${esc(g.category)}" aria-expanded="${!g.collapsed}" title="${
-            g.collapsed ? 'Expand' : 'Collapse'
-          } ${esc(g.category)}">${g.collapsed ? '▸' : '▾'}</button>`;
-          return `<th colspan="${g.collapsed ? 1 : n}" class="bandh gs" data-band="${esc(g.category)}">${btn}${esc(g.category)}<span class="tw">${n}</span></th>`;
+          const btn = `<button type="button" class="fold" aria-expanded="${!g.collapsed}" aria-label="${
+            g.collapsed ? 'Open' : 'Fold'
+          } ${esc(g.category)}">${g.collapsed ? '+' : '−'}</button>`;
+          const attrs = `data-band="${esc(g.category)}" data-fold="${esc(g.category)}"`;
+          if (!g.collapsed) {
+            return `<th colspan="${n}" class="bandh gs open" ${attrs} title="Fold ${esc(g.category)} to headline tiles">${btn}${esc(g.category)}<span class="tw">${n}</span></th>`;
+          }
+          const statuses = [...new Set(g.metrics.map((m) => m.Status ?? 'Released'))];
+          const pill = statuses.length === 1 ? statusPill(g.metrics[0]) : '';
+          const labels = g.metrics
+            .map((m) => `<span class="tlab" data-abbr="${esc(m.Abbreviation)}" data-tip="${esc(metricTip(m))}">${esc(m.Abbreviation)}</span>`)
+            .join('');
+          return `<th rowspan="2" class="bandh gs closed" ${attrs} title="Open ${esc(g.category)} for full values">${btn}${esc(g.category)}<span class="u">${n} metric${
+            n === 1 ? '' : 's'
+          }${pill}</span><span class="otiles">${labels}</span></th>`;
         })
         .join('') +
       `</tr>`;
@@ -287,14 +274,8 @@ export class GsmPortfolioTable extends StoreElement {
         )
         .join('') +
       groups
-        .map((g) =>
-          g.collapsed
-            ? th(`cat:${g.category}`, `<span class="sumh">${g.metrics.map((m) => esc(m.Abbreviation)).join(' ')}</span><span class="u">metrics &gt;10% flagged</span>`, {
-                classes: 'gs sum',
-                tip: `<b>${esc(g.category)}</b> (folded)<br>Dots mark metrics with many flagged sites. Click to sort by how many.`,
-              })
-            : g.metrics.map((m, i) => metricHead(m, i === 0)).join('')
-        )
+        .filter((g) => !g.collapsed)
+        .map((g) => g.metrics.map((m, i) => metricHead(m, i === 0)).join(''))
         .join('') +
       `</tr>`;
     const head = `<thead>${bandRow}${colRow}</thead>`;
@@ -314,7 +295,7 @@ export class GsmPortfolioTable extends StoreElement {
       groups
         .map((g) =>
           g.collapsed
-            ? this.#summary(row, g)
+            ? this.#tiles(row, g, heatClass)
             : g.metrics
                 .map((m, i) => {
                   const html = this.#cell(row.rollup(m.MetricID), m, `${row.label} · ${m.Abbreviation}`, heatClass(row, m), row.studies);
@@ -326,7 +307,8 @@ export class GsmPortfolioTable extends StoreElement {
     const studyRowHTML = (row, child) => {
       const { study, meta: date } = row;
       const nick = study.params?.nickname;
-      return `<tr class="study ${child ? 'child' : ''}">
+      const hl = state.highlightStudy === study.StudyID;
+      return `<tr class="study ${child ? 'child' : ''} ${hl ? 'sel' : ''}" data-hl="${esc(study.StudyID)}" title="Click to highlight in every view">
         <td class="grp"><a href="#/study/${esc(study.StudyID)}" data-study="${esc(study.StudyID)}" class="mono">${esc(study.StudyID)}</a>${
           nick ? `<span class="nick">${esc(nick)}</span>` : ''
         }<span class="info" data-tip="${esc(this.#studyTip(study, date))}" role="img" aria-label="Study details">i</span></td>
@@ -352,11 +334,19 @@ export class GsmPortfolioTable extends StoreElement {
       .filter(([, n]) => n)
       .map(([st, n]) => `${n} ${st.toLowerCase()}`)
       .join(' · ');
-    const mode = state.cellMode === 'defined' ? 'cells as defined in the glossary' : 'custom cell contents';
+    const zoom = store.tableZoom(groups.map((g) => g.category));
+    const mode =
+      zoom === 'overview'
+        ? 'one headline value per metric'
+        : state.cellMode === 'defined'
+          ? 'cells as defined in the glossary'
+          : 'custom cell contents';
+    const hlStudy = filtered.find((s) => s.StudyID === state.highlightStudy);
+    const hlNote = hlStudy ? ` · highlighting <b>${esc(hlStudy.StudyID)}${hlStudy.params?.nickname ? ` ${esc(hlStudy.params.nickname)}` : ''}</b>` : '';
     this.innerHTML = `
       <div class="showing" data-anno="showing">Showing ${filtered.length} / ${store.studies.length} studies · ${metrics.length} / ${
         store.supportedMetrics().length
-      } site-level metrics (${statusCounts}) · ${mode} · each study at its own latest snapshot${sortNote}</div>
+      } site-level metrics (${statusCounts}) · ${mode} · each study at its own latest snapshot${hlNote}${sortNote}</div>
       <div class="tblwrap"><table class="po">${head}<tbody>${body}</tbody></table></div>`;
 
     for (const el of this.querySelectorAll('.spark')) {

@@ -30,8 +30,8 @@ export class PortfolioStore extends EventTarget {
     }
 
     this.state = {
-      show: new Set(['num', 'rate']), // any of num | den | rate | flagged | red | dist | trend; cells stack what's on
-      heatmap: 'flagged', // 'none' | 'num' | 'den' | 'rate' | 'flagged' | 'red' — the measure that drives cell shading (and metric sorting)
+      show: new Set(['num', 'rate']), // any of num | den | rate | trend; cells stack what's on
+      heatmap: 'none', // 'none' | 'num' | 'den' | 'rate' — column-relative cell shading (and the metric sort measure)
       ramp: 'blue', // heatmap palette: 'blue' | 'teal' | 'purple' | 'grey'
       groupBy: 'none', // 'none' (one row per study) | a study param
       filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set() },
@@ -45,8 +45,14 @@ export class PortfolioStore extends EventTarget {
       asOf: null, // view the portfolio as of this date; the study page's visit scrubber drives it
       cellMode: 'defined', // 'defined' — each metric shows its glossary display rule | 'custom' — the `show` stack for every metric
       statuses: new Set(STATUS_ORDER), // glossary Status values to show (Released | New | Planned)
-      collapsedGroups: new Set(), // program table: categories folded to one summary column
+      // Program table zoom: folded categories show one headline value per
+      // metric. All folded = Overview (the landing view), none = Details.
+      collapsedGroups: new Set(), // filled with every category below
+      programView: 'table', // 'table' (Overview / Details) | 'distribution'
+      highlightStudy: null, // StudyID marked in every program view
+      distCollapsed: new Set(), // distribution view: categories folded to their header
     };
+    this.state.collapsedGroups = new Set(this.#allCategories());
   }
 
   /**
@@ -121,6 +127,81 @@ export class PortfolioStore extends EventTarget {
   /** Fold / unfold one category band in the program table. */
   toggleGroup(category) {
     const set = this.state.collapsedGroups;
+    set.has(category) ? set.delete(category) : set.add(category);
+    this.#emit();
+  }
+
+  /**
+   * Table zoom derived from which visible categories are folded: 'overview'
+   * (all folded), 'details' (none folded) or 'mixed'.
+   */
+  tableZoom(categories = this.metricCategories().map((g) => g.category)) {
+    const folded = categories.filter((c) => this.state.collapsedGroups.has(c)).length;
+    if (folded === categories.length) return 'overview';
+    return folded === 0 ? 'details' : 'mixed';
+  }
+
+  /** The view switch: 'overview' / 'details' set the table zoom; 'distribution' swaps the view. */
+  setProgramView(view) {
+    if (view === 'distribution') {
+      this.state.programView = 'distribution';
+    } else {
+      this.state.programView = 'table';
+      this.state.collapsedGroups = view === 'details' ? new Set() : new Set(this.#allCategories());
+    }
+    this.#emit();
+  }
+
+  #allCategories() {
+    return [...new Set([...CATEGORY_ORDER, ...groupByCategory(this.metrics, CATEGORY_ORDER).map((g) => g.category)])];
+  }
+
+  /** Mark one study in every program view; selecting it again clears the highlight. */
+  highlight(studyId) {
+    this.state.highlightStudy = studyId && this.state.highlightStudy !== studyId ? studyId : null;
+    this.#emit();
+  }
+
+  /**
+   * The program view as URL query params (view, open bands, highlighted
+   * study, folded distribution categories) — so a link reopens the same view.
+   * `open` lists the table's open bands; `all` stands for every band.
+   */
+  programParams() {
+    const { state } = this;
+    const cats = this.#allCategories();
+    const open = cats.filter((c) => !state.collapsedGroups.has(c));
+    const zoom = open.length === 0 ? 'overview' : open.length === cats.length ? 'details' : 'mixed';
+    const params = new URLSearchParams();
+    params.set('view', state.programView === 'distribution' ? 'distribution' : zoom);
+    if (zoom === 'mixed' || (zoom === 'details' && state.programView === 'distribution')) {
+      params.set('open', zoom === 'details' ? 'all' : open.join(','));
+    }
+    if (state.highlightStudy) params.set('study', state.highlightStudy);
+    if (state.distCollapsed.size) params.set('dfold', [...state.distCollapsed].join(','));
+    return params;
+  }
+
+  /** Restore what programParams() wrote; unknown studies / categories are ignored. One 'change'. */
+  applyProgramParams(params) {
+    const { state } = this;
+    const cats = this.#allCategories();
+    const view = params.get('view');
+    const open = params.get('open');
+    const list = (v) => (v ? v.split(',').filter((c) => cats.includes(c)) : []);
+    state.programView = view === 'distribution' ? 'distribution' : 'table';
+    if (open === 'all' || (open == null && view === 'details')) state.collapsedGroups = new Set();
+    else if (open != null) state.collapsedGroups = new Set(cats.filter((c) => !list(open).includes(c)));
+    else state.collapsedGroups = new Set(cats);
+    const study = params.get('study');
+    state.highlightStudy = this.studies.some((st) => st.StudyID === study) ? study : null;
+    state.distCollapsed = new Set(list(params.get('dfold')));
+    this.#emit();
+  }
+
+  /** Fold / unfold one category in the distribution view (independent of the table's folds). */
+  toggleDistGroup(category) {
+    const set = this.state.distCollapsed;
     set.has(category) ? set.delete(category) : set.add(category);
     this.#emit();
   }

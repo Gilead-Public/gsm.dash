@@ -4,6 +4,7 @@ import { groupByCategory, CATEGORY_ORDER, OTHER_CATEGORY, STATUS_ORDER } from '.
 import { normalizeMetric } from '../src/data/normalize.js';
 import { PortfolioStore } from '../src/data/store.js';
 import { generatePortfolio } from '../scripts/generate-example-data.mjs';
+import { stripScale, axisLabel } from '../src/scales/strip.js';
 
 // Glossary display rules (P2): the rule only changes formatting; the rate is
 // always Σn / Σd per day (exposure) or per participant.
@@ -97,5 +98,27 @@ describe('catalog in the example portfolio', () => {
     expect(one.screened).toBeGreaterThanOrEqual(one.enrolled);
     expect(one.enrolled).toBeGreaterThanOrEqual(one.dosed);
     expect(store.population([])).toEqual({ screened: null, enrolled: null, dosed: null });
+  });
+});
+
+describe('distribution strip scale', () => {
+  it('places values on 0 → max × 1.08, portfolio included in the max', () => {
+    const { max, x } = stripScale([0.1, 0.2, null], 0.25);
+    expect(max).toBeCloseTo(0.27, 10);
+    expect(x(0)).toBe(0);
+    expect(x(0.27)).toBeCloseTo(100, 10);
+    expect(x(null)).toBeNull();
+  });
+
+  it('never divides by zero', () => {
+    expect(stripScale([0, 0], 0).max).toBe(1);
+    expect(stripScale([], null).max).toBe(1);
+  });
+
+  it('labels the axis in the display unit', () => {
+    expect(axisLabel(per28, 0.056)).toBe('0.056');
+    expect(axisLabel(per28, 1.234)).toBe('1.23');
+    expect(axisLabel(pct, 0.005)).toBe('0.50%');
+    expect(axisLabel(pct, 0.125)).toBe('12.5%');
   });
 });

@@ -47,6 +47,7 @@ export class GsmSidebar extends StoreElement {
     this.addEventListener('change', (e) => {
       if (e.target.matches('select[data-groupby]')) this.store.set('groupBy', e.target.value);
       if (e.target.matches('select[data-heatmap]')) this.store.set('heatmap', e.target.value);
+      if (e.target.matches('select[data-highlight]')) this.store.highlight(e.target.value || null);
       if (e.target.matches('input[data-metric]')) this.store.toggleMetric(e.target.dataset.metric);
     });
     // <details> toggle doesn't bubble; capture it so re-renders keep section state.
@@ -90,32 +91,75 @@ export class GsmSidebar extends StoreElement {
       return;
     }
 
+    // One sidebar drives every program view. A control that does not apply to
+    // the current view stays visible but disabled, with the reason under it.
+    const dist = state.programView === 'distribution';
+    const overview = !dist && this.store.tableZoom() === 'overview';
+    const ctl = (body, { anno = '', na = '' } = {}) =>
+      `<div class="ctl ${na ? 'na' : ''}"${anno ? ` data-anno="${anno}"` : ''}${na ? ' aria-disabled="true"' : ''}>${body}${
+        na.trim() ? `<p class="sb-why">${na}</p>` : ''
+      }</div>`;
+    const tableOnly = dist ? 'Table only: the distribution plots every study on each metric’s line.' : '';
+
+    const studies = this.store.filteredStudies();
+    const hl = studies.some((st) => st.StudyID === state.highlightStudy) ? state.highlightStudy : '';
+    const highlight = ctl(
+      `<label>Highlight study</label><select data-highlight><option value="">None</option>${studies
+        .map(
+          (st) =>
+            `<option value="${esc(st.StudyID)}" ${st.StudyID === hl ? 'selected' : ''}>${esc(st.StudyID)}${
+              st.params?.nickname ? ` · ${esc(st.params.nickname)}` : ''
+            }</option>`
+        )
+        .join('')}</select><p class="sb-hint">Marks the study in every view. Click a row or a dot to pick one.</p>`,
+      { anno: 'highlight' }
+    );
+
     // P2: cells follow each metric's glossary display rule by default; the
     // old free-form stack stays available as "Custom".
     const defined = state.cellMode === 'defined';
     const chip = ([k, label]) =>
       `<button type="button" class="chip ${state.show.has(k) ? 'on' : ''}" data-show="${k}" aria-pressed="${state.show.has(k)}">${label}</button>`;
-    const extras = [['flagged', '% Flagged'], ['red', '% Red'], ['dist', 'Distribution'], ['trend', 'Trend']];
+    const extras = [['trend', 'Trend']];
+    const cellsNa = dist
+      ? 'The distribution shows each value as defined in the glossary.'
+      : overview
+        ? 'Overview tiles show one headline value per metric. Open a category or switch to Details.'
+        : '';
     const config =
-      `<div class="ctl" data-anno="cellmode"><label>Cell display</label>${this.#seg('cellMode', [['defined', 'As defined'], ['custom', 'Custom']])}
-        <p class="sb-hint">${
-          defined ? 'Each metric as its glossary defines it: n (%), per 28 days, or %.' : 'The same numbers stacked in every cell.'
-        }</p></div>` +
-      `<div class="ctl"><label>${defined ? 'Also show' : 'Show in each cell'}</label><div class="chips">${(defined
-        ? extras
-        : [['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate'], ...extras]
-      )
-        .map(chip)
-        .join('')}</div></div>` +
-      `<div class="ctl"><label>Heatmap (also drives column sort)</label><select data-heatmap>${[
-        ['none', 'None'], ['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate'], ['flagged', '% Flagged (red or amber)'], ['red', '% Red'],
-      ]
-        .map(([k, label]) => `<option value="${k}" ${state.heatmap === k ? 'selected' : ''}>${label}</option>`)
-        .join('')}</select></div>` +
-      `<div class="ctl"><label>Heatmap color</label>${this.#seg('ramp', RAMPS)}</div>` +
-      `<div class="ctl"><label>Group rows by</label><select data-groupby>${GROUP_BY_OPTIONS.map(
-        ([value, label]) => `<option value="${value}" ${value === state.groupBy ? 'selected' : ''}>${label}</option>`
-      ).join('')}</select></div>`;
+      highlight +
+      ctl(
+        `<label>Cell display</label>${this.#seg('cellMode', [['defined', 'As defined'], ['custom', 'Custom']])}${
+          cellsNa
+            ? ''
+            : `<p class="sb-hint">${defined ? 'Each metric as its glossary defines it: n (%), per 28 days, or %.' : 'The same numbers stacked in every cell.'}</p>`
+        }`,
+        { anno: 'cellmode', na: cellsNa }
+      ) +
+      ctl(
+        `<label>${defined ? 'Also show' : 'Show in each cell'}</label><div class="chips">${(defined
+          ? extras
+          : [['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate'], ...extras]
+        )
+          .map(chip)
+          .join('')}</div>`,
+        { na: cellsNa ? ' ' : '' }
+      ) +
+      ctl(
+        `<label>Heatmap (also drives column sort)</label><select data-heatmap ${dist ? 'disabled' : ''}>${[
+          ['none', 'None'], ['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate'],
+        ]
+          .map(([k, label]) => `<option value="${k}" ${state.heatmap === k ? 'selected' : ''}>${label}</option>`)
+          .join('')}</select>`,
+        { na: tableOnly }
+      ) +
+      ctl(`<label>Heatmap color</label>${this.#seg('ramp', RAMPS)}`, { na: dist || state.heatmap === 'none' ? ' ' : '' }) +
+      ctl(
+        `<label>Group rows by</label><select data-groupby ${dist ? 'disabled' : ''}>${GROUP_BY_OPTIONS.map(
+          ([value, label]) => `<option value="${value}" ${value === state.groupBy ? 'selected' : ''}>${label}</option>`
+        ).join('')}</select>`,
+        { na: tableOnly }
+      );
 
     const supported = this.store.supportedMetrics();
     const unsupported = this.store.unsupportedMetrics();
