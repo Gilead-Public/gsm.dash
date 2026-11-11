@@ -58,9 +58,31 @@
         }
       }
     },
+    "distributions": {
+      "type": "array",
+      "description": "Reporting_Distributions (gsm.roadmap#617): categorical breakdowns of a metric's numerator or denominator per group. Counts only; no participant rows. A blank category is null and displays as \"Not recorded\".",
+      "items": {
+        "type": "object",
+        "required": ["GroupID", "GroupLevel", "MetricID", "Source", "Variable", "Category", "Count", "Participants", "Total", "Percent"],
+        "properties": {
+          "GroupID": { "type": "string" },
+          "GroupLevel": { "enum": ["Site", "Country", "Study"] },
+          "MetricID": { "type": "string" },
+          "Source": { "enum": ["Numerator", "Denominator"] },
+          "Variable": { "type": "string", "minLength": 1 },
+          "Category": { "type": ["string", "null"] },
+          "Count": { "type": "number", "minimum": 0 },
+          "Participants": { "type": "integer", "minimum": 0 },
+          "Total": { "type": "number", "minimum": 0 },
+          "Percent": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+          "StudyID": { "type": "string" },
+          "SnapshotDate": { "type": "string" }
+        }
+      }
+    },
     "details": {
       "type": "array",
-      "description": "Phase 2 (Q8 option A): categorical breakdown counts aggregated from Mapped-layer frames at export. Counts only; no participant rows.",
+      "description": "Phase 2 (Q8 option A): categorical breakdown counts aggregated from Mapped-layer frames at export. Counts only; no participant rows. Superseded by distributions; removed once breakdown-bar is replaced.",
       "items": {
         "type": "object",
         "required": ["MetricID", "Category", "Numerator"],
