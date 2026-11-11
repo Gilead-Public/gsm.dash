@@ -16,7 +16,7 @@ function clean() {
   /** @type {RunRecord} */
   const run = {
     runId: 'gh-1-1', commit: 'c'.repeat(40), repo: 'o/r', startedAt: 't', baselineHash: 'b'.repeat(64),
-    scope: { issues: [1], completed: [], pr: null, prCloses: [], cli: [] }, issueStates: {}, dataSha256: null, builds: {},
+    scope: { issues: [1], completed: [], pr: null, prCloses: [], stack: [], cli: [] }, issueStates: {}, dataSha256: null, builds: {},
     environment: { os: 'Linux 6', arch: 'x64', node: 'v26.0.0', npm: '11.0.0', packages: {}, browser: { name: 'chromium', version: '158.0' }, lockfileSha256: 'e'.repeat(64) },
     steps: REQUIRED_STEPS.map((name) => ({ name, exitCode: 0, startedAt: 't', endedAt: 't' })),
     validation: 'passed', failures: [], warnings: [],
@@ -24,7 +24,7 @@ function clean() {
   /** @type {GateResult} */
   const gate = {
     criteria: [{ id: '1.03', issue: 1, text: 'x (visual check)', kind: 'visual', inScope: true, automated: 'pass', acceptance: 'awaiting', modes: ['file', 'subpath'], tests: [], notes: [],
-      evidence: [{ mode: 'file', path: 'e.png', sha256: SHOT, test: 't', file: 'f' }, { mode: 'subpath', path: 'e2.png', sha256: SHOT2, test: 't', file: 'f' }] }],
+      evidence: [{ artifact: 'spa', mode: 'file', path: 'e.png', sha256: SHOT, test: 't', file: 'f' }, { artifact: 'spa', mode: 'subpath', path: 'e2.png', sha256: SHOT2, test: 't', file: 'f' }] }],
     failures: [], incomplete: false, untraced: 0, inScope: 1,
   };
   return {

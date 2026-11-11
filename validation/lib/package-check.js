@@ -46,7 +46,7 @@ export function packageProblems(p) {
 
   for (const c of p.gate.criteria.filter((c) => c.inScope && c.kind === 'visual')) {
     if (!acceptedInEveryMode(c, p.acceptance, p.run.runId, p.run.baselineHash)) {
-      problems.push(`${c.id}: acceptance does not cover this run's screenshots in every mode (${c.modes.join(', ')})`);
+      problems.push(`${c.id}: acceptance does not cover this run's screenshots of the shipped artifact in every mode (${c.modes.join(', ')})`);
     }
   }
   return problems;

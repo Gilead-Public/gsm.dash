@@ -32,7 +32,7 @@ export const REQUIRED_STEPS = /** @type {const} */ (['environment', 'scope', 'ge
  * @property {string} startedAt
  * @property {string} [finishedAt]
  * @property {string} baselineHash
- * @property {{ issues: number[]; completed: number[]; pr: number | null; prCloses: number[]; cli: number[] }} scope
+ * @property {{ issues: number[]; completed: number[]; pr: number | null; prCloses: number[]; stack: import('./scope.js').StackEntry[]; cli: number[] }} scope
  * @property {Record<string, { state: string; stateReason: string | null; fetchedAt: string }>} issueStates
  * @property {Environment | null} environment
  * @property {string | null} dataSha256
@@ -50,5 +50,6 @@ export const REQUIRED_STEPS = /** @type {const} */ (['environment', 'scope', 'ge
  * @property {'build' | 'evidence' | 'trace' | 'attachment' | 'record'} kind
  * @property {string} [criterion]
  * @property {string} [test]
+ * @property {string | null} [artifact]
  * @property {string | null} [mode]
  */

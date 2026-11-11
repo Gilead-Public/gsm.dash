@@ -3,12 +3,23 @@ import { test as base, expect } from '@playwright/test';
 /** @typedef {import('@playwright/test').Page} Page */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { parseProject, requireRunDir } from '../projects.js';
 
-const RUN_DIR = resolve(process.env.VALIDATION_RUN_DIR ?? 'validation-runs/dev');
+const RUN_DIR = resolve(requireRunDir());
 const RUN_ID = process.env.VALIDATION_RUN_ID ?? 'dev';
 const COMMIT = process.env.VALIDATION_COMMIT ?? 'uncommitted';
 
-/** @typedef {'file' | 'subpath'} Mode */
+/** @typedef {import('../projects.js').Artifact} Artifact */
+/** @typedef {import('../../validation/lib/criteria.js').Mode} Mode */
+
+/**
+ * @param {import('@playwright/test').TestInfo} testInfo
+ */
+function projectOf(testInfo) {
+  const project = parseProject(testInfo.project.name);
+  if (!project) throw new Error(`unknown Playwright project "${testInfo.project.name}"`);
+  return project;
+}
 
 /** The example data both builds under test were made from. */
 export const DATA_DIR = join(RUN_DIR, 'build/subpath/examples/data');
@@ -29,6 +40,7 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
 
 /**
  * @typedef {object} App
+ * @property {Artifact} artifact
  * @property {Mode} mode
  * @property {(route?: string, overrides?: DataOverrides) => Promise<void>} open Opens the build under test at a route such as `#/study/AA-AA-000-0000` and waits for the page to render.
  */
@@ -73,12 +85,13 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
 
   app: async ({ page, context, pageErrors }, use, testInfo) => {
     void pageErrors;
-    const mode = /** @type {Mode} */ (testInfo.project.name);
+    const { artifact, mode } = projectOf(testInfo);
     if (mode === 'file') await context.route(/^https?:/, (route) => route.abort());
     const base = mode === 'file'
       ? `file://${join(RUN_DIR, 'build/file/gsm-dash-standalone.html')}`
       : (testInfo.project.use.baseURL);
     await use({
+      artifact,
       mode,
       async open(route = '', overrides) {
         let url = `${base}${route}`;
@@ -102,11 +115,11 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
   },
 
   evidence: async ({}, use, testInfo) => {
-    const mode = testInfo.project.name;
+    const { artifact, mode } = projectOf(testInfo);
     await use({
       async shot(page, label) {
         const id = /^(\d+\.\d{2}):/.exec(testInfo.title)?.[1] ?? 'untraced';
-        const stamp = `${new Date().toISOString()} · run ${RUN_ID} · ${COMMIT.slice(0, 12)} · ${id} · ${mode}`;
+        const stamp = `${new Date().toISOString()} · run ${RUN_ID} · ${COMMIT.slice(0, 12)} · ${id} · ${artifact}/${mode}`;
         await page.evaluate((text) => {
           const d = document.createElement('div');
           d.id = '__evidence_banner';

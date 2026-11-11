@@ -17,7 +17,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "generate-data": "node scripts/generate-example-data.mjs",
-    "e2e": "playwright test",
+    "e2e": "node validation/run.js --offline",
     "validate": "node validation/run.js",
     "criteria:sync": "node validation/sync-criteria.js",
     "typecheck": "tsc --noEmit",

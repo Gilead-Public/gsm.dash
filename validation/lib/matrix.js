@@ -49,6 +49,17 @@ function summary(run, gate) {
 }
 
 /**
+ * The issues in scope, and the PR stack they came from when the PR is stacked on others.
+ * @param {RunRecord} run
+ */
+export function scopeDetail(run) {
+  const issues = `issues ${run.scope.issues.map((n) => `#${n}`).join(', ') || 'none'}`;
+  const stack = run.scope.stack ?? [];
+  if (stack.length < 2) return issues;
+  return `${issues}; PR ${stack.map((s) => `#${s.pr}`).join(' on ')}`;
+}
+
+/**
  * @param {RunRecord} run
  * @param {GateResult} gate
  * @returns {string}
@@ -62,7 +73,7 @@ export function matrixMarkdown(run, gate) {
     '',
     `Environment: ${environmentLine(run)}`,
     '',
-    `**In scope: ${gate.inScope} of ${gate.criteria.length} criteria** (issues ${run.scope.issues.map((n) => `#${n}`).join(', ') || 'none'}). ` +
+    `**In scope: ${gate.inScope} of ${gate.criteria.length} criteria** (${scopeDetail(run)}). ` +
       `Pass ${counts.pass} · fail ${counts.fail} · missing ${counts.missing} · unapproved ${counts.unapproved} · pending ${counts.pending} · visual awaiting acceptance ${awaiting} · untraced tests ${gate.untraced}.`,
     '',
 ];
@@ -70,16 +81,16 @@ export function matrixMarkdown(run, gate) {
   if (run.warnings.length) out.push('## Warnings', '', ...run.warnings.map((w) => `- ${cell(w)}`), '');
   out.push('## Criteria', '', '| Criterion | Kind | Automated | Acceptance | Tests | Evidence | Text |', '|---|---|---|---|---|---|---|');
   for (const c of gate.criteria) {
-    const tests = c.tests.map((t) => `${t.outcome}${t.mode ? ` [${t.mode}]` : ''}`).join(', ') || '—';
-    const evidence = c.evidence.map((e) => `[${e.mode}] ${e.sha256.slice(0, 10) || 'missing'}`).join(', ') || '—';
+    const tests = c.tests.map((t) => `${t.outcome}${t.mode ? ` [${t.artifact}/${t.mode}]` : ''}`).join(', ') || '—';
+    const evidence = c.evidence.map((e) => `[${e.artifact}/${e.mode}] ${e.sha256.slice(0, 10) || 'missing'}`).join(', ') || '—';
     out.push(`| ${c.id} | ${c.kind ?? '—'} | ${c.automated} | ${c.acceptance} | ${cell(tests)} | ${cell(evidence)} | ${cell(c.text)} |`);
   }
   const traced = gate.criteria.filter((c) => c.tests.length || c.evidence.length);
   if (traced.length) out.push('', '## Tests and evidence', '');
   for (const c of traced) {
     out.push(`### ${c.id} · ${c.kind ?? 'unclassified'} · ${c.automated}${c.inScope ? '' : ' (not in scope)'}`, '');
-    for (const t of c.tests) out.push(`- ${t.outcome}${t.mode ? ` [${t.mode}]` : ''} \`${t.file}\` › ${cell(t.title)}`);
-    for (const e of c.evidence) out.push(`- evidence [${e.mode}] [${e.path}](${encodeURI(e.path)}) \`${e.sha256.slice(0, 12) || 'missing'}\` from \`${e.file}\` › ${cell(e.test)}`);
+    for (const t of c.tests) out.push(`- ${t.outcome}${t.mode ? ` [${t.artifact}/${t.mode}]` : ''} \`${t.file}\` › ${cell(t.title)}`);
+    for (const e of c.evidence) out.push(`- evidence [${e.artifact}/${e.mode}] [${e.path}](${encodeURI(e.path)}) \`${e.sha256.slice(0, 12) || 'missing'}\` from \`${e.file}\` › ${cell(e.test)}`);
     out.push('');
   }
   return `${out.join('\n')}\n`;
@@ -94,8 +105,8 @@ export function matrixHtml(run, gate) {
   const { counts, awaiting } = summary(run, gate);
   const rows = gate.criteria
     .map((c) => {
-      const tests = c.tests.map((t) => `<li class="${t.outcome}">${esc(t.outcome)}${t.mode ? ` [${t.mode}]` : ''}: ${esc(t.title)} <code>${esc(t.file)}</code></li>`).join('');
-      const evidence = c.evidence.map((e) => `<li><a href="${esc(encodeURI(e.path))}">[${e.mode}] ${esc(e.sha256.slice(0, 12) || 'missing')}</a> <span title="${esc(`${e.file} › ${e.test}`)}">${esc(e.test)}</span></li>`).join('');
+      const tests = c.tests.map((t) => `<li class="${t.outcome}">${esc(t.outcome)}${t.mode ? ` [${t.artifact}/${t.mode}]` : ''}: ${esc(t.title)} <code>${esc(t.file)}</code></li>`).join('');
+      const evidence = c.evidence.map((e) => `<li><a href="${esc(encodeURI(e.path))}">[${e.artifact}/${e.mode}] ${esc(e.sha256.slice(0, 12) || 'missing')}</a> <span title="${esc(`${e.file} › ${e.test}`)}">${esc(e.test)}</span></li>`).join('');
       return `<tr class="${c.automated}"><td>${c.id}</td><td>${c.kind ?? '—'}</td><td>${c.automated}</td><td>${c.acceptance}</td><td><ul>${tests}</ul></td><td><ul>${evidence}</ul></td><td>${esc(c.text)}</td></tr>`;
     })
     .join('\n');
@@ -110,7 +121,7 @@ ul{margin:0;padding-left:16px}tr.fail td:nth-child(3),tr.missing td:nth-child(3)
 <h1>Traceability matrix · ${run.validation.toUpperCase()}</h1>
 <p>Run <code>${esc(run.runId)}</code> · commit <code>${esc(run.commit.slice(0, 12))}</code> · baseline <code>${esc(run.baselineHash.slice(0, 12))}</code> · ${esc(run.startedAt)}</p>
 <p>Environment: ${esc(environmentLine(run))}</p>
-<p><strong>In scope: ${gate.inScope} of ${gate.criteria.length} criteria</strong> (issues ${esc(run.scope.issues.map((n) => `#${n}`).join(', ') || 'none')}). Pass ${counts.pass} · fail ${counts.fail} · missing ${counts.missing} · unapproved ${counts.unapproved} · pending ${counts.pending} · visual awaiting acceptance ${awaiting} · untraced tests ${gate.untraced}.</p>
+<p><strong>In scope: ${gate.inScope} of ${gate.criteria.length} criteria</strong> (${esc(scopeDetail(run))}). Pass ${counts.pass} · fail ${counts.fail} · missing ${counts.missing} · unapproved ${counts.unapproved} · pending ${counts.pending} · visual awaiting acceptance ${awaiting} · untraced tests ${gate.untraced}.</p>
 ${list('Failures', groupFailures(run.failures))}${list('Warnings', run.warnings)}
 <h2>Criteria</h2><table><thead><tr><th>Criterion</th><th>Kind</th><th>Automated</th><th>Acceptance</th><th>Tests</th><th>Evidence</th><th>Text</th></tr></thead><tbody>
 ${rows}
