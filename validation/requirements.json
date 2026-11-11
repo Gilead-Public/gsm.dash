@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "22768996abccf417457a26c2c87600db67a5e61abdcf4e124603626c4bed78d9",
+  "hash": "6e55e77805e7842f58066db8c8e4686f1715260797a3ead3f4deae1c7d01891b",
   "issues": [
     {
       "number": 8,
@@ -13,21 +13,21 @@
           "text": "The schema accepts a valid `distributions` array. It rejects missing required columns, a `Source` outside `Numerator`/`Denominator`, negative counts, and a `Percent` outside 0–1.",
           "sha256": "3ba41e1c846f21dabe7994778070f3ccf72c8b3877e8cc23b93ec5cd790c0359",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "8.02",
           "text": "A study file without `distributions` stays valid, because metrics without distributions are unaffected.",
           "sha256": "6a85d30b5c8ccffa1caca634b27482ded64e4c1ad82811ca9678999d30f10a84",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "8.03",
           "text": "Contract tests cover the valid, invalid and empty cases.",
           "sha256": "4860fcea5e62463a57b256d134248995a84ff388b337b818c4a3213f2a049255",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         }
       ]
     },
@@ -42,35 +42,35 @@
           "text": "On the fixture, for numerator distributions, `Total` equals the metric's Numerator (per metric × group). This is a gsm.roadmap#617 acceptance check.",
           "sha256": "28c46062dc5b96c66a3bdd21e028b940c89a095172dad224611848732fe90749",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "9.02",
           "text": "On the fixture, for denominator distributions, `Total` equals the metric's Denominator. This is a gsm.roadmap#617 acceptance check.",
           "sha256": "3b2c50e17aca7891902b3ab491faa59704377becc786ce251b38c3ffe0f3c7c6",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "9.03",
           "text": "On the fixture, for single-value variables, the sum of `Count` over categories equals `Total`. This is a gsm.roadmap#617 acceptance check.",
           "sha256": "be8b009fcad351729421e06b11b69c135e271087499f7ebe6e00deaf2d013ceb",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "9.04",
           "text": "In each study's latest snapshot, every site in `results` for a configured metric has distribution rows.",
           "sha256": "cadf993ecf71f1e364f8fbbdf2e3892a070e15bfe132720c21b56df42ff5b927",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "9.05",
           "text": "The generated files validate against the #8 schema.",
           "sha256": "b916b84a0b3fb53e9132fad27a5b69c4b0e21d9cb05fcd7b29e1b616e82b233b",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         }
       ]
     },
@@ -85,56 +85,56 @@
           "text": "The widget renders from the #9 fixture for every configured metric.",
           "sha256": "34d7f5eda43dd37e6f85ffd7d293662228dad2abfc0a652d894975993a43d892",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.02",
           "text": "Displayed counts and both percentages equal independently summed fixture values (test).",
           "sha256": "884335495d383eb2244d42c3242e61676bd7bca0298f2c770f0ade3af9fc45f4",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.03",
           "text": "The site-to-study summing sits in one tested function, so it can be qualified as dashboard logic (gsm.roadmap#625).",
           "sha256": "d3f33887991c31e5beb5b907655fc5aef86628d4f9152a2644393783cdf9840c",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.04",
           "text": "No user-facing text contains \"Numerator\" or \"Denominator\" (test).",
           "sha256": "a0f13552f8488a0de83d9f703d2b7bbd26ab6d74e8ea727de85d30c07a6db6b7",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.05",
           "text": "There's no total row that repeats the header value.",
           "sha256": "7c6650c30d4db5a07d019b0a725e45b17d7a415ad1e987276651c1f04e51f1ff",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.06",
           "text": "Status colours come from configuration, and the neutral fallback applies when none are given (test).",
           "sha256": "b6a077ef4151e1f3c0b674bb67ed8827e739bdee8a7483c643bd6c8bd163132e",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.07",
           "text": "Sorting, top-N collapsing, \"Not recorded\" placement, the footnotes, and the empty and missing states are tested.",
           "sha256": "f3df7a10bcc0f5528d8769189d395745e34316f406021c4c50c712647f478dd7",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.08",
           "text": "A reviewer compares the rendered widget with the Layout A design and accepts it (visual comparison).",
           "sha256": "08e58e24ea3af4caafd63b6bba6f16850456cd7408033e3dfa1f5d87e0c4ec18",
           "kind": "visual",
-          "reviewed": false
+          "reviewed": true
         }
       ]
     },
