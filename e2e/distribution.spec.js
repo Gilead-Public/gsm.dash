@@ -47,7 +47,7 @@ import { expect, readData, test } from './fixtures/app.js';
 const portfolio = readData('portfolio.json');
 const study = portfolio.studies[0];
 const snapshot = readData(study.files[study.snapshots.at(-1)]);
-const CONFIG = /** @type {Record<string, { enrolledPercent?: boolean; statusVariables?: string[]; sections: Record<string, { title?: string; topN?: number }> }>} */ (DISTRIBUTION_CONFIG);
+const CONFIG = /** @type {Record<string, { enrolledPercent?: boolean; statusVariables?: string[]; percentLabel?: string; enrolledLabel?: string; sections: Record<string, { title?: string; topN?: number; percentLabel?: string }> }>} */ (DISTRIBUTION_CONFIG);
 /** @type {Metric[]} */
 const configured = portfolio.metrics.filter((m) => CONFIG[m.ID]);
 const route = `#/study/${encodeURIComponent(study.StudyID)}`;
@@ -85,37 +85,53 @@ function totalsFor(m) {
  */
 function expectedFor(m) {
   const totals = totalsFor(m);
+  const config = CONFIG[m.ID];
   /** @type {Row[]} */
   const rows = snapshot.distributions.filter((d) => d.MetricID === m.MetricID);
-  const sections = /** @type {Section[]} */ (expectedView(rows, CONFIG[m.ID], totals));
+  const sections = /** @type {Section[]} */ (expectedView(rows, config, totals));
   return {
     header: { pct: pct(totals.Numerator / totals.Denominator), nd: `${int(totals.Numerator)} / ${int(totals.Denominator)}` },
-    sections: sections.map((s) => ({
-      title: s.title,
-      rows: s.bars.map((b) => ({ label: b.label, count: int(b.count), population: pct(b.population), enrolled: s.twoPercentages ? pct(b.enrolled) : null })),
-      notes: [
-        ...(s.notes.multi ? [`A participant can fall in more than one category, so the counts add up to more than ${int(s.Total)}.`] : []),
-        ...(s.notes.notRecorded ? ['Not recorded: the source value was blank.'] : []),
-],
-    })),
+    sections: sections.map((s) => {
+      // Column headings are the configured business labels; each value is expected under its heading.
+      const populationLabel = config.sections?.[`${s.Source}:${s.Variable}`]?.percentLabel ?? config.percentLabel ?? '%';
+      const enrolledLabel = s.twoPercentages ? (config.enrolledLabel ?? '% Enrolled') : null;
+      return {
+        title: s.title,
+        variable: s.Variable,
+        isStatus: (config.statusVariables ?? []).includes(s.Variable),
+        headings: ['n', populationLabel, ...(enrolledLabel ? [enrolledLabel] : [])],
+        rows: s.bars.map((bar) => ({
+          label: bar.label,
+          kind: bar.kind,
+          values: {
+            n: int(bar.count),
+            [populationLabel]: pct(bar.population),
+            ...(enrolledLabel ? { [enrolledLabel]: pct(bar.enrolled) } : {}),
+          },
+        })),
+        notes: [
+          ...(s.notes.multi ? [`A participant can fall in more than one category, so the counts add up to more than ${int(s.Total)}.`] : []),
+          ...(s.notes.notRecorded ? ['Not recorded: the source value was blank.'] : []),
+        ],
+      };
+    }),
   };
 }
 
 /**
- * What a user sees in one tile: visible text only, in page order. Every element read must be visible (not
- * display:none, visibility:hidden or fully transparent); anything hidden is reported so the test fails.
+ * What a user sees in one tile, read the way a user reads it:
+ * - every value is paired with the column heading positioned above it, not with its data attributes;
+ * - every element read must be visible (anything hidden is reported);
+ * - every visible piece of text must belong to the header, a section title, the column headings, a row or a
+ *   footnote. Anything else, such as a stray total line, is reported as unexpected.
  * @param {Page} page
  * @param {Metric} m
  */
 async function renderedFor(page, m) {
   return body(page, m).evaluate((el) => {
-    /**
-     * @param {Element | null} e
-     */
+    /** @param {Element | null} e */
     const shown = (e) => Boolean(e?.checkVisibility({ opacityProperty: true, visibilityProperty: true }));
-    /**
-     * @param {Element | null} e
-     */
+    /** @param {Element | null} e */
     const text = (e) => e?.textContent?.replace(/\s+/g, ' ').trim() ?? null;
     /** @type {string[]} */
     const hidden = [];
@@ -127,27 +143,50 @@ async function renderedFor(page, m) {
       if (!shown(e)) hidden.push(what);
       return text(e);
     };
-    const sections = [...el.querySelectorAll('.dist-sec')].map((s, i) => ({
-      title: visible(s.querySelector('.sub-h'), `section ${i} title`),
-      rows: [...s.querySelectorAll('.dist-row')].map((r, j) => {
+    const sections = [...el.querySelectorAll('.dist-sec')].map((s, i) => {
+      const headings = [...s.querySelectorAll('.dist-cols span')].filter((h) => text(h)).map((h, k) => {
+        const box = h.getBoundingClientRect();
+        return { text: visible(h, `section ${i} heading ${k}`), left: box.left, right: box.right };
+      });
+      const rows = [...s.querySelectorAll('.dist-row')].map((r, j) => {
         visible(r.querySelector('.btrack'), `section ${i} row ${j} bar`);
-        const enrolled = r.querySelector('[data-pct="enrolled"]');
-        return {
-          label: visible(r.querySelector('.lbl'), `section ${i} row ${j} label`),
-          count: visible(r.querySelector('.v'), `section ${i} row ${j} count`),
-          population: visible(r.querySelector('[data-pct="population"]'), `section ${i} row ${j} percentage`),
-          enrolled: enrolled ? visible(enrolled, `section ${i} row ${j} second percentage`) : null,
-        };
-      }),
-      notes: [...s.querySelectorAll('.dist-note')].map((n, j) => visible(n, `section ${i} footnote ${j}`)),
-    }));
+        /** @type {Record<string, string | null>} */
+        const values = {};
+        for (const cell of r.querySelectorAll('.v, .p')) {
+          const box = cell.getBoundingClientRect();
+          const middle = (box.left + box.right) / 2;
+          const heading = headings.find((h) => middle >= h.left - 0.5 && middle <= h.right + 0.5);
+          values[heading ? String(heading.text) : `no heading at x=${Math.round(middle)}`] = visible(cell, `section ${i} row ${j} value`);
+        }
+        return { label: visible(r.querySelector('.lbl'), `section ${i} row ${j} label`), values };
+      });
+      return {
+        title: visible(s.querySelector('.sub-h'), `section ${i} title`),
+        headings: headings.map((h) => h.text),
+        rows,
+        notes: [...s.querySelectorAll('.dist-note')].map((n, j) => visible(n, `section ${i} footnote ${j}`)),
+      };
+    });
+    /** @type {string[]} */
+    const unexpected = [];
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const content = node.textContent?.trim();
+      const parent = node.parentElement;
+      if (!content || !parent || !shown(parent)) continue;
+      if (!parent.closest('.dist-head, .sub-h, .dist-cols, .dist-row, .dist-note')) unexpected.push(content);
+    }
     return {
       header: { pct: visible(el.querySelector('.dist-pct'), 'header percentage'), nd: visible(el.querySelector('.dist-nd'), 'header counts') },
       sections,
       hidden,
+      unexpected,
     };
   });
 }
+
+/** @param {string} value */
+const exactly = (value) => new RegExp(`^\\s*${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`);
 
 /**
  * @param {{ open(route?: string): Promise<void> }} app
@@ -178,10 +217,13 @@ test.describe('Layout A distribution widget', () => {
       const want = expectedFor(m);
       expect(seen.hidden, m.ID).toEqual([]);
       expect(seen.header, m.ID).toEqual(want.header);
-      expect(seen.sections.map(({ title, rows }) => ({ title, rows })), m.ID).toEqual(want.sections.map(({ title, rows }) => ({ title, rows })));
+      expect(
+        seen.sections.map(({ title, headings, rows }) => ({ title, headings, rows })),
+        m.ID,
+      ).toEqual(want.sections.map(({ title, headings, rows }) => ({ title, headings, rows: rows.map(({ label, values }) => ({ label, values })) })));
     }
     expect(configured.some((m) => expectedFor(m).sections.some((s) => s.rows.some((r) => r.label.startsWith('+ ')))), 'the fixture exercises a collapsed bar').toBe(true);
-    expect(configured.some((m) => expectedFor(m).sections.some((s) => s.rows.some((r) => r.enrolled !== null))), 'the fixture exercises the second percentage').toBe(true);
+    expect(configured.some((m) => expectedFor(m).sections.some((s) => s.headings.length === 3)), 'the fixture exercises the second percentage').toBe(true);
   });
 
   test('10.04: no user-facing text says Numerator or Denominator (#10)', async ({ app, page }) => {
@@ -195,12 +237,14 @@ test.describe('Layout A distribution widget', () => {
     }
   });
 
-  test('10.05: each section shows exactly the expected rows, so no total row repeats the header (#10)', async ({ app, page }) => {
+  test('10.05: the widget shows only the expected rows and no other content, so no total repeats the header (#10)', async ({ app, page }) => {
     await openStudy(app, page);
     for (const m of configured) {
       const seen = await renderedFor(page, m);
       const want = expectedFor(m);
       expect(seen.sections.map((s) => s.rows.map((r) => r.label)), m.ID).toEqual(want.sections.map((s) => s.rows.map((r) => r.label)));
+      expect(seen.unexpected, `${m.ID}: visible content outside the header, titles, headings, rows and footnotes`).toEqual([]);
+      await expect(body(page, m).locator('.dist-total'), m.ID).toHaveCount(0);
       await expect(body(page, m).locator('.dist-nd'), m.ID).toHaveCount(1);
       await expect(body(page, m).locator('.dist-nd'), m.ID).toHaveText(want.header.nd);
     }
@@ -208,38 +252,34 @@ test.describe('Layout A distribution widget', () => {
 
   test('10.06: with no colour map configured, every status bar renders neutral and reason bars stay uncoloured (#10)', async ({ app, page }) => {
     await openStudy(app, page);
-    const neutral = await page.evaluate(() => {
+    /** @param {string} css */
+    const colourOf = (css) => page.evaluate((value) => {
       const probe = document.createElement('div');
-      probe.style.background = 'var(--na)';
+      probe.style.background = value;
       document.body.append(probe);
       const colour = getComputedStyle(probe).backgroundColor;
       probe.remove();
       return colour;
-    });
-    const accent = await page.evaluate(() => {
-      const probe = document.createElement('div');
-      probe.style.background = 'var(--accent)';
-      document.body.append(probe);
-      const colour = getComputedStyle(probe).backgroundColor;
-      probe.remove();
-      return colour;
-    });
-    let statusBars = 0;
-    let reasonBars = 0;
+    }, css);
+    const neutral = await colourOf('var(--na)');
+    const accent = await colourOf('var(--accent)');
+    expect(neutral).not.toBe(accent);
+    const checked = { status: 0, reason: 0 };
     for (const m of configured) {
-      /** @type {string[]} */
-      const statusVariables = (CONFIG[m.ID]).statusVariables ?? [];
-      for (const section of await body(page, m).locator('.dist-sec').all()) {
-        const isStatus = statusVariables.includes((await section.getAttribute('data-variable')) ?? '');
-        for (const bar of await section.locator('.dist-row[data-kind="category"] .b').all()) {
-          await expect(bar, m.ID).toHaveCSS('background-color', isStatus ? neutral : accent);
-          if (isStatus) statusBars++;
-          else reasonBars++;
+      // Which sections exist and which are statuses comes from the fixture and configuration, not from the page.
+      for (const want of expectedFor(m).sections) {
+        const section = body(page, m).locator('.dist-sec').filter({ has: page.locator('.sub-h', { hasText: exactly(want.title) }) });
+        await expect(section, `${m.ID} ${want.title}`).toHaveCount(1);
+        await expect(section, `${m.ID} ${want.title}`).toHaveAttribute('data-variable', want.variable);
+        for (const row of want.rows.filter((r) => r.kind === 'category')) {
+          const bar = section.locator('.dist-row').filter({ has: page.locator('.lbl', { hasText: exactly(row.label) }) }).locator('.b');
+          await expect(bar, `${m.ID} ${want.title} ${row.label}`).toHaveCSS('background-color', want.isStatus ? neutral : accent);
+          checked[want.isStatus ? 'status' : 'reason']++;
         }
       }
     }
-    expect(statusBars).toBeGreaterThan(10);
-    expect(reasonBars).toBeGreaterThan(10);
+    expect(checked.status, 'status bars checked').toBeGreaterThan(10);
+    expect(checked.reason, 'reason bars checked').toBeGreaterThan(10);
   });
 
   test('10.06: configured status colours render, unmapped statuses fall back to neutral, reasons stay uncoloured (#10)', async ({ app, page }) => {
