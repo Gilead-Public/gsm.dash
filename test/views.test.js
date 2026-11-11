@@ -6,11 +6,11 @@ import { STANDARD_TILE_VIEWS } from '../src/app/study-page-spec.js';
 import '../src/widgets/index.js';
 
 describe('standard vs custom is derived from data layers', () => {
-  it('reporting-layer-only views are standard; details/external/listings make a view custom', () => {
+  it('reporting-layer-only views are standard; external/listings make a view custom', () => {
     expect(widgetKind({ dataSpec: { results: 'self' } })).toBe('standard');
     expect(widgetKind({ dataSpec: { results: 'self', bounds: 'self', groups: 'self' } })).toBe('standard');
     expect(widgetKind({ dataSpec: { history: 'self' } })).toBe('standard');
-    expect(widgetKind({ dataSpec: { results: 'self', details: 'self' } })).toBe('custom');
+    expect(widgetKind({ dataSpec: { results: 'self', distributions: 'self' } })).toBe('standard');
     expect(widgetKind({ dataSpec: { results: 'self', external: true } })).toBe('custom');
     expect(widgetKind({ dataSpec: { results: 'self', listings: 'self' } })).toBe('custom');
   });
@@ -25,7 +25,7 @@ describe('standard vs custom is derived from data layers', () => {
   });
 
   it('the shipped custom widgets classify as custom and the gsm.viz adapters as standard/wide', () => {
-    expect(getWidget('breakdown-bar').kind).toBe('custom');
+    expect(getWidget('distribution-bar').kind).toBe('standard');
     expect(getWidget('link-out').kind).toBe('custom');
     expect(getWidget('threshold-list').kind).toBe('standard');
     for (const name of ['viz-bar', 'viz-scatter', 'viz-timeseries']) {

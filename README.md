@@ -5,6 +5,23 @@
 > simulated.
 
 Executive dashboard components and app shell for the gsm ecosystem.
+
+## Intended use
+
+gsm.dash displays precomputed clinical-trial oversight metrics for central monitoring review, for one study or
+across a portfolio of studies.
+
+- **Users:** central monitoring and study teams reviewing study and portfolio status.
+- **Inputs:** aggregated outputs of the gsm.reporting data model (results, groups, bounds, distributions). No
+  participant-level data.
+- **What it computes:** display arithmetic on those outputs only: summing site rows to study or portfolio level,
+  percentages of displayed counts, sorting and grouping.
+- **What it does not do:** derive metrics, scores or flags (the upstream gsm pipeline does), make decisions, or
+  write data back.
+- **Validation:** its regulatory classification is not yet confirmed, so it is developed to the GxP standard in
+  the meantime. Requirements are GitHub issues with numbered acceptance criteria, every test names the criterion
+  it evidences, and each validation run produces a traceability matrix and a hashed evidence bundle (see
+  `validation/`).
 References in code comments to "design doc §n", "Qn" and "Wn" point at this
 project's internal requirements and design documentation.
 

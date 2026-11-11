@@ -3,7 +3,7 @@
 // wherever a rich tooltip is wanted. Native `title` cannot carry markup, cannot
 // be positioned, and cannot be styled — so anything multi-line goes through
 // here, and `title` is left for one-line hints.
-import { esc } from '../util/format.js';
+import { esc, displayLabel } from '../util/format.js';
 
 function tooltipEl() {
   let tip = document.getElementById('gsm-tooltip');
@@ -47,27 +47,43 @@ export function attachHoverTooltip(host) {
   host.addEventListener('mouseleave', hideTooltip);
 }
 
+export const REQUIREMENT_URL = (n) => `https://github.com/Gilead-BioStats/gsm.roadmap/issues/${n}`;
+
+/** Status pill — Released metrics carry none; New / Planned are flagged. */
+export function statusPill(metric) {
+  const status = metric?.Status ?? 'Released';
+  return status === 'Released' ? '' : `<span class="pill ${status.toLowerCase()}">${esc(status)}</span>`;
+}
+
 /**
- * A metric's Reporting_Metrics definition as tooltip HTML — what the
- * abbreviation actually counts. Shared so the program table's column headers
- * and the study page's tile and drill-in headers all say the same thing.
+ * A metric's glossary entry as tooltip HTML — name, status, definition,
+ * numerator / denominator, display rule, then the flagging model. Shared so
+ * the program table's column headers and the study page's tile and drill-in
+ * headers all say the same thing (P6).
  */
 export function metricTip(metric) {
   const rows = [
+    ['Definition', metric.Definition != null ? esc(metric.Definition) : '<span class="tip-muted">not yet supplied (Q2)</span>', true],
     ['Numerator', metric.Numerator],
     ['Denominator', metric.Denominator],
-    ['Analysis', metric.AnalysisType],
-    ['Model', metric.Model],
-    ['Score', metric.Score],
-    ['Thresholds', metric.thresholds?.length ? metric.thresholds.join(', ') : metric.Threshold],
+    ['Displayed as', displayLabel(metric)],
+    [
+      'Flagging',
+      [metric.Score, metric.thresholds?.length ? `thresholds ${metric.thresholds.join(', ')}` : metric.Threshold].filter(Boolean).join(' · '),
+    ],
     [
       'Accrual',
       metric.AccrualThreshold != null ? `${metric.AccrualMetric ?? 'Denominator'} ≥ ${metric.AccrualThreshold}` : null,
     ],
+    ['Requirement', metric.RequirementID ? `gsm.roadmap#${metric.RequirementID}` : null],
+    ['Note', metric.Note],
   ].filter(([, v]) => v != null && v !== '');
   return (
-    `<b>${esc(metric.Metric)}</b> <span class="mono">${esc(metric.MetricID)}</span><br>` +
-    rows.map(([k, v]) => `${k}: ${esc(v)}`).join('<br>')
+    `<b>${esc(metric.Metric)}</b>${statusPill(metric)}<br>` +
+    `<span class="tip-muted mono">${esc(metric.Abbreviation)} · ${esc(metric.ID ?? metric.MetricID)}${
+      metric.Category ? ` · ${esc(metric.Category)}` : ''
+    }</span>` +
+    `<dl class="tip-dl">${rows.map(([k, v, raw]) => `<dt>${k}</dt><dd>${raw ? v : esc(v)}</dd>`).join('')}</dl>`
   );
 }
 

@@ -2,7 +2,7 @@
 // declares and injects them — widgets never reach into the store or fetch.
 // Mirrors how workr resolves workflow `spec:` blocks.
 //
-// Layers: results ('self' | 'all-site'), details ('self'), bounds ('self'),
+// Layers: results ('self' | 'all-site'), distributions ('self'), bounds ('self'),
 // groups ('self'), history ('self' — site rows across the study's snapshots),
 // external (link config only), listings (never on the exec build).
 
@@ -29,7 +29,7 @@ export function resolveData(dataSpec, { store, studyId, metricId }) {
     );
   }
 
-  if (dataSpec.details === 'self' && metricId) data.details = store.detailRows(studyId, date, metricId);
+  if (dataSpec.distributions === 'self' && metricId) data.distributions = store.distributionRows(studyId, date, metricId);
   if (dataSpec.bounds === 'self' && metricId) data.bounds = store.boundsRows(studyId, date, metricId);
   if (dataSpec.groups === 'self') data.groups = store.groupRows(studyId, date);
   if (dataSpec.history === 'self' && metricId) {

@@ -58,18 +58,25 @@
         }
       }
     },
-    "details": {
+    "distributions": {
       "type": "array",
-      "description": "Phase 2 (Q8 option A): categorical breakdown counts aggregated from Mapped-layer frames at export. Counts only; no participant rows.",
+      "description": "Reporting_Distributions (gsm.roadmap#617): categorical breakdowns of a metric's numerator or denominator per group. Counts only; no participant rows. A blank category is null and displays as \"Not recorded\".",
       "items": {
         "type": "object",
-        "required": ["MetricID", "Category", "Numerator"],
+        "required": ["GroupID", "GroupLevel", "MetricID", "Source", "Variable", "Category", "Count", "Participants", "Total", "Percent"],
         "properties": {
-          "MetricID": { "type": "string" },
-          "Category": { "type": "string" },
           "GroupID": { "type": "string" },
-          "Numerator": { "type": "number" },
-          "Denominator": { "type": "number" }
+          "GroupLevel": { "enum": ["Site", "Country", "Study"] },
+          "MetricID": { "type": "string" },
+          "Source": { "enum": ["Numerator", "Denominator"] },
+          "Variable": { "type": "string", "minLength": 1 },
+          "Category": { "type": ["string", "null"] },
+          "Count": { "type": "number", "minimum": 0 },
+          "Participants": { "type": "integer", "minimum": 0 },
+          "Total": { "type": "number", "minimum": 0 },
+          "Percent": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+          "StudyID": { "type": "string" },
+          "SnapshotDate": { "type": "string", "format": "date" }
         }
       }
     }

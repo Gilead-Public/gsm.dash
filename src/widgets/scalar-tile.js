@@ -1,5 +1,5 @@
 import { registerWidget } from './registry.js';
-import { esc, fmtPct, fmtInt } from '../util/format.js';
+import { fmtMetric, fmtRate, fmtRateDiff, ndLine } from '../util/format.js';
 import { flagDistribution } from '../data/rollup.js';
 import { SEVERITY_ORDER } from '../scales/flags.js';
 import { sparkline } from '../charts/sparkline.js';
@@ -8,11 +8,9 @@ import { sparkline } from '../charts/sparkline.js';
 // always labeled — color is never the only encoding), study trend sparkline,
 // neutral portfolio comparison.
 
-function comparisonLine(study, portfolio) {
+function comparisonLine(metric, study, portfolio) {
   if (study?.Metric == null || portfolio?.Rate == null) return '';
-  const diff = (study.Metric - portfolio.Rate) * 100;
-  const sign = diff >= 0 ? '+' : '−';
-  return `<div class="cmp">portfolio ${fmtPct(portfolio.Rate)} · this study ${sign}${Math.abs(diff).toFixed(1)} pt</div>`;
+  return `<div class="cmp">portfolio ${fmtRate(metric, portfolio.Rate)} · this study ${fmtRateDiff(metric, study.Metric, portfolio.Rate)}</div>`;
 }
 
 export function renderScalarTile(el, data) {
@@ -22,12 +20,12 @@ export function renderScalarTile(el, data) {
     .map((s) => `<i class="flag-${s}" style="flex:${f[s]}"></i>`)
     .join('');
   el.innerHTML = `
-    <div><span class="big">${fmtPct(study?.Metric)}</span>
-      <span class="nd">${study ? `${fmtInt(study.Numerator)} / ${fmtInt(study.Denominator)}` : 'no data'}</span></div>
+    <div><span class="big">${study ? fmtMetric(metric, { ...study, Rate: study.Metric }).html : '—'}</span>
+      <span class="nd">${ndLine(metric, study)}</span></div>
     <div class="flags"><div class="fbar">${segs}</div>
       <span class="fcounts">${f.red}R·${f.amber}A·${f.green}G·${f.na}NA</span></div>
     <div class="spark-slot"></div>
-    ${comparisonLine(study, portfolio)}`;
+    ${comparisonLine(metric, study, portfolio)}`;
   sparkline(el.querySelector('.spark-slot'), trend, { width: 180, height: 26, label: `${metric.Abbreviation} study trend` });
 }
 

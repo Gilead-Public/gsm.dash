@@ -1,5 +1,5 @@
 import { registerWidget } from '../registry.js';
-import { esc, fmtPct, fmtInt } from '../../util/format.js';
+import { esc, fmtInt, fmtRate } from '../../util/format.js';
 import { svgOpen, svgClose, linear, sevClass, selClass, text, sortDesc } from '../../charts/mini.js';
 
 // One bar per site (all sites), height = numerator, colored by flag.
@@ -15,7 +15,7 @@ export function renderBarNumerator(el, data) {
     .map((r, i) => {
       const x0 = L + i * (bw + gap);
       const y0 = y(r.Numerator);
-      return `<rect data-site="${esc(r.GroupID)}" x="${x0.toFixed(1)}" y="${y0.toFixed(1)}" width="${bw.toFixed(1)}" height="${(H - B - y0).toFixed(1)}" rx="1.5" class="bar ${sevClass(r.Flag)}${selClass(r.GroupID, selectedSite)}"><title>${esc(r.GroupID)} · ${fmtInt(r.Numerator)} / ${fmtInt(r.Denominator)} = ${fmtPct(r.Metric)} · flag ${r.Flag ?? 'NA'}</title></rect>`;
+      return `<rect data-site="${esc(r.GroupID)}" x="${x0.toFixed(1)}" y="${y0.toFixed(1)}" width="${bw.toFixed(1)}" height="${(H - B - y0).toFixed(1)}" rx="1.5" class="bar ${sevClass(r.Flag)}${selClass(r.GroupID, selectedSite)}"><title>${esc(r.GroupID)} · ${fmtInt(r.Numerator)} / ${fmtInt(r.Denominator)} = ${fmtRate(metric, r.Metric)} · flag ${r.Flag ?? 'NA'}</title></rect>`;
     })
     .join('');
   el.innerHTML = `

@@ -1,0 +1,36 @@
+name: validation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VALIDATION_REPO: ${{ github.repository }}
+      VALIDATION_PR: ${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run typecheck
+      - run: node validation/run.js
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-run-${{ github.run_id }}-${{ github.run_attempt }}
+          path: validation-runs/
+          if-no-files-found: error

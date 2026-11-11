@@ -1,4 +1,6 @@
 import { StoreElement, esc } from './util.js';
+import { STATUS_ORDER } from '../data/catalog.js';
+import { statusPill } from './tooltip.js';
 
 const GROUP_BY_OPTIONS = [
   ['none', 'None — one row per study'],
@@ -33,10 +35,19 @@ export class GsmSidebar extends StoreElement {
       if (e.target.closest('button[data-clear]')) return this.store.clearFilters();
       const all = e.target.closest('button[data-metrics-all]');
       if (all) return this.store.setAllMetrics(all.dataset.metricsAll === 'on');
+      const status = e.target.closest('button[data-status]');
+      if (status) return this.store.toggleStatus(status.dataset.status);
+      const grp = e.target.closest('button[data-group-metrics]');
+      if (grp) {
+        const group = this.store.metricCategories(this.store.supportedMetrics()).find((g) => g.category === grp.dataset.groupMetrics);
+        const ids = (group?.metrics ?? []).map((m) => m.MetricID);
+        return this.store.setMetricsVisible(ids, grp.dataset.on !== '1');
+      }
     });
     this.addEventListener('change', (e) => {
       if (e.target.matches('select[data-groupby]')) this.store.set('groupBy', e.target.value);
       if (e.target.matches('select[data-heatmap]')) this.store.set('heatmap', e.target.value);
+      if (e.target.matches('select[data-highlight]')) this.store.highlight(e.target.value || null);
       if (e.target.matches('input[data-metric]')) this.store.toggleMetric(e.target.dataset.metric);
     });
     // <details> toggle doesn't bubble; capture it so re-renders keep section state.
@@ -80,34 +91,102 @@ export class GsmSidebar extends StoreElement {
       return;
     }
 
+    // One sidebar drives every program view. A control that does not apply to
+    // the current view stays visible but disabled, with the reason under it.
+    const dist = state.programView === 'distribution';
+    const overview = !dist && this.store.tableZoom() === 'overview';
+    const ctl = (body, { na = '' } = {}) =>
+      `<div class="ctl ${na ? 'na' : ''}"${na ? ' aria-disabled="true"' : ''}>${body}${
+        na.trim() ? `<p class="sb-why">${na}</p>` : ''
+      }</div>`;
+    const tableOnly = dist ? 'Table only: the distribution plots every study on each metric’s line.' : '';
+
+    const studies = this.store.filteredStudies();
+    const hl = studies.some((st) => st.StudyID === state.highlightStudy) ? state.highlightStudy : '';
+    const highlight = ctl(
+      `<label>Highlight study</label><select data-highlight><option value="">None</option>${studies
+        .map(
+          (st) =>
+            `<option value="${esc(st.StudyID)}" ${st.StudyID === hl ? 'selected' : ''}>${esc(st.StudyID)}${
+              st.params?.nickname ? ` · ${esc(st.params.nickname)}` : ''
+            }</option>`
+        )
+        .join('')}</select><p class="sb-hint">Marks the study in every view. Click a row or a dot to pick one.</p>`
+    );
+
+    // P2: cells follow each metric's glossary display rule by default; the
+    // old free-form stack stays available as "Custom".
+    const defined = state.cellMode === 'defined';
+    const chip = ([k, label]) =>
+      `<button type="button" class="chip ${state.show.has(k) ? 'on' : ''}" data-show="${k}" aria-pressed="${state.show.has(k)}">${label}</button>`;
+    const extras = [['trend', 'Trend']];
+    const cellsNa = dist
+      ? 'The distribution shows each value as defined in the glossary.'
+      : overview
+        ? 'Overview tiles show one headline value per metric. Open a category or switch to Details.'
+        : '';
     const config =
-      `<div class="ctl"><label>Show in each cell</label><div class="chips">${[
-        ['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate'],
-        ['flagged', '% Flagged'], ['red', '% Red'], ['dist', 'Distribution'], ['trend', 'Trend'],
-      ]
-        .map(([k, label]) => `<button type="button" class="chip ${state.show.has(k) ? 'on' : ''}" data-show="${k}" aria-pressed="${state.show.has(k)}">${label}</button>`)
-        .join('')}</div></div>` +
-      `<div class="ctl"><label>Heatmap (also drives column sort)</label><select data-heatmap>${[
-        ['none', 'None'], ['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate'], ['flagged', '% Flagged (red or amber)'], ['red', '% Red'],
-      ]
-        .map(([k, label]) => `<option value="${k}" ${state.heatmap === k ? 'selected' : ''}>${label}</option>`)
-        .join('')}</select></div>` +
-      `<div class="ctl"><label>Heatmap color</label>${this.#seg('ramp', RAMPS)}</div>` +
-      `<div class="ctl"><label>Group rows by</label><select data-groupby>${GROUP_BY_OPTIONS.map(
-        ([value, label]) => `<option value="${value}" ${value === state.groupBy ? 'selected' : ''}>${label}</option>`
-      ).join('')}</select></div>`;
+      highlight +
+      ctl(
+        `<label>Cell display</label>${this.#seg('cellMode', [['defined', 'As defined'], ['custom', 'Custom']])}${
+          cellsNa
+            ? ''
+            : `<p class="sb-hint">${defined ? 'Each metric as its glossary defines it: n (%), per 28 days, or %.' : 'The same numbers stacked in every cell.'}</p>`
+        }`,
+        { na: cellsNa }
+      ) +
+      ctl(
+        `<label>${defined ? 'Also show' : 'Show in each cell'}</label><div class="chips">${(defined
+          ? extras
+          : [['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate'], ...extras]
+        )
+          .map(chip)
+          .join('')}</div>`,
+        { na: cellsNa ? ' ' : '' }
+      ) +
+      ctl(
+        `<label>Heatmap (also drives column sort)</label><select data-heatmap ${dist ? 'disabled' : ''}>${[
+          ['none', 'None'], ['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate'],
+        ]
+          .map(([k, label]) => `<option value="${k}" ${state.heatmap === k ? 'selected' : ''}>${label}</option>`)
+          .join('')}</select>`,
+        { na: tableOnly }
+      ) +
+      ctl(`<label>Heatmap color</label>${this.#seg('ramp', RAMPS)}`, { na: dist || state.heatmap === 'none' ? ' ' : '' }) +
+      ctl(
+        `<label>Group rows by</label><select data-groupby ${dist ? 'disabled' : ''}>${GROUP_BY_OPTIONS.map(
+          ([value, label]) => `<option value="${value}" ${value === state.groupBy ? 'selected' : ''}>${label}</option>`
+        ).join('')}</select>`,
+        { na: tableOnly }
+      );
 
     const supported = this.store.supportedMetrics();
     const unsupported = this.store.unsupportedMetrics();
     const visible = this.store.visibleMetrics().length;
+    const statusCount = (st) => supported.filter((m) => (m.Status ?? 'Released') === st).length;
     const metrics =
-      `<div class="sb-actions"><button type="button" class="linkbtn" data-metrics-all="on">All</button><button type="button" class="linkbtn" data-metrics-all="off">None</button></div>` +
-      `<div class="metric-list">${supported
+      `<div class="ctl"><label>Status</label><div class="chips">${STATUS_ORDER.filter(statusCount)
         .map(
-          (m) => `<label class="metric-opt" title="${esc(m.Metric)} · ${esc(m.MetricID)}">
-            <input type="checkbox" data-metric="${esc(m.MetricID)}" ${state.hiddenMetrics.has(m.MetricID) ? '' : 'checked'}>
-            <span class="mono">${esc(m.Abbreviation)}</span><span class="mname">${esc(m.Metric)}</span></label>`
+          (st) =>
+            `<button type="button" class="chip ${state.statuses.has(st) ? 'on' : ''}" data-status="${st}" aria-pressed="${state.statuses.has(st)}">${st}<span class="cnt">${statusCount(st)}</span></button>`
         )
+        .join('')}</div></div>` +
+      `<div class="sb-actions"><button type="button" class="linkbtn" data-metrics-all="on">All</button><button type="button" class="linkbtn" data-metrics-all="off">None</button></div>` +
+      `<div class="metric-list">${this.store
+        .metricCategories(supported)
+        .map((g) => {
+          const on = g.metrics.filter((m) => !state.hiddenMetrics.has(m.MetricID)).length;
+          return `<div class="mgroup"><div class="mgroup-head"><span>${esc(g.category)}</span><button type="button" class="linkbtn" data-group-metrics="${esc(
+            g.category
+          )}" data-on="${on === g.metrics.length ? '1' : '0'}">${on === g.metrics.length ? 'none' : 'all'}</button><span class="cnt">${on}/${g.metrics.length}</span></div>${g.metrics
+            .map((m) => {
+              const off = !state.statuses.has(m.Status ?? 'Released');
+              return `<label class="metric-opt ${off ? 'status-off' : ''}" title="${esc(m.Metric)} · ${esc(m.MetricID)}${off ? ' — hidden by the status filter' : ''}">
+            <input type="checkbox" data-metric="${esc(m.MetricID)}" ${state.hiddenMetrics.has(m.MetricID) ? '' : 'checked'}>
+            <span class="mono">${esc(m.Abbreviation)}</span><span class="mname">${esc(m.Metric)}</span>${statusPill(m)}</label>`;
+            })
+            .join('')}</div>`;
+        })
         .join('')}</div>` +
       (unsupported.length
         ? `<p class="sb-note" title="${esc(unsupported.map((m) => `${m.Abbreviation} (${m.GroupLevel}-level)`).join(', '))}">

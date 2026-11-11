@@ -1,15 +1,16 @@
 import { registerWidget } from '../registry.js';
-import { esc, fmtPct, fmtInt } from '../../util/format.js';
+import { esc, fmtInt, fmtMetric, displayLabel } from '../../util/format.js';
 
 // Text-only view: rate with its numerator and denominator. The plainest
 // thing the reporting layer gives every site-level metric.
 export function renderOverview(el, data) {
   const { metric, study, siteRows } = data;
   el.innerHTML = `
-    <div><span class="big">${fmtPct(study?.Metric)}</span></div>
+    <div><span class="big">${study ? fmtMetric(metric, { ...study, Rate: study.Metric }).html : '—'}</span></div>
     <dl class="kv">
       <dt>Numerator</dt><dd>${study ? fmtInt(study.Numerator) : '—'} <span class="muted">${esc(metric.Numerator ?? '')}</span></dd>
       <dt>Denominator</dt><dd>${study ? fmtInt(study.Denominator) : '—'} <span class="muted">${esc(metric.Denominator ?? '')}</span></dd>
+      <dt>Shown as</dt><dd class="muted">${esc(displayLabel(metric))}</dd>
       <dt>Sites</dt><dd>${siteRows.length}</dd>
     </dl>`;
 }
