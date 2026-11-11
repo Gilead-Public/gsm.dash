@@ -115,7 +115,7 @@ step('environment', () => {
     arch: arch(),
     node: process.version,
     npm: execFileSync('npm', ['--version'], { encoding: 'utf8' }).trim(),
-    packages: Object.fromEntries(['@playwright/test', 'vitest', 'vite', 'typescript', 'ajv'].map((p) => [p, version(p)])),
+    packages: Object.fromEntries(['@playwright/test', 'vitest', 'vite', 'typescript', 'ajv', 'ajv-formats'].map((p) => [p, version(p)])),
     browser: { name: 'chromium', version: execFileSync('node', ['--input-type=module', '-e', probe], { encoding: 'utf8' }).trim() },
     lockfileSha256: sha256File('package-lock.json'),
   };

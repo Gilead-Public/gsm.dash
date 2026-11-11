@@ -1,9 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import Ajv from 'ajv/dist/2020.js';
+import addFormats from 'ajv-formats';
 
 const schema = JSON.parse(readFileSync(new URL('../schemas/study-snapshot.schema.json', import.meta.url)));
-const validate = new Ajv({ allErrors: true, strict: false }).compile(schema);
+const ajv = new Ajv({ allErrors: true, strict: false });
+addFormats(ajv);
+const validate = ajv.compile(schema);
 
 const snapshot = (extra = {}) => ({ schemaVersion: '1.0.0', StudyID: 'AA-AA-000-0000', SnapshotDate: '2026-11-01', results: [], ...extra });
 
@@ -65,5 +68,12 @@ describe('distributions in the study snapshot contract', () => {
     expect(valid([row()])).toBe(true);
     expect(Object.values(INVALID).every((bad) => !valid([bad]))).toBe(true);
     expect(REQUIRED.every((key) => !valid([without(key)]))).toBe(true);
+  });
+
+  it('rejects malformed dates in the snapshot and in its distribution rows', () => {
+    for (const bad of ['not-a-date', '2026-13-45', '11/01/2026', '2026-11-01T00:00:00Z']) {
+      expect(validate(snapshot({ SnapshotDate: bad })), bad).toBe(false);
+      expect(valid([row({ SnapshotDate: bad })]), bad).toBe(false);
+    }
   });
 });

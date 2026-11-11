@@ -3,6 +3,7 @@ import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import Ajv from 'ajv/dist/2020.js';
+import addFormats from 'ajv-formats';
 import { generatePortfolio, METRICS, writeExampleData } from '../scripts/generate-example-data.mjs';
 import { DISTRIBUTION_SPECS } from '../scripts/example-distributions.mjs';
 import { recount, rowKey } from './qual/distributions.js';
@@ -85,6 +86,7 @@ describe('simulated distributions for the #617 metrics', () => {
     try {
       writeExampleData(dir);
       const ajv = new Ajv({ allErrors: true, strict: false });
+      addFormats(ajv);
       const schema = (name) => ajv.compile(JSON.parse(readFileSync(new URL(`../schemas/${name}`, import.meta.url))));
       const [validateSnapshot, validatePortfolio] = [schema('study-snapshot.schema.json'), schema('portfolio.schema.json')];
       const written = JSON.parse(readFileSync(join(dir, 'portfolio.json'), 'utf8'));

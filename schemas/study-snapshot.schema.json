@@ -76,7 +76,7 @@
           "Total": { "type": "number", "minimum": 0 },
           "Percent": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
           "StudyID": { "type": "string" },
-          "SnapshotDate": { "type": "string" }
+          "SnapshotDate": { "type": "string", "format": "date" }
         }
       }
     }
