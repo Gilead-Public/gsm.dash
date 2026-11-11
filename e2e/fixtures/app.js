@@ -129,6 +129,8 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
   endState: [async ({ page, evidence }, use, testInfo) => {
     await use();
     if (!/^\d+\.\d{2}:/.test(testInfo.title) || page.url() === 'about:blank') return;
+    // A test that already attached its own evidence screenshot needs no second, near-identical one.
+    if (testInfo.attachments.some((a) => a.name === 'evidence')) return;
     try {
       await evidence.shot(page, 'end state');
     } catch (e) {
