@@ -1,0 +1,556 @@
+{
+  "repo": "Gilead-Public/gsm.dash",
+  "hash": "22768996abccf417457a26c2c87600db67a5e61abdcf4e124603626c4bed78d9",
+  "issues": [
+    {
+      "number": 8,
+      "title": "Add a distributions layer to the study snapshot contract",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": false,
+      "criteria": [
+        {
+          "id": "8.01",
+          "text": "The schema accepts a valid `distributions` array. It rejects missing required columns, a `Source` outside `Numerator`/`Denominator`, negative counts, and a `Percent` outside 0–1.",
+          "sha256": "3ba41e1c846f21dabe7994778070f3ccf72c8b3877e8cc23b93ec5cd790c0359",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "8.02",
+          "text": "A study file without `distributions` stays valid, because metrics without distributions are unaffected.",
+          "sha256": "6a85d30b5c8ccffa1caca634b27482ded64e4c1ad82811ca9678999d30f10a84",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "8.03",
+          "text": "Contract tests cover the valid, invalid and empty cases.",
+          "sha256": "4860fcea5e62463a57b256d134248995a84ff388b337b818c4a3213f2a049255",
+          "kind": "unit",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "title": "Generate simulated distributions for the #617 metrics",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": false,
+      "criteria": [
+        {
+          "id": "9.01",
+          "text": "On the fixture, for numerator distributions, `Total` equals the metric's Numerator (per metric × group). This is a gsm.roadmap#617 acceptance check.",
+          "sha256": "28c46062dc5b96c66a3bdd21e028b940c89a095172dad224611848732fe90749",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "9.02",
+          "text": "On the fixture, for denominator distributions, `Total` equals the metric's Denominator. This is a gsm.roadmap#617 acceptance check.",
+          "sha256": "3b2c50e17aca7891902b3ab491faa59704377becc786ce251b38c3ffe0f3c7c6",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "9.03",
+          "text": "On the fixture, for single-value variables, the sum of `Count` over categories equals `Total`. This is a gsm.roadmap#617 acceptance check.",
+          "sha256": "be8b009fcad351729421e06b11b69c135e271087499f7ebe6e00deaf2d013ceb",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "9.04",
+          "text": "In each study's latest snapshot, every site in `results` for a configured metric has distribution rows.",
+          "sha256": "cadf993ecf71f1e364f8fbbdf2e3892a070e15bfe132720c21b56df42ff5b927",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "9.05",
+          "text": "The generated files validate against the #8 schema.",
+          "sha256": "b916b84a0b3fb53e9132fad27a5b69c4b0e21d9cb05fcd7b29e1b616e82b233b",
+          "kind": "unit",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "title": "Build a Layout A bar-chart distribution widget",
+      "parent": "Gilead-BioStats/gsm.roadmap#618",
+      "userTest": true,
+      "criteria": [
+        {
+          "id": "10.01",
+          "text": "The widget renders from the #9 fixture for every configured metric.",
+          "sha256": "34d7f5eda43dd37e6f85ffd7d293662228dad2abfc0a652d894975993a43d892",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "10.02",
+          "text": "Displayed counts and both percentages equal independently summed fixture values (test).",
+          "sha256": "884335495d383eb2244d42c3242e61676bd7bca0298f2c770f0ade3af9fc45f4",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "10.03",
+          "text": "The site-to-study summing sits in one tested function, so it can be qualified as dashboard logic (gsm.roadmap#625).",
+          "sha256": "d3f33887991c31e5beb5b907655fc5aef86628d4f9152a2644393783cdf9840c",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "10.04",
+          "text": "No user-facing text contains \"Numerator\" or \"Denominator\" (test).",
+          "sha256": "a0f13552f8488a0de83d9f703d2b7bbd26ab6d74e8ea727de85d30c07a6db6b7",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "10.05",
+          "text": "There's no total row that repeats the header value.",
+          "sha256": "7c6650c30d4db5a07d019b0a725e45b17d7a415ad1e987276651c1f04e51f1ff",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "10.06",
+          "text": "Status colours come from configuration, and the neutral fallback applies when none are given (test).",
+          "sha256": "b6a077ef4151e1f3c0b674bb67ed8827e739bdee8a7483c643bd6c8bd163132e",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "10.07",
+          "text": "Sorting, top-N collapsing, \"Not recorded\" placement, the footnotes, and the empty and missing states are tested.",
+          "sha256": "f3df7a10bcc0f5528d8769189d395745e34316f406021c4c50c712647f478dd7",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "10.08",
+          "text": "A reviewer compares the rendered widget with the Layout A design and accepts it (visual comparison).",
+          "sha256": "08e58e24ea3af4caafd63b6bba6f16850456cd7408033e3dfa1f5d87e0c4ec18",
+          "kind": "visual",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "title": "Hide site-flag views on the study view by default",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": true,
+      "criteria": [
+        {
+          "id": "11.01",
+          "text": "A test asserts that the default study view renders no site-flag counts.",
+          "sha256": "827fc4cb61a0bf10f04792ac66363445989eafd509324fdeeef3f9e132171fca",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "11.02",
+          "text": "Enabling them through configuration restores them (test).",
+          "sha256": "29b752c7a4ba3d9beb35e860c1fc82a47c6a1669d4b8dfa0ddc703b1f554d223",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "11.03",
+          "text": "The portfolio view is unchanged.",
+          "sha256": "10226d1e4284adcc8979f94ec71bcdc949d16653e951bd590bee678b315c44d7",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "11.04",
+          "text": "A reviewer compares the default study view with the design and accepts it (visual comparison).",
+          "sha256": "a9592c3b12907212ddc8d7ca3747d9297aba25fc190984b16cc8253c80ad9d32",
+          "kind": "visual",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 12,
+      "title": "Fail visibly on unknown widget or metric references",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": false,
+      "criteria": [
+        {
+          "id": "12.01",
+          "text": "Tests cover each case, and the placeholder text names the bad reference.",
+          "sha256": "1ef6040373e59226c6e8628b012f282ae56dce5b829adf42b499eec597956432",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "12.02",
+          "text": "Valid references render exactly as before.",
+          "sha256": "0aa8b16ab3de7b464ab47735f3e29dcb5976e01167b735a66917fdddd77d23a0",
+          "kind": "e2e",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "title": "Configure detailed-report links per widget",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": false,
+      "criteria": [
+        {
+          "id": "13.01",
+          "text": "Links render from configuration for each configured metric.",
+          "sha256": "fde12ebe5a8c74cc25c451b6364c5d3501d0b559c345342b6799bf94f6f52b1e",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "13.02",
+          "text": "Relative links resolve against the configured base (test).",
+          "sha256": "9540620b6a415a23a568ac0ea8b2a68f2f4fb069d7a90609f0a6c23f7b03c183",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "13.03",
+          "text": "An unconfigured metric renders no link.",
+          "sha256": "11952bfc040633d27251b885815ef06caccd60c3a52fb7f28f0f856c81d45619",
+          "kind": "e2e",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "title": "Reject portfolio inputs from mixed snapshot cycles",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": false,
+      "criteria": [
+        {
+          "id": "14.01",
+          "text": "With a fixture that has one study off-cycle, that study is excluded and named.",
+          "sha256": "e5d7ac2082dd34d7ecd024ba7a67ae2762692a99b0112ec1c5d8b884399546d0",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "14.02",
+          "text": "With a fixture that has one study off-cycle, totals equal the sum over the in-cycle studies.",
+          "sha256": "0842c56f57a1e7ccc3bbc6caef7b901b37d4c97402ff2fca368af51a45f1b6f6",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "14.03",
+          "text": "With a fixture where every study is in cycle, the portfolio renders as before.",
+          "sha256": "c766990a8882f34b9fde499e329cf193d6260a0273a1e07476e3a255a86cc422",
+          "kind": "e2e",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "title": "Read the portfolio from a counts-only summary",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": false,
+      "criteria": [
+        {
+          "id": "15.01",
+          "text": "A double-programming test shows that every portfolio number computed from the summary equals the number from pooling the per-study files.",
+          "sha256": "1727d40a7fcf032eb5a1db640adb3f66357ad43a1793276af95b3ebec08af920",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "15.02",
+          "text": "The schema rejects ratios and unknown fields.",
+          "sha256": "56e6d3b4eab519a9f51e7c21a0e6eb554078404e84b910475da7ce43a9414b39",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "15.03",
+          "text": "The summary is a small fraction of the per-study files' size.",
+          "sha256": "28c8deab637ecd2fa075e5419578e930c81b773e0656d10fb6c6a8e8f83257ba",
+          "kind": "unit",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 16,
+      "title": "Move portfolio defaults into a configuration file",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": false,
+      "criteria": [
+        {
+          "id": "16.01",
+          "text": "Changing the configuration changes the initial view.",
+          "sha256": "f7ed564abae30e12bcbf89ffad3bfad4da19fa5ec7cf3eb6b5290a87fe4e8033",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "16.02",
+          "text": "An invalid value fails with an actionable message (test).",
+          "sha256": "7f0d8a71dd3766b9489fb88d9e096b865cf812570caf883d812d51978a4087fe",
+          "kind": "unit",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 17,
+      "title": "Add an eligibility-over-time widget",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": true,
+      "criteria": [
+        {
+          "id": "17.01",
+          "text": "The plotted values equal the study-level `qtl0001` results at each snapshot (test).",
+          "sha256": "f957f5c9a5a32f2049b200354985d3655608bb45dbf9ad9438d7562aaf9b84a5",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "17.02",
+          "text": "The axis, labels and markers match the standard eligibility report's chart (visual comparison).",
+          "sha256": "3e2a13aaa6050a48570fd6b19de3d62d5c1d06de18060cffc6b79b28e68fe912",
+          "kind": "visual",
+          "reviewed": false
+        },
+        {
+          "id": "17.03",
+          "text": "The single-snapshot and missing-metric states are tested.",
+          "sha256": "649216ca4ad813475a837a699a8e90874e9fef9215ed454a8d5a6d6f72c8a5da",
+          "kind": "unit",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "title": "Add status colours to distribution widgets",
+      "parent": "Gilead-BioStats/gsm.roadmap#618",
+      "userTest": true,
+      "criteria": [
+        {
+          "id": "18.01",
+          "text": "Each listed status renders in its configured colour (test).",
+          "sha256": "327ef6dc9d9db1a596feae8671389c391ba0effc54ef5b935510cae0ebdbc8e8",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "18.02",
+          "text": "A status missing from the map uses the neutral colour and logs a warning (test).",
+          "sha256": "3f6bf9ef618139a18536de25ad1797a2afc28698a07f5d94c79fbad12fb66176",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "18.03",
+          "text": "The colours match the standard reports (visual comparison).",
+          "sha256": "220bf5d787ee1b1b804cb471b06cad54b754aa03181fc4b728184fb6ea40ac0c",
+          "kind": "visual",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 19,
+      "title": "Show the top protocol-deviation categories",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": false,
+      "criteria": [
+        {
+          "id": "19.01",
+          "text": "The top 5 categories and their counts equal independently summed fixture rows (test).",
+          "sha256": "5bff00559837ce09ac5ceb8eeaab2cbd250a68e02790539d58144649765a79a5",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "19.02",
+          "text": "No percentages are shown.",
+          "sha256": "64849207d10e775d3f356414e0e90fcd81ef9b23f8c1622338d4e07ff20e7b9c",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "19.03",
+          "text": "The non-important variant renders from configuration alone.",
+          "sha256": "a2b0fec340549b42885c5c3c56399ffc879213a14b3ab7f88ebc16417cf65cbe",
+          "kind": "e2e",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 20,
+      "title": "Move portfolio details into hovers and trim the tooltips",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": true,
+      "criteria": [
+        {
+          "id": "20.01",
+          "text": "No ⓘ elements remain (test).",
+          "sha256": "369029752e94a9cff33ccdbd39602ea19282f86c5c807a5a6cd128d655332eff",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "20.02",
+          "text": "The header and study-name hovers show the moved content (test).",
+          "sha256": "de065f3f07a0e48da4385ff3f1557e962a05976acad9591ae3eacb183787907d",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "20.03",
+          "text": "The tooltips contain no metric ID, score or thresholds.",
+          "sha256": "e7451c328c034f7bf9c93e9fa05b84f6e456cabff31465f3b2497ce732581e85",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "20.04",
+          "text": "A reviewer compares the hovers and tooltips with the design and accepts them (visual comparison).",
+          "sha256": "1d1abb838079048ec3436df5857f8437917c713a05d36fe0a79cd8285eb37c8c",
+          "kind": "visual",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 21,
+      "title": "Add column options and a density toggle to the portfolio table",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": true,
+      "criteria": [
+        {
+          "id": "21.01",
+          "text": "Each column toggles, and the defaults apply (tests).",
+          "sha256": "f69e2b283f676fcef4edde8d8605f85163cf8f5d6f0ce8739e0c87caf3c426ce",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "21.02",
+          "text": "n / expected renders when a target exists, and the count alone renders when it doesn't (tests).",
+          "sha256": "e19d529f91500f761b81a972d99f4e107c1f746c6d9eda4e3701a691d73924f4",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "21.03",
+          "text": "The density toggle changes row spacing (visual check).",
+          "sha256": "20d1c3b0626e30f18c88a7aaed5a56865fa001a92aefc272b7bf1ed021c9b271",
+          "kind": "visual",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 22,
+      "title": "Add a study filter and a full Reset to the portfolio",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": true,
+      "criteria": [
+        {
+          "id": "22.01",
+          "text": "The study filter limits the rows to the selected studies (test).",
+          "sha256": "391f0eb25e783eb7640c3e633c3dfc8d8632f39a0282b27d10982cfb3c8defa3",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "22.02",
+          "text": "Reset restores the configured defaults (test).",
+          "sha256": "effb0e179c50f3825b37a432eb9657a6cfb939dc7be57393ba21f01091587b58",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "22.03",
+          "text": "A reviewer compares the study filter and Reset with the design and accepts them (visual comparison).",
+          "sha256": "f10bb05d34bfcd1be36cc8fb5a7f05448233aae7b46649f0a1ec9839c25d6701",
+          "kind": "visual",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 23,
+      "title": "Simplify heatmap options and fix shading under Group By",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": true,
+      "criteria": [
+        {
+          "id": "23.01",
+          "text": "Tests cover persistence across filters, clearing by Reset, and URL round-trips.",
+          "sha256": "07aa0df843daacf9a3189cfba33249a9f0162072b2839ec05ce24ef2008b65ce",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "23.02",
+          "text": "Expanded rows carry and display heat shading (test and visual check).",
+          "sha256": "fb933f4c883d3b446792014a228ab38ff848def575c699fbb92b688eb95e67f1",
+          "kind": "visual",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 24,
+      "title": "Update the portfolio header",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": true,
+      "criteria": [
+        {
+          "id": "24.01",
+          "text": "The logo renders, and the metadata line is gone (visual check).",
+          "sha256": "df5bf5d9188c1fba54e188f1e5c691e67793078da55809605a463e2036066de4",
+          "kind": "visual",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 25,
+      "title": "Open the detailed report from a study and metric cell",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": true,
+      "criteria": [
+        {
+          "id": "25.01",
+          "text": "Configured cells link to the right report, in a new tab (test).",
+          "sha256": "69eabb8578d523daac73297b7ed006daf483f5ad6fcbf66af0caccbab6af1068",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "25.02",
+          "text": "Unconfigured cells don't link (test).",
+          "sha256": "779d3ca8e25b1094f79122d453a0ecdb04e3ff91d2d0096df634583b5efd027d",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "25.03",
+          "text": "A reviewer compares the cell links with the design and accepts them (visual comparison).",
+          "sha256": "8b128e4a26ddb7c2c9a4fbb1c12ffa2fd643e3caf79490cf0a121a4ec1df1f71",
+          "kind": "visual",
+          "reviewed": false
+        }
+      ]
+    }
+  ]
+}

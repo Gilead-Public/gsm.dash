@@ -16,11 +16,22 @@
     "build:standalone": "npm run generate-data && vite build && node scripts/build-standalone.mjs",
     "preview": "vite preview",
     "test": "vitest run",
-    "generate-data": "node scripts/generate-example-data.mjs"
+    "generate-data": "node scripts/generate-example-data.mjs",
+    "e2e": "playwright test",
+    "validate": "node validation/run.js",
+    "criteria:sync": "node validation/sync-criteria.js",
+    "typecheck": "tsc --noEmit",
+    "criteria:review": "node validation/review-criteria.js"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^26.6.6",
     "ajv": "^8.17.1",
+    "typescript": "^7.0.2",
     "vite": "^6.3.0",
     "vitest": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

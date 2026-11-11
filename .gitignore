@@ -2,3 +2,6 @@ node_modules/
 dist/
 examples/data/
 .DS_Store
+validation-runs/
+test-results/
+playwright-report/
