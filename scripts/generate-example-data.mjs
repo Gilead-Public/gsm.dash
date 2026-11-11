@@ -4,6 +4,7 @@
 import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { DISTRIBUTION_SPECS, distributionRows, seedOf, simulateRecords } from './example-distributions.mjs';
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', 'examples', 'data');
 const SCHEMA_VERSION = '1.0.0';
@@ -34,15 +35,16 @@ const GLOSSARY = [
   { id: 'kri0012', abbr: 'SF', name: 'Screen Failure Rate', cat: 'Disposition', status: 'Released', display: 'pct', pop: 'Screened', num: 'Number of screen failed participants', den: 'Total screened participants', denKey: 'screened', derived: 'sf', base: 0.18, note: 'The tracker also lists a Planned "Screen Failure" divided by all enrolled (open question Q1).' },
   { id: 'kri0006', abbr: 'SDSC', name: 'Study Discontinuation Rate', cat: 'Disposition', status: 'Released', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants with premature study discontinuation', den: 'All enrolled', denKey: 'enrolled', base: 0.08, req: 61 },
   { id: 'kri0007', abbr: 'TDSC', name: 'Treatment Discontinuation Rate', cat: 'Disposition', status: 'Released', display: 'count_pct', pop: 'Dosed', num: 'Number of participants with premature treatment discontinuation', den: 'All dosed', denKey: 'dosed', base: 0.11, req: 90, note: 'Tracker: changed-in-dev (denominator moves to all dosed).' },
+  { id: 'kri0007-2', abbr: 'PTDSC', name: 'Premature Treatment Discontinuation Rate', cat: 'Disposition', status: 'Planned', display: 'count_pct', pop: 'Dosed', num: 'Number of participants with premature treatment discontinuation', den: 'All dosed', denKey: 'dosed', base: 0.09 },
   { id: 'ctq0001', abbr: 'WC', name: 'Withdrawal of Consent', cat: 'Disposition', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants who withdrew consent from the study', den: 'All enrolled', denKey: 'enrolled', base: 0.03, req: 61 },
   { id: 'ctq0002', abbr: 'LTFU', name: 'Lost to Follow Up', cat: 'Disposition', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants lost to follow-up', den: 'All enrolled', denKey: 'enrolled', base: 0.015, req: 61 },
   // Early events
   { id: 'ctq0003', abbr: 'DTH30', name: 'Early Deaths (30 days)', cat: 'Early events', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants who died within 30 days from randomization', den: 'All enrolled', denKey: 'enrolled', derived: 'dth30', base: 0.006, req: 121 },
   { id: 'kri0015', abbr: 'DTH90', name: 'Early Deaths (90 days)', cat: 'Early events', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants who died within 90 days from randomization', den: 'All enrolled', denKey: 'enrolled', base: 0.018, req: 121 },
-  { id: 'ctq0004', abbr: 'IPNS', name: 'IP Non-starters', cat: 'Early events', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of confirmed IP non-starters', den: 'All enrolled', denKey: 'enrolled', derived: 'ipns', base: 0.02, req: 56 },
+  { id: 'kri0019', abbr: 'IPNS', name: 'IP Non-starters', cat: 'Early events', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of confirmed IP non-starters', den: 'All enrolled', denKey: 'enrolled', derived: 'ipns', base: 0.02, req: 56 },
   // Eligibility & integrity
   { id: 'kri0014', abbr: 'IE', name: 'Eligibility', cat: 'Eligibility & integrity', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of ineligible participants', den: 'All enrolled', denKey: 'enrolled', base: 0.03, req: 49 },
-  { id: 'ctq0005', abbr: 'STRAT', name: 'Stratification', cat: 'Eligibility & integrity', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of confirmed mis-stratified participants', den: 'All enrolled', denKey: 'enrolled', base: 0.02, req: 49 },
+  { id: 'strat0001', abbr: 'STRAT', name: 'Stratification', cat: 'Eligibility & integrity', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of confirmed mis-stratified participants', den: 'All enrolled', denKey: 'enrolled', base: 0.02, req: 49 },
   { id: 'ctq0006', abbr: 'PFSC', name: 'Premature Censoring for PFS', cat: 'Eligibility & integrity', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants at very high risk for premature censoring for PFS', den: 'All enrolled', denKey: 'enrolled', base: 0.025, req: 261 },
   // Safety & deviations
   { id: 'kri0001', abbr: 'AE', name: 'AE Reporting Rate', cat: 'Safety & deviations', status: 'New', display: 'per_28d', num: 'Number of AEs reported', den: 'Exposure in days', denKey: 'exposureDays', base: 1.1 / 28 },
@@ -98,6 +100,7 @@ export const METRICS = GLOSSARY.map((g, i) => ({
   denKey: g.denKey,
   derived: g.derived,
 }));
+
 
 // Mapped_EXCLUSION's real Source attribution levels — the breakdown-bar demo
 // mirrors the phase-2 `details` slice (counts aggregated at export).
@@ -199,7 +202,7 @@ function sitePopulations(study, snapIndex, siteRate) {
   });
 }
 
-export function generateSnapshot(study, snapshotDate, snapIndex, metrics = METRICS, { withBounds = false } = {}) {
+export function generateSnapshot(study, snapshotDate, snapIndex, metrics = METRICS, { withBounds = false, withDistributions = false, records = null } = {}) {
   const results = [];
   const details = [];
   const bounds = [];
@@ -316,15 +319,48 @@ export function generateSnapshot(study, snapshotDate, snapIndex, metrics = METRI
   ];
   const snapshot = { schemaVersion: SCHEMA_VERSION, StudyID: study.StudyID, SnapshotDate: snapshotDate, results, groups, details };
   if (withBounds) snapshot.bounds = bounds;
+  if (withDistributions) snapshot.distributions = generateDistributions(study, snapshotDate, snapIndex, metrics, results, pops, records);
   return snapshot;
+}
+
+/**
+ * Site-level distribution rows for every configured metric present in `metrics`. A separate seeded stream per
+ * study snapshot keeps the rest of the example data unchanged. When `records` is a Map, the simulated records
+ * are kept there (never written to disk) so tests can recount them independently.
+ */
+function generateDistributions(study, snapshotDate, snapIndex, metrics, results, pops, records) {
+  const rand = rng(seedOf(`${study.StudyID}|${snapshotDate}`));
+  const progress = (snapIndex + 1) / SNAPSHOT_DATES.length;
+  const rows = [];
+  for (const spec of DISTRIBUTION_SPECS) {
+    const metric = metrics.find((m) => m.ID === spec.id);
+    if (!metric) continue;
+    pops.forEach((p) => {
+      const result = results.find((r) => r.GroupLevel === 'Site' && r.GroupID === p.site && r.MetricID === metric.MetricID);
+      const recs = simulateRecords(spec, {
+        numerator: result.Numerator,
+        denominator: result.Denominator,
+        participants: p.enrolled,
+        early: spec.id === 'kri0015' ? p.dth30 : 0,
+        progress,
+      }, rand);
+      records?.set([study.StudyID, snapshotDate, p.site, metric.MetricID].join('|'), { spec, records: recs });
+      rows.push(...distributionRows(spec, recs, { GroupID: p.site, MetricID: metric.MetricID, StudyID: study.StudyID, SnapshotDate: snapshotDate }));
+    });
+  }
+  return rows;
 }
 
 export function generatePortfolio() {
   const studies = generateStudies();
-  // Bounds are single-snapshot by design (Reporting_Bounds); emitting them only
-  // for each study's latest snapshot keeps the example data small.
+  // Bounds are single-snapshot by design (Reporting_Bounds). Distributions follow them: latest snapshot only, which
+  // keeps the example data small until #617 says whether history is published.
+  const records = new Map();
   const byStudy = studies.map((s) =>
-    s.snapshots.map((d, i) => generateSnapshot(s, d, i, METRICS, { withBounds: i === s.snapshots.length - 1 }))
+    s.snapshots.map((d, i) => {
+      const latest = i === s.snapshots.length - 1;
+      return generateSnapshot(s, d, i, METRICS, { withBounds: latest, withDistributions: latest, records });
+    })
   );
   // The manifest's params are the study's most recent snapshot.
   const latestParams = (snaps) =>
@@ -340,19 +376,25 @@ export function generatePortfolio() {
     })),
     metrics: METRICS.map(({ base, denKey, derived, ...m }) => m),
   };
-  return { manifest, snapshots: byStudy.flat() };
+  return { manifest, snapshots: byStudy.flat(), records };
 }
 
-function main() {
+/** Writes the example data (manifest plus one file per study snapshot) into `outDir`, replacing what was there. */
+export function writeExampleData(outDir = OUT) {
   const { manifest, snapshots } = generatePortfolio();
-  rmSync(OUT, { recursive: true, force: true });
-  mkdirSync(OUT, { recursive: true });
-  writeFileSync(join(OUT, 'portfolio.json'), JSON.stringify(manifest, null, 1));
+  rmSync(outDir, { recursive: true, force: true });
+  mkdirSync(outDir, { recursive: true });
+  writeFileSync(join(outDir, 'portfolio.json'), JSON.stringify(manifest, null, 1));
   for (const snap of snapshots) {
-    const dir = join(OUT, 'studies', snap.StudyID);
+    const dir = join(outDir, 'studies', snap.StudyID);
     mkdirSync(dir, { recursive: true });
     writeFileSync(join(dir, `${snap.SnapshotDate}.json`), JSON.stringify(snap));
   }
+  return { manifest, snapshots };
+}
+
+function main() {
+  const { manifest, snapshots } = writeExampleData(OUT);
   console.log(`Wrote ${snapshots.length} snapshots for ${manifest.studies.length} studies to ${OUT}`);
 }
 
