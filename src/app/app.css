@@ -348,6 +348,31 @@ svg.mini .is-sel { stroke: var(--ink); stroke-width: 1.5; paint-order: stroke; }
 .hbar .b.flag-red { background: var(--crit); } .hbar .b.flag-amber { background: var(--warn); }
 .hbar .b.flag-green { background: var(--good); } .hbar .b.flag-na { background: var(--na); }
 .hbar .v { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
+
+/* Layout A distribution bars (distribution-bar widget): numbers on one line, the bar full width beneath */
+.dist { display: flex; flex-direction: column; gap: 10px; }
+.dist-head { display: flex; align-items: baseline; gap: 8px; font-size: 12px; color: var(--ink-2); }
+.dist-head .dist-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tile .dist-head .dist-name { display: none; } /* the tile header already names the metric */
+.dist-head .dist-pct { font-family: "Archivo", sans-serif; font-size: 20px; color: var(--ink); }
+.dist-head .dist-nd { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-3); }
+.dist-cols, .dist-row { display: grid; grid-template-columns: minmax(0, 1fr) 32px 50px; column-gap: 6px; align-items: end; }
+.dist-sec.two .dist-cols, .dist-sec.two .dist-row { grid-template-columns: minmax(0, 1fr) 32px 50px 50px; }
+.dist-cols { font-size: 10.5px; line-height: 1.15; color: var(--ink-3); }
+.dist-cols span { text-align: right; }
+.dist-bars { display: flex; flex-direction: column; gap: 5px; margin-top: 3px; }
+.dist-row { font-size: 12px; color: var(--ink-2); row-gap: 2px; }
+.dist-row .lbl { grid-row: 1; grid-column: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dist-row .v { grid-row: 1; grid-column: 2; }
+.dist-row .p[data-pct="population"] { grid-row: 1; grid-column: 3; }
+.dist-row .p[data-pct="enrolled"] { grid-row: 1; grid-column: 4; }
+.dist-row .btrack { grid-row: 2; grid-column: 1 / -1; background: var(--panel-2); border-radius: 3px; }
+.dist-row .b { height: 7px; border-radius: 3px; background: var(--accent); opacity: 0.85; }
+.dist-row.more .b, .dist-row.not-recorded .b { background: var(--ink-3); opacity: 0.5; }
+.dist-row .v, .dist-row .p { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
+.dist-row .p { color: var(--ink-2); }
+.dist-row.not-recorded .lbl, .dist-row.more .lbl { font-style: italic; }
+.dist-note { margin: 4px 0 0; font-size: 11px; color: var(--ink-3); }
 .tile { position: relative; }
 .tile.wide { grid-column: span 2; }
 .tile .tile-body { display: flex; flex-direction: column; gap: 8px; flex: 1; min-height: 150px; }

@@ -79,21 +79,6 @@
           "SnapshotDate": { "type": "string" }
         }
       }
-    },
-    "details": {
-      "type": "array",
-      "description": "Phase 2 (Q8 option A): categorical breakdown counts aggregated from Mapped-layer frames at export. Counts only; no participant rows. Superseded by distributions; removed once breakdown-bar is replaced.",
-      "items": {
-        "type": "object",
-        "required": ["MetricID", "Category", "Numerator"],
-        "properties": {
-          "MetricID": { "type": "string" },
-          "Category": { "type": "string" },
-          "GroupID": { "type": "string" },
-          "Numerator": { "type": "number" },
-          "Denominator": { "type": "number" }
-        }
-      }
     }
   }
 }

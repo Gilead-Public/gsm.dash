@@ -7,8 +7,8 @@ import './views/bar-numerator.js';
 import './views/bar-outliers.js';
 import './views/flag-dist.js';
 import './views/trend-mini.js';
+import './distribution-bar.js';
 // Custom / page-level widgets:
-import './breakdown-bar.js';
 import './link-out.js';
 import './threshold-list.js';
 // gsm.viz adapters — the standard KRI-report charts, wide format (drill-in panel).

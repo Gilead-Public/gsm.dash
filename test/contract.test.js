@@ -29,20 +29,6 @@ describe('example data conforms to the contract schemas', () => {
     }
   });
 
-  it('detail category counts reconcile with the study-level numerator', () => {
-    for (const snap of snapshots) {
-      const byMetric = new Map();
-      for (const d of snap.details ?? []) {
-        byMetric.set(d.MetricID, (byMetric.get(d.MetricID) ?? 0) + d.Numerator);
-        expect(d.Numerator, `${snap.StudyID} ${d.MetricID} ${d.Category}`).toBeGreaterThanOrEqual(0);
-      }
-      for (const [metricId, sum] of byMetric) {
-        const studyRow = snap.results.find((r) => r.GroupLevel === 'Study' && r.MetricID === metricId);
-        expect(sum, `${snap.StudyID} ${metricId}`).toBe(studyRow.Numerator);
-      }
-    }
-  });
-
   it('for site-level metrics, the pipeline study row equals the sum of site rows (reconciliation)', () => {
     const snap = snapshots[0];
     const byMetric = {};

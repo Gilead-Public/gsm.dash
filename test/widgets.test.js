@@ -5,11 +5,11 @@ import { deriveWatchSites } from '../src/widgets/threshold-list.js';
 // Importing the widget modules registers the shipped set.
 import '../src/widgets/index.js';
 
-const EXEC = ['results', 'details', 'external'];
+const EXEC = ['results', 'distributions', 'external'];
 
 describe('widget registry + allow-list resolution', () => {
   it('resolves registered widgets whose dataSpec the host allows', () => {
-    expect(resolveWidget('breakdown-bar', EXEC)).toMatchObject({ degraded: false });
+    expect(resolveWidget('distribution-bar', EXEC)).toMatchObject({ degraded: false });
     expect(resolveWidget('threshold-list', EXEC).def.name).toBe('threshold-list');
   });
 

@@ -5,6 +5,7 @@ import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DISTRIBUTION_SPECS, distributionRows, seedOf, simulateRecords } from './example-distributions.mjs';
+import { DISTRIBUTION_CONFIG } from '../src/config/distributions.js';
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', 'examples', 'data');
 const SCHEMA_VERSION = '1.0.0';
@@ -90,10 +91,10 @@ export const METRICS = GLOSSARY.map((g, i) => ({
   Definition: null, // the tracker's Definition column is empty (open question Q2)
   // Shared by the study page tile rows and the program table column bands.
   Category: g.cat,
-  ...(g.abbr === 'IE' && { Widget: 'breakdown-bar' }),
+  ...(DISTRIBUTION_CONFIG[g.id] && { Widget: 'distribution-bar' }),
   ...(g.abbr === 'DTH90' && {
-    Widget: 'link-out',
-    WidgetConfig: { href: 'https://gilead-biostats.github.io/gsm.kri/', label: 'mortality report' },
+    Widgets: ['link-out'],
+    WidgetConfigs: { 'link-out': { href: 'https://gilead-biostats.github.io/gsm.kri/', label: 'mortality report' } },
   }),
   // generator-only; stripped before writing
   base: g.base,
@@ -101,10 +102,6 @@ export const METRICS = GLOSSARY.map((g, i) => ({
   derived: g.derived,
 }));
 
-
-// Mapped_EXCLUSION's real Source attribution levels — the breakdown-bar demo
-// mirrors the phase-2 `details` slice (counts aggregated at export).
-const IE_SOURCES = ['EDC I/E only', 'Eligibility PD only', 'Ineligible, Both Criteria'];
 
 const SNAPSHOT_DATES = ['2026-01-31', '2026-02-28', '2026-03-31', '2026-04-30', '2026-05-31', '2026-06-30'];
 const TAS = ['Cardiology', 'Immunology', 'Neurology', 'Oncology', 'Virology'];
@@ -204,7 +201,6 @@ function sitePopulations(study, snapIndex, siteRate) {
 
 export function generateSnapshot(study, snapshotDate, snapIndex, metrics = METRICS, { withBounds = false, withDistributions = false, records = null } = {}) {
   const results = [];
-  const details = [];
   const bounds = [];
   const byAbbr = new Map(METRICS.map((m) => [m.Abbreviation, m]));
   const studyRate = (m) => Math.max(m.base * 0.05, m.base * study.character[m.MetricID].factor * (1 + study.drift * snapIndex));
@@ -283,15 +279,6 @@ export function generateSnapshot(study, snapshotDate, snapIndex, metrics = METRI
     if (withBounds && studyDen > 0) {
       bounds.push(...generateBounds(m.MetricID, studyNum / studyDen, pops.map((p) => p[m.denKey])));
     }
-    if (m.Abbreviation === 'IE') {
-      // Category counts must reconcile with the study-level numerator.
-      const c1 = Math.round(studyNum * (0.4 + R() * 0.2));
-      const c2 = Math.round((studyNum - c1) * (0.5 + R() * 0.2));
-      const counts = [c1, c2, studyNum - c1 - c2];
-      IE_SOURCES.forEach((Category, i) =>
-        details.push({ MetricID: m.MetricID, Category, Numerator: counts[i] })
-      );
-    }
   }
   const sum = (k) => pops.reduce((a, p) => a + p[k], 0);
   const studyParams = {
@@ -317,7 +304,7 @@ export function generateSnapshot(study, snapshotDate, snapIndex, metrics = METRI
       { GroupID: p.site, GroupLevel: 'Site', Param: 'InvestigatorLastName', Value: `Investigator ${String.fromCharCode(65 + (i % 26))}` },
     ]),
   ];
-  const snapshot = { schemaVersion: SCHEMA_VERSION, StudyID: study.StudyID, SnapshotDate: snapshotDate, results, groups, details };
+  const snapshot = { schemaVersion: SCHEMA_VERSION, StudyID: study.StudyID, SnapshotDate: snapshotDate, results, groups };
   if (withBounds) snapshot.bounds = bounds;
   if (withDistributions) snapshot.distributions = generateDistributions(study, snapshotDate, snapIndex, metrics, results, pops, records);
   return snapshot;

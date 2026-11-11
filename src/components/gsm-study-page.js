@@ -239,7 +239,7 @@ export class GsmStudyPage extends StoreElement {
     const body = document.createElement('div');
     body.className = 'tile-body';
     tile.append(body);
-    const config = current === metric.Widget ? metric.WidgetConfig : undefined;
+    const config = metric.WidgetConfigs?.[current] ?? (current === metric.Widget ? metric.WidgetConfig : undefined);
     const { def } = this.#mountWidget(body, current, { metricId: metric.MetricID, config });
     if (def.size) tile.classList.add(def.size);
     const open = this.store.state.detail.metricId === metric.MetricID;

@@ -15,7 +15,7 @@ export const STUDY_PAGE_SPEC = {
 
 // Host data-layer allow-list (W2): aggregated contract layers only — the exec
 // build never carries participant-level `listings`.
-export const EXEC_ALLOW_LIST = ['results', 'details', 'bounds', 'groups', 'history', 'external'];
+export const EXEC_ALLOW_LIST = ['results', 'distributions', 'bounds', 'groups', 'history', 'external'];
 
 // Standard tile views, in paging order. Every one reads only the reporting
 // layer, so every site-level metric gets all of them for free. A metric's

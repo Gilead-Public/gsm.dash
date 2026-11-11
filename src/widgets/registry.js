@@ -9,9 +9,9 @@ const widgets = new Map();
 
 // Layers that come "for free" from the standardized reporting model. A view
 // that reads only these is STANDARD: it works for every site-level metric with
-// no per-metric work. Anything else (details from the Mapped layer, listings,
-// an external report link) is CUSTOM — purpose-built for a metric.
-export const REPORTING_LAYERS = new Set(['results', 'history', 'bounds', 'groups']);
+// no per-metric work. Anything else (listings, an external report link) is
+// CUSTOM — purpose-built for a metric.
+export const REPORTING_LAYERS = new Set(['results', 'history', 'bounds', 'groups', 'distributions']);
 
 export function widgetKind(def) {
   if (def.kind) return def.kind;

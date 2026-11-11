@@ -299,10 +299,10 @@ export class PortfolioStore extends EventTarget {
     return selectLatestSnapshots([study], this.state.asOf).get(studyId) ?? null;
   }
 
-  /** Contract `details` rows (categorical breakdown counts) for one metric. */
-  detailRows(studyId, date, metricId) {
-    const details = this.#entry(studyId, date)?.snapshot.details ?? [];
-    return details.filter((d) => d.MetricID === metricId);
+  /** Reporting_Distributions site rows for one metric; undefined when the snapshot carries no distributions. */
+  distributionRows(studyId, date, metricId) {
+    const rows = this.#entry(studyId, date)?.snapshot.distributions;
+    return rows?.filter((d) => d.MetricID === metricId);
   }
 
   /** Reporting_Bounds rows for one metric (scatter envelope); empty when the snapshot has none. */
