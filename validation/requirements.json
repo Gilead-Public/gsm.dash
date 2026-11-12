@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "6e55e77805e7842f58066db8c8e4686f1715260797a3ead3f4deae1c7d01891b",
+  "hash": "c47401fb0529d2f108d23c4ea18c5eb0a8e5ab839fe30e9562d35b21a6636933",
   "issues": [
     {
       "number": 8,
@@ -264,22 +264,22 @@
           "id": "15.01",
           "text": "A double-programming test shows that every portfolio number computed from the summary equals the number from pooling the per-study files.",
           "sha256": "1727d40a7fcf032eb5a1db640adb3f66357ad43a1793276af95b3ebec08af920",
-          "kind": "unit",
-          "reviewed": false
+          "kind": "e2e",
+          "reviewed": true
         },
         {
           "id": "15.02",
           "text": "The schema rejects ratios and unknown fields.",
           "sha256": "56e6d3b4eab519a9f51e7c21a0e6eb554078404e84b910475da7ce43a9414b39",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "15.03",
-          "text": "The summary is a small fraction of the per-study files' size.",
-          "sha256": "28c8deab637ecd2fa075e5419578e930c81b773e0656d10fb6c6a8e8f83257ba",
+          "text": "On the generated example data, `summary.json` is at most 10% of the combined size of all per-study snapshot files listed in the manifest, measured in bytes on disk without compression.",
+          "sha256": "3cc28fba62b18e03b05076b638dbc1f385b08f9ee447cb9295a699f3f8a42dae",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         }
       ]
     },
@@ -549,6 +549,49 @@
           "sha256": "8b128e4a26ddb7c2c9a4fbb1c12ffa2fd643e3caf79490cf0a121a4ec1df1f71",
           "kind": "visual",
           "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 27,
+      "title": "Deliver one self-contained file per report",
+      "parent": "Gilead-BioStats/gsm.roadmap#623",
+      "userTest": false,
+      "criteria": [
+        {
+          "id": "27.01",
+          "text": "Every report is one HTML file with its scripts, styles and data inline, requiring no external runtime resources. It opens offline from `file://` and under a sub-path.",
+          "sha256": "1a1f8d0eaa16228da0f2f23c2fea0dd81432600495c12850d6b597cae2134472",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "27.02",
+          "text": "Reports link to each other with relative URLs.",
+          "sha256": "e35178eed12a0a90c373f65c2237054d3d65e1789a213aee853bfaf77aee3bbb",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "27.03",
+          "text": "Data is injected after the build. The base R injector needs no Node or Bun at render time, and the Node and R injectors produce byte-identical files for the same input.",
+          "sha256": "1010f99877cfe2d4863c5af6cdd54eaf13491131e0298dd8f2527e9a8642c10f",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "27.04",
+          "text": "A data document that fails its schema shows an error state, not numbers.",
+          "sha256": "809ed4e330471134788b489f0ea393718d0b0cfc7f3d80fe39e7a6c5b4bae71a",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "27.05",
+          "text": "The portfolio view state carries over to a study report and back: the selected view, folded categories in the table and distribution views, grouping and open groups, sorting, cell display, heatmap and palette, study filters, metric-status filters, hidden metrics and the highlighted study. The study report applies the metric-status filters and hidden metrics.",
+          "sha256": "74c00c0cbf32083a40068aed8baef97b502964042d595575f87e6f40efe8399d",
+          "kind": "e2e",
+          "reviewed": true
         }
       ]
     }
