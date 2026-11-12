@@ -13,17 +13,19 @@ export function readEmbedded(doc = document) {
   const manifestEl = doc.querySelector('script[type="application/json"][data-gsm="portfolio"]');
   if (!manifestEl) return null;
   const manifest = JSON.parse(manifestEl.textContent);
+  const summaryEl = doc.querySelector('script[type="application/json"][data-gsm="summary"]');
+  const summary = summaryEl ? JSON.parse(summaryEl.textContent) : null;
   const snapshots = [...doc.querySelectorAll('script[type="application/json"][data-gsm="snapshot"]')].map(
     (el) => JSON.parse(el.textContent)
   );
-  return { manifest, snapshots };
+  return { manifest, summary, snapshots };
 }
 
 export async function fetchPortfolio(baseUrl) {
-  const manifest = await fetchJSON(`${baseUrl}/portfolio.json`);
+  const [manifest, summary] = await Promise.all([fetchJSON(`${baseUrl}/portfolio.json`), fetchJSON(`${baseUrl}/summary.json`)]);
   const paths = manifest.studies.flatMap((s) => Object.values(s.files));
   const snapshots = await Promise.all(paths.map((p) => fetchJSON(`${baseUrl}/${p}`)));
-  return { manifest, snapshots };
+  return { manifest, summary, snapshots };
 }
 
 /** Embedded data wins when present; otherwise fetch from baseUrl. */

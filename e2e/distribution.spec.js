@@ -50,7 +50,6 @@ const snapshot = readData(study.files[study.snapshots.at(-1)]);
 const CONFIG = /** @type {Record<string, { enrolledPercent?: boolean; statusVariables?: string[]; percentLabel?: string; enrolledLabel?: string; sections: Record<string, { title?: string; topN?: number; percentLabel?: string }> }>} */ (DISTRIBUTION_CONFIG);
 /** @type {Metric[]} */
 const configured = portfolio.metrics.filter((m) => CONFIG[m.ID]);
-const route = `#/study/${encodeURIComponent(study.StudyID)}`;
 
 /**
  * @param {number | null} x
@@ -189,11 +188,11 @@ async function renderedFor(page, m) {
 const exactly = (value) => new RegExp(`^\\s*${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`);
 
 /**
- * @param {{ open(route?: string): Promise<void> }} app
+ * @param {{ openStudy(studyId: string): Promise<void> }} app
  * @param {Page} page
  */
 async function openStudy(app, page) {
-  await app.open(route);
+  await app.openStudy(study.StudyID);
   await expect(body(page, configured[0]).locator('.dist')).toBeVisible();
 }
 
@@ -284,7 +283,7 @@ test.describe('Layout A distribution widget', () => {
 
   test('10.06: configured status colours render, unmapped statuses fall back to neutral, reasons stay uncoloured (#10)', async ({ app, page }) => {
     const m = metricById('kri0006');
-    await app.open(route, {
+    await app.openStudy(study.StudyID, {
       portfolio: (p) => {
         const meta = p.metrics.find((x) => x.ID === 'kri0006');
         meta.WidgetConfigs = { ...meta.WidgetConfigs, 'distribution-bar': { colours: { 'Study Completion': 'rgb(21, 101, 192)', Ongoing: 'rgb(46, 125, 50)' } } };
@@ -323,7 +322,7 @@ test.describe('Layout A distribution widget', () => {
 
   test('10.07: a configured metric with no rows in the snapshot shows the empty state (#10)', async ({ app, page }) => {
     const m = metricById('kri0006');
-    await app.open(route, {
+    await app.openStudy(study.StudyID, {
       snapshot: (snap) => {
         if (snap.distributions) snap.distributions = snap.distributions.filter((d) => d.MetricID !== m.MetricID);
       },
@@ -348,7 +347,7 @@ test.describe('Layout A distribution widget', () => {
   });
 
   test('10.07: a metric without a breakdown configuration shows the missing state (#10)', async ({ app, page }) => {
-    await app.open(route, {
+    await app.openStudy(study.StudyID, {
       portfolio: (p) => {
         p.metrics.find((x) => x.ID === 'kri0001').Widget = 'distribution-bar';
       },

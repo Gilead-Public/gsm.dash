@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gilead-public.github.io/gsm.dash/schemas/portfolio-summary.schema.json",
+  "title": "gsm.dash portfolio summary",
+  "description": "Counts only: per study × snapshot × metric, the site-level Numerator and Denominator summed, the site count and the site flag counts. Rates and shares are computed after summing and are never stored.",
+  "type": "object",
+  "required": ["schemaVersion", "generated", "studies", "counts"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "generated": { "type": "string", "format": "date-time" },
+    "studies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "description": "The study's snapshot dates and its population counts at its latest snapshot, from Reporting_Groups Study rows; a count the study does not report is omitted. Descriptive parameters stay in the manifest.",
+        "required": ["StudyID", "snapshots"],
+        "additionalProperties": false,
+        "properties": {
+          "StudyID": { "type": "string", "minLength": 1 },
+          "ScreenedCount": { "$ref": "#/$defs/count" },
+          "ParticipantCount": { "$ref": "#/$defs/count" },
+          "DosedCount": { "$ref": "#/$defs/count" },
+          "snapshots": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "format": "date" }
+          }
+        }
+      }
+    },
+    "counts": {
+      "type": "array",
+      "description": "One row per study × snapshot × metric with at least one site row.",
+      "items": {
+        "type": "object",
+        "required": ["StudyID", "SnapshotDate", "MetricID", "Numerator", "Denominator", "SiteCount", "FlagCounts"],
+        "additionalProperties": false,
+        "properties": {
+          "StudyID": { "type": "string", "minLength": 1 },
+          "SnapshotDate": { "type": "string", "format": "date" },
+          "MetricID": { "type": "string", "minLength": 1 },
+          "Numerator": { "type": "number", "minimum": 0 },
+          "Denominator": { "type": "number", "minimum": 0 },
+          "SiteCount": { "$ref": "#/$defs/count", "minimum": 1 },
+          "FlagCounts": {
+            "type": "object",
+            "description": "Sites per flag value; NA counts sites without a flag.",
+            "required": ["-2", "-1", "0", "1", "2", "NA"],
+            "additionalProperties": false,
+            "properties": {
+              "-2": { "$ref": "#/$defs/count" },
+              "-1": { "$ref": "#/$defs/count" },
+              "0": { "$ref": "#/$defs/count" },
+              "1": { "$ref": "#/$defs/count" },
+              "2": { "$ref": "#/$defs/count" },
+              "NA": { "$ref": "#/$defs/count" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "count": { "type": "integer", "minimum": 0 }
+  }
+}

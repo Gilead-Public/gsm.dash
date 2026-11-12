@@ -72,6 +72,63 @@ export function closingIssues(repo, pr) {
   return nodes.filter((n) => n.repository.nameWithOwner.toLowerCase() === repo.toLowerCase()).map((n) => n.number);
 }
 
+/** @typedef {import('./scope.js').PullInfo} PullInfo */
+
+/**
+ * @param {any} raw
+ * @returns {PullInfo}
+ */
+const toPull = (raw) => ({
+  number: raw.number,
+  base: raw.base.ref,
+  head: raw.head.ref,
+  body: raw.body ?? '',
+  state: raw.state,
+  merged: Boolean(raw.merged_at),
+});
+
+/**
+ * @param {string} repo
+ * @param {number} n
+ * @returns {PullInfo}
+ */
+export function fetchPull(repo, n) {
+  return toPull(JSON.parse(gh(['api', `repos/${repo}/pulls/${n}`])));
+}
+
+/**
+ * PRs in any state whose head is `branch` in `repo`.
+ * @param {string} repo
+ * @param {string} branch
+ * @returns {PullInfo[]}
+ */
+export function pullsWithHead(repo, branch) {
+  const head = encodeURIComponent(`${repo.split('/')[0]}:${branch}`);
+  const pages = JSON.parse(gh(['api', '--paginate', '--slurp', `repos/${repo}/pulls?state=all&per_page=100&head=${head}`]));
+  return pages.flat().map(toPull);
+}
+
+/**
+ * @param {string} repo
+ * @returns {string}
+ */
+export function defaultBranch(repo) {
+  return gh(['api', `repos/${repo}`, '--jq', '.default_branch']).trim();
+}
+
+/**
+ * Whether `branch` has no commits that `base` lacks.
+ * @param {string} repo
+ * @param {string} base
+ * @param {string} branch
+ * @returns {boolean}
+ */
+export function containedIn(repo, base, branch) {
+  const ahead = gh(['api', `repos/${repo}/compare/${encodeURIComponent(base)}...${encodeURIComponent(branch)}`, '--jq', '.ahead_by']).trim();
+  if (!/^\d+$/.test(ahead)) throw new Error(`cannot compare ${branch} with ${base}: ${ahead || 'no ahead_by in the response'}`);
+  return Number(ahead) === 0;
+}
+
 /**
  * @param {string} repo
  * @param {string} runId

@@ -21,7 +21,7 @@ export function resolveData(dataSpec, { store, studyId, metricId }) {
     data.study = store.studyRollup(studyId, date, metricId); // derived from site rows
     data.siteRows = store.siteRows(studyId, date, metricId);
     data.trend = store.studyTrend(studyId, metricId);
-    data.portfolio = store.rollup(store.studies, metricId); // whole-portfolio comparison
+    data.portfolio = store.portfolioComparison(studyId, metricId);
   } else if (dataSpec.results === 'all-site') {
     data.metrics = store.metrics;
     data.siteRowsByMetric = new Map(

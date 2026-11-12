@@ -1,5 +1,6 @@
 import { orderMetrics, normalizeMetric, pivotGroups, indexResults } from './normalize.js';
-import { selectLatestSnapshots, poolResults, flagDistribution, bucketStudies, filterStudies } from './rollup.js';
+import { selectLatestSnapshots, poolResults, bucketStudies, filterStudies } from './rollup.js';
+import { indexSummary, poolSummary, POPULATIONS } from './summary.js';
 import { nextSort } from './sort.js';
 import { STATUS_ORDER, CATEGORY_ORDER, groupByCategory } from './catalog.js';
 
@@ -10,13 +11,22 @@ import { STATUS_ORDER, CATEGORY_ORDER, groupByCategory } from './catalog.js';
  * (e.g. a gsm.kri htmlwidget) can drive it directly.
  */
 export class PortfolioStore extends EventTarget {
-  constructor({ manifest, snapshots }) {
+  #summary = null;
+  #comparison = null;
+
+  /**
+   * @param {{ manifest: any, snapshots: any[], summary?: any, comparison?: Array<{ SnapshotDate: string, MetricID: string, Numerator: number, Denominator: number }> }} data
+   *   A study report passes its injected `comparison` (portfolio counts per visit date × metric) instead of the summary.
+   */
+  constructor({ manifest, snapshots, summary, comparison }) {
     super();
     const { active, inactive } = orderMetrics(manifest.metrics.map(normalizeMetric));
     this.metrics = active;
     this.inactiveMetrics = inactive;
     this.studies = manifest.studies;
     this.generated = manifest.generated;
+    if (comparison) this.#comparison = new Map(comparison.map((r) => [`${r.SnapshotDate}\n${r.MetricID}`, r]));
+    else this.#summary = indexSummary(summary, manifest.studies);
 
     // StudyID -> SnapshotDate -> {snapshot, byMetric, groupParams}
     this.snapshotIndex = new Map();
@@ -53,6 +63,23 @@ export class PortfolioStore extends EventTarget {
       distCollapsed: new Set(), // distribution view: categories folded to their header
     };
     this.state.collapsedGroups = new Set(this.#allCategories());
+  }
+
+  get #index() {
+    if (!this.#summary) throw new Error('a study report carries no portfolio summary, only its comparison');
+    return this.#summary;
+  }
+
+  /**
+   * The portfolio a study's tiles compare with, at the visit shown. A study report looks it up in its injected
+   * comparison; otherwise it is pooled from the summary.
+   * @returns {{ Numerator: number, Denominator: number, Rate: number | null } | null}
+   */
+  portfolioComparison(studyId, metricId) {
+    if (!this.#comparison) return this.rollup(this.studies, metricId);
+    const row = this.#comparison.get(`${this.latestDate(studyId)}\n${metricId}`);
+    if (!row) return null;
+    return { Numerator: row.Numerator, Denominator: row.Denominator, Rate: row.Denominator > 0 ? row.Numerator / row.Denominator : null };
   }
 
   /**
@@ -331,59 +358,19 @@ export class PortfolioStore extends EventTarget {
   }
 
   /**
-   * Participants enrolled across a set of studies, each at its own latest
-   * snapshot — the same snapshot selection the metric rollups use, so the
-   * enrollment column and the metric columns always describe the same extract.
-   * Summed from Reporting_Groups `ParticipantCount`; `ParticipantTarget` comes
-   * along for the "n of target" context.
-   *
-   * `enrolled` is null when no study in the set reports a count, so a missing
+   * Participant populations (P4) across a set of studies, from each study's latest counts in the summary: Screened /
+   * Enrolled / Dosed from Reporting_Groups `ScreenedCount` / `ParticipantCount` / `DosedCount`. `asOf` only decides which
+   * studies count: the summary carries no earlier counts. Each is null when no counted study reports it, so a missing
    * value is never rendered as a real zero.
    */
-  enrollment(studies) {
-    let enrolled = 0;
-    let target = 0;
-    let counted = 0;
-    const latest = this.latestFor(studies);
-    for (const [studyId, date] of latest) {
-      const params = this.studyParamsAt(studyId, date);
-      const n = Number(params.ParticipantCount);
-      const t = Number(params.ParticipantTarget);
-      if (Number.isFinite(n)) {
-        enrolled += n;
-        counted += 1;
-      }
-      if (Number.isFinite(t)) target += t;
-    }
-    return {
-      enrolled: counted ? enrolled : null,
-      target: target || null,
-      nStudies: latest.size,
-      nCounted: counted,
-    };
-  }
-
-  /**
-   * Participant populations (P4) across a set of studies at their latest
-   * snapshots: Screened / Enrolled / Dosed from Reporting_Groups
-   * `ScreenedCount` / `ParticipantCount` / `DosedCount`. Each is null when no
-   * study in the set reports it.
-   */
   population(studies) {
-    const totals = { screened: 0, enrolled: 0, dosed: 0 };
-    const counted = { screened: 0, enrolled: 0, dosed: 0 };
-    const keys = { screened: 'ScreenedCount', enrolled: 'ParticipantCount', dosed: 'DosedCount' };
-    for (const [studyId, date] of this.latestFor(studies)) {
-      const params = this.studyParamsAt(studyId, date);
-      for (const [k, param] of Object.entries(keys)) {
-        const n = Number(params[param]);
-        if (params[param] != null && Number.isFinite(n)) {
-          totals[k] += n;
-          counted[k] += 1;
-        }
-      }
-    }
-    return Object.fromEntries(Object.keys(keys).map((k) => [k, counted[k] ? totals[k] : null]));
+    const ids = [...this.latestFor(studies).keys()];
+    return Object.fromEntries(
+      Object.entries(POPULATIONS).map(([key, param]) => {
+        const reported = ids.map((id) => this.#index.population(id, param)).filter((n) => n != null);
+        return [key, reported.length ? reported.reduce((a, b) => a + b, 0) : null];
+      }),
+    );
   }
 
   /** Site rows for one metric across every snapshot of the study (time series input). */
@@ -408,15 +395,12 @@ export class PortfolioStore extends EventTarget {
   }
 
   /**
-   * Pooled rollup for a set of studies at their latest snapshots: Σ site
-   * numerators / Σ site denominators across every contributing site, plus
-   * the site flag distribution. One study or the whole portfolio — same math.
+   * Pooled rollup for a set of studies at their latest snapshots, from the
+   * summary: Σ site numerators / Σ site denominators, plus the site flag
+   * distribution. One study or the whole portfolio — same math.
    */
   rollup(studies, metricId) {
-    const latest = this.latestFor(studies);
-    const siteRows = [];
-    for (const [studyId, date] of latest) siteRows.push(...this.siteRows(studyId, date, metricId));
-    return { ...poolResults(siteRows), NumSites: siteRows.length, flags: flagDistribution(siteRows) };
+    return poolSummary(this.#index, this.latestFor(studies), metricId);
   }
 
   buckets() {
@@ -430,10 +414,7 @@ export class PortfolioStore extends EventTarget {
   trendSeries(metricId, studies = this.filteredStudies()) {
     const gridDates = [...new Set(studies.flatMap((s) => s.snapshots))].sort();
     return gridDates.map((date) => {
-      const atDate = selectLatestSnapshots(studies, date);
-      const rows = [];
-      for (const [studyId, snapDate] of atDate) rows.push(...this.siteRows(studyId, snapDate, metricId));
-      const { Rate, NumStudies } = poolResults(rows);
+      const { Rate, NumStudies } = poolSummary(this.#index, selectLatestSnapshots(studies, date), metricId);
       return { date, rate: Rate, nStudies: NumStudies };
     });
   }

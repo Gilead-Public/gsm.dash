@@ -1,3 +1,4 @@
+// @ts-check
 // The numeric heart of gsm.dash (design doc §4.3). Pure functions over
 // contract-shaped rows; the qualification target for double-programming QC.
 
@@ -49,9 +50,22 @@ export function flagDistribution(siteRows) {
     else if (Math.abs(Flag) >= 1) d.amber += 1;
     else d.green += 1;
   }
-  d.total = d.red + d.amber + d.green + d.na;
-  d.share = d.total > 0 ? (d.red + d.amber) / d.total : 0;
-  return d;
+  return withShare(d);
+}
+
+/**
+ * The same distribution from site counts per flag value (keys -2, -1, 0, 1, 2 and NA), as the portfolio summary
+ * stores them.
+ * @param {Record<string, number>} counts
+ */
+export function flagDistributionFromCounts(counts) {
+  return withShare({ red: counts['-2'] + counts['2'], amber: counts['-1'] + counts['1'], green: counts['0'], na: counts.NA });
+}
+
+/** @param {{ red: number, amber: number, green: number, na: number }} d */
+function withShare(d) {
+  const total = d.red + d.amber + d.green + d.na;
+  return { ...d, total, share: total > 0 ? (d.red + d.amber) / total : 0 };
 }
 
 /**

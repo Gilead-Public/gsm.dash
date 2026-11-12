@@ -1,17 +1,18 @@
 // @ts-check
-// Builds both delivery modes, runs every test, and writes the traceability matrix and evidence for one run.
+// Builds every artifact in both delivery modes, runs every test, and writes the traceability matrix and evidence for one run.
 // Usage: node validation/run.js [--issues 8,9] [--pr <number>] [--offline] [--repo owner/name]
 // Exit code 0 only when validation passed. Every step runs and is recorded; nothing short-circuits the report.
 import { execFileSync, spawnSync } from 'node:child_process';
 import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
-import { loadBaseline, BASELINE_PATH } from './lib/baseline.js';
-import { resolveScope } from './lib/scope.js';
+import { differsFromLive, loadBaseline, BASELINE_PATH } from './lib/baseline.js';
+import { resolveScope, walkStack } from './lib/scope.js';
 import { flag, option, parseIssueList } from './lib/cli.js';
-import { MODES, parseIssueBody, sha256 } from './lib/criteria.js';
+import { MODES, parseIssueBody } from './lib/criteria.js';
 import { EVIDENCE, evaluate } from './lib/gate.js';
+import { SPEC_ARTIFACTS } from '../e2e/projects.js';
 /** @typedef {import('./lib/gate.js').GateResult} GateResult */
-import { closingIssues, DEFAULT_REPO, fetchIssue } from './lib/github.js';
+import { closingIssues, containedIn, DEFAULT_REPO, defaultBranch, fetchIssue, fetchPull, pullsWithHead } from './lib/github.js';
 import { hashTree, sha256File, treeDigest } from './lib/hash.js';
 import { groupFailures, matrixHtml, matrixMarkdown } from './lib/matrix.js';
 /** @typedef {import('./lib/record.js').Environment} Environment */
@@ -58,7 +59,7 @@ copyFileSync(BASELINE_PATH, at('requirements.json'));
 /** @type {RunRecord} */
 const record = {
   runId, commit, repo, startedAt: now(), baselineHash: baseline.hash,
-  scope: { issues: [], completed: [], pr: prArg ? Number(prArg) : null, prCloses: [], cli: cliIssues },
+  scope: { issues: [], completed: [], pr: prArg ? Number(prArg) : null, prCloses: [], stack: [], cli: cliIssues },
   issueStates: {}, environment: null, dataSha256: null, builds: {}, steps: [], validation: 'incomplete', failures: [], warnings: [],
 };
 if (dirty) record.warnings.push('the working tree has uncommitted changes; the commit does not identify what was tested');
@@ -115,7 +116,7 @@ step('environment', () => {
     arch: arch(),
     node: process.version,
     npm: execFileSync('npm', ['--version'], { encoding: 'utf8' }).trim(),
-    packages: Object.fromEntries(['@playwright/test', 'vitest', 'vite', 'typescript', 'ajv', 'ajv-formats'].map((p) => [p, version(p)])),
+    packages: Object.fromEntries(['@playwright/test', 'vitest', 'vite', 'typescript', 'ajv', 'ajv-formats', 'astro', '@astrojs/react', 'react', 'react-dom', 'es-module-lexer'].map((p) => [p, version(p)])),
     browser: { name: 'chromium', version: execFileSync('node', ['--input-type=module', '-e', probe], { encoding: 'utf8' }).trim() },
     lockfileSha256: sha256File('package-lock.json'),
   };
@@ -123,7 +124,7 @@ step('environment', () => {
   return 0;
 });
 
-// 1. Scope: completed issues, plus what the PR declares it closes, plus --issues.
+// 1. Scope: completed issues, plus what the PR and the PRs it is stacked on close, plus --issues.
 const scope = new Set();
 step('scope', () => {
   const known = new Set(baseline.issues.map((i) => i.number));
@@ -144,16 +145,28 @@ step('scope', () => {
     if (info.state === 'closed' && info.stateReason === 'completed') record.scope.completed.push(issue.number);
     live.set(issue.number, info.body);
   }
-  if (record.scope.pr) record.scope.prCloses = closingIssues(repo, record.scope.pr);
-  const unknown = settle();
+  let broken = 0;
+  if (record.scope.pr) {
+    const main = defaultBranch(repo);
+    const walked = walkStack(record.scope.pr, {
+      repo,
+      defaultBranch: main,
+      pull: (n) => fetchPull(repo, n),
+      pullsWithHead: (branch) => pullsWithHead(repo, branch),
+      linkedCloses: (n) => closingIssues(repo, n),
+      landed: (branch) => containedIn(repo, main, branch),
+    });
+    record.scope.prCloses = walked.closes;
+    record.scope.stack = walked.stack;
+    record.failures.push(...walked.failures);
+    broken = walked.failures.length;
+  }
+  const unknown = settle() + broken;
 
   let drift = 0;
   for (const issue of baseline.issues) {
-    const parsed = parseIssueBody(issue.number, live.get(issue.number) ?? '');
-    const liveSig = parsed.criteria.map((c) => `${c.id}:${sha256(c.text)}`).join(',');
-    const baseSig = issue.criteria.map((c) => `${c.id}:${c.sha256}`).join(',');
-    if (liveSig === baseSig && !parsed.errors.length) continue;
-    const msg = `#${issue.number}: acceptance criteria on GitHub differ from the baseline; run criteria:sync`;
+    if (!differsFromLive(issue, parseIssueBody(issue.number, live.get(issue.number) ?? ''))) continue;
+    const msg = `#${issue.number}: acceptance criteria or Scope on GitHub differ from the baseline; run criteria:sync`;
     if (scope.has(issue.number)) {
       record.failures.push(msg);
       drift++;
@@ -163,7 +176,7 @@ step('scope', () => {
 });
 record.scope.issues = [...scope].sort((a, b) => a - b);
 
-// 2–4. One data generation shared by two isolated builds, each copied into the run folder before the next starts.
+// 2–5. One data generation shared by three isolated builds, each written into the run folder before the next starts.
 const buildsOk =
   step('generate-data', () => {
     const code = sh('npm', ['run', 'generate-data']);
@@ -184,17 +197,19 @@ const buildsOk =
     mkdirSync(join(out, 'examples'), { recursive: true });
     cpSync('examples/data', join(out, 'examples/data'), { recursive: true });
     return 0;
-  });
+  }) &&
+  step('build-reports', () => sh('npx', ['astro', 'build']) || sh('node', ['scripts/package-reports.mjs', at('build/reports')]));
 
 if (buildsOk) {
   record.builds = hashTree(at('build'), runDir);
   step('inventory', () =>
-    sh('npx', ['vitest', 'list', `--json=${at('inventory-vitest.json')}`]) ||
+    // Vitest 5 lists by parsing source unless told otherwise, which leaves template-literal names unexpanded.
+    sh('npx', ['vitest', 'list', '--staticParse=false', `--json=${at('inventory-vitest.json')}`]) ||
     sh('npx', ['playwright', 'test', '--list', '--reporter=json'], { ...runEnv, PLAYWRIGHT_JSON_OUTPUT_NAME: at('inventory-playwright.json') }));
   step('vitest', () => sh('npx', ['vitest', 'run', '--reporter=default', '--reporter=json', `--outputFile.json=${at('vitest.json')}`]));
   step('playwright', () => sh('npx', ['playwright', 'test', '--reporter=list,json'], { ...runEnv, PLAYWRIGHT_JSON_OUTPUT_NAME: at('playwright.json') }));
 } else {
-  for (const name of ['build-file', 'build-subpath', 'inventory', 'vitest', 'playwright']) {
+  for (const name of ['build-file', 'build-subpath', 'build-reports', 'inventory', 'vitest', 'playwright']) {
     if (!record.steps.some((s) => s.name === name)) skip(name);
   }
 }
@@ -243,13 +258,13 @@ step('report', () => {
   for (const r of rows) for (const a of r.attachments) if (existsSync(at(a.path))) hashes.set(a.path, sha256File(at(a.path)));
   const evidence = new Map([...hashes].filter(([p]) => rows.some((r) => r.attachments.some((a) => a.path === p && a.name === EVIDENCE))));
 
-  gate = evaluate({ baseline, scope, modes: [...MODES], reports: { vitest, playwright }, inventory, evidence, runId });
+  gate = evaluate({ baseline, scope, modes: [...MODES], artifacts: SPEC_ARTIFACTS, reports: { vitest, playwright }, inventory, evidence, runId });
   record.failures.push(...gate.failures);
 
   const time = now();
   writeFileSync(at('results.jsonl'), rows.map((r) => {
     const { criterion } = parseTitle(testTitle(r));
-    return JSON.stringify({ runId, commit, time, source: r.source, file: r.file, title: testTitle(r), titlePath: r.titlePath, mode: r.mode, outcome: r.outcome, criterion, issue: criterion ? Number(criterion.split('.')[0]) : null });
+    return JSON.stringify({ runId, commit, time, source: r.source, file: r.file, title: testTitle(r), titlePath: r.titlePath, artifact: r.artifact, mode: r.mode, outcome: r.outcome, criterion, issue: criterion ? Number(criterion.split('.')[0]) : null });
   }).join('\n') + (rows.length ? '\n' : ''));
   writeFileSync(at('matrix.json'), `${JSON.stringify(gate, null, 2)}\n`);
 
@@ -260,7 +275,7 @@ step('report', () => {
       const hash = hashes.get(a.path);
       if (!hash) continue;
       const kind = a.name === EVIDENCE ? 'evidence' : a.name === 'trace' ? 'trace' : 'attachment';
-      manifest.push({ path: a.path, sha256: hash, kind, criterion: criterion ?? undefined, test: `${r.file} › ${r.titlePath.join(' › ')}`, mode: r.mode });
+      manifest.push({ path: a.path, sha256: hash, kind, criterion: criterion ?? undefined, test: `${r.file} › ${r.titlePath.join(' › ')}`, artifact: r.artifact, mode: r.mode });
     }
   }
   return 0;
