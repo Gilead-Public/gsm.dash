@@ -4,6 +4,7 @@
 import { DISTRIBUTION_CONFIG } from '../config/distributions.js';
 import { STUDY_VIEW_CONFIG } from '../config/study-views.js';
 import { esc } from '../util/format.js';
+import { reportLink } from './report-links.js';
 import { getWidget, resolveWidget } from '../widgets/registry.js';
 import { DETAIL_TABS, EXEC_ALLOW_LIST, STUDY_PAGE_SPEC } from './study-page-spec.js';
 
@@ -46,12 +47,19 @@ export function resolveView(name, metric, config) {
  * tabs are code, not runtime configuration, so they are checked here too: a misspelt one fails the shipped-
  * configuration unit test before it can ship.
  * @param {any[]} catalog Every catalog metric, shown or not.
- * @param {{ breakdowns?: Record<string, unknown>, studies?: Record<string, { configs?: Record<string, unknown> }>, pageWidgets?: Array<{ widget: string }>, detailTabs?: Array<{ widget: string }> }} [sources]
+ * @param {{ breakdowns?: Record<string, unknown>, studies?: Record<string, { configs?: Record<string, unknown> }>, pageWidgets?: Array<{ widget: string }>, detailTabs?: Array<{ widget: string }>, reportBase?: string | null, page?: string }} [sources]
  * @returns {Problem[]}
  */
 export function configProblems(
   catalog,
-  { breakdowns = DISTRIBUTION_CONFIG, studies = STUDY_VIEW_CONFIG, pageWidgets = STUDY_PAGE_SPEC.pageWidgets, detailTabs = DETAIL_TABS } = {},
+  {
+    breakdowns = DISTRIBUTION_CONFIG,
+    studies = STUDY_VIEW_CONFIG,
+    pageWidgets = STUDY_PAGE_SPEC.pageWidgets,
+    detailTabs = DETAIL_TABS,
+    reportBase = null,
+    page = globalThis.location?.href ?? '',
+  } = {},
 ) {
   const ids = new Set(catalog.flatMap((m) => [m.ID, m.MetricID]));
   /** @type {Problem[]} */
@@ -67,6 +75,11 @@ export function configProblems(
   for (const [studyId, study] of Object.entries(studies)) {
     for (const name of Object.keys(study.configs ?? {})) {
       if (!getWidget(name)) problems.push({ reference: `Widget "${name}" in the view options of study ${studyId}`, reason: 'it is not a registered widget' });
+    }
+  }
+  for (const m of catalog) {
+    if (m.ReportLink != null && !reportLink(m, reportBase, page)) {
+      problems.push({ reference: `Report link "${m.ReportLink}" for ${m.Abbreviation} (${m.MetricID})`, reason: `it can't be resolved against the report base "${reportBase ?? './'}"` });
     }
   }
   for (const { widget } of pageWidgets) {

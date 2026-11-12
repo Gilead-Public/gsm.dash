@@ -43,7 +43,7 @@ describe('references that fail visibly (#12)', () => {
 
   it('the shipped configuration, page layout and drill-in tabs match the shipped catalog and widgets', async () => {
     const { generatePortfolio } = await import('../scripts/generate-example-data.mjs');
-    expect(configProblems(generatePortfolio().manifest.metrics)).toEqual([]);
+    expect(configProblems(generatePortfolio().manifest.metrics, { page: 'https://example.org/dash/index.html' })).toEqual([]);
   });
 
   it('keeps an explicitly empty view name, which its tile then shows as a problem; only an omitted name means none', () => {

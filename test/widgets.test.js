@@ -29,8 +29,8 @@ describe('widget registry + allow-list resolution', () => {
 
   it('refuses a widget that does not apply to the metric: breakdowns without a configuration, a report link without a link', () => {
     expect(resolveWidget('distribution-bar', EXEC, plain)).toEqual({ def: null, reason: 'it has no breakdown configuration' });
-    expect(resolveWidget('link-out', EXEC, plain, {})).toEqual({ def: null, reason: 'no report link is configured for it' });
-    expect(resolveWidget('link-out', EXEC, plain, { href: 'report.html' }).def.name).toBe('link-out');
+    expect(resolveWidget('link-out', EXEC, plain, { label: 'report' })).toEqual({ def: null, reason: 'no report link is configured for it' });
+    expect(resolveWidget('link-out', EXEC, { ...plain, ReportLink: 'report.html' }).def.name).toBe('link-out');
   });
 
   it('missingLayers names exactly the disallowed layers', () => {

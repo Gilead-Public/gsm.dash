@@ -58,8 +58,8 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
  */
 
 /**
- * The same data changes for a report's document: `portfolio` sees the catalog and the study's entry as a one-study
- * manifest, and `snapshot` sees each of the study's snapshots.
+ * The same data changes for a report's document: `portfolio` sees the report base, the catalog and the study's entry
+ * as a one-study manifest, and `snapshot` sees each of the study's snapshots.
  * @param {DataOverrides} overrides
  * @returns {ReportOverrides}
  */
@@ -68,10 +68,12 @@ function asReportOverrides(overrides) {
   return {
     document(doc) {
       if (overrides.portfolio) {
-        const manifest = { generated: doc.generated, metrics: doc.metrics, studies: [doc.study] };
+        const manifest = { generated: doc.generated, reportBase: doc.reportBase, metrics: doc.metrics, studies: [doc.study] };
         overrides.portfolio(manifest);
         doc.metrics = manifest.metrics;
         [doc.study] = manifest.studies;
+        if (manifest.reportBase === undefined) delete doc.reportBase;
+        else doc.reportBase = manifest.reportBase;
       }
       if (overrides.snapshot) for (const snapshot of doc.snapshots) overrides.snapshot(snapshot);
     },

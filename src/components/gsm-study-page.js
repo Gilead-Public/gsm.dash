@@ -2,6 +2,7 @@ import { StoreElement, esc } from './util.js';
 import { attachHoverTooltip, metricInfoIcon, statusPill } from './tooltip.js';
 import { resolveData, getWidget } from '../widgets/index.js';
 import { configProblems, noticeHtml, problemHtml, resolveView } from '../app/references.js';
+import { reportLink, reportLinkHtml } from '../app/report-links.js';
 import { STUDY_PAGE_SPEC, DETAIL_TABS, KIND_HELP } from '../app/study-page-spec.js';
 import { currentTileView, sharedTileViews, tileConfig, tileViews, viewLabel } from '../app/tile-views.js';
 
@@ -259,7 +260,7 @@ export class GsmStudyPage extends StoreElement {
         <button type="button" class="vbtn" data-view-step="-1" data-metric="${esc(metric.MetricID)}" aria-label="Previous view">‹</button>
         <span class="view-name" title="${esc(viewLabel(current))} — view ${idx + 1} of ${views.length}">${esc(viewLabel(current))} <span class="muted">${idx + 1}/${views.length}</span></span>
         <button type="button" class="vbtn" data-view-step="1" data-metric="${esc(metric.MetricID)}" aria-label="Next view">›</button>
-        <button type="button" class="tile-more ${open ? 'on' : ''}" data-detail-metric="${esc(metric.MetricID)}" aria-expanded="${open}" title="Full-size gsm.viz charts">Charts ${open ? '▴' : '▾'}</button>
+        <button type="button" class="tile-more ${open ? 'on' : ''}" data-detail-metric="${esc(metric.MetricID)}" aria-expanded="${open}" title="Full-size gsm.viz charts">Charts ${open ? '▴' : '▾'}</button>${reportLinkHtml(reportLink(metric, this.store.reportBase, location.href))}
       </div>`
     );
   }
@@ -318,7 +319,7 @@ export class GsmStudyPage extends StoreElement {
       ...(allViews === 'mixed' ? [['mixed', 'Mixed']] : []),
     ];
 
-    const problems = configProblems([...this.store.metrics, ...this.store.inactiveMetrics]);
+    const problems = configProblems([...this.store.metrics, ...this.store.inactiveMetrics], { reportBase: this.store.reportBase });
     this.innerHTML = `
       <a href="#/program" class="back">← Program overview</a>${noticeHtml(problems)}
       <div class="dd-head">

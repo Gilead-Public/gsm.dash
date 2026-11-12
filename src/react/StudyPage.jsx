@@ -3,6 +3,7 @@ import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } f
 import { attachHoverTooltip, metricTip } from '../components/tooltip.js';
 import { getWidget } from '../widgets/index.js';
 import { configProblems, problemText, resolveView } from '../app/references.js';
+import { reportLink } from '../app/report-links.js';
 import { STUDY_PAGE_SPEC, DETAIL_TABS, KIND_HELP } from '../app/study-page-spec.js';
 import { currentTileView, sharedTileViews, tileConfig, tileViews, viewLabel } from '../app/tile-views.js';
 import { useStore } from './useStore.js';
@@ -181,7 +182,7 @@ export function StudyPage({ store, studyId }) {
 
   return (
     <div className="study-page" data-study={studyId} ref={root} onClick={onClick}>
-      <ConfigNotice problems={configProblems([...store.metrics, ...store.inactiveMetrics])} />
+      <ConfigNotice problems={configProblems([...store.metrics, ...store.inactiveMetrics], { reportBase: store.reportBase })} />
       <div className="dd-head">
         <span className="study mono">{study.StudyID}</span>
         {study.params.nickname ? <span className="study nick">{study.params.nickname}</span> : null}
@@ -321,6 +322,7 @@ function Tile({ metric, open, store, studyId, version }) {
   const view = resolveView(current, metric, config);
   const { def } = view;
   const label = viewLabel(current);
+  const link = reportLink(metric, store.reportBase, location.href);
   const step = (/** @type {number} */ by) => store.setTileView(metric.MetricID, views[(idx + by + views.length) % views.length]);
   const toggleDetail = () => store.set('detail', { metricId: open ? null : metric.MetricID, tab: store.state.detail.tab });
   return (
@@ -346,6 +348,11 @@ function Tile({ metric, open, store, studyId, version }) {
         <button type="button" className={`tile-more ${open ? 'on' : ''}`} data-detail-metric={metric.MetricID} aria-expanded={open} title="Full-size gsm.viz charts" onClick={toggleDetail}>
           Charts {open ? '▴' : '▾'}
         </button>
+        {link ? (
+          <a className="report-link" href={link} target="_blank" rel="noopener">
+            Detailed report ↗
+          </a>
+        ) : null}
       </div>
     </div>
   );

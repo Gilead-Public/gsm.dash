@@ -9,6 +9,7 @@
   "properties": {
     "schemaVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
     "generated": { "type": "string", "format": "date-time" },
+    "reportBase": { "$ref": "portfolio.schema.json#/properties/reportBase" },
     "metrics": { "$ref": "portfolio.schema.json#/properties/metrics" },
     "study": {
       "type": "object",

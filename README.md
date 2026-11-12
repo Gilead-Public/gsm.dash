@@ -126,6 +126,11 @@ One contract, two modes (auto-detected): **fetched** (static host serving
 (`<script type="application/json" data-gsm="portfolio|summary|snapshot">` blocks for
 self-contained HTML / htmlwidget embedding).
 
+Detailed-report links (#13): a catalog entry's `ReportLink` is a path to that metric's
+report, resolved against the manifest's optional `reportBase`, which itself resolves
+against the page; a relative base therefore works wherever the dashboard is hosted.
+A metric without `ReportLink` shows no link.
+
 Study reports take one injected study document (`<script type="application/json"
 id="gsm-data">`): the catalog, the study's manifest entry, all its snapshots and
 the portfolio comparison per snapshot date, pooled from the summary.

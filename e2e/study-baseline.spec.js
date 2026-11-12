@@ -28,8 +28,16 @@ const STANDARD = { overview: 'overview', details: 'scalar-tile', scatter: 'scatt
  */
 async function capture(page, name, artifact) {
   const root = page.locator('#app > gsm-study-page, #app > .study-page');
-  const dom = await root.evaluate((el) => el.innerHTML);
+  // #13 adds a report link to configured tiles after this baseline was pinned; its own tests check those links, so
+  // they are left out here and every other part of the page is still compared with the page before #12.
+  const dom = await root.evaluate((el) => {
+    const copy = /** @type {Element} */ (el.cloneNode(true));
+    for (const link of copy.querySelectorAll('.report-link')) link.remove();
+    return copy.innerHTML;
+  });
+  await root.evaluate((el) => el.querySelectorAll('.report-link').forEach((a) => a.setAttribute('hidden', '')));
   const aria = await root.ariaSnapshot();
+  await root.evaluate((el) => el.querySelectorAll('.report-link').forEach((a) => a.removeAttribute('hidden')));
   const rendered = await root.evaluate((el) => {
     const shown = (/** @type {Element} */ e) => {
       if (!e.checkVisibility({ opacityProperty: true, visibilityProperty: true })) return false;

@@ -8,7 +8,7 @@ import { StudyPage } from './StudyPage.jsx';
 
 /** @param {import('./document.js').StudyDocument} doc */
 function storeFor(doc) {
-  const manifest = { generated: doc.generated, metrics: doc.metrics, studies: [doc.study] };
+  const manifest = { generated: doc.generated, reportBase: doc.reportBase, metrics: doc.metrics, studies: [doc.study] };
   return new PortfolioStore({ manifest, snapshots: doc.snapshots, comparison: doc.comparison });
 }
 
