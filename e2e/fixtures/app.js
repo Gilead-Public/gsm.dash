@@ -43,6 +43,7 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
  * @property {Artifact} artifact
  * @property {Mode} mode
  * @property {(route?: string, overrides?: DataOverrides) => Promise<void>} open Opens the build under test at a route such as `#/study/AA-AA-000-0000` and waits for the page to render.
+ * @property {(studyId: string, overrides?: DataOverrides) => Promise<void>} openStudy Opens one study's page in the artifact under test.
  */
 
 const BLOCK = /<script type="application\/json" data-gsm="(portfolio|snapshot)">([\s\S]*?)<\/script>/g;
@@ -110,6 +111,10 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
         }
         await page.goto(url);
         await page.locator('#app > .layout, #app > gsm-study-page').first().waitFor();
+      },
+      async openStudy(studyId, overrides) {
+        await this.open(`#/study/${encodeURIComponent(studyId)}`, overrides);
+        await page.locator('gsm-study-page .tile').first().waitFor();
       },
     });
   },
