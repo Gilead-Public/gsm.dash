@@ -1,3 +1,4 @@
+// @ts-check
 import validate from 'virtual:gsm/validate-study-document';
 
 /**

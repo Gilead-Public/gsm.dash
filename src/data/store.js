@@ -11,16 +11,22 @@ import { STATUS_ORDER, CATEGORY_ORDER, groupByCategory } from './catalog.js';
  * (e.g. a gsm.kri htmlwidget) can drive it directly.
  */
 export class PortfolioStore extends EventTarget {
-  #summary;
+  #summary = null;
+  #comparison = null;
 
-  constructor({ manifest, snapshots, summary }) {
+  /**
+   * @param {{ manifest: any, snapshots: any[], summary?: any, comparison?: Array<{ SnapshotDate: string, MetricID: string, Numerator: number, Denominator: number }> }} data
+   *   A study report passes its injected `comparison` (portfolio counts per visit date × metric) instead of the summary.
+   */
+  constructor({ manifest, snapshots, summary, comparison }) {
     super();
     const { active, inactive } = orderMetrics(manifest.metrics.map(normalizeMetric));
     this.metrics = active;
     this.inactiveMetrics = inactive;
     this.studies = manifest.studies;
     this.generated = manifest.generated;
-    this.#summary = indexSummary(summary, manifest.studies);
+    if (comparison) this.#comparison = new Map(comparison.map((r) => [`${r.SnapshotDate}\n${r.MetricID}`, r]));
+    else this.#summary = indexSummary(summary, manifest.studies);
 
     // StudyID -> SnapshotDate -> {snapshot, byMetric, groupParams}
     this.snapshotIndex = new Map();
@@ -57,6 +63,23 @@ export class PortfolioStore extends EventTarget {
       distCollapsed: new Set(), // distribution view: categories folded to their header
     };
     this.state.collapsedGroups = new Set(this.#allCategories());
+  }
+
+  get #index() {
+    if (!this.#summary) throw new Error('a study report carries no portfolio summary, only its comparison');
+    return this.#summary;
+  }
+
+  /**
+   * The portfolio a study's tiles compare with, at the visit shown. A study report looks it up in its injected
+   * comparison; otherwise it is pooled from the summary.
+   * @returns {{ Numerator: number, Denominator: number, Rate: number | null } | null}
+   */
+  portfolioComparison(studyId, metricId) {
+    if (!this.#comparison) return this.rollup(this.studies, metricId);
+    const row = this.#comparison.get(`${this.latestDate(studyId)}\n${metricId}`);
+    if (!row) return null;
+    return { Numerator: row.Numerator, Denominator: row.Denominator, Rate: row.Denominator > 0 ? row.Numerator / row.Denominator : null };
   }
 
   /**
@@ -344,7 +367,7 @@ export class PortfolioStore extends EventTarget {
     const ids = [...this.latestFor(studies).keys()];
     return Object.fromEntries(
       Object.entries(POPULATIONS).map(([key, param]) => {
-        const reported = ids.map((id) => this.#summary.population(id, param)).filter((n) => n != null);
+        const reported = ids.map((id) => this.#index.population(id, param)).filter((n) => n != null);
         return [key, reported.length ? reported.reduce((a, b) => a + b, 0) : null];
       }),
     );
@@ -377,7 +400,7 @@ export class PortfolioStore extends EventTarget {
    * distribution. One study or the whole portfolio — same math.
    */
   rollup(studies, metricId) {
-    return poolSummary(this.#summary, this.latestFor(studies), metricId);
+    return poolSummary(this.#index, this.latestFor(studies), metricId);
   }
 
   buckets() {
@@ -391,7 +414,7 @@ export class PortfolioStore extends EventTarget {
   trendSeries(metricId, studies = this.filteredStudies()) {
     const gridDates = [...new Set(studies.flatMap((s) => s.snapshots))].sort();
     return gridDates.map((date) => {
-      const { Rate, NumStudies } = poolSummary(this.#summary, selectLatestSnapshots(studies, date), metricId);
+      const { Rate, NumStudies } = poolSummary(this.#index, selectLatestSnapshots(studies, date), metricId);
       return { date, rate: Rate, nStudies: NumStudies };
     });
   }

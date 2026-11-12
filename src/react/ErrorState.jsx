@@ -1,3 +1,4 @@
+// @ts-check
 /** @param {{ errors: string[] }} props */
 export function ErrorState({ errors }) {
   return (

@@ -1,3 +1,4 @@
+// @ts-check
 // The numeric heart of gsm.dash (design doc §4.3). Pure functions over
 // contract-shaped rows; the qualification target for double-programming QC.
 

@@ -1,3 +1,4 @@
+// @ts-check
 // Independent recount of distribution rows from simulated records, for double programming.
 // Deliberately shares no code with scripts/example-distributions.mjs: one pass over the records, tallying
 // every (variable, category) pair, instead of filtering the pool once per category.

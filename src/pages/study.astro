@@ -1,15 +1,23 @@
 ---
+// gsm.viz ships as a classic script that defines window.gsmViz; it runs inline before the module that mounts the page.
+import { readFileSync } from 'node:fs';
 import '../app/app.css';
+
+const vendor = (file: string) => readFileSync(`public/vendor/gsm.viz-2.3.0/${file}`, 'utf8');
+const vizCss = vendor('main.css');
+const vizJs = vendor('index.js').replace(/<\/script/gi, '<\\/script');
 ---
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>gsm.dash study report</title>
+    <style is:inline set:html={vizCss}></style>
   </head>
   <body>
     <script is:inline type="application/json" id="gsm-data">__GSM_DATA__</script>
     <div id="app"></div>
+    <script is:inline set:html={vizJs}></script>
     <script>
       import { mount } from '../react/mount.jsx';
       mount(document.getElementById('app'));

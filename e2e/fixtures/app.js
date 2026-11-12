@@ -57,6 +57,27 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
  * @property {string} [text] Replaces the injected text outright, for data that isn't a document at all.
  */
 
+/**
+ * The same data changes for a report's document: `portfolio` sees the catalog and the study's entry as a one-study
+ * manifest, and `snapshot` sees each of the study's snapshots.
+ * @param {DataOverrides} overrides
+ * @returns {ReportOverrides}
+ */
+function asReportOverrides(overrides) {
+  if (overrides.summary) throw new Error('a report carries no portfolio summary; summary overrides need the spa artifact');
+  return {
+    document(doc) {
+      if (overrides.portfolio) {
+        const manifest = { generated: doc.generated, metrics: doc.metrics, studies: [doc.study] };
+        overrides.portfolio(manifest);
+        doc.metrics = manifest.metrics;
+        [doc.study] = manifest.studies;
+      }
+      if (overrides.snapshot) for (const snapshot of doc.snapshots) overrides.snapshot(snapshot);
+    },
+  };
+}
+
 const DATA_BLOCK = /(<script type="application\/json" id="gsm-data">)([\s\S]*?)(<\/script>)/;
 
 /**
@@ -144,6 +165,11 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
         await page.locator('#app > .layout, #app > gsm-study-page').first().waitFor();
       },
       async openStudy(studyId, overrides) {
+        if (artifact === 'reports') {
+          await this.openReport(studyId, overrides && asReportOverrides(overrides));
+          await page.locator('#app .tile').first().waitFor();
+          return;
+        }
         await this.open(`#/study/${encodeURIComponent(studyId)}`, overrides);
         await page.locator('gsm-study-page .tile').first().waitFor();
       },

@@ -7,7 +7,6 @@ const manifest = readData('portfolio.json');
 /** @type {Array<{ StudyID: string, params: Record<string, string | number>, snapshots: string[] }>} */
 const studies = manifest.studies;
 const latest = (/** @type {string[]} */ dates) => [...dates].sort().at(-1);
-const heading = (/** @type {typeof studies[number]} */ s) => (s.params.nickname ? `${s.StudyID} · ${s.params.nickname}` : s.StudyID);
 
 test('27.01: every study report is one HTML file with scripts, styles and data inline, and opens with no other request (#27)', async ({ app, page }) => {
   expect(readdirSync(REPORTS_DIR).sort(), 'one file per study and nothing else').toEqual(studies.map((s) => `${s.StudyID}.html`).sort());
@@ -26,8 +25,9 @@ test('27.01: every study report is one HTML file with scripts, styles and data i
 
     requests.length = 0;
     const url = await app.openReport(study.StudyID);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(heading(study));
-    await expect(page.locator('.report-meta')).toHaveText(`${study.snapshots.length} snapshots · latest ${latest(study.snapshots)}`);
+    await expect(page.locator('.dd-head .study.mono')).toHaveText(study.StudyID);
+    const n = study.snapshots.length;
+    await expect(page.locator('.visits .meta')).toHaveText(`Visit ${n}/${n} · ${latest(study.snapshots)}`);
     expect(requests, `${study.StudyID}: requests besides the report itself`).toEqual([url]);
   }
 });
@@ -49,7 +49,7 @@ for (const [what, change] of Object.entries(INVALID)) {
     await app.openReport(study.StudyID, { document: change });
     await expect(page.getByRole('alert')).toBeVisible();
     await expect(page.getByRole('alert').getByRole('heading')).toHaveText("This report can't be shown");
-    await expect(page.locator('#app .report, #app .report-meta')).toHaveCount(0);
+    await expect(page.locator('#app .dd-head, #app .tile')).toHaveCount(0);
   });
 }
 
@@ -57,12 +57,13 @@ for (const [what, text] of Object.entries({ 'data that is not JSON': '{"study": 
   test(`27.04: a report with ${what} shows the error state (#27)`, async ({ app, page }) => {
     await app.openReport(study.StudyID, { text });
     await expect(page.getByRole('alert').getByRole('heading')).toHaveText("This report can't be shown");
-    await expect(page.locator('#app .report')).toHaveCount(0);
+    await expect(page.locator('#app .dd-head, #app .tile')).toHaveCount(0);
   });
 }
 
 test('27.04: the same report with its data rewritten unchanged shows the study, not the error state (#27)', async ({ app, page }) => {
   await app.openReport(study.StudyID, { document: () => {} });
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText(heading(study));
+  await expect(page.locator('.dd-head .study.mono')).toHaveText(study.StudyID);
+  await expect(page.locator('#app .tile').first()).toBeVisible();
   await expect(page.getByRole('alert')).toHaveCount(0);
 });

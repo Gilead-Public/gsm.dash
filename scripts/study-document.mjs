@@ -1,3 +1,4 @@
+// @ts-check
 // One study's report data: the metric catalog, its manifest entry, all its snapshots, and the portfolio comparison
 // for each of its snapshot dates, pooled from the counts-only summary (#15).
 import { selectLatestSnapshots } from '../src/data/rollup.js';

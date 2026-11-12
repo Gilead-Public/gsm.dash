@@ -106,7 +106,8 @@ npm run build:reports  # one self-contained study report per study, in dist/repo
   one study-snapshot file per study × snapshot date, columns mirroring the
   gsm.core reporting data model exactly. The R-side export writer validates
   against these.
-- `src/pages/`, `src/react/` — the study report (Astro page, one React root),
+- `src/pages/`, `src/react/` — the study report (Astro page, one React root
+  rendering the study page from one injected document, gsm.viz inlined),
   replacing the app's study route. `scripts/package-reports.mjs` inlines the
   built page into a template; `scripts/inject.mjs` puts one study document
   (`schemas/study-document.schema.json`, built by `scripts/study-document.mjs`)

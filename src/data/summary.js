@@ -1,3 +1,4 @@
+// @ts-check
 // Every portfolio number comes from the counts-only summary (#15), never from pooling the per-study files.
 import { poolResults, flagDistributionFromCounts } from './rollup.js';
 

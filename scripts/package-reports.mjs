@@ -1,3 +1,4 @@
+// @ts-check
 // Packages each page Astro built into a single-file template (scripts and styles inline, the data placeholder left
 // in place), then writes one report per study by injecting its data document.
 // Usage: node scripts/package-reports.mjs <out dir> [data dir]   (after `astro build`)

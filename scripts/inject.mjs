@@ -1,3 +1,4 @@
+// @ts-check
 // Puts one data document into a packaged report template. The JSON text is copied byte for byte except that `<`
 // becomes < (the same character inside a JSON string, and it can't close the script tag), so any runtime that
 // can replace a string writes the same file.

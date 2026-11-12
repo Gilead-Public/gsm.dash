@@ -1,3 +1,4 @@
+// @ts-check
 // Distribution widget configuration per metric (keyed by gsm metric ID): business labels for each
 // Source × Variable section, which variables are statuses (coloured) rather than reasons (uncoloured), top-N
 // collapsing, and whether numerator sections also show the share of enrolled participants.

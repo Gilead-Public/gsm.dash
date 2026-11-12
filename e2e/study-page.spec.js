@@ -413,3 +413,54 @@ test.describe('study page behaviour', () => {
     }
   });
 });
+
+/** Counts the gsm.viz charts the page has made and not destroyed, by wrapping the bundle's chart functions as it loads. */
+function trackCharts() {
+  const live = new Set();
+  /** @type {any} */
+  let api;
+  Object.defineProperty(window, 'gsmViz', {
+    configurable: true,
+    get: () => api,
+    set(value) {
+      const charts = value.default;
+      for (const [name, make] of Object.entries(charts)) {
+        if (typeof make !== 'function') continue;
+        charts[name] = (/** @type {any[]} */ ...args) => {
+          const chart = make(...args);
+          if (typeof chart?.destroy === 'function') {
+            live.add(chart);
+            const destroy = chart.destroy.bind(chart);
+            chart.destroy = () => {
+              live.delete(chart);
+              return destroy();
+            };
+          }
+          return chart;
+        };
+      }
+      api = value;
+    },
+  });
+  /** @type {any} */ (window).__liveCharts = () => live.size;
+}
+
+test('stepping through visits and switching chart tabs and tile views leaves one live gsm.viz chart per chart shown', async ({ app, page }) => {
+  await page.addInitScript(trackCharts);
+  await app.openStudy(study.StudyID);
+  const charts = () => page.evaluate(() => ({ live: /** @type {any} */ (window).__liveCharts(), shown: document.querySelectorAll('.viz canvas').length }));
+  await page.locator('button[data-detail-metric]').first().click();
+  await expect.poll(charts, 'drill-in opened').toEqual({ live: 1, shown: 1 });
+  for (const index of [0, 1, dates.length - 1, 0]) {
+    await goToVisit(page, index);
+    await expect.poll(charts, `visit ${index + 1}`).toEqual({ live: 1, shown: 1 });
+  }
+  for (const name of ['Scatter plot', 'Over time', 'Bar chart']) {
+    await page.locator('.detail').getByRole('tab', { name }).click();
+    await expect.poll(charts, name).toEqual({ live: 1, shown: 1 });
+  }
+  await page.locator('.tile button[data-view-step="1"]').first().click();
+  await expect.poll(charts, 'a tile paged to its next view').toEqual({ live: 1, shown: 1 });
+  await page.locator('.detail button[data-detail-close]').click();
+  await expect.poll(charts, 'drill-in closed').toEqual({ live: 0, shown: 0 });
+});
