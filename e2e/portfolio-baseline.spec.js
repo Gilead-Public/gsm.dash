@@ -3,9 +3,8 @@
 // e2e/__snapshots__/portfolio-baseline.spec.js/. Each state is reached through the UI and recorded as its DOM (by
 // hash), its accessibility tree (which leaves out hidden elements) and what CSS places or colours: every Distribution
 // mark's position along its track and whether it is visible, every table cell's background, and any open tooltip.
-// To re-record at a pinned commit: npm run e2e records nothing; run Playwright with --update-snapshots there.
-import { createHash } from 'node:crypto';
-import { expect, readData, test } from './fixtures/app.js';
+import { readData, test } from './fixtures/app.js';
+import { domLine, expectRecorded, runs } from './fixtures/baseline.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('@playwright/test').TestInfo} TestInfo */
 
@@ -14,22 +13,6 @@ test.describe.configure({ timeout: 60_000 });
 const portfolio = readData('portfolio.json');
 /** @type {Array<{ StudyID: string, params: Record<string, string> }>} */
 const studies = portfolio.studies;
-
-/**
- * Runs of equal values as `value ×n`, so long uniform stretches stay readable.
- * @param {string[]} values
- */
-function runs(values) {
-  /** @type {string[]} */
-  const out = [];
-  for (let i = 0; i < values.length; ) {
-    let j = i;
-    while (j < values.length && values[j] === values[i]) j++;
-    out.push(j - i > 1 ? `${values[i]} ×${j - i}` : values[i]);
-    i = j;
-  }
-  return out.join(' | ');
-}
 
 /**
  * @param {Page} page
@@ -58,7 +41,7 @@ async function capture(page, name) {
   });
   const text = [
     `state: ${name}`,
-    `dom: sha256 ${createHash('sha256').update(dom).digest('hex')} (${dom.length} characters)`,
+    domLine(dom),
     `tooltip: ${rendered.tooltip}`,
     `cell backgrounds: ${runs(rendered.cells)}`,
     'distribution marks:',
@@ -77,10 +60,7 @@ async function capture(page, name) {
  * @param {string} name
  */
 async function expectState(page, testInfo, name) {
-  const { text, dom } = await capture(page, name);
-  const before = testInfo.errors.length;
-  expect.soft(text, name).toMatchSnapshot(`${name}.txt`);
-  if (testInfo.errors.length > before) await testInfo.attach(`${name} DOM`, { body: dom, contentType: 'text/html' });
+  await expectRecorded(testInfo, `${name}.txt`, await capture(page, name));
 }
 
 /** @param {Page} page */

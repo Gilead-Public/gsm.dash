@@ -270,7 +270,7 @@ test.describe('study page behaviour', () => {
     await app.openStudy(study.StudyID);
   });
 
-  test('a tile pages through the standard views in order, showing each one, and wraps around', async ({ page }) => {
+  test('12.02: a tile pages through the standard views in order, showing each one, and wraps around (#12)', async ({ page }) => {
     const id = await plainMetric(page);
     const name = tile(page, id).locator('.view-name');
     const n = STANDARD_VIEWS.length;
@@ -285,20 +285,20 @@ test.describe('study page behaviour', () => {
     await expect(name).toHaveText(`Trend over time ${STANDARD_VIEWS.length}/${STANDARD_VIEWS.length}`);
   });
 
-  test('a metric with its own view opens on it, after the standard views', async ({ page }) => {
+  test('12.02: a metric with its own view opens on it, after the standard views (#12)', async ({ page }) => {
     const custom = portfolio.metrics.find((/** @type {{ Widget?: string }} */ m) => m.Widget === 'distribution-bar');
     const n = STANDARD_VIEWS.length + 1;
     await expect(tile(page, custom.MetricID).locator('.view-name')).toHaveText(`Breakdowns ${n}/${n}`);
     await expectViewContent(page, custom.MetricID, 'Breakdowns');
   });
 
-  test('every metric in the catalog has a tile, opening on its own view or Details', async ({ page }) => {
+  test('12.02: every metric in the catalog has a tile, opening on its own view or Details (#12)', async ({ page }) => {
     expect(tiles.length).toBeGreaterThan(10);
     expect(tiles.some((m) => m.Widget) && tiles.some((m) => !m.Widget), 'the catalog has metrics with and without their own view').toBe(true);
     expect(await shownViews(page)).toEqual(expectedViews(defaultView));
   });
 
-  test('the all-tiles menu sets every tile to one view, shows Mixed once a tile differs, and restores the defaults', async ({ page }) => {
+  test('12.02: the all-tiles menu sets every tile to one view, shows Mixed once a tile differs, and restores the defaults (#12)', async ({ page }) => {
     const menu = page.locator('select[data-all-views]');
     await expect(menu).toHaveValue('default');
     await menu.selectOption('trend-mini');
@@ -314,7 +314,7 @@ test.describe('study page behaviour', () => {
     expect(await shownViews(page)).toEqual(expectedViews(defaultView));
   });
 
-  test('grouping by category splits the tiles into category rows; turning it off shows one flat grid', async ({ page }) => {
+  test('12.02: grouping by category splits the tiles into category rows; turning it off shows one flat grid (#12)', async ({ page }) => {
     const shownRows = () =>
       page.locator('.dd-row').evaluateAll((rows) =>
         rows.map((r) => [(r.querySelector('.rowlab')?.textContent ?? '').trim(), [...r.querySelectorAll('.tile[data-metric-id]')].map((t) => t.getAttribute('data-metric-id'))]),
@@ -332,7 +332,7 @@ test.describe('study page behaviour', () => {
     expect(await shownRows()).toEqual([[`All metrics · ${tiles.length}`, tiles.map((m) => m.MetricID)]]);
   });
 
-  test('the visit scrubber shows the chosen visit and play steps forward to the latest, then stops', async ({ page }) => {
+  test('12.02: the visit scrubber shows the chosen visit and play steps forward to the latest, then stops (#12)', async ({ page }) => {
     expect(dates.length).toBeGreaterThan(3);
     await expect(visitLabel(page)).toHaveText(visitText(dates.length - 1));
     await goToVisit(page, 0);
@@ -347,7 +347,7 @@ test.describe('study page behaviour', () => {
     await expect(play).toHaveAttribute('aria-label', 'Play through visits');
   });
 
-  test('play from the latest visit restarts at the first, and pressing it again pauses', async ({ page }) => {
+  test('12.02: play from the latest visit restarts at the first, and pressing it again pauses (#12)', async ({ page }) => {
     const play = page.locator('button[data-play]');
     await play.click();
     await expect(visitLabel(page)).toHaveText(visitText(0));
@@ -358,7 +358,7 @@ test.describe('study page behaviour', () => {
     await expect(visitLabel(page)).toHaveText(/** @type {string} */ (paused));
   });
 
-  test('selecting a site in one chart highlights it in every chart, and the chip clears it', async ({ page }) => {
+  test('12.02: selecting a site in one chart highlights it in every chart, and the chip clears it (#12)', async ({ page }) => {
     await page.locator('select[data-all-views]').selectOption('scatter-mini');
     const first = page.locator('.tile circle[data-site]').first();
     const site = /** @type {string} */ (await first.getAttribute('data-site'));
@@ -376,7 +376,7 @@ test.describe('study page behaviour', () => {
     await expect(page.locator('.tile circle.is-sel, .tile circle.is-dim')).toHaveCount(0);
   });
 
-  test('the chart panel opens under its tile, switches tabs, and closes', async ({ page }) => {
+  test('12.02: the chart panel opens under its tile, switches tabs, and closes (#12)', async ({ page }) => {
     const id = await plainMetric(page);
     const more = tile(page, id).locator('button[data-detail-metric]');
     await expect(page.locator('.detail')).toHaveCount(0);
@@ -402,7 +402,7 @@ test.describe('study page behaviour', () => {
     await expect(page.locator('.detail')).toHaveCount(0);
   });
 
-  test('the comparison line pools every study at its own snapshot as of the visit, at the latest and an earlier visit', async ({ page }) => {
+  test('12.02: the comparison line pools every study at its own snapshot as of the visit, at the latest and an earlier visit (#12)', async ({ page }) => {
     const latestOthers = studies.filter((s) => s.snapshots.at(-1) !== dates.at(-1));
     expect(latestOthers.length, 'other studies have a different latest snapshot').toBeGreaterThan(0);
     const earlier = 1;
@@ -480,7 +480,7 @@ function trackCharts() {
   /** @type {any} */ (window).__liveCharts = () => live.size;
 }
 
-test('stepping through visits and switching chart tabs and tile views leaves one live gsm.viz chart per chart shown', async ({ app, page }) => {
+test('12.02: stepping through visits and switching chart tabs and tile views leaves one live gsm.viz chart per chart shown (#12)', async ({ app, page }) => {
   await page.addInitScript(trackCharts);
   await app.openStudy(study.StudyID);
   const charts = () => page.evaluate(() => ({ live: /** @type {any} */ (window).__liveCharts(), shown: document.querySelectorAll('.viz canvas').length }));

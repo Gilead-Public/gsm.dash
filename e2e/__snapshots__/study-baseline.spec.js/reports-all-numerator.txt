@@ -1,0 +1,230 @@
+state: all-numerator (reports)
+dom: sha256 ad8b6dbb4ca5b0bdae8d9752a64349979f368f23ecfd5f4400a1bc6003a6a4b9 (108618 characters)
+tooltip: none
+drill-in: closed
+tiles:
+  Analysis_kri0012 · Numerator by site 4/6: bars 17
+  Analysis_kri0006 · Numerator by site 4/6: bars 17
+  Analysis_kri0007 · Numerator by site 4/5: bars 17
+  Analysis_kri0007-2 · Numerator by site 4/6: bars 17
+  Analysis_ctq0001 · Numerator by site 4/5: bars 17
+  Analysis_ctq0002 · Numerator by site 4/5: bars 17
+  Analysis_ctq0003 · Numerator by site 4/5: bars 6
+  Analysis_kri0015 · Numerator by site 4/7: bars 15
+  Analysis_kri0019 · Numerator by site 4/6: bars 15
+  Analysis_kri0014 · Numerator by site 4/6: bars 17
+  Analysis_strat0001 · Numerator by site 4/6: bars 17
+  Analysis_ctq0006 · Numerator by site 4/5: bars 15
+  Analysis_kri0001 · Numerator by site 4/5: bars 17
+  Analysis_kri0002 · Numerator by site 4/5: bars 17
+  Analysis_kri0003 · Numerator by site 4/5: bars 17
+  Analysis_kri0004 · Numerator by site 4/5: bars 17
+  Analysis_kri0005 · Numerator by site 4/5: bars 17
+  Analysis_kri0008 · Numerator by site 4/5: bars 17
+  Analysis_kri0009 · Numerator by site 4/5: bars 17
+  Analysis_kri0010 · Numerator by site 4/5: bars 17
+  Analysis_kri0011 · Numerator by site 4/5: bars 17
+accessibility:
+- text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
+- button "Play through visits": ▶
+- slider "Visit": "4"
+- text: Visit 5/5 · 2026-05-31
+- checkbox "Group by category" [checked]
+- text: Group by category All tiles
+- combobox "Set every tile to a view":
+  - option "Default per metric"
+  - option "Overview"
+  - option "Details"
+  - option "Scatter (n vs d)"
+  - option "Numerator by site" [selected]
+  - option "Trend over time"
+- button "⤨ Randomize"
+- text: Disposition · 6 SF Screen Failure Rate
+- img "Screen Failure Rate definition": i
+- text: standard Number of screen failed participants by site
+- img "SF numerator by site": 113 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/6
+- button "Next view": ›
+- button "Charts ▾"
+- text: SDSC Study Discontinuation Rate
+- img "Study Discontinuation Rate definition": i
+- text: standard Number of participants with premature study discontinuation by site
+- img "SDSC numerator by site": 10 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/6
+- button "Next view": ›
+- button "Charts ▾"
+- text: TDSC Treatment Discontinuation Rate
+- img "Treatment Discontinuation Rate definition": i
+- text: standard Number of participants with premature treatment discontinuation by site
+- img "TDSC numerator by site": 12 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: PTDSC Premature Treatment Discontinuation Rate
+- img "Premature Treatment Discontinuation Rate definition": i
+- text: Planned standard Number of participants with premature treatment discontinuation by site
+- img "PTDSC numerator by site": 15 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/6
+- button "Next view": ›
+- button "Charts ▾"
+- text: WC Withdrawal of Consent
+- img "Withdrawal of Consent definition": i
+- text: Planned standard Number of participants who withdrew consent from the study by site
+- img "WC numerator by site": 2 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: LTFU Lost to Follow Up
+- img "Lost to Follow Up definition": i
+- text: Planned standard Number of participants lost to follow-up by site
+- img "LTFU numerator by site": 4 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: Early events · 3 DTH30 Early Deaths (30 days)
+- img "Early Deaths (30 days) definition": i
+- text: Planned standard Number of participants who died within 30 days from randomization by site
+- img "DTH30 numerator by site": 1 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: DTH90 Early Deaths (90 days)
+- img "Early Deaths (90 days) definition": i
+- text: Planned standard Number of participants who died within 90 days from randomization by site
+- img "DTH90 numerator by site": 2 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: IPNS IP Non-starters
+- img "IP Non-starters definition": i
+- text: Planned standard Number of confirmed IP non-starters by site
+- img "IPNS numerator by site": 1 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/6
+- button "Next view": ›
+- button "Charts ▾"
+- text: Eligibility & integrity · 3 IE Eligibility
+- img "Eligibility definition": i
+- text: Planned standard Number of ineligible participants by site
+- img "IE numerator by site": 3 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/6
+- button "Next view": ›
+- button "Charts ▾"
+- text: STRAT Stratification
+- img "Stratification definition": i
+- text: Planned standard Number of confirmed mis-stratified participants by site
+- img "STRAT numerator by site": 7 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/6
+- button "Next view": ›
+- button "Charts ▾"
+- text: PFSC Premature Censoring for PFS
+- img "Premature Censoring for PFS definition": i
+- text: Planned standard Number of participants at very high risk for premature censoring for PFS by site
+- img "PFSC numerator by site": 4 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: Safety & deviations · 5 AE AE Reporting Rate
+- img "AE Reporting Rate definition": i
+- text: New standard Number of AEs reported by site
+- img "AE numerator by site": 1,137 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: SAE SAE Reporting Rate
+- img "SAE Reporting Rate definition": i
+- text: New standard Number of SAEs reported by site
+- img "SAE numerator by site": 97 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: PD Non-Important Protocol Deviation Rate
+- img "Non-Important Protocol Deviation Rate definition": i
+- text: New standard Number of non-important PDs by site
+- img "PD numerator by site": 279 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: IPD Important Protocol Deviation Rate
+- img "Important Protocol Deviation Rate definition": i
+- text: New standard Number of important PDs by site
+- img "IPD numerator by site": 37 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: LB G3+ Lab Abnormality Rate
+- img "G3+ Lab Abnormality Rate definition": i
+- text: standard Number of G3+ abnormal lab samples by site
+- img "LB numerator by site": 191 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: Data quality · 4 QRY Query Rate
+- img "Query Rate definition": i
+- text: "standard Total # queries by site"
+- img "QRY numerator by site": 2,195 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: OQRY Delayed Query Resolution Rate
+- img "Delayed Query Resolution Rate definition": i
+- text: "standard # queries ever open > 30 days by site"
+- img "OQRY numerator by site": 126 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: ODAT Delayed Data Entry Rate
+- img "Delayed Data Entry Rate definition": i
+- text: "standard Total # data pages entered > 10 days by site"
+- img "ODAT numerator by site": 433 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: CDAT Data Change Rate
+- img "Data Change Rate definition": i
+- text: "standard Total # data points with > 1 change by site"
+- img "CDAT numerator by site": 477 0
+- text: 17 sites, sorted by numerator · click a bar to track it
+- button "Previous view": ‹
+- text: Numerator by site 4/5
+- button "Next view": ›
+- button "Charts ▾"
