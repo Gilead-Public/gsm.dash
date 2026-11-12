@@ -1,10 +1,11 @@
 // @ts-check
 // 11.03 regression evidence: the portfolio as it rendered before #11's changes, recorded state by state in
-// e2e/__snapshots__/portfolio-baseline.spec.js/. Each state is reached through the UI and recorded as its DOM (by
-// hash), its accessibility tree (which leaves out hidden elements) and what CSS places or colours: every Distribution
-// mark's position along its track and whether it is visible, every table cell's background, and any open tooltip.
+// e2e/__snapshots__/portfolio-baseline.spec.js/, at 69b2240. Each state is reached through the UI and recorded as its
+// canonical DOM (by hash), every sparkline's points, its accessibility tree (which leaves out hidden elements) and what
+// CSS places or colours: every Distribution mark's position along its track and whether it is visible, every table
+// cell's background, and any open tooltip. The canonical DOM lets the React page be compared with the same records.
 import { readData, test } from './fixtures/app.js';
-import { domLine, expectRecorded, runs } from './fixtures/baseline.js';
+import { canonicalDom, canonicalLine, expectRecorded, runs } from './fixtures/baseline.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('@playwright/test').TestInfo} TestInfo */
 
@@ -13,6 +14,8 @@ test.describe.configure({ timeout: 60_000 });
 const portfolio = readData('portfolio.json');
 /** @type {Array<{ StudyID: string, params: Record<string, string> }>} */
 const studies = portfolio.studies;
+/** The old elements and their React counterparts: a div carrying the element's name as a class. */
+const HOSTS = { 'gsm-sidebar': 'div.sidebar', 'gsm-view-switch': 'div.view-switch', 'gsm-portfolio-table': 'div.portfolio-table', 'gsm-portfolio-dist': 'div.portfolio-dist' };
 
 /**
  * @param {Page} page
@@ -20,6 +23,7 @@ const studies = portfolio.studies;
  */
 async function capture(page, name) {
   const dom = await page.locator('#app').evaluate((el) => el.innerHTML);
+  const canonical = await page.locator('#app').evaluate(canonicalDom, HOSTS);
   const aria = await page.locator('#app').ariaSnapshot();
   const rendered = await page.evaluate(() => {
     const visible = (/** @type {Element} */ el) => el.checkVisibility({ opacityProperty: true, visibilityProperty: true });
@@ -36,21 +40,27 @@ async function capture(page, name) {
         .join(' '),
     );
     const cells = [...document.querySelectorAll('#app td, #app .otile')].map((el) => getComputedStyle(el).backgroundColor);
+    const sparklines = [...document.querySelectorAll('#app .spark svg')].map((svg) => {
+      const dot = svg.querySelector('.spark-dot');
+      return `${svg.getAttribute('aria-label')}: line ${svg.querySelector('.spark-line')?.getAttribute('d')}; dot ${dot?.getAttribute('cx')},${dot?.getAttribute('cy')}${visible(svg) ? '' : ' hidden'}`;
+    });
     const tip = document.getElementById('gsm-tooltip');
-    return { tracks, cells, tooltip: tip && visible(tip) ? tip.innerHTML : 'none' };
+    return { tracks, cells, sparklines, tooltip: tip && visible(tip) ? tip.innerHTML : 'none' };
   });
   const text = [
     `state: ${name}`,
-    domLine(dom),
+    canonicalLine(canonical),
     `tooltip: ${rendered.tooltip}`,
     `cell backgrounds: ${runs(rendered.cells)}`,
     'distribution marks:',
     ...rendered.tracks.map((t) => `  ${t}`),
+    'sparklines:',
+    ...(rendered.sparklines.length ? rendered.sparklines.map((t) => `  ${t}`) : ['  none']),
     'accessibility:',
     aria,
     '',
   ].join('\n');
-  return { text, dom };
+  return { text, dom, canonical };
 }
 
 /**
@@ -64,7 +74,7 @@ async function expectState(page, testInfo, name) {
 }
 
 /** @param {Page} page */
-const sidebar = (page) => page.locator('gsm-sidebar');
+const sidebar = (page) => page.locator('gsm-sidebar, .sidebar');
 
 test.describe('the portfolio against its recorded baseline', () => {
   test('11.03: the table matches its baseline in Overview, Details and Mixed, sorted both ways, with a heatmap and with each cell display (#11)', async ({ app, page }, testInfo) => {

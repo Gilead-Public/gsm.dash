@@ -1,5 +1,5 @@
 state: rows-filtered
-dom: sha256 6dba71e0b58aabdba675fc4df3a569860fd97c76cbaae0cc783296190ecd4518 (129261 characters)
+canonical dom: sha256 f6e8dadec7f6f5d0aa5c77f84bebfb840041d241838d81205f8ec061481e6146 (133841 characters)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
@@ -24,6 +24,8 @@ distribution marks:
   pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
   pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
   pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+sparklines:
+  none
 accessibility:
 - main:
   - text: Controls

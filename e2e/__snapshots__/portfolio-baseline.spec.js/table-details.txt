@@ -1,5 +1,5 @@
 state: table-details
-dom: sha256 44251b08056a927710267fe376a8f9a82aa5f2a41fd4e329baeb09b37a9b64ec (324302 characters)
+canonical dom: sha256 fb2f030da6c52b972f8b54f47364e1b0e9ab4cc635d670125b6ee30294cdb437 (338692 characters)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×25 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21
 distribution marks:
@@ -24,6 +24,8 @@ distribution marks:
   pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
   pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
   pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+sparklines:
+  none
 accessibility:
 - main:
   - text: Controls

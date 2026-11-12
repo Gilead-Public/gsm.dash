@@ -1,5 +1,5 @@
 state: rows-status-hidden
-dom: sha256 c4562392ac96bde8fab3db94c8f9339e95e7095c90d5c40f225c8068a4c9121d (109610 characters)
+canonical dom: sha256 11422393f683fdd836850737069100d62d16fdcb42b975fb8b1a9eef7b47c6c3 (115319 characters)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
@@ -20,6 +20,8 @@ distribution marks:
   pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
   pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
   pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+sparklines:
+  none
 accessibility:
 - main:
   - text: Controls

@@ -1,5 +1,5 @@
 state: distribution-filtered
-dom: sha256 a6fcaa702642143f8b82f7569c69ad4bb80a2871bddc4110b3f99366301abd2f (127746 characters)
+canonical dom: sha256 69bdff02c491379b28b886ae00801796c9165d1d1979752ba22e8506bcabc235 (134620 characters)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×4 | rgb(224, 238, 236) ×5 | rgb(237, 240, 238) ×6 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×5 | rgb(224, 238, 236) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
@@ -18,6 +18,8 @@ distribution marks:
   pt[STUDY006]@0.5457 pt[STUDY009]@0.6654 pt[STUDY011]@0.9259 ptot@0.6608 psel[STUDY002]@0.6556 lsel@0.6556
   pt[STUDY006]@0.9259 pt[STUDY009]@0.7973 pt[STUDY011]@0.5091 ptot@0.7863 psel[STUDY002]@0.8464 lsel@0.8464
   pt[STUDY006]@0.9259 pt[STUDY009]@0.8570 pt[STUDY011]@0.8449 ptot@0.8475 psel[STUDY002]@0.7188 lsel@0.7188
+sparklines:
+  none
 accessibility:
 - main:
   - text: Controls

@@ -22,7 +22,7 @@ const delta = Math.round(own.denominator / 4);
  * @param {string} row
  */
 async function shownValue(page, row) {
-  const table = page.locator('gsm-portfolio-table table.po');
+  const table = page.locator(':is(gsm-portfolio-table, .portfolio-table) table.po');
   const headings = await table.locator('thead th.bandh .tlab').allTextContents();
   const index = headings.map((h) => h.trim()).indexOf(/** @type {string} */ (metric.Abbreviation));
   expect(index, `a visible ${metric.Abbreviation} heading`).toBeGreaterThanOrEqual(0);
