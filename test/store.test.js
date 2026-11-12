@@ -54,34 +54,13 @@ describe('site-level input model', () => {
   });
 });
 
-describe('enrollment column', () => {
-  it('sums ParticipantCount over each study’s latest snapshot', () => {
-    const studies = store.studies.slice(0, 4);
-    const expected = studies.reduce(
-      (sum, s) => sum + Number(store.studyParamsAt(s.StudyID, store.latestDate(s.StudyID)).ParticipantCount),
-      0
-    );
-    const e = store.enrollment(studies);
-    expect(e.enrolled).toBe(expected);
-    expect(e.nStudies).toBe(studies.length);
-    expect(e.nCounted).toBe(studies.length);
-  });
-
-  it('the portfolio total equals the sum of its study rows', () => {
-    const perStudy = store.studies.reduce((sum, s) => sum + store.enrollment([s]).enrolled, 0);
-    expect(store.enrollment(store.studies).enrolled).toBe(perStudy);
-  });
-
-  it('follows asOf rather than always reading the newest snapshot', () => {
+describe('study parameters', () => {
+  it('follow asOf rather than always reading the newest snapshot', () => {
     const study = store.studies.find((s) => s.snapshots.length > 1);
     const [first] = study.snapshots;
     expect(store.studyParamsAt(study.StudyID, first)).toBe(
       store.snapshotIndex.get(study.StudyID).get(first).groupParams.get(study.StudyID)
     );
-  });
-
-  it('reports null rather than 0 when no study carries a count', () => {
-    expect(store.enrollment([]).enrolled).toBeNull();
   });
 });
 

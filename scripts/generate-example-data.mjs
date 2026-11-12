@@ -6,6 +6,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DISTRIBUTION_SPECS, distributionRows, seedOf, simulateRecords } from './example-distributions.mjs';
 import { DISTRIBUTION_CONFIG } from '../src/config/distributions.js';
+import { buildSummary } from './portfolio-summary.mjs';
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', 'examples', 'data');
 const SCHEMA_VERSION = '1.0.0';
@@ -363,15 +364,17 @@ export function generatePortfolio() {
     })),
     metrics: METRICS.map(({ base, denKey, derived, ...m }) => m),
   };
-  return { manifest, snapshots: byStudy.flat(), records };
+  const snapshots = byStudy.flat();
+  return { manifest, snapshots, summary: buildSummary(manifest, snapshots), records };
 }
 
-/** Writes the example data (manifest plus one file per study snapshot) into `outDir`, replacing what was there. */
+/** Writes the example data (manifest, portfolio summary and one file per study snapshot) into `outDir`, replacing what was there. */
 export function writeExampleData(outDir = OUT) {
-  const { manifest, snapshots } = generatePortfolio();
+  const { manifest, snapshots, summary } = generatePortfolio();
   rmSync(outDir, { recursive: true, force: true });
   mkdirSync(outDir, { recursive: true });
   writeFileSync(join(outDir, 'portfolio.json'), JSON.stringify(manifest, null, 1));
+  writeFileSync(join(outDir, 'summary.json'), JSON.stringify(summary));
   for (const snap of snapshots) {
     const dir = join(outDir, 'studies', snap.StudyID);
     mkdirSync(dir, { recursive: true });

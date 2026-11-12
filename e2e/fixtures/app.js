@@ -35,6 +35,7 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
 /**
  * @typedef {object} DataOverrides
  * @property {(manifest: any) => void} [portfolio]
+ * @property {(summary: any) => void} [summary]
  * @property {(snapshot: any) => void} [snapshot]
  */
 
@@ -46,7 +47,7 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
  * @property {(studyId: string, overrides?: DataOverrides) => Promise<void>} openStudy Opens one study's page in the artifact under test.
  */
 
-const BLOCK = /<script type="application\/json" data-gsm="(portfolio|snapshot)">([\s\S]*?)<\/script>/g;
+const BLOCK = /<script type="application\/json" data-gsm="(portfolio|summary|snapshot)">([\s\S]*?)<\/script>/g;
 
 /**
  * @param {string} html
@@ -57,6 +58,7 @@ function rewriteEmbedded(html, overrides) {
   return html.replace(BLOCK, (_, kind, text) => {
     const data = JSON.parse(text);
     if (kind === 'portfolio') overrides.portfolio?.(data);
+    else if (kind === 'summary') overrides.summary?.(data);
     else overrides.snapshot?.(data);
     return `<script type="application/json" data-gsm="${kind}">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
   });
@@ -104,7 +106,9 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
           await page.route('**/examples/data/**', async (r) => {
             const response = await r.fetch();
             const json = await response.json();
-            if (r.request().url().endsWith('/portfolio.json')) overrides.portfolio?.(json);
+            const url = r.request().url();
+            if (url.endsWith('/portfolio.json')) overrides.portfolio?.(json);
+            else if (url.endsWith('/summary.json')) overrides.summary?.(json);
             else overrides.snapshot?.(json);
             await r.fulfill({ response, json });
           });

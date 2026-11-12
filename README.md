@@ -100,7 +100,8 @@ npm test           # rollup/normalize units + contract schema conformance
 - `src/charts/sparkline.js` — D5 renderer. Deliberate seam: swaps to
   `@gilead-biostats/gsm.viz`'s `sparkline` once gsm.viz ships as an ESM
   package (design doc §7).
-- `schemas/` — the **normative JSON contract**: `portfolio.json` manifest +
+- `schemas/` — the **normative JSON contract**: `portfolio.json` manifest,
+  the counts-only `summary.json` that every portfolio number comes from, and
   one study-snapshot file per study × snapshot date, columns mirroring the
   gsm.core reporting data model exactly. The R-side export writer validates
   against these.
@@ -111,8 +112,8 @@ npm test           # rollup/normalize units + contract schema conformance
 ## Data loading
 
 One contract, two modes (auto-detected): **fetched** (static host serving
-`portfolio.json` + `studies/...`) or **embedded**
-(`<script type="application/json" data-gsm="portfolio|snapshot">` blocks for
+`portfolio.json` + `summary.json` + `studies/...`) or **embedded**
+(`<script type="application/json" data-gsm="portfolio|summary|snapshot">` blocks for
 self-contained HTML / htmlwidget embedding).
 
 ## Events

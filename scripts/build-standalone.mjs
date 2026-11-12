@@ -33,9 +33,9 @@ html = html.replace(/<link rel="stylesheet"[^>]*href="(\/(?:assets|vendor)\/[^"]
   return `<style>\n${css}\n</style>`;
 });
 
-// Embed the portfolio: manifest + every listed snapshot file.
+// Embed the portfolio: manifest, summary and every listed snapshot file.
 const manifest = JSON.parse(readFileSync(join(DATA, 'portfolio.json'), 'utf8'));
-const blocks = [jsonBlock('portfolio', manifest)];
+const blocks = [jsonBlock('portfolio', manifest), jsonBlock('summary', JSON.parse(readFileSync(join(DATA, 'summary.json'), 'utf8')))];
 for (const study of manifest.studies) {
   for (const rel of Object.values(study.files)) {
     blocks.push(jsonBlock('snapshot', JSON.parse(readFileSync(join(DATA, rel), 'utf8'))));
@@ -54,5 +54,5 @@ const body = html.match(/<body>([\s\S]*?)<\/body>/)[1];
 writeFileSync(join(DIST, 'gsm-dash-artifact.html'), `${head.trim()}\n${body.trim()}\n`);
 
 const mb = (readFileSync(standalone).length / 1e6).toFixed(2);
-console.log(`Wrote ${standalone} (${mb} MB, ${blocks.length - 1} snapshots embedded)`);
+console.log(`Wrote ${standalone} (${mb} MB, ${blocks.length - 2} snapshots embedded)`);
 console.log(`Files in dist: ${readdirSync(DIST).join(', ')}`);

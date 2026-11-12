@@ -89,39 +89,72 @@ export function siteRows(read, study, metricId, asOf = null) {
 }
 
 /**
+ * @typedef {object} Pooled
+ * @property {number} numerator
+ * @property {number} denominator
+ * @property {number | null} rate
+ * @property {number} studies Studies contributing at least one site row.
+ * @property {number} sites
+ * @property {{ red: number; amber: number; green: number; na: number }} flags Sites by flag: |2| red, |1| amber, 0 green, none na.
+ */
+
+/**
  * @param {(path: string) => any} read
  * @param {StudyEntry[]} studies
  * @param {string} metricId
  * @param {string | null} asOf
- * @returns {{ numerator: number; denominator: number; rate: number | null; studies: number }}
+ * @returns {Pooled}
  */
 export function pooled(read, studies, metricId, asOf = null) {
   let numerator = 0;
   let denominator = 0;
   let contributing = 0;
+  let sites = 0;
+  const flags = { red: 0, amber: 0, green: 0, na: 0 };
   for (const study of studies) {
-    if (!snapshotAsOf(study, asOf)) continue;
-    contributing++;
-    for (const r of siteRows(read, study, metricId, asOf)) {
+    const rows = siteRows(read, study, metricId, asOf);
+    if (rows.length) contributing++;
+    for (const r of rows) {
       numerator += r.Numerator;
       denominator += r.Denominator;
+      sites++;
+      if (r.Flag == null) flags.na++;
+      else if (Math.abs(r.Flag) >= 2) flags.red++;
+      else if (Math.abs(r.Flag) >= 1) flags.amber++;
+      else flags.green++;
     }
   }
-  return { numerator, denominator, rate: denominator > 0 ? numerator / denominator : null, studies: contributing };
+  return { numerator, denominator, rate: denominator > 0 ? numerator / denominator : null, studies: contributing, sites, flags };
 }
 
 /**
- * A study-level population parameter (ScreenedCount, ParticipantCount) summed over each study's latest snapshot, or
- * null when no study reports it.
+ * The pooled rate on every date any of the studies has a snapshot, each study as of that date.
+ * @param {(path: string) => any} read
+ * @param {StudyEntry[]} studies
+ * @param {string} metricId
+ */
+export function pooledTrend(read, studies, metricId) {
+  const dates = [...new Set(studies.flatMap((s) => s.snapshots))].sort();
+  return dates.map((date) => {
+    const p = pooled(read, studies, metricId, date);
+    return { date, rate: p.rate, studies: p.studies };
+  });
+}
+
+/**
+ * A study-level population parameter (ScreenedCount, ParticipantCount, DosedCount) summed over the studies with a
+ * snapshot on or before asOf, each from its latest snapshot, or null when none of them reports it.
  * @param {(path: string) => any} read
  * @param {StudyEntry[]} studies
  * @param {string} param
+ * @param {string | null} [asOf]
  * @returns {number | null}
  */
-export function population(read, studies, param) {
+export function population(read, studies, param, asOf = null) {
   let total = 0;
   let reported = 0;
   for (const study of studies) {
+    if (snapshotAsOf(study, asOf) === null) continue;
     const row = read(study.files[latestSnapshot(study)]).groups.find(
       (/** @type {any} */ g) => g.GroupLevel === 'Study' && g.GroupID === study.StudyID && g.Param === param,
     );
