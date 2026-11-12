@@ -1,12 +1,13 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "c47401fb0529d2f108d23c4ea18c5eb0a8e5ab839fe30e9562d35b21a6636933",
+  "hash": "e621535bdcaa1f23392420cec49c8587f76eb4bee68da19449c8ef73d4daf13b",
   "issues": [
     {
       "number": 8,
       "title": "Add a distributions layer to the study snapshot contract",
       "parent": "Gilead-BioStats/gsm.roadmap#625",
       "userTest": false,
+      "scopeSection": "**In:**\n- Add an optional `distributions` array to the study snapshot schema, with #617's columns: `GroupID`, `GroupLevel`, `Source` (`Numerator` | `Denominator`), `Variable`, `Category`, `Count`, `Participants`, `Total`, `Percent`, plus `MetricID`, `SnapshotDate` and `StudyID`.\n- A blank category is represented as `null` and displayed as \"Not recorded\".\n- Keep `details` until its consumer is replaced (#10), then remove it.\n\n**Out:**\n- Computing distributions (pipeline, gsm.roadmap#617).\n- Rendering them (#10).",
       "criteria": [
         {
           "id": "8.01",
@@ -36,6 +37,7 @@
       "title": "Generate simulated distributions for the #617 metrics",
       "parent": "Gilead-BioStats/gsm.roadmap#625",
       "userTest": false,
+      "scopeSection": "**In:**\n- Rename placeholders to the production IDs in #617: `ctq0004` → `kri0019`, `ctq0005` → `strat0001`. Add `kri0007-2`.\n- Generate `distributions` rows for each metric and category column listed in #617's \"Metrics configured\" and data-requirement tables (`kri0006`, `kri0007-2`, `kri0019`, `kri0014`, `kri0015`, `strat0001`, `kri0012`):\n  - numerator-side and denominator-side variables;\n  - at least one multi-value variable;\n  - blank values (\"Not recorded\");\n  - the full category grid, with zeros.\n- Site-level rows only (`GroupLevel` = Site), matching the pipeline design.\n- A deterministic seed, so the fixture is reproducible.\n- Variables matching the design review (2026-11-09), using the agreed status labels:\n  - eligibility status: Eligible, Potentially Ineligible, Ineligible (not the source);\n  - I/E criteria, counted per criterion (a participant can count against several);\n  - IP status: Dosed – ongoing; Dosed – treatment complete; Dosed – premature treatment discontinuation; Potential Non-Starter – within window; Potential Non-Starter – outside window; Confirmed Non-Starter;\n  - study disposition (enrolled participants): Withdrawal by Participant; Lost to Follow-Up; Study Discontinuation: Other; Death; Study Completion; Ongoing;\n  - screening (all participants, low priority): Screen Failure; In Screening; Enrolled;\n  - protocol-deviation category (`dvdecod`) for important (`kri0004`) and non-important (`kri0003`) deviations, counted per deviation.\n\n**Out:** real data, and the R pipeline.",
       "criteria": [
         {
           "id": "9.01",
@@ -79,6 +81,7 @@
       "title": "Build a Layout A bar-chart distribution widget",
       "parent": "Gilead-BioStats/gsm.roadmap#618",
       "userTest": true,
+      "scopeSection": "**In:** a Layout A bar-chart widget following the contract in the gsm.roadmap#617 pipeline design.\n- **Header:** metric name, percent, and numerator / denominator.\n- **Scope of data:** filter to one metric and, optionally, one group. Site rows are summed to study level in one function; nothing else is derived.\n- **Sections:** one per `Source` × `Variable`, numerator first.\n- **Bars:** Σ `Count` per category, sorted by descending count, with \"Not recorded\" last. A top-N setting collapses the rest into a \"+ k more\" bar.\n- **Two percentages per category, by default:**\n  - the share of the metric's population: Σ `Count` / Σ `Total` (e.g. % of participants who discontinued);\n  - the share of enrolled participants: Σ `Count` / the metric's Denominator, where the denominator is the enrolled population.\n- **Labels:** business terms from configuration (e.g. \"% Discontinued\", \"% Enrolled\"). Never show \"Numerator\" or \"Denominator\". Tooltips may carry the longer context.\n- **No duplicate total:** no total row when the header already shows that value.\n- **Colours:** status categories take colours from a configurable status-to-colour map, and fall back to a neutral colour when no map is given. Reason categories aren't coloured.\n- **Footnotes:** shown automatically when Σ `Count` > `Total` (multi-value variables, where a participant counts in several categories) and when \"Not recorded\" is present.\n- **States:** empty (configured, but no rows) and missing (the metric has no distributions).\n- **Accessibility:** accessible labels.\n- **Replaces:** `breakdown-bar`, and removes the `details` consumer.\n\n**Out:**\n- The contents of the status-to-colour map (a separate issue).\n- Other chart types.\n- Pipeline computation.",
       "criteria": [
         {
           "id": "10.01",
@@ -143,34 +146,35 @@
       "title": "Hide site-flag views on the study view by default",
       "parent": "Gilead-BioStats/gsm.roadmap#625",
       "userTest": true,
+      "scopeSection": "**In:**\n- The default study view shows no site-flag counts:\n  - the default tile has no flag bar;\n  - `flag-dist` and `bar-outliers` are not in the default views.\n- Configuration can re-enable them per study or per metric.\n\n**Out:** the portfolio view.",
       "criteria": [
         {
           "id": "11.01",
           "text": "A test asserts that the default study view renders no site-flag counts.",
           "sha256": "827fc4cb61a0bf10f04792ac66363445989eafd509324fdeeef3f9e132171fca",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "11.02",
           "text": "Enabling them through configuration restores them (test).",
           "sha256": "29b752c7a4ba3d9beb35e860c1fc82a47c6a1669d4b8dfa0ddc703b1f554d223",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "11.03",
           "text": "The portfolio view is unchanged.",
           "sha256": "10226d1e4284adcc8979f94ec71bcdc949d16653e951bd590bee678b315c44d7",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "11.04",
-          "text": "A reviewer compares the default study view with the design and accepts it (visual comparison).",
-          "sha256": "a9592c3b12907212ddc8d7ca3747d9297aba25fc190984b16cc8253c80ad9d32",
+          "text": "A reviewer compares the default study view with the default described in Scope and accepts it (visual comparison).",
+          "sha256": "e77658606afd5f21602291f371df26793bf4f5ff04f52d096d334025f791df38",
           "kind": "visual",
-          "reviewed": false
+          "reviewed": true
         }
       ]
     },
@@ -179,20 +183,21 @@
       "title": "Fail visibly on unknown widget or metric references",
       "parent": "Gilead-BioStats/gsm.roadmap#625",
       "userTest": false,
+      "scopeSection": "**In:** each of these renders a visible placeholder naming the reference and the reason, and logs a warning:\n- an unknown widget name;\n- an unknown metric ID;\n- a widget that doesn't apply to the metric's kind (for example a distribution widget on a metric without distributions).\n\nThere is no silent fallback.\n\n**Applicability.** Every tile and chart widget applies to any site-level metric. `distribution-bar` applies only to a metric with a breakdown configuration, and `link-out` only to a metric with a configured report link. Using either on another metric is an incompatible reference: a placeholder names the widget, the metric and the reason, and a warning is logged. A configured metric with no rows, including an earlier snapshot whose breakdowns aren't published, keeps the empty states from #10.\n\n**Unknown metric IDs** in configuration (breakdowns, report links, per-study views) are listed in a notice at the top of the study page, naming each reference and where it was found.\n\n**Out:** validating configuration before rendering (a separate issue, to follow).",
       "criteria": [
         {
           "id": "12.01",
           "text": "Tests cover each case, and the placeholder text names the bad reference.",
           "sha256": "1ef6040373e59226c6e8628b012f282ae56dce5b829adf42b499eec597956432",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "12.02",
           "text": "Valid references render exactly as before.",
           "sha256": "0aa8b16ab3de7b464ab47735f3e29dcb5976e01167b735a66917fdddd77d23a0",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         }
       ]
     },
@@ -201,27 +206,28 @@
       "title": "Configure detailed-report links per widget",
       "parent": "Gilead-BioStats/gsm.roadmap#625",
       "userTest": false,
+      "scopeSection": "**In:**\n- A per-metric (or per-widget) link to its detailed report, taken from configuration.\n- Relative paths, resolved against a configurable base, so links work wherever the reports are hosted.\n- No link at all when none is configured, rather than a broken one.\n\n**Out:** choosing the real destinations, which depends on where reports are deployed (gsm.roadmap#625, open question 4).",
       "criteria": [
         {
           "id": "13.01",
           "text": "Links render from configuration for each configured metric.",
           "sha256": "fde12ebe5a8c74cc25c451b6364c5d3501d0b559c345342b6799bf94f6f52b1e",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "13.02",
           "text": "Relative links resolve against the configured base (test).",
           "sha256": "9540620b6a415a23a568ac0ea8b2a68f2f4fb069d7a90609f0a6c23f7b03c183",
-          "kind": "unit",
-          "reviewed": false
+          "kind": "e2e",
+          "reviewed": true
         },
         {
           "id": "13.03",
           "text": "An unconfigured metric renders no link.",
           "sha256": "11952bfc040633d27251b885815ef06caccd60c3a52fb7f28f0f856c81d45619",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         }
       ]
     },
@@ -230,6 +236,7 @@
       "title": "Reject portfolio inputs from mixed snapshot cycles",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": false,
+      "scopeSection": "**In:**\n- The portfolio input declares its cycle: a snapshot date or cycle ID in the manifest.\n- Studies whose latest snapshot doesn't match the cycle are excluded from the current-cycle table and totals, and named in a visible notice.\n- Missing studies are named too.\n- Trend history is unaffected.\n\n**Out:** how the pipeline signals that a cycle is complete (gsm.roadmap#624, open question 4).",
       "criteria": [
         {
           "id": "14.01",
@@ -259,6 +266,7 @@
       "title": "Read the portfolio from a counts-only summary",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": false,
+      "scopeSection": "**In:**\n- The portfolio view reads one summary document:\n  - each study's latest parameters;\n  - per study × metric × snapshot: summed Numerator and Denominator, the site count, and flag counts.\n- The summary holds counts only, with no stored rates.\n- Rates and shares are computed after summing. A JSON Schema rejects stored ratios.\n- The example-data generator writes the summary. In production, the portfolio repository produces it (gsm.roadmap#624, P1–P2).\n\n**Out:** the production summary job.",
       "criteria": [
         {
           "id": "15.01",
@@ -288,6 +296,7 @@
       "title": "Move portfolio defaults into a configuration file",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": false,
+      "scopeSection": "**In:**\n- Read `groupBy`, `heatmap`, `ramp`, `show` and the default visible metric columns from a configuration file. It's JSON for the prototype; #624 places the production defaults in the portfolio repository's YAML.\n- Values are validated against the same vocabulary as the sidebar.\n\n**Out:** the production configuration location.",
       "criteria": [
         {
           "id": "16.01",
@@ -310,6 +319,7 @@
       "title": "Add an eligibility-over-time widget",
       "parent": "Gilead-BioStats/gsm.roadmap#625",
       "userTest": true,
+      "scopeSection": "**In:**\n- A time-series widget that plots the study-level `qtl0001` result (percent, with n/N) against snapshot date.\n- Built on the gsm.viz `timeSeries` module, so it matches the standard report's chart.\n- An empty state for a study with a single snapshot.\n\n**Out:**\n- Making past snapshots available to the render step. That's a deployment dependency: it needs read access to the snapshot history.\n- Any new eligibility calculation.",
       "criteria": [
         {
           "id": "17.01",
@@ -339,6 +349,7 @@
       "title": "Add status colours to distribution widgets",
       "parent": "Gilead-BioStats/gsm.roadmap#618",
       "userTest": true,
+      "scopeSection": "**In:** a status-to-colour map in configuration, with these entries.\n\n| Group | Status | Colour |\n|---|---|---|\n| Eligibility | Eligible | teal |\n| Eligibility | Ineligible | red |\n| Eligibility | Potentially Ineligible | TBD |\n| IP status | Dosed – ongoing; Dosed – treatment complete; Dosed – premature treatment discontinuation; Potential Non-Starter – within window; Potential Non-Starter – outside window; Confirmed Non-Starter | match the standard IP compliance report (palette TBD) |\n| Study disposition (enrolled) | Withdrawal by Participant | red |\n| Study disposition (enrolled) | Lost to Follow-Up | purple |\n| Study disposition (enrolled) | Death | black |\n| Study disposition (enrolled) | Ongoing | green |\n| Study disposition (enrolled) | Study Discontinuation: Other; Study Completion | match the standard retention report (TBD) |\n| Screening (all participants) | Screen Failure; In Screening; Enrolled | TBD |\n\n- Colour names become the exact values used by the standard eligibility and retention reports.\n- Unknown statuses fall back to the neutral colour and are reported.\n\n**Out:**\n- The colour hook in the widget (#10).\n- Colours for reason categories.",
       "criteria": [
         {
           "id": "18.01",
@@ -368,6 +379,7 @@
       "title": "Show the top protocol-deviation categories",
       "parent": "Gilead-BioStats/gsm.roadmap#625",
       "userTest": false,
+      "scopeSection": "**In:**\n- Configure #10's widget: top 5 categories by count, counts only (percentages switched off), with ties broken alphabetically.\n- One instance for important PDs.\n- An optional second instance for non-important PDs, using configuration only.\n\n**Out:**\n- A new widget type.\n- Harmonising categories across studies.",
       "criteria": [
         {
           "id": "19.01",
@@ -397,6 +409,7 @@
       "title": "Move portfolio details into hovers and trim the tooltips",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": true,
+      "scopeSection": "**In:**\n- Remove the ⓘ icons.\n- Show the metric definition on header hover, and study details, including the snapshot date, on study-name hover.\n- Drop the Snapshot column.\n- Remove the metric ID, Score and Threshold rows from the tooltip.\n- Phrase rates per 28 days throughout, and use each metric's own denominator label (FB-019).",
       "criteria": [
         {
           "id": "20.01",
@@ -433,6 +446,7 @@
       "title": "Add column options and a density toggle to the portfolio table",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": true,
+      "scopeSection": "**In:**\n- A column chooser: study name (default on), enrolled (default off), status (default off).\n- Enrolled shown as n / expected when the data carries an enrollment target.\n- A roomy/condensed toggle.\n- Defaults read from the portfolio configuration (#16).\n\n**Out:** adding the enrollment target to the data contract (a separate data change).",
       "criteria": [
         {
           "id": "21.01",
@@ -462,6 +476,7 @@
       "title": "Add a study filter and a full Reset to the portfolio",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": true,
+      "scopeSection": "**In:**\n- A multi-select study filter.\n- A Reset button that restores every default: filters, metrics, heatmap, group-by and highlight.",
       "criteria": [
         {
           "id": "22.01",
@@ -491,6 +506,7 @@
       "title": "Simplify heatmap options and fix shading under Group By",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": true,
+      "scopeSection": "**In:**\n- One colour ramp.\n- The heatmap setting persists across filter changes, is cleared by Reset, and is kept in the URL.\n- Expanded study rows are shaded.",
       "criteria": [
         {
           "id": "23.01",
@@ -513,6 +529,7 @@
       "title": "Update the portfolio header",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": true,
+      "scopeSection": "**In:**\n- Add the RBQM logo.\n- Remove the metadata line.\n- Keep or remove the theme control, per the decision below.",
       "criteria": [
         {
           "id": "24.01",
@@ -528,6 +545,7 @@
       "title": "Open the detailed report from a study and metric cell",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": true,
+      "scopeSection": "**In:**\n- A cell click opens the configured detailed report for that study and metric in a new tab, reusing the per-metric link configuration from #13.\n- When no report is configured, there's no link, so nothing breaks.",
       "criteria": [
         {
           "id": "25.01",
@@ -557,6 +575,7 @@
       "title": "Deliver one self-contained file per report",
       "parent": "Gilead-BioStats/gsm.roadmap#623",
       "userTest": false,
+      "scopeSection": "**In:**\n- One HTML file per report, `portfolio.html` and `<StudyID>.html`, with scripts, styles and data inline, requiring no external runtime resources.\n- Relative links between reports.\n- Data injected into the built template after the build, by a Node injector and by a base R injector that needs no Node or Bun at render time.\n- Each report validates its data against a JSON Schema when it loads.\n- The portfolio view state carries over to a study report and back, as listed in 27.05.\n\n**Out:**\n- Hosting and access control.\n- The R package that calls the R injector.",
       "criteria": [
         {
           "id": "27.01",
