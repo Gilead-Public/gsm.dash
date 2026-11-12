@@ -5,10 +5,10 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
-import { loadBaseline, BASELINE_PATH } from './lib/baseline.js';
+import { differsFromLive, loadBaseline, BASELINE_PATH } from './lib/baseline.js';
 import { resolveScope, walkStack } from './lib/scope.js';
 import { flag, option, parseIssueList } from './lib/cli.js';
-import { MODES, parseIssueBody, sha256 } from './lib/criteria.js';
+import { MODES, parseIssueBody } from './lib/criteria.js';
 import { EVIDENCE, evaluate } from './lib/gate.js';
 import { SPEC_ARTIFACTS } from '../e2e/projects.js';
 /** @typedef {import('./lib/gate.js').GateResult} GateResult */
@@ -165,11 +165,8 @@ step('scope', () => {
 
   let drift = 0;
   for (const issue of baseline.issues) {
-    const parsed = parseIssueBody(issue.number, live.get(issue.number) ?? '');
-    const liveSig = parsed.criteria.map((c) => `${c.id}:${sha256(c.text)}`).join(',');
-    const baseSig = issue.criteria.map((c) => `${c.id}:${c.sha256}`).join(',');
-    if (liveSig === baseSig && !parsed.errors.length) continue;
-    const msg = `#${issue.number}: acceptance criteria on GitHub differ from the baseline; run criteria:sync`;
+    if (!differsFromLive(issue, parseIssueBody(issue.number, live.get(issue.number) ?? ''))) continue;
+    const msg = `#${issue.number}: acceptance criteria or Scope on GitHub differ from the baseline; run criteria:sync`;
     if (scope.has(issue.number)) {
       record.failures.push(msg);
       drift++;

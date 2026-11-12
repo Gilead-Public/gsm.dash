@@ -15,6 +15,7 @@ export const MODES = ['file', 'subpath'];
 /**
  * @typedef {object} ParsedIssue
  * @property {ParsedCriterion[]} criteria
+ * @property {string} scopeSection The `## Scope` section, which decides how the criteria are read; empty when absent.
  * @property {boolean} userTest
  * @property {string[]} errors
  */
@@ -57,8 +58,9 @@ function section(body, heading) {
 export function parseIssueBody(issue, body) {
   /** @type {string[]} */
   const errors = [];
+  const scopeSection = (section(body, /^## Scope\s*$/) ?? []).map((l) => l.trimEnd()).join('\n').trim();
   const lines = section(body, /^## Acceptance criteria\s*$/);
-  if (!lines) return { criteria: [], userTest: false, errors: [`#${issue}: no "## Acceptance criteria" section`] };
+  if (!lines) return { criteria: [], scopeSection, userTest: false, errors: [`#${issue}: no "## Acceptance criteria" section`] };
 
   /** @type {ParsedCriterion[]} */
   const criteria = [];
@@ -83,7 +85,7 @@ export function parseIssueBody(issue, body) {
   if (userTest && !criteria.some((c) => isVisualText(c.text))) {
     errors.push(`#${issue}: User Tests is ticked but no criterion is a visual check or comparison`);
   }
-  return { criteria, userTest, errors };
+  return { criteria, scopeSection, userTest, errors };
 }
 
 /**
