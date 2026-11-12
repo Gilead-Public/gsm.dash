@@ -41,6 +41,7 @@ and are held back until a future release.
 npm install
 npm run dev        # generates example data, serves the app
 npm test           # rollup/normalize units + contract schema conformance
+npm run build:reports  # one self-contained study report per study, in dist/reports
 ```
 
 ## What's here (v1: the program page)
@@ -105,6 +106,11 @@ npm test           # rollup/normalize units + contract schema conformance
   one study-snapshot file per study × snapshot date, columns mirroring the
   gsm.core reporting data model exactly. The R-side export writer validates
   against these.
+- `src/pages/`, `src/react/` — the study report (Astro page, one React root),
+  replacing the app's study route. `scripts/package-reports.mjs` inlines the
+  built page into a template; `scripts/inject.mjs` puts one study document
+  (`schemas/study-document.schema.json`, built by `scripts/study-document.mjs`)
+  into it. A document that fails its schema shows an error state.
 - `scripts/generate-example-data.mjs` — deterministic simulated portfolio
   (12 studies × ~6 monthly snapshots, real gsm.kri metric catalog IDs, all
   numbers fake).
@@ -115,6 +121,10 @@ One contract, two modes (auto-detected): **fetched** (static host serving
 `portfolio.json` + `summary.json` + `studies/...`) or **embedded**
 (`<script type="application/json" data-gsm="portfolio|summary|snapshot">` blocks for
 self-contained HTML / htmlwidget embedding).
+
+Study reports take one injected study document (`<script type="application/json"
+id="gsm-data">`): the catalog, the study's manifest entry, all its snapshots and
+the portfolio comparison per snapshot date, pooled from the summary.
 
 ## Events
 

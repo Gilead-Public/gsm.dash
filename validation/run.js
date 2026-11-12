@@ -116,7 +116,7 @@ step('environment', () => {
     arch: arch(),
     node: process.version,
     npm: execFileSync('npm', ['--version'], { encoding: 'utf8' }).trim(),
-    packages: Object.fromEntries(['@playwright/test', 'vitest', 'vite', 'typescript', 'ajv', 'ajv-formats'].map((p) => [p, version(p)])),
+    packages: Object.fromEntries(['@playwright/test', 'vitest', 'vite', 'typescript', 'ajv', 'ajv-formats', 'astro', '@astrojs/react', 'react', 'react-dom', 'es-module-lexer'].map((p) => [p, version(p)])),
     browser: { name: 'chromium', version: execFileSync('node', ['--input-type=module', '-e', probe], { encoding: 'utf8' }).trim() },
     lockfileSha256: sha256File('package-lock.json'),
   };
@@ -179,7 +179,7 @@ step('scope', () => {
 });
 record.scope.issues = [...scope].sort((a, b) => a - b);
 
-// 2–4. One data generation shared by two isolated builds, each copied into the run folder before the next starts.
+// 2–5. One data generation shared by three isolated builds, each written into the run folder before the next starts.
 const buildsOk =
   step('generate-data', () => {
     const code = sh('npm', ['run', 'generate-data']);
@@ -200,17 +200,19 @@ const buildsOk =
     mkdirSync(join(out, 'examples'), { recursive: true });
     cpSync('examples/data', join(out, 'examples/data'), { recursive: true });
     return 0;
-  });
+  }) &&
+  step('build-reports', () => sh('npx', ['astro', 'build']) || sh('node', ['scripts/package-reports.mjs', at('build/reports')]));
 
 if (buildsOk) {
   record.builds = hashTree(at('build'), runDir);
   step('inventory', () =>
-    sh('npx', ['vitest', 'list', `--json=${at('inventory-vitest.json')}`]) ||
+    // Vitest 5 lists by parsing source unless told otherwise, which leaves template-literal names unexpanded.
+    sh('npx', ['vitest', 'list', '--staticParse=false', `--json=${at('inventory-vitest.json')}`]) ||
     sh('npx', ['playwright', 'test', '--list', '--reporter=json'], { ...runEnv, PLAYWRIGHT_JSON_OUTPUT_NAME: at('inventory-playwright.json') }));
   step('vitest', () => sh('npx', ['vitest', 'run', '--reporter=default', '--reporter=json', `--outputFile.json=${at('vitest.json')}`]));
   step('playwright', () => sh('npx', ['playwright', 'test', '--reporter=list,json'], { ...runEnv, PLAYWRIGHT_JSON_OUTPUT_NAME: at('playwright.json') }));
 } else {
-  for (const name of ['build-file', 'build-subpath', 'inventory', 'vitest', 'playwright']) {
+  for (const name of ['build-file', 'build-subpath', 'build-reports', 'inventory', 'vitest', 'playwright']) {
     if (!record.steps.some((s) => s.name === name)) skip(name);
   }
 }

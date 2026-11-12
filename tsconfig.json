@@ -9,7 +9,8 @@
     "strict": true,
     "noImplicitAny": false,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": ["node"],
+    "jsx": "react-jsx"
   },
-  "include": ["validation/**/*.js", "e2e/**/*.js", "playwright.config.js"]
+  "include": ["validation/**/*.js", "e2e/**/*.js", "playwright.config.js", "src/react/**/*", "scripts/inject.mjs", "scripts/package-reports.mjs", "scripts/study-document.mjs"]
 }

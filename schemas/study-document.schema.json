@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gilead-public.github.io/gsm.dash/schemas/study-document.schema.json",
+  "title": "gsm.dash study report data",
+  "description": "Everything one study report shows, injected into the report after the build: the metric catalog, the study's manifest entry, all its snapshots, and the portfolio comparison for each of its snapshot dates as counts pooled from the portfolio summary.",
+  "type": "object",
+  "required": ["schemaVersion", "generated", "metrics", "study", "snapshots", "comparison"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "generated": { "type": "string", "format": "date-time" },
+    "metrics": { "$ref": "portfolio.schema.json#/properties/metrics" },
+    "study": {
+      "type": "object",
+      "required": ["StudyID", "params", "snapshots"],
+      "additionalProperties": false,
+      "properties": {
+        "StudyID": { "type": "string", "minLength": 1 },
+        "params": { "$ref": "portfolio.schema.json#/properties/studies/items/properties/params" },
+        "snapshots": { "$ref": "portfolio.schema.json#/properties/studies/items/properties/snapshots" }
+      }
+    },
+    "snapshots": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "study-snapshot.schema.json" }
+    },
+    "comparison": {
+      "type": "array",
+      "description": "One row per snapshot date of the study × metric reported by at least one study, pooled from the portfolio summary: for the study's latest snapshot, every study at its own latest snapshot; for an earlier one, every study as of that date. At most one row per date and metric. Rates are computed by the report.",
+      "items": {
+        "type": "object",
+        "required": ["SnapshotDate", "MetricID", "Numerator", "Denominator"],
+        "additionalProperties": false,
+        "properties": {
+          "SnapshotDate": { "type": "string", "format": "date" },
+          "MetricID": { "type": "string", "minLength": 1 },
+          "Numerator": { "type": "number", "minimum": 0 },
+          "Denominator": { "type": "number", "minimum": 0 }
+        }
+      }
+    }
+  }
+}
