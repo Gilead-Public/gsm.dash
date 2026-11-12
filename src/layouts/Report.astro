@@ -1,0 +1,47 @@
+---
+// The shell every report shares: its data block, the app's header, and the code that mounts the page. Every page
+// carries the same code, so the page names itself in `data-page`. gsm.viz ships as a classic script that defines
+// window.gsmViz; a page that draws its charts inlines it to run before that code.
+import { readFileSync } from 'node:fs';
+import '../app/app.css';
+
+interface Props {
+  page: 'study' | 'portfolio';
+  title: string;
+  tag: string;
+  viz?: boolean;
+}
+const { page, title, tag, viz = false } = Astro.props;
+const vendor = (file: string) => readFileSync(`public/vendor/gsm.viz-2.3.0/${file}`, 'utf8');
+const vizCss = viz ? vendor('main.css') : '';
+const vizJs = viz ? vendor('index.js').replace(/<\/script/gi, '<\\/script') : '';
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {viz && <style is:inline set:html={vizCss}></style>}
+  </head>
+  <body data-page={page}>
+    <script is:inline type="application/json" id="gsm-data">__GSM_DATA__</script>
+    <div class="wrap">
+      <header class="app">
+        <h1>gsm.dash</h1>
+        <span class="tag" id="page-tag">{tag}</span>
+        <span id="meta" class="muted"></span>
+        <button type="button" class="hbtn" id="glossaryBtn" title="Open the CTQ metric glossary">Metric glossary</button>
+        <slot name="header" />
+        <div class="seg theme" id="themeSeg" role="group" aria-label="Theme">
+          <button type="button" data-theme-pref="auto" class="on">Auto</button><button type="button" data-theme-pref="light">Light</button><button type="button" data-theme-pref="dark">Dark</button>
+        </div>
+      </header>
+      <main id="app"></main>
+    </div>
+    {viz && <script is:inline set:html={vizJs}></script>}
+    <script>
+      import { mount } from '../react/mount.jsx';
+      mount(document.getElementById('app'));
+    </script>
+  </body>
+</html>

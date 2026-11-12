@@ -47,7 +47,7 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
  * @property {Mode} mode
  * @property {(route?: string, overrides?: DataOverrides) => Promise<void>} open Opens the build under test at a route such as `#/study/AA-AA-000-0000` and waits for the page to render.
  * @property {(studyId: string, overrides?: DataOverrides) => Promise<void>} openStudy Opens one study's page in the artifact under test.
- * @property {(studyId: string, overrides?: ReportOverrides) => Promise<string>} openReport Opens one study's report and waits for it to show its data or its error state. Returns the URL opened.
+ * @property {(name: string, overrides?: ReportOverrides) => Promise<string>} openReport Opens one report, `portfolio` or a StudyID, and waits for it to show its data or its error state. Returns the URL opened.
  */
 
 /**
@@ -175,12 +175,12 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
         await this.open(`#/study/${encodeURIComponent(studyId)}`, overrides);
         await page.locator('gsm-study-page .tile').first().waitFor();
       },
-      async openReport(studyId, overrides) {
+      async openReport(name, overrides) {
         if (artifact !== 'reports') throw new Error(`openReport needs the reports artifact, not ${artifact}`);
-        const file = join(REPORTS_DIR, `${studyId}.html`);
-        let url = mode === 'file' ? `file://${file}` : `${base}${encodeURIComponent(studyId)}.html`;
+        const file = join(REPORTS_DIR, `${name}.html`);
+        let url = mode === 'file' ? `file://${file}` : `${base}${encodeURIComponent(name)}.html`;
         if (overrides && mode === 'file') {
-          const variant = testInfo.outputPath(`${studyId}.html`);
+          const variant = testInfo.outputPath(`${name}.html`);
           writeFileSync(variant, rewriteReport(readFileSync(file, 'utf8'), overrides));
           url = `file://${variant}`;
         } else if (overrides) {
@@ -190,7 +190,7 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
           });
         }
         await page.goto(url);
-        await page.locator('#app > [data-study], #app > [role=alert]').waitFor();
+        await page.locator('#app > [data-study], #app > .layout, #app > [role=alert]').first().waitFor({ state: 'attached' });
         return url;
       },
     });
