@@ -414,6 +414,30 @@ test.describe('study page behaviour', () => {
   });
 });
 
+test('the study page sits in the app shell: brand, Study view tag, export date, a working metric glossary and theme switch, inside the page margins', async ({ app, page }) => {
+  await app.openStudy(study.StudyID);
+  const header = page.locator('header.app');
+  await expect(header.locator('h1')).toHaveText('gsm.dash');
+  await expect(header.locator('#page-tag')).toHaveText('Study view');
+  await expect(header.locator('#meta')).toContainText(` metrics · exported ${portfolio.generated}`);
+  await header.locator('#glossaryBtn').click();
+  const glossary = page.locator('dialog#gsm-glossary');
+  await expect(glossary).toBeVisible();
+  await expect(glossary).toContainText(tiles[0].Abbreviation);
+  await page.keyboard.press('Escape');
+  await expect(glossary).toBeHidden();
+  await header.locator('button[data-theme-pref="dark"]').click();
+  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('dark');
+  await expect(header.locator('button[data-theme-pref="dark"]')).toHaveClass(/\bon\b/);
+  await header.locator('button[data-theme-pref="auto"]').click();
+  expect(await page.evaluate(() => document.documentElement.dataset.theme ?? 'auto')).toBe('auto');
+  const shell = await header.boundingBox();
+  const content = await page.locator('#app > gsm-study-page, #app > .study-page').boundingBox();
+  expect(shell && content, 'header and study page both laid out').toBeTruthy();
+  expect(Math.round(content?.x ?? 0), 'the study page lines up with the header').toBe(Math.round(shell?.x ?? -1));
+  expect(content?.x ?? 0, 'inside the page margins').toBeGreaterThanOrEqual(20);
+});
+
 /** Counts the gsm.viz charts the page has made and not destroyed, by wrapping the bundle's chart functions as it loads. */
 function trackCharts() {
   const live = new Set();

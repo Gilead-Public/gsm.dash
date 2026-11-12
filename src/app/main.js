@@ -6,28 +6,7 @@ import '../components/gsm-portfolio-dist.js';
 import '../components/gsm-view-switch.js';
 import '../components/gsm-study-page.js';
 import { openGlossary } from '../components/glossary.js';
-
-const THEME_KEY = 'gsm-dash-theme';
-
-function applyTheme(pref) {
-  if (pref === 'light' || pref === 'dark') document.documentElement.dataset.theme = pref;
-  else delete document.documentElement.dataset.theme; // 'auto' follows the OS
-  for (const b of document.querySelectorAll('#themeSeg button')) {
-    b.classList.toggle('on', b.dataset.themePref === pref);
-  }
-}
-
-function initTheme() {
-  let pref = 'auto';
-  try { pref = localStorage.getItem(THEME_KEY) ?? 'auto'; } catch { /* storage unavailable */ }
-  applyTheme(pref);
-  document.getElementById('themeSeg').addEventListener('click', (e) => {
-    const b = e.target.closest('button[data-theme-pref]');
-    if (!b) return;
-    applyTheme(b.dataset.themePref);
-    try { localStorage.setItem(THEME_KEY, b.dataset.themePref); } catch { /* storage unavailable */ }
-  });
-}
+import { initTheme } from './theme.js';
 
 function route() {
   const hash = location.hash || '#/program';
