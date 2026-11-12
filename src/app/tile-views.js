@@ -5,13 +5,15 @@ import { studyViews } from '../config/study-views.js';
 import { getWidget } from '../widgets/registry.js';
 
 /**
- * Paging order: the standard views, then the study's added views, then the metric's own.
+ * Paging order: the standard views, then the study's added views, then the metric's own. A name that isn't a
+ * registered widget stays in, so its tile shows why it can't render (#12); that includes an explicitly empty name.
+ * Only an omitted name means "none".
  * @param {any} metric
  * @param {string} studyId
  * @returns {string[]}
  */
 export function tileViews(metric, studyId) {
-  const own = [metric?.Widget, ...(metric?.Widgets ?? [])].filter((n) => n && getWidget(n));
+  const own = [metric?.Widget, ...(metric?.Widgets ?? [])].filter((n) => n != null);
   return [...new Set([...STANDARD_TILE_VIEWS, ...studyViews(studyId).views, ...own])];
 }
 
@@ -23,9 +25,16 @@ export function tileViews(metric, studyId) {
  * @param {string[]} views
  */
 export function currentTileView(metric, chosen, views) {
-  const fallback = views.includes(metric?.Widget) ? metric.Widget : 'scalar-tile';
-  return chosen && views.includes(chosen) ? chosen : fallback;
+  const fallback = metric?.Widget != null && views.includes(metric.Widget) ? metric.Widget : 'scalar-tile';
+  return chosen != null && views.includes(chosen) ? chosen : fallback;
 }
+
+/**
+ * A view's name in its tile: the widget's label, or the configured name in quotes when it isn't a widget, so an
+ * empty or misspelt name reads as one.
+ * @param {string} name
+ */
+export const viewLabel = (name) => getWidget(name)?.label ?? JSON.stringify(name);
 
 /**
  * The views the "All tiles" menu offers: those every tile in the study has.

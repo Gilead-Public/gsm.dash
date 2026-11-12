@@ -8,36 +8,29 @@ import '../src/widgets/index.js';
 const EXEC = ['results', 'distributions', 'external'];
 
 describe('widget registry + allow-list resolution', () => {
+  const configured = { MetricID: 'Analysis_kri0012', ID: 'kri0012', Abbreviation: 'SF' };
+  const plain = { MetricID: 'Analysis_kri0007', ID: 'kri0007', Abbreviation: 'TDSC' };
+
   it('resolves registered widgets whose dataSpec the host allows', () => {
-    expect(resolveWidget('distribution-bar', EXEC)).toMatchObject({ degraded: false });
+    expect(resolveWidget('distribution-bar', EXEC, configured)).toMatchObject({ reason: null });
     expect(resolveWidget('threshold-list', EXEC).def.name).toBe('threshold-list');
   });
 
-  it('falls back to scalar-tile for unknown names', () => {
-    const { def, degraded } = resolveWidget('no-such-widget', EXEC);
-    expect(def.name).toBe('scalar-tile');
-    expect(degraded).toBe(true);
+  it('substitutes nothing for an unknown name, and says why', () => {
+    expect(resolveWidget('no-such-widget', EXEC)).toEqual({ def: null, reason: 'it is not a registered widget' });
+    expect(resolveWidget(undefined, EXEC)).toEqual({ def: null, reason: 'it is not a registered widget' });
   });
 
-  it('undefined name means the default widget, not a degrade', () => {
-    expect(resolveWidget(undefined, EXEC)).toMatchObject({ degraded: false });
+  it('substitutes nothing when a layer is disallowed, and names the layer', () => {
+    registerWidget({ name: 'test-listings-widget', dataSpec: { results: 'self', listings: 'self' }, render() {} });
+    expect(resolveWidget('test-listings-widget', EXEC)).toEqual({ def: null, reason: 'it needs the listings data, which this page does not carry' });
+    expect(resolveWidget('test-listings-widget', [...EXEC, 'listings']).def.name).toBe('test-listings-widget');
   });
 
-  it('degrades along the fallback chain when a layer is disallowed (W2)', () => {
-    registerWidget({
-      name: 'test-listings-widget',
-      dataSpec: { results: 'self', listings: 'self' },
-      fallback: 'link-out',
-      render() {},
-    });
-    // Exec build: listings disallowed -> falls back to link-out (allowed).
-    const exec = resolveWidget('test-listings-widget', EXEC);
-    expect(exec.def.name).toBe('link-out');
-    expect(exec.degraded).toBe(true);
-    // Study-team build: listings allowed -> runs as itself.
-    const team = resolveWidget('test-listings-widget', [...EXEC, 'listings']);
-    expect(team.def.name).toBe('test-listings-widget');
-    expect(team.degraded).toBe(false);
+  it('refuses a widget that does not apply to the metric: breakdowns without a configuration, a report link without a link', () => {
+    expect(resolveWidget('distribution-bar', EXEC, plain)).toEqual({ def: null, reason: 'it has no breakdown configuration' });
+    expect(resolveWidget('link-out', EXEC, plain, {})).toEqual({ def: null, reason: 'no report link is configured for it' });
+    expect(resolveWidget('link-out', EXEC, plain, { href: 'report.html' }).def.name).toBe('link-out');
   });
 
   it('missingLayers names exactly the disallowed layers', () => {

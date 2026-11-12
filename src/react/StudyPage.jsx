@@ -1,9 +1,10 @@
 // @ts-check
 import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { attachHoverTooltip, metricTip } from '../components/tooltip.js';
-import { getWidget, resolveWidget } from '../widgets/index.js';
-import { STUDY_PAGE_SPEC, EXEC_ALLOW_LIST, DETAIL_TABS, KIND_HELP } from '../app/study-page-spec.js';
-import { currentTileView, sharedTileViews, tileConfig, tileViews } from '../app/tile-views.js';
+import { getWidget } from '../widgets/index.js';
+import { configProblems, problemText, resolveView } from '../app/references.js';
+import { STUDY_PAGE_SPEC, DETAIL_TABS, KIND_HELP } from '../app/study-page-spec.js';
+import { currentTileView, sharedTileViews, tileConfig, tileViews, viewLabel } from '../app/tile-views.js';
 import { useStore } from './useStore.js';
 import { Widget } from './Widget.jsx';
 
@@ -33,6 +34,49 @@ function KindBadge({ def }) {
     <span className={`kind kind-${def.kind}`} title={KIND_HELP[/** @type {keyof typeof KIND_HELP} */ (def.kind)] ?? ''}>
       {def.kind}
     </span>
+  );
+}
+
+/** @param {{ problem: import('../app/references.js').Problem }} props */
+function ProblemNote({ problem }) {
+  return (
+    <div className="ref-problem" role="note">
+      <b>Can't show this view.</b> {problemText(problem)}
+    </div>
+  );
+}
+
+/**
+ * The body of a tile or the drill-in panel: the resolved widget, or the reason it can't render. The one place a
+ * problem is shown, for every caller.
+ * @param {{ view: ReturnType<typeof resolveView>, className: string, metricId?: string, config?: object, store: any, studyId: string, version: number }} props
+ */
+function ViewBody({ view, className, ...widget }) {
+  if (view.problem) {
+    return (
+      <div className={className}>
+        <ProblemNote problem={view.problem} />
+      </div>
+    );
+  }
+  return <Widget className={className} def={view.def} {...widget} />;
+}
+
+/**
+ * Configuration references no tile can show.
+ * @param {{ problems: import('../app/references.js').Problem[] }} props
+ */
+function ConfigNotice({ problems }) {
+  if (!problems.length) return null;
+  return (
+    <div className="config-notice" role="status">
+      <b>Configuration problems</b>
+      <ul>
+        {problems.map((p, i) => (
+          <li key={i}>{problemText(p)}</li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -137,6 +181,7 @@ export function StudyPage({ store, studyId }) {
 
   return (
     <div className="study-page" data-study={studyId} ref={root} onClick={onClick}>
+      <ConfigNotice problems={configProblems([...store.metrics, ...store.inactiveMetrics])} />
       <div className="dd-head">
         <span className="study mono">{study.StudyID}</span>
         {study.params.nickname ? <span className="study nick">{study.params.nickname}</span> : null}
@@ -272,26 +317,28 @@ function Tile({ metric, open, store, studyId, version }) {
   const views = tileViews(metric, studyId);
   const current = currentTileView(metric, store.state.tileViews.get(metric.MetricID), views);
   const idx = views.indexOf(current);
-  const { def, degraded } = resolveWidget(current, EXEC_ALLOW_LIST);
   const config = tileConfig(metric, current, studyId);
+  const view = resolveView(current, metric, config);
+  const { def } = view;
+  const label = viewLabel(current);
   const step = (/** @type {number} */ by) => store.setTileView(metric.MetricID, views[(idx + by + views.length) % views.length]);
   const toggleDetail = () => store.set('detail', { metricId: open ? null : metric.MetricID, tab: store.state.detail.tab });
   return (
-    <div className={def.size ? `tile ${def.size}` : 'tile'} data-metric-id={metric.MetricID}>
+    <div className={def?.size ? `tile ${def.size}` : 'tile'} data-metric-id={metric.MetricID}>
       <div className="tile-head">
         <span className="abbr">{metric.Abbreviation}</span>
         <span className="name">{metric.Metric}</span>
         <InfoIcon metric={metric} />
         <StatusPill metric={metric} />
-        <KindBadge def={def} />
+        {def ? <KindBadge def={def} /> : null}
       </div>
-      <Widget className="tile-body" def={def} degradedFrom={degraded ? current : undefined} metricId={metric.MetricID} config={config} store={store} studyId={studyId} version={version} />
+      <ViewBody view={view} className="tile-body" metricId={metric.MetricID} config={config} store={store} studyId={studyId} version={version} />
       <div className="tile-foot">
         <button type="button" className="vbtn" data-view-step="-1" data-metric={metric.MetricID} aria-label="Previous view" onClick={() => step(-1)}>
           ‹
         </button>
-        <span className="view-name" title={`${def.label} — view ${idx + 1} of ${views.length}`}>
-          {def.label} <span className="muted">{`${idx + 1}/${views.length}`}</span>
+        <span className="view-name" title={`${label} — view ${idx + 1} of ${views.length}`}>
+          {label} <span className="muted">{`${idx + 1}/${views.length}`}</span>
         </span>
         <button type="button" className="vbtn" data-view-step="1" data-metric={metric.MetricID} aria-label="Next view" onClick={() => step(1)}>
           ›
@@ -309,18 +356,15 @@ function Tile({ metric, open, store, studyId, version }) {
  * @param {{ name: string, config?: object, store: any, studyId: string, version: number }} props
  */
 function PageWidget({ name, config, store, studyId, version }) {
-  const { def, degraded } = resolveWidget(name, EXEC_ALLOW_LIST);
+  const view = resolveView(name, null, config);
+  const { def } = view;
   return (
-    <div className={def.size ? `tile ${def.size}` : 'tile'}>
-      <div className="tile-head">
-        <KindBadge def={def} />
-      </div>
-      <Widget className="tile-body" def={def} degradedFrom={degraded ? name : undefined} config={config} store={store} studyId={studyId} version={version} />
+    <div className={def?.size ? `tile ${def.size}` : 'tile'}>
+      <div className="tile-head">{def ? <KindBadge def={def} /> : null}</div>
+      <ViewBody view={view} className="tile-body" config={config} store={store} studyId={studyId} version={version} />
     </div>
   );
 }
-
-const FALLBACK_NOTE = '<p class="muted small">This chart needs a data layer this build does not carry; showing the fallback view.</p>';
 
 /**
  * The drill-in panel under the row that owns the selected metric: the standard KRI-report charts as tabs.
@@ -329,7 +373,7 @@ const FALLBACK_NOTE = '<p class="muted small">This chart needs a data layer this
 function DetailPanel({ metric, store, studyId, version }) {
   const { tab } = store.state.detail;
   const tabDef = getWidget(tab);
-  const { def, degraded } = resolveWidget(tab, EXEC_ALLOW_LIST);
+  const view = resolveView(tab, metric);
   return (
     <div className="detail">
       <div className="detail-head">
@@ -348,7 +392,7 @@ function DetailPanel({ metric, store, studyId, version }) {
           ✕
         </button>
       </div>
-      <Widget className="detail-body" def={def} degradedFrom={degraded ? tab : undefined} note={degraded ? FALLBACK_NOTE : undefined} metricId={metric.MetricID} store={store} studyId={studyId} version={version} />
+      <ViewBody view={view} className="detail-body" metricId={metric.MetricID} store={store} studyId={studyId} version={version} />
     </div>
   );
 }

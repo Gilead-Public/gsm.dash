@@ -90,7 +90,7 @@ function tileContent(page, metricId) {
     const seen = (/** @type {Element | null | undefined} */ el) => (el ? (shown(el) ? text(el) : '(hidden)') : '');
     const fbar = body.querySelector('.fbar');
     return {
-      fallback: body.hasAttribute('data-degraded-from') || Boolean(body.querySelector('.viz-placeholder')),
+      fallback: Boolean(body.querySelector('.ref-problem, .viz-placeholder')),
       heading: seen(body.querySelector('.sub-h')),
       big: text(body.querySelector('.big')),
       terms: [...body.querySelectorAll('dl.kv dt')].map(text),

@@ -22,6 +22,6 @@ registerWidget({
   label: 'Report link',
   version: '0.1.0',
   dataSpec: { results: 'self', external: true },
-  fallback: 'scalar-tile',
+  appliesTo: (_metric, config) => (config.href ? null : 'no report link is configured for it'),
   render: renderLinkOut,
 });

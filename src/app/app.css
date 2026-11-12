@@ -620,3 +620,9 @@ table.gloss tr.planned td:first-child { box-shadow: inset 3px 0 0 var(--planned)
 table.gloss tr.new td:first-child { box-shadow: inset 3px 0 0 var(--new); }
 table.gloss a { color: var(--accent); }
 
+
+/* #12: a reference that can't render says so, in its tile or in a notice above the study page. */
+.ref-problem { padding: 10px; border: 1px dashed var(--crit); border-radius: 6px; color: var(--ink-2); font-size: 12px; line-height: 1.4; }
+.ref-problem b { display: block; color: var(--crit); }
+.config-notice { margin: 0 0 12px; padding: 10px 14px; border: 1px solid var(--crit); border-radius: 6px; background: color-mix(in srgb, var(--crit) 6%, var(--panel)); font-size: 13px; }
+.config-notice ul { margin: 6px 0 0; padding-left: 18px; }
