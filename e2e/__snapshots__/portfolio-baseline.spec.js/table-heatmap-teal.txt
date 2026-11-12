@@ -1,0 +1,562 @@
+state: table-heatmap-teal
+dom: sha256 b99db0db97e96038505f12ae28491be348159f780e2ac32afad67ce2110869bd (314697 characters)
+tooltip: none
+cell backgrounds: rgb(237, 240, 238) ×5 | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(237, 240, 238) ×15 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(231, 242, 240) ×2 | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(203, 227, 223) ×3 | rgb(163, 204, 197) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(231, 242, 240) ×3 | rgb(203, 227, 223) ×3 | rgb(231, 242, 240) ×3 | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(203, 227, 223) ×3 | rgb(231, 242, 240) ×3 | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(163, 204, 197) ×2 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) ×3 | rgb(203, 227, 223) | rgb(231, 242, 240) ×3 | rgb(203, 227, 223) | rgb(116, 176, 166) ×2 | rgb(163, 204, 197) | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(116, 176, 166) ×2 | rgb(231, 242, 240) | rgb(116, 176, 166) ×2 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(231, 242, 240) ×2 | rgb(163, 204, 197) | rgb(116, 176, 166) ×2 | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) | rgb(203, 227, 223) ×3 | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(203, 227, 223) ×3 | rgb(231, 242, 240) ×4 | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(116, 176, 166) ×2 | rgb(203, 227, 223) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(163, 204, 197) ×2 | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) | rgb(163, 204, 197) ×2 | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(231, 242, 240) ×3 | rgb(116, 176, 166) ×2 | rgb(203, 227, 223) | rgb(163, 204, 197) ×2 | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(203, 227, 223) ×2 | rgb(116, 176, 166) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) ×2 | rgb(203, 227, 223) ×2 | rgb(163, 204, 197) ×2 | rgb(203, 227, 223) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(116, 176, 166) | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(116, 176, 166) ×2 | rgb(231, 242, 240) | rgb(203, 227, 223) ×2 | rgb(116, 176, 166) ×2 | rgb(163, 204, 197) | rgb(116, 176, 166) ×3 | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(116, 176, 166) ×2 | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(163, 204, 197) ×2 | rgb(203, 227, 223)
+distribution marks:
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+accessibility:
+- main:
+  - text: Controls
+  - button "Collapse controls" [expanded]: «
+  - group:
+    - text: ▸ Config Highlight study
+    - combobox:
+      - option "None" [selected]
+      - option "STUDY001 · ATLAS-1"
+      - option "STUDY002 · BEACON-1"
+      - option "STUDY003 · COBALT-1"
+      - option "STUDY004 · DELTA-1"
+      - option "STUDY005 · EMBER-1"
+      - option "STUDY006 · FALCON-2"
+      - option "STUDY007 · GRANITE-3"
+      - option "STUDY008 · HARBOR-2"
+      - option "STUDY009 · IRIS-1"
+      - option "STUDY010 · JUNIPER-2"
+      - option "STUDY011 · KESTREL-3"
+      - option "STUDY012 · LUMEN-1"
+    - paragraph: Marks the study in every view. Click a row or a dot to pick one.
+    - text: Cell display
+    - group:
+      - button "As defined"
+      - button "Custom"
+    - paragraph: "Each metric as its glossary defines it: n (%), per 28 days, or %."
+    - text: Also show
+    - button "Trend"
+    - text: Heatmap (also drives column sort)
+    - combobox:
+      - option "None"
+      - option "Numerator"
+      - option "Denominator"
+      - option "Rate" [selected]
+    - text: Heatmap color
+    - group:
+      - button "Blue"
+      - button "Teal"
+      - button "Purple"
+      - button "Grey"
+    - text: Group rows by
+    - combobox:
+      - option "None — one row per study" [selected]
+      - option "Therapeutic area"
+      - option "Indication"
+      - option "Phase"
+      - option "Status"
+      - option "Product"
+  - group:
+    - text: ▸ Metrics 21/21 Status
+    - button "Released8" [pressed]
+    - button "New4" [pressed]
+    - button "Planned9" [pressed]
+    - button "All"
+    - button "None"
+    - text: Disposition
+    - button "none"
+    - text: 6/6
+    - checkbox "SF Screen Failure Rate" [checked]
+    - text: SF Screen Failure Rate
+    - checkbox "SDSC Study Discontinuation Rate" [checked]
+    - text: SDSC Study Discontinuation Rate
+    - checkbox "TDSC Treatment Discontinuation Rate" [checked]
+    - text: TDSC Treatment Discontinuation Rate
+    - checkbox "PTDSC Premature Treatment Discontinuation Rate Planned" [checked]
+    - text: PTDSC Premature Treatment Discontinuation Rate Planned
+    - checkbox "WC Withdrawal of Consent Planned" [checked]
+    - text: WC Withdrawal of Consent Planned
+    - checkbox "LTFU Lost to Follow Up Planned" [checked]
+    - text: LTFU Lost to Follow Up Planned Early events
+    - button "none"
+    - text: 3/3
+    - checkbox "DTH30 Early Deaths (30 days) Planned" [checked]
+    - text: DTH30 Early Deaths (30 days) Planned
+    - checkbox "DTH90 Early Deaths (90 days) Planned" [checked]
+    - text: DTH90 Early Deaths (90 days) Planned
+    - checkbox "IPNS IP Non-starters Planned" [checked]
+    - text: IPNS IP Non-starters Planned Eligibility & integrity
+    - button "none"
+    - text: 3/3
+    - checkbox "IE Eligibility Planned" [checked]
+    - text: IE Eligibility Planned
+    - checkbox "STRAT Stratification Planned" [checked]
+    - text: STRAT Stratification Planned
+    - checkbox "PFSC Premature Censoring for PFS Planned" [checked]
+    - text: PFSC Premature Censoring for PFS Planned Safety & deviations
+    - button "none"
+    - text: 5/5
+    - checkbox "AE AE Reporting Rate New" [checked]
+    - text: AE AE Reporting Rate New
+    - checkbox "SAE SAE Reporting Rate New" [checked]
+    - text: SAE SAE Reporting Rate New
+    - checkbox "PD Non-Important Protocol Deviation Rate New" [checked]
+    - text: PD Non-Important Protocol Deviation Rate New
+    - checkbox "IPD Important Protocol Deviation Rate New" [checked]
+    - text: IPD Important Protocol Deviation Rate New
+    - checkbox "LB G3+ Lab Abnormality Rate" [checked]
+    - text: LB G3+ Lab Abnormality Rate Data quality
+    - button "none"
+    - text: 4/4
+    - checkbox "QRY Query Rate" [checked]
+    - text: QRY Query Rate
+    - checkbox "OQRY Delayed Query Resolution Rate" [checked]
+    - text: OQRY Delayed Query Resolution Rate
+    - checkbox "ODAT Delayed Data Entry Rate" [checked]
+    - text: ODAT Delayed Data Entry Rate
+    - checkbox "CDAT Data Change Rate" [checked]
+    - text: CDAT Data Change Rate
+    - paragraph: 1 metric is not site-level (Study) — held back until a future release adds that plumbing.
+  - group:
+    - text: ▸ Filter Therapeutic area
+    - button "Cardiology"
+    - button "Immunology"
+    - button "Neurology"
+    - button "Oncology"
+    - button "Virology"
+    - text: Phase
+    - button "P1"
+    - button "P2"
+    - button "P3"
+    - text: Status
+    - button "Active"
+    - button "Completed"
+    - button "Enrolling"
+  - tablist "Program view":
+    - text: Table
+    - tab "Overview"
+    - tab "Details"
+    - tab "Distribution"
+  - text: "Mixed: Early events, Eligibility & integrity, Safety & deviations, Data quality open Showing 12 / 12 studies · 21 / 21 site-level metrics (8 released · 4 new · 9 planned) · cells as defined in the glossary · each study at its own latest snapshot · sorted by DTH30 rate ↑"
+  - table:
+    - rowgroup:
+      - row "Study Snapshot Population Open Disposition Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU Fold Early events Early events3 Fold Eligibility & integrity Eligibility & integrity3 Fold Safety & deviations Safety & deviations5 Fold Data quality Data quality4":
+        - columnheader "Study"
+        - columnheader "Snapshot"
+        - columnheader "Population"
+        - columnheader "Open Disposition Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU":
+          - button "Open Disposition": +
+          - text: Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU
+        - columnheader "Fold Early events Early events3":
+          - button "Fold Early events" [expanded]: −
+          - text: Early events3
+        - columnheader "Fold Eligibility & integrity Eligibility & integrity3":
+          - button "Fold Eligibility & integrity" [expanded]: −
+          - text: Eligibility & integrity3
+        - columnheader "Fold Safety & deviations Safety & deviations5":
+          - button "Fold Safety & deviations" [expanded]: −
+          - text: Safety & deviations5
+        - columnheader "Fold Data quality Data quality4":
+          - button "Fold Data quality" [expanded]: −
+          - text: Data quality4
+      - row "Scr. n Enr. n DTH30 Early Deaths (30 days) definition n (% enr.) Planned DTH90 Early Deaths (90 days) definition n (% enr.) Planned IPNS IP Non-starters definition n (% enr.) Planned IE Eligibility definition n (% enr.) Planned STRAT Stratification definition n (% enr.) Planned PFSC Premature Censoring for PFS definition n (% enr.) Planned AE AE Reporting Rate definition / 28 d New SAE SAE Reporting Rate definition / 28 d New PD Non-Important Protocol Deviation Rate definition / 28 d New IPD Important Protocol Deviation Rate definition / 28 d New LB G3+ Lab Abnormality Rate definition n (%) QRY Query Rate definition % OQRY Delayed Query Resolution Rate definition % ODAT Delayed Data Entry Rate definition % CDAT Data Change Rate definition %":
+        - columnheader "Scr. n"
+        - columnheader "Enr. n"
+        - columnheader "DTH30 Early Deaths (30 days) definition n (% enr.) Planned":
+          - text: DTH30
+          - img "Early Deaths (30 days) definition": i
+          - text: n (% enr.) Planned
+        - columnheader "DTH90 Early Deaths (90 days) definition n (% enr.) Planned":
+          - text: DTH90
+          - img "Early Deaths (90 days) definition": i
+          - text: n (% enr.) Planned
+        - columnheader "IPNS IP Non-starters definition n (% enr.) Planned":
+          - text: IPNS
+          - img "IP Non-starters definition": i
+          - text: n (% enr.) Planned
+        - columnheader "IE Eligibility definition n (% enr.) Planned":
+          - text: IE
+          - img "Eligibility definition": i
+          - text: n (% enr.) Planned
+        - columnheader "STRAT Stratification definition n (% enr.) Planned":
+          - text: STRAT
+          - img "Stratification definition": i
+          - text: n (% enr.) Planned
+        - columnheader "PFSC Premature Censoring for PFS definition n (% enr.) Planned":
+          - text: PFSC
+          - img "Premature Censoring for PFS definition": i
+          - text: n (% enr.) Planned
+        - columnheader "AE AE Reporting Rate definition / 28 d New":
+          - text: AE
+          - img "AE Reporting Rate definition": i
+          - text: / 28 d New
+        - columnheader "SAE SAE Reporting Rate definition / 28 d New":
+          - text: SAE
+          - img "SAE Reporting Rate definition": i
+          - text: / 28 d New
+        - columnheader "PD Non-Important Protocol Deviation Rate definition / 28 d New":
+          - text: PD
+          - img "Non-Important Protocol Deviation Rate definition": i
+          - text: / 28 d New
+        - columnheader "IPD Important Protocol Deviation Rate definition / 28 d New":
+          - text: IPD
+          - img "Important Protocol Deviation Rate definition": i
+          - text: / 28 d New
+        - columnheader "LB G3+ Lab Abnormality Rate definition n (%)":
+          - text: LB
+          - img "G3+ Lab Abnormality Rate definition": i
+          - text: n (%)
+        - columnheader "QRY Query Rate definition %":
+          - text: QRY
+          - img "Query Rate definition": i
+          - text: "%"
+        - columnheader "OQRY Delayed Query Resolution Rate definition %":
+          - text: OQRY
+          - img "Delayed Query Resolution Rate definition": i
+          - text: "%"
+        - columnheader "ODAT Delayed Data Entry Rate definition %":
+          - text: ODAT
+          - img "Delayed Data Entry Rate definition": i
+          - text: "%"
+        - columnheader "CDAT Data Change Rate definition %":
+          - text: CDAT
+          - img "Data Change Rate definition": i
+          - text: "%"
+    - rowgroup:
+      - row "Portfolio total 12 11,645 8,874 23.8% 7.9% 11.3% 9.0% 2.6% 1.6% 69 (0.8%) 184 (2.1%) 159 (1.8%) 279 (3.1%) 208 (2.3%) 221 (2.5%) 1.20 0.10 0.37 0.06 8,320 (4.5%) 6.8% 9.0% 11.7% 3.3%":
+        - cell "Portfolio total"
+        - cell "12"
+        - cell "11,645"
+        - cell "8,874"
+        - cell "23.8% 7.9% 11.3% 9.0% 2.6% 1.6%"
+        - cell "69 (0.8%)"
+        - cell "184 (2.1%)"
+        - cell "159 (1.8%)"
+        - cell "279 (3.1%)"
+        - cell "208 (2.3%)"
+        - cell "221 (2.5%)"
+        - cell "1.20"
+        - cell "0.10"
+        - cell "0.37"
+        - cell "0.06"
+        - cell "8,320 (4.5%)"
+        - cell "6.8%"
+        - cell "9.0%"
+        - cell "11.7%"
+        - cell "3.3%"
+      - row "STUDY002BEACON-1 Study details 2026-05-31 769 645 16.1% 6.8% 11.7% 9.8% 2.5% 1.4% 1 (0.2%) 10 (1.6%) 15 (2.3%) 20 (3.1%) 10 (1.6%) 13 (2.0%) 0.95 0.07 0.44 0.04 669 (5.6%) 6.7% 8.8% 9.8% 3.4%":
+        - cell "STUDY002BEACON-1 Study details":
+          - link "STUDY002":
+            - /url: "#/study/STUDY002"
+          - text: BEACON-1
+          - img "Study details": i
+        - cell "2026-05-31"
+        - cell "769"
+        - cell "645"
+        - cell "16.1% 6.8% 11.7% 9.8% 2.5% 1.4%"
+        - cell "1 (0.2%)"
+        - cell "10 (1.6%)"
+        - cell "15 (2.3%)"
+        - cell "20 (3.1%)"
+        - cell "10 (1.6%)"
+        - cell "13 (2.0%)"
+        - cell "0.95"
+        - cell "0.07"
+        - cell "0.44"
+        - cell "0.04"
+        - cell "669 (5.6%)"
+        - cell "6.7%"
+        - cell "8.8%"
+        - cell "9.8%"
+        - cell "3.4%"
+      - row "STUDY008HARBOR-2 Study details 2026-06-30 611 499 18.3% 5.2% 9.2% 8.8% 2.4% 1.4% 2 (0.4%) 6 (1.2%) 8 (1.6%) 14 (2.8%) 14 (2.8%) 10 (2.0%) 1.24 0.09 0.24 0.02 225 (2.2%) 6.8% 13.4% 12.2% 3.5%":
+        - cell "STUDY008HARBOR-2 Study details":
+          - link "STUDY008":
+            - /url: "#/study/STUDY008"
+          - text: HARBOR-2
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "611"
+        - cell "499"
+        - cell "18.3% 5.2% 9.2% 8.8% 2.4% 1.4%"
+        - cell "2 (0.4%)"
+        - cell "6 (1.2%)"
+        - cell "8 (1.6%)"
+        - cell "14 (2.8%)"
+        - cell "14 (2.8%)"
+        - cell "10 (2.0%)"
+        - cell "1.24"
+        - cell "0.09"
+        - cell "0.24"
+        - cell "0.02"
+        - cell "225 (2.2%)"
+        - cell "6.8%"
+        - cell "13.4%"
+        - cell "12.2%"
+        - cell "3.5%"
+      - row "STUDY007GRANITE-3 Study details 2026-06-30 962 735 23.6% 10.5% 13.2% 7.8% 1.6% 1.0% 3 (0.4%) 14 (1.9%) 16 (2.2%) 33 (4.5%) 18 (2.4%) 11 (1.5%) 0.81 0.10 0.40 0.03 965 (6.0%) 10.9% 6.1% 14.9% 4.8%":
+        - cell "STUDY007GRANITE-3 Study details":
+          - link "STUDY007":
+            - /url: "#/study/STUDY007"
+          - text: GRANITE-3
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "962"
+        - cell "735"
+        - cell "23.6% 10.5% 13.2% 7.8% 1.6% 1.0%"
+        - cell "3 (0.4%)"
+        - cell "14 (1.9%)"
+        - cell "16 (2.2%)"
+        - cell "33 (4.5%)"
+        - cell "18 (2.4%)"
+        - cell "11 (1.5%)"
+        - cell "0.81"
+        - cell "0.10"
+        - cell "0.40"
+        - cell "0.03"
+        - cell "965 (6.0%)"
+        - cell "10.9%"
+        - cell "6.1%"
+        - cell "14.9%"
+        - cell "4.8%"
+      - row "STUDY001ATLAS-1 Study details 2026-05-31 1,341 988 26.3% 6.6% 12.2% 8.6% 2.5% 2.6% 6 (0.6%) 16 (1.6%) 15 (1.5%) 37 (3.7%) 32 (3.2%) 32 (3.2%) 0.86 0.14 0.41 0.05 907 (5.0%) 5.2% 5.5% 10.4% 2.1%":
+        - cell "STUDY001ATLAS-1 Study details":
+          - link "STUDY001":
+            - /url: "#/study/STUDY001"
+          - text: ATLAS-1
+          - img "Study details": i
+        - cell "2026-05-31"
+        - cell "1,341"
+        - cell "988"
+        - cell "26.3% 6.6% 12.2% 8.6% 2.5% 2.6%"
+        - cell "6 (0.6%)"
+        - cell "16 (1.6%)"
+        - cell "15 (1.5%)"
+        - cell "37 (3.7%)"
+        - cell "32 (3.2%)"
+        - cell "32 (3.2%)"
+        - cell "0.86"
+        - cell "0.14"
+        - cell "0.41"
+        - cell "0.05"
+        - cell "907 (5.0%)"
+        - cell "5.2%"
+        - cell "5.5%"
+        - cell "10.4%"
+        - cell "2.1%"
+      - row "STUDY011KESTREL-3 Study details 2026-06-30 780 598 23.3% 7.5% 11.5% 8.3% 2.2% 1.0% 4 (0.7%) 12 (2.0%) 9 (1.5%) 12 (2.0%) 18 (3.0%) 12 (2.0%) 1.78 0.09 0.23 0.05 394 (3.1%) 4.3% 12.5% 5.9% 4.1%":
+        - cell "STUDY011KESTREL-3 Study details":
+          - link "STUDY011":
+            - /url: "#/study/STUDY011"
+          - text: KESTREL-3
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "780"
+        - cell "598"
+        - cell "23.3% 7.5% 11.5% 8.3% 2.2% 1.0%"
+        - cell "4 (0.7%)"
+        - cell "12 (2.0%)"
+        - cell "9 (1.5%)"
+        - cell "12 (2.0%)"
+        - cell "18 (3.0%)"
+        - cell "12 (2.0%)"
+        - cell "1.78"
+        - cell "0.09"
+        - cell "0.23"
+        - cell "0.05"
+        - cell "394 (3.1%)"
+        - cell "4.3%"
+        - cell "12.5%"
+        - cell "5.9%"
+        - cell "4.1%"
+      - row "STUDY003COBALT-1 Study details 2026-06-30 1,011 722 28.6% 9.3% 12.8% 12.1% 2.8% 1.4% 5 (0.7%) 12 (1.7%) 11 (1.5%) 16 (2.2%) 14 (1.9%) 25 (3.5%) 1.24 0.06 0.44 0.05 1,032 (6.4%) 6.2% 13.0% 15.4% 2.8%":
+        - cell "STUDY003COBALT-1 Study details":
+          - link "STUDY003":
+            - /url: "#/study/STUDY003"
+          - text: COBALT-1
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "1,011"
+        - cell "722"
+        - cell "28.6% 9.3% 12.8% 12.1% 2.8% 1.4%"
+        - cell "5 (0.7%)"
+        - cell "12 (1.7%)"
+        - cell "11 (1.5%)"
+        - cell "16 (2.2%)"
+        - cell "14 (1.9%)"
+        - cell "25 (3.5%)"
+        - cell "1.24"
+        - cell "0.06"
+        - cell "0.44"
+        - cell "0.05"
+        - cell "1,032 (6.4%)"
+        - cell "6.2%"
+        - cell "13.0%"
+        - cell "15.4%"
+        - cell "2.8%"
+      - row "STUDY005EMBER-1 Study details 2026-06-30 1,168 871 25.4% 13.5% 7.0% 8.7% 2.0% 1.6% 7 (0.8%) 11 (1.3%) 17 (2.0%) 19 (2.2%) 17 (2.0%) 26 (3.0%) 1.41 0.11 0.36 0.04 544 (2.9%) 8.6% 10.3% 15.0% 3.5%":
+        - cell "STUDY005EMBER-1 Study details":
+          - link "STUDY005":
+            - /url: "#/study/STUDY005"
+          - text: EMBER-1
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "1,168"
+        - cell "871"
+        - cell "25.4% 13.5% 7.0% 8.7% 2.0% 1.6%"
+        - cell "7 (0.8%)"
+        - cell "11 (1.3%)"
+        - cell "17 (2.0%)"
+        - cell "19 (2.2%)"
+        - cell "17 (2.0%)"
+        - cell "26 (3.0%)"
+        - cell "1.41"
+        - cell "0.11"
+        - cell "0.36"
+        - cell "0.04"
+        - cell "544 (2.9%)"
+        - cell "8.6%"
+        - cell "10.3%"
+        - cell "15.0%"
+        - cell "3.5%"
+      - row "STUDY009IRIS-1 Study details 2026-06-30 708 597 15.7% 6.0% 7.2% 13.1% 4.4% 1.7% 5 (0.8%) 15 (2.5%) 10 (1.7%) 25 (4.2%) 14 (2.3%) 18 (3.0%) 1.15 0.12 0.24 0.06 529 (3.9%) 4.1% 9.0% 9.3% 4.1%":
+        - cell "STUDY009IRIS-1 Study details":
+          - link "STUDY009":
+            - /url: "#/study/STUDY009"
+          - text: IRIS-1
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "708"
+        - cell "597"
+        - cell "15.7% 6.0% 7.2% 13.1% 4.4% 1.7%"
+        - cell "5 (0.8%)"
+        - cell "15 (2.5%)"
+        - cell "10 (1.7%)"
+        - cell "25 (4.2%)"
+        - cell "14 (2.3%)"
+        - cell "18 (3.0%)"
+        - cell "1.15"
+        - cell "0.12"
+        - cell "0.24"
+        - cell "0.06"
+        - cell "529 (3.9%)"
+        - cell "4.1%"
+        - cell "9.0%"
+        - cell "9.3%"
+        - cell "4.1%"
+      - row "STUDY012LUMEN-1 Study details 2026-06-30 1,281 907 29.2% 7.3% 11.9% 10.5% 4.1% 1.3% 8 (0.9%) 17 (1.9%) 13 (1.4%) 47 (5.2%) 16 (1.8%) 19 (2.1%) 0.96 0.08 0.45 0.09 821 (4.3%) 6.8% 9.5% 11.8% 2.8%":
+        - cell "STUDY012LUMEN-1 Study details":
+          - link "STUDY012":
+            - /url: "#/study/STUDY012"
+          - text: LUMEN-1
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "1,281"
+        - cell "907"
+        - cell "29.2% 7.3% 11.9% 10.5% 4.1% 1.3%"
+        - cell "8 (0.9%)"
+        - cell "17 (1.9%)"
+        - cell "13 (1.4%)"
+        - cell "47 (5.2%)"
+        - cell "16 (1.8%)"
+        - cell "19 (2.1%)"
+        - cell "0.96"
+        - cell "0.08"
+        - cell "0.45"
+        - cell "0.09"
+        - cell "821 (4.3%)"
+        - cell "6.8%"
+        - cell "9.5%"
+        - cell "11.8%"
+        - cell "2.8%"
+      - row "STUDY004DELTA-1 Study details 2026-06-30 844 576 31.8% 6.1% 6.9% 7.8% 1.9% 2.4% 6 (1.0%) 21 (3.6%) 13 (2.3%) 11 (1.9%) 13 (2.3%) 13 (2.3%) 1.55 0.14 0.40 0.08 693 (5.4%) 11.1% 6.2% 11.7% 1.8%":
+        - cell "STUDY004DELTA-1 Study details":
+          - link "STUDY004":
+            - /url: "#/study/STUDY004"
+          - text: DELTA-1
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "844"
+        - cell "576"
+        - cell "31.8% 6.1% 6.9% 7.8% 1.9% 2.4%"
+        - cell "6 (1.0%)"
+        - cell "21 (3.6%)"
+        - cell "13 (2.3%)"
+        - cell "11 (1.9%)"
+        - cell "13 (2.3%)"
+        - cell "13 (2.3%)"
+        - cell "1.55"
+        - cell "0.14"
+        - cell "0.40"
+        - cell "0.08"
+        - cell "693 (5.4%)"
+        - cell "11.1%"
+        - cell "6.2%"
+        - cell "11.7%"
+        - cell "1.8%"
+      - row "STUDY006FALCON-2 Study details 2026-06-30 1,023 879 14.1% 6.9% 17.3% 4.9% 2.4% 2.0% 10 (1.1%) 23 (2.6%) 14 (1.6%) 31 (3.5%) 13 (1.5%) 18 (2.0%) 1.34 0.09 0.52 0.06 720 (3.7%) 6.5% 7.3% 10.8% 4.4%":
+        - cell "STUDY006FALCON-2 Study details":
+          - link "STUDY006":
+            - /url: "#/study/STUDY006"
+          - text: FALCON-2
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "1,023"
+        - cell "879"
+        - cell "14.1% 6.9% 17.3% 4.9% 2.4% 2.0%"
+        - cell "10 (1.1%)"
+        - cell "23 (2.6%)"
+        - cell "14 (1.6%)"
+        - cell "31 (3.5%)"
+        - cell "13 (1.5%)"
+        - cell "18 (2.0%)"
+        - cell "1.34"
+        - cell "0.09"
+        - cell "0.52"
+        - cell "0.06"
+        - cell "720 (3.7%)"
+        - cell "6.5%"
+        - cell "7.3%"
+        - cell "10.8%"
+        - cell "4.4%"
+      - row "STUDY010JUNIPER-2 Study details 2026-06-30 1,147 857 25.3% 7.5% 11.3% 9.1% 2.7% 1.2% 12 (1.4%) 27 (3.2%) 18 (2.1%) 14 (1.6%) 29 (3.4%) 24 (2.8%) 1.29 0.09 0.22 0.08 821 (4.6%) 5.2% 11.0% 11.1% 3.0%":
+        - cell "STUDY010JUNIPER-2 Study details":
+          - link "STUDY010":
+            - /url: "#/study/STUDY010"
+          - text: JUNIPER-2
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "1,147"
+        - cell "857"
+        - cell "25.3% 7.5% 11.3% 9.1% 2.7% 1.2%"
+        - cell "12 (1.4%)"
+        - cell "27 (3.2%)"
+        - cell "18 (2.1%)"
+        - cell "14 (1.6%)"
+        - cell "29 (3.4%)"
+        - cell "24 (2.8%)"
+        - cell "1.29"
+        - cell "0.09"
+        - cell "0.22"
+        - cell "0.08"
+        - cell "821 (4.6%)"
+        - cell "5.2%"
+        - cell "11.0%"
+        - cell "11.1%"
+        - cell "3.0%"

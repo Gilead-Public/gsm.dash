@@ -119,7 +119,7 @@ test.describe('portfolio view numbers', () => {
   // Every value is hovered, which takes most of the default 20 s.
   test.describe.configure({ timeout: 60_000 });
 
-  test('the overview shows the pooled total and every study at its own latest snapshot', async ({ app, page }) => {
+  test('11.03: the overview shows the pooled total and every study at its own latest snapshot (#11)', async ({ app, page }) => {
     expect(new Set(studies.map((s) => snapshotAsOf(s, null))).size, 'the fixture has studies on different latest snapshots').toBeGreaterThan(1);
     expect(bands.flatMap((b) => b.metrics), 'the catalog keeps each category together').toEqual(catalog);
     await app.open();
@@ -134,7 +134,7 @@ test.describe('portfolio view numbers', () => {
     }
   });
 
-  test('grouping pools each group of studies', async ({ app, page }) => {
+  test('11.03: grouping pools each group of studies (#11)', async ({ app, page }) => {
     await app.open();
     await page.locator('select[data-groupby]').selectOption('phase');
     await expect(page.locator('gsm-portfolio-table tr.bucket').first()).toBeVisible();
@@ -152,7 +152,7 @@ test.describe('portfolio view numbers', () => {
     }
   });
 
-  test('a filter pools only the studies it keeps', async ({ app, page }) => {
+  test('11.03: a filter pools only the studies it keeps (#11)', async ({ app, page }) => {
     const counts = studiesBy(studies, 'therapeutic_area');
     const [area, kept] = [...counts].sort((a, b) => b[1].length - a[1].length)[0];
     expect(kept.length, 'the filter keeps more than one study and drops some').toBeGreaterThan(1);

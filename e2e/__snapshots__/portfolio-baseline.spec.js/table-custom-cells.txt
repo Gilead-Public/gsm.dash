@@ -1,0 +1,955 @@
+state: table-custom-cells
+dom: sha256 ef21b87b2c9fd9294b45898c071257b2cc47e2e26a5709134d552e953519a829 (408074 characters)
+tooltip: none
+cell backgrounds: rgb(237, 240, 238) ×5 | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(237, 240, 238) ×15 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(231, 242, 240) ×2 | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(203, 227, 223) ×3 | rgb(163, 204, 197) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(231, 242, 240) ×3 | rgb(203, 227, 223) ×3 | rgb(231, 242, 240) ×3 | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(203, 227, 223) ×3 | rgb(231, 242, 240) ×3 | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(163, 204, 197) ×2 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) ×3 | rgb(203, 227, 223) | rgb(231, 242, 240) ×3 | rgb(203, 227, 223) | rgb(116, 176, 166) ×2 | rgb(163, 204, 197) | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(116, 176, 166) ×2 | rgb(231, 242, 240) | rgb(116, 176, 166) ×2 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(231, 242, 240) ×2 | rgb(163, 204, 197) | rgb(116, 176, 166) ×2 | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) | rgb(203, 227, 223) ×3 | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(203, 227, 223) ×3 | rgb(231, 242, 240) ×4 | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(116, 176, 166) ×2 | rgb(203, 227, 223) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(163, 204, 197) ×2 | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) | rgb(163, 204, 197) ×2 | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(231, 242, 240) ×3 | rgb(116, 176, 166) ×2 | rgb(203, 227, 223) | rgb(163, 204, 197) ×2 | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(203, 227, 223) ×2 | rgb(116, 176, 166) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) ×2 | rgb(203, 227, 223) ×2 | rgb(163, 204, 197) ×2 | rgb(203, 227, 223) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(116, 176, 166) | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(116, 176, 166) ×2 | rgb(231, 242, 240) | rgb(203, 227, 223) ×2 | rgb(116, 176, 166) ×2 | rgb(163, 204, 197) | rgb(116, 176, 166) ×3 | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(116, 176, 166) ×2 | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(163, 204, 197) ×2 | rgb(203, 227, 223)
+distribution marks:
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+accessibility:
+- main:
+  - text: Controls
+  - button "Collapse controls" [expanded]: «
+  - group:
+    - text: ▸ Config Highlight study
+    - combobox:
+      - option "None" [selected]
+      - option "STUDY001 · ATLAS-1"
+      - option "STUDY002 · BEACON-1"
+      - option "STUDY003 · COBALT-1"
+      - option "STUDY004 · DELTA-1"
+      - option "STUDY005 · EMBER-1"
+      - option "STUDY006 · FALCON-2"
+      - option "STUDY007 · GRANITE-3"
+      - option "STUDY008 · HARBOR-2"
+      - option "STUDY009 · IRIS-1"
+      - option "STUDY010 · JUNIPER-2"
+      - option "STUDY011 · KESTREL-3"
+      - option "STUDY012 · LUMEN-1"
+    - paragraph: Marks the study in every view. Click a row or a dot to pick one.
+    - text: Cell display
+    - group:
+      - button "As defined"
+      - button "Custom"
+    - paragraph: The same numbers stacked in every cell.
+    - text: Show in each cell
+    - button "Numerator"
+    - button "Denominator" [pressed]
+    - button "Rate" [pressed]
+    - button "Trend" [pressed]
+    - text: Heatmap (also drives column sort)
+    - combobox:
+      - option "None"
+      - option "Numerator"
+      - option "Denominator"
+      - option "Rate" [selected]
+    - text: Heatmap color
+    - group:
+      - button "Blue"
+      - button "Teal"
+      - button "Purple"
+      - button "Grey"
+    - text: Group rows by
+    - combobox:
+      - option "None — one row per study" [selected]
+      - option "Therapeutic area"
+      - option "Indication"
+      - option "Phase"
+      - option "Status"
+      - option "Product"
+  - group:
+    - text: ▸ Metrics 21/21 Status
+    - button "Released8" [pressed]
+    - button "New4" [pressed]
+    - button "Planned9" [pressed]
+    - button "All"
+    - button "None"
+    - text: Disposition
+    - button "none"
+    - text: 6/6
+    - checkbox "SF Screen Failure Rate" [checked]
+    - text: SF Screen Failure Rate
+    - checkbox "SDSC Study Discontinuation Rate" [checked]
+    - text: SDSC Study Discontinuation Rate
+    - checkbox "TDSC Treatment Discontinuation Rate" [checked]
+    - text: TDSC Treatment Discontinuation Rate
+    - checkbox "PTDSC Premature Treatment Discontinuation Rate Planned" [checked]
+    - text: PTDSC Premature Treatment Discontinuation Rate Planned
+    - checkbox "WC Withdrawal of Consent Planned" [checked]
+    - text: WC Withdrawal of Consent Planned
+    - checkbox "LTFU Lost to Follow Up Planned" [checked]
+    - text: LTFU Lost to Follow Up Planned Early events
+    - button "none"
+    - text: 3/3
+    - checkbox "DTH30 Early Deaths (30 days) Planned" [checked]
+    - text: DTH30 Early Deaths (30 days) Planned
+    - checkbox "DTH90 Early Deaths (90 days) Planned" [checked]
+    - text: DTH90 Early Deaths (90 days) Planned
+    - checkbox "IPNS IP Non-starters Planned" [checked]
+    - text: IPNS IP Non-starters Planned Eligibility & integrity
+    - button "none"
+    - text: 3/3
+    - checkbox "IE Eligibility Planned" [checked]
+    - text: IE Eligibility Planned
+    - checkbox "STRAT Stratification Planned" [checked]
+    - text: STRAT Stratification Planned
+    - checkbox "PFSC Premature Censoring for PFS Planned" [checked]
+    - text: PFSC Premature Censoring for PFS Planned Safety & deviations
+    - button "none"
+    - text: 5/5
+    - checkbox "AE AE Reporting Rate New" [checked]
+    - text: AE AE Reporting Rate New
+    - checkbox "SAE SAE Reporting Rate New" [checked]
+    - text: SAE SAE Reporting Rate New
+    - checkbox "PD Non-Important Protocol Deviation Rate New" [checked]
+    - text: PD Non-Important Protocol Deviation Rate New
+    - checkbox "IPD Important Protocol Deviation Rate New" [checked]
+    - text: IPD Important Protocol Deviation Rate New
+    - checkbox "LB G3+ Lab Abnormality Rate" [checked]
+    - text: LB G3+ Lab Abnormality Rate Data quality
+    - button "none"
+    - text: 4/4
+    - checkbox "QRY Query Rate" [checked]
+    - text: QRY Query Rate
+    - checkbox "OQRY Delayed Query Resolution Rate" [checked]
+    - text: OQRY Delayed Query Resolution Rate
+    - checkbox "ODAT Delayed Data Entry Rate" [checked]
+    - text: ODAT Delayed Data Entry Rate
+    - checkbox "CDAT Data Change Rate" [checked]
+    - text: CDAT Data Change Rate
+    - paragraph: 1 metric is not site-level (Study) — held back until a future release adds that plumbing.
+  - group:
+    - text: ▸ Filter Therapeutic area
+    - button "Cardiology"
+    - button "Immunology"
+    - button "Neurology"
+    - button "Oncology"
+    - button "Virology"
+    - text: Phase
+    - button "P1"
+    - button "P2"
+    - button "P3"
+    - text: Status
+    - button "Active"
+    - button "Completed"
+    - button "Enrolling"
+  - tablist "Program view":
+    - text: Table
+    - tab "Overview"
+    - tab "Details"
+    - tab "Distribution"
+  - text: "Mixed: Early events, Eligibility & integrity, Safety & deviations, Data quality open Showing 12 / 12 studies · 21 / 21 site-level metrics (8 released · 4 new · 9 planned) · custom cell contents · each study at its own latest snapshot · sorted by DTH30 rate ↑"
+  - table:
+    - rowgroup:
+      - row "Study Snapshot Population Open Disposition Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU Fold Early events Early events3 Fold Eligibility & integrity Eligibility & integrity3 Fold Safety & deviations Safety & deviations5 Fold Data quality Data quality4":
+        - columnheader "Study"
+        - columnheader "Snapshot"
+        - columnheader "Population"
+        - columnheader "Open Disposition Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU":
+          - button "Open Disposition": +
+          - text: Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU
+        - columnheader "Fold Early events Early events3":
+          - button "Fold Early events" [expanded]: −
+          - text: Early events3
+        - columnheader "Fold Eligibility & integrity Eligibility & integrity3":
+          - button "Fold Eligibility & integrity" [expanded]: −
+          - text: Eligibility & integrity3
+        - columnheader "Fold Safety & deviations Safety & deviations5":
+          - button "Fold Safety & deviations" [expanded]: −
+          - text: Safety & deviations5
+        - columnheader "Fold Data quality Data quality4":
+          - button "Fold Data quality" [expanded]: −
+          - text: Data quality4
+      - row "Scr. n Enr. n DTH30 Early Deaths (30 days) definition n (% enr.) Planned DTH90 Early Deaths (90 days) definition n (% enr.) Planned IPNS IP Non-starters definition n (% enr.) Planned IE Eligibility definition n (% enr.) Planned STRAT Stratification definition n (% enr.) Planned PFSC Premature Censoring for PFS definition n (% enr.) Planned AE AE Reporting Rate definition / 28 d New SAE SAE Reporting Rate definition / 28 d New PD Non-Important Protocol Deviation Rate definition / 28 d New IPD Important Protocol Deviation Rate definition / 28 d New LB G3+ Lab Abnormality Rate definition n (%) QRY Query Rate definition % OQRY Delayed Query Resolution Rate definition % ODAT Delayed Data Entry Rate definition % CDAT Data Change Rate definition %":
+        - columnheader "Scr. n"
+        - columnheader "Enr. n"
+        - columnheader "DTH30 Early Deaths (30 days) definition n (% enr.) Planned":
+          - text: DTH30
+          - img "Early Deaths (30 days) definition": i
+          - text: n (% enr.) Planned
+        - columnheader "DTH90 Early Deaths (90 days) definition n (% enr.) Planned":
+          - text: DTH90
+          - img "Early Deaths (90 days) definition": i
+          - text: n (% enr.) Planned
+        - columnheader "IPNS IP Non-starters definition n (% enr.) Planned":
+          - text: IPNS
+          - img "IP Non-starters definition": i
+          - text: n (% enr.) Planned
+        - columnheader "IE Eligibility definition n (% enr.) Planned":
+          - text: IE
+          - img "Eligibility definition": i
+          - text: n (% enr.) Planned
+        - columnheader "STRAT Stratification definition n (% enr.) Planned":
+          - text: STRAT
+          - img "Stratification definition": i
+          - text: n (% enr.) Planned
+        - columnheader "PFSC Premature Censoring for PFS definition n (% enr.) Planned":
+          - text: PFSC
+          - img "Premature Censoring for PFS definition": i
+          - text: n (% enr.) Planned
+        - columnheader "AE AE Reporting Rate definition / 28 d New":
+          - text: AE
+          - img "AE Reporting Rate definition": i
+          - text: / 28 d New
+        - columnheader "SAE SAE Reporting Rate definition / 28 d New":
+          - text: SAE
+          - img "SAE Reporting Rate definition": i
+          - text: / 28 d New
+        - columnheader "PD Non-Important Protocol Deviation Rate definition / 28 d New":
+          - text: PD
+          - img "Non-Important Protocol Deviation Rate definition": i
+          - text: / 28 d New
+        - columnheader "IPD Important Protocol Deviation Rate definition / 28 d New":
+          - text: IPD
+          - img "Important Protocol Deviation Rate definition": i
+          - text: / 28 d New
+        - columnheader "LB G3+ Lab Abnormality Rate definition n (%)":
+          - text: LB
+          - img "G3+ Lab Abnormality Rate definition": i
+          - text: n (%)
+        - columnheader "QRY Query Rate definition %":
+          - text: QRY
+          - img "Query Rate definition": i
+          - text: "%"
+        - columnheader "OQRY Delayed Query Resolution Rate definition %":
+          - text: OQRY
+          - img "Delayed Query Resolution Rate definition": i
+          - text: "%"
+        - columnheader "ODAT Delayed Data Entry Rate definition %":
+          - text: ODAT
+          - img "Delayed Data Entry Rate definition": i
+          - text: "%"
+        - columnheader "CDAT Data Change Rate definition %":
+          - text: CDAT
+          - img "Data Change Rate definition": i
+          - text: "%"
+    - rowgroup:
+      - row:
+        - cell "Portfolio total"
+        - cell "12"
+        - cell "11,645"
+        - cell "8,874"
+        - cell "23.8% 7.9% 11.3% 9.0% 2.6% 1.6%"
+        - 'cell "8,874 0.8% Portfolio total · DTH30 trend: 6 snapshots, latest 0.8%"':
+          - text: 8,874 0.8%
+          - 'img "Portfolio total · DTH30 trend: 6 snapshots, latest 0.8%"'
+        - 'cell "8,874 2.1% Portfolio total · DTH90 trend: 6 snapshots, latest 2.1%"':
+          - text: 8,874 2.1%
+          - 'img "Portfolio total · DTH90 trend: 6 snapshots, latest 2.1%"'
+        - 'cell "8,874 1.8% Portfolio total · IPNS trend: 6 snapshots, latest 1.8%"':
+          - text: 8,874 1.8%
+          - 'img "Portfolio total · IPNS trend: 6 snapshots, latest 1.8%"'
+        - 'cell "8,874 3.1% Portfolio total · IE trend: 6 snapshots, latest 3.1%"':
+          - text: 8,874 3.1%
+          - 'img "Portfolio total · IE trend: 6 snapshots, latest 3.1%"'
+        - 'cell "8,874 2.3% Portfolio total · STRAT trend: 6 snapshots, latest 2.3%"':
+          - text: 8,874 2.3%
+          - 'img "Portfolio total · STRAT trend: 6 snapshots, latest 2.3%"'
+        - 'cell "8,874 2.5% Portfolio total · PFSC trend: 6 snapshots, latest 2.5%"':
+          - text: 8,874 2.5%
+          - 'img "Portfolio total · PFSC trend: 6 snapshots, latest 2.5%"'
+        - 'cell "1,568,480 1.20 Portfolio total · AE trend: 6 snapshots, latest 4.3%"':
+          - text: 1,568,480 1.20
+          - 'img "Portfolio total · AE trend: 6 snapshots, latest 4.3%"'
+        - 'cell "1,568,480 0.10 Portfolio total · SAE trend: 6 snapshots, latest 0.4%"':
+          - text: 1,568,480 0.10
+          - 'img "Portfolio total · SAE trend: 6 snapshots, latest 0.4%"'
+        - 'cell "1,568,480 0.37 Portfolio total · PD trend: 6 snapshots, latest 1.3%"':
+          - text: 1,568,480 0.37
+          - 'img "Portfolio total · PD trend: 6 snapshots, latest 1.3%"'
+        - 'cell "1,568,480 0.06 Portfolio total · IPD trend: 6 snapshots, latest 0.2%"':
+          - text: 1,568,480 0.06
+          - 'img "Portfolio total · IPD trend: 6 snapshots, latest 0.2%"'
+        - 'cell "186,708 4.5% Portfolio total · LB trend: 6 snapshots, latest 4.5%"':
+          - text: 186,708 4.5%
+          - 'img "Portfolio total · LB trend: 6 snapshots, latest 4.5%"'
+        - 'cell "2,592,369 6.8% Portfolio total · QRY trend: 6 snapshots, latest 6.8%"':
+          - text: 2,592,369 6.8%
+          - 'img "Portfolio total · QRY trend: 6 snapshots, latest 6.8%"'
+        - 'cell "177,545 9.0% Portfolio total · OQRY trend: 6 snapshots, latest 9.0%"':
+          - text: 177,545 9.0%
+          - 'img "Portfolio total · OQRY trend: 6 snapshots, latest 9.0%"'
+        - 'cell "333,543 11.7% Portfolio total · ODAT trend: 6 snapshots, latest 11.7%"':
+          - text: 333,543 11.7%
+          - 'img "Portfolio total · ODAT trend: 6 snapshots, latest 11.7%"'
+        - 'cell "2,592,369 3.3% Portfolio total · CDAT trend: 6 snapshots, latest 3.3%"':
+          - text: 2,592,369 3.3%
+          - 'img "Portfolio total · CDAT trend: 6 snapshots, latest 3.3%"'
+      - row:
+        - cell "STUDY002BEACON-1 Study details":
+          - link "STUDY002":
+            - /url: "#/study/STUDY002"
+          - text: BEACON-1
+          - img "Study details": i
+        - cell "2026-05-31"
+        - cell "769"
+        - cell "645"
+        - cell "16.1% 6.8% 11.7% 9.8% 2.5% 1.4%"
+        - 'cell "645 0.2% STUDY002 · DTH30 trend: 5 snapshots, latest 0.2%"':
+          - text: 645 0.2%
+          - 'img "STUDY002 · DTH30 trend: 5 snapshots, latest 0.2%"'
+        - 'cell "645 1.6% STUDY002 · DTH90 trend: 5 snapshots, latest 1.6%"':
+          - text: 645 1.6%
+          - 'img "STUDY002 · DTH90 trend: 5 snapshots, latest 1.6%"'
+        - 'cell "645 2.3% STUDY002 · IPNS trend: 5 snapshots, latest 2.3%"':
+          - text: 645 2.3%
+          - 'img "STUDY002 · IPNS trend: 5 snapshots, latest 2.3%"'
+        - 'cell "645 3.1% STUDY002 · IE trend: 5 snapshots, latest 3.1%"':
+          - text: 645 3.1%
+          - 'img "STUDY002 · IE trend: 5 snapshots, latest 3.1%"'
+        - 'cell "645 1.6% STUDY002 · STRAT trend: 5 snapshots, latest 1.6%"':
+          - text: 645 1.6%
+          - 'img "STUDY002 · STRAT trend: 5 snapshots, latest 1.6%"'
+        - 'cell "645 2.0% STUDY002 · PFSC trend: 5 snapshots, latest 2.0%"':
+          - text: 645 2.0%
+          - 'img "STUDY002 · PFSC trend: 5 snapshots, latest 2.0%"'
+        - 'cell "105,036 0.95 STUDY002 · AE trend: 5 snapshots, latest 3.4%"':
+          - text: 105,036 0.95
+          - 'img "STUDY002 · AE trend: 5 snapshots, latest 3.4%"'
+        - 'cell "105,036 0.07 STUDY002 · SAE trend: 5 snapshots, latest 0.3%"':
+          - text: 105,036 0.07
+          - 'img "STUDY002 · SAE trend: 5 snapshots, latest 0.3%"'
+        - 'cell "105,036 0.44 STUDY002 · PD trend: 5 snapshots, latest 1.6%"':
+          - text: 105,036 0.44
+          - 'img "STUDY002 · PD trend: 5 snapshots, latest 1.6%"'
+        - 'cell "105,036 0.04 STUDY002 · IPD trend: 5 snapshots, latest 0.1%"':
+          - text: 105,036 0.04
+          - 'img "STUDY002 · IPD trend: 5 snapshots, latest 0.1%"'
+        - 'cell "11,919 5.6% STUDY002 · LB trend: 5 snapshots, latest 5.6%"':
+          - text: 11,919 5.6%
+          - 'img "STUDY002 · LB trend: 5 snapshots, latest 5.6%"'
+        - 'cell "169,106 6.7% STUDY002 · QRY trend: 5 snapshots, latest 6.7%"':
+          - text: 169,106 6.7%
+          - 'img "STUDY002 · QRY trend: 5 snapshots, latest 6.7%"'
+        - 'cell "11,310 8.8% STUDY002 · OQRY trend: 5 snapshots, latest 8.8%"':
+          - text: 11,310 8.8%
+          - 'img "STUDY002 · OQRY trend: 5 snapshots, latest 8.8%"'
+        - 'cell "22,413 9.8% STUDY002 · ODAT trend: 5 snapshots, latest 9.8%"':
+          - text: 22,413 9.8%
+          - 'img "STUDY002 · ODAT trend: 5 snapshots, latest 9.8%"'
+        - 'cell "169,106 3.4% STUDY002 · CDAT trend: 5 snapshots, latest 3.4%"':
+          - text: 169,106 3.4%
+          - 'img "STUDY002 · CDAT trend: 5 snapshots, latest 3.4%"'
+      - row:
+        - cell "STUDY008HARBOR-2 Study details":
+          - link "STUDY008":
+            - /url: "#/study/STUDY008"
+          - text: HARBOR-2
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "611"
+        - cell "499"
+        - cell "18.3% 5.2% 9.2% 8.8% 2.4% 1.4%"
+        - 'cell "499 0.4% STUDY008 · DTH30 trend: 6 snapshots, latest 0.4%"':
+          - text: 499 0.4%
+          - 'img "STUDY008 · DTH30 trend: 6 snapshots, latest 0.4%"'
+        - 'cell "499 1.2% STUDY008 · DTH90 trend: 6 snapshots, latest 1.2%"':
+          - text: 499 1.2%
+          - 'img "STUDY008 · DTH90 trend: 6 snapshots, latest 1.2%"'
+        - 'cell "499 1.6% STUDY008 · IPNS trend: 6 snapshots, latest 1.6%"':
+          - text: 499 1.6%
+          - 'img "STUDY008 · IPNS trend: 6 snapshots, latest 1.6%"'
+        - 'cell "499 2.8% STUDY008 · IE trend: 6 snapshots, latest 2.8%"':
+          - text: 499 2.8%
+          - 'img "STUDY008 · IE trend: 6 snapshots, latest 2.8%"'
+        - 'cell "499 2.8% STUDY008 · STRAT trend: 6 snapshots, latest 2.8%"':
+          - text: 499 2.8%
+          - 'img "STUDY008 · STRAT trend: 6 snapshots, latest 2.8%"'
+        - 'cell "499 2.0% STUDY008 · PFSC trend: 6 snapshots, latest 2.0%"':
+          - text: 499 2.0%
+          - 'img "STUDY008 · PFSC trend: 6 snapshots, latest 2.0%"'
+        - 'cell "91,320 1.24 STUDY008 · AE trend: 6 snapshots, latest 4.4%"':
+          - text: 91,320 1.24
+          - 'img "STUDY008 · AE trend: 6 snapshots, latest 4.4%"'
+        - 'cell "91,320 0.09 STUDY008 · SAE trend: 6 snapshots, latest 0.3%"':
+          - text: 91,320 0.09
+          - 'img "STUDY008 · SAE trend: 6 snapshots, latest 0.3%"'
+        - 'cell "91,320 0.24 STUDY008 · PD trend: 6 snapshots, latest 0.8%"':
+          - text: 91,320 0.24
+          - 'img "STUDY008 · PD trend: 6 snapshots, latest 0.8%"'
+        - 'cell "91,320 0.02 STUDY008 · IPD trend: 6 snapshots, latest 0.1%"':
+          - text: 91,320 0.02
+          - 'img "STUDY008 · IPD trend: 6 snapshots, latest 0.1%"'
+        - 'cell "10,074 2.2% STUDY008 · LB trend: 6 snapshots, latest 2.2%"':
+          - text: 10,074 2.2%
+          - 'img "STUDY008 · LB trend: 6 snapshots, latest 2.2%"'
+        - 'cell "155,813 6.8% STUDY008 · QRY trend: 6 snapshots, latest 6.8%"':
+          - text: 155,813 6.8%
+          - 'img "STUDY008 · QRY trend: 6 snapshots, latest 6.8%"'
+        - 'cell "10,658 13.4% STUDY008 · OQRY trend: 6 snapshots, latest 13.4%"':
+          - text: 10,658 13.4%
+          - 'img "STUDY008 · OQRY trend: 6 snapshots, latest 13.4%"'
+        - 'cell "18,172 12.2% STUDY008 · ODAT trend: 6 snapshots, latest 12.2%"':
+          - text: 18,172 12.2%
+          - 'img "STUDY008 · ODAT trend: 6 snapshots, latest 12.2%"'
+        - 'cell "155,813 3.5% STUDY008 · CDAT trend: 6 snapshots, latest 3.5%"':
+          - text: 155,813 3.5%
+          - 'img "STUDY008 · CDAT trend: 6 snapshots, latest 3.5%"'
+      - row:
+        - cell "STUDY007GRANITE-3 Study details":
+          - link "STUDY007":
+            - /url: "#/study/STUDY007"
+          - text: GRANITE-3
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "962"
+        - cell "735"
+        - cell "23.6% 10.5% 13.2% 7.8% 1.6% 1.0%"
+        - 'cell "735 0.4% STUDY007 · DTH30 trend: 6 snapshots, latest 0.4%"':
+          - text: 735 0.4%
+          - 'img "STUDY007 · DTH30 trend: 6 snapshots, latest 0.4%"'
+        - 'cell "735 1.9% STUDY007 · DTH90 trend: 6 snapshots, latest 1.9%"':
+          - text: 735 1.9%
+          - 'img "STUDY007 · DTH90 trend: 6 snapshots, latest 1.9%"'
+        - 'cell "735 2.2% STUDY007 · IPNS trend: 6 snapshots, latest 2.2%"':
+          - text: 735 2.2%
+          - 'img "STUDY007 · IPNS trend: 6 snapshots, latest 2.2%"'
+        - 'cell "735 4.5% STUDY007 · IE trend: 6 snapshots, latest 4.5%"':
+          - text: 735 4.5%
+          - 'img "STUDY007 · IE trend: 6 snapshots, latest 4.5%"'
+        - 'cell "735 2.4% STUDY007 · STRAT trend: 6 snapshots, latest 2.4%"':
+          - text: 735 2.4%
+          - 'img "STUDY007 · STRAT trend: 6 snapshots, latest 2.4%"'
+        - 'cell "735 1.5% STUDY007 · PFSC trend: 6 snapshots, latest 1.5%"':
+          - text: 735 1.5%
+          - 'img "STUDY007 · PFSC trend: 6 snapshots, latest 1.5%"'
+        - 'cell "131,673 0.81 STUDY007 · AE trend: 6 snapshots, latest 2.9%"':
+          - text: 131,673 0.81
+          - 'img "STUDY007 · AE trend: 6 snapshots, latest 2.9%"'
+        - 'cell "131,673 0.10 STUDY007 · SAE trend: 6 snapshots, latest 0.3%"':
+          - text: 131,673 0.10
+          - 'img "STUDY007 · SAE trend: 6 snapshots, latest 0.3%"'
+        - 'cell "131,673 0.40 STUDY007 · PD trend: 6 snapshots, latest 1.4%"':
+          - text: 131,673 0.40
+          - 'img "STUDY007 · PD trend: 6 snapshots, latest 1.4%"'
+        - 'cell "131,673 0.03 STUDY007 · IPD trend: 6 snapshots, latest 0.1%"':
+          - text: 131,673 0.03
+          - 'img "STUDY007 · IPD trend: 6 snapshots, latest 0.1%"'
+        - 'cell "16,009 6.0% STUDY007 · LB trend: 6 snapshots, latest 6.0%"':
+          - text: 16,009 6.0%
+          - 'img "STUDY007 · LB trend: 6 snapshots, latest 6.0%"'
+        - 'cell "217,876 10.9% STUDY007 · QRY trend: 6 snapshots, latest 10.9%"':
+          - text: 217,876 10.9%
+          - 'img "STUDY007 · QRY trend: 6 snapshots, latest 10.9%"'
+        - 'cell "23,801 6.1% STUDY007 · OQRY trend: 6 snapshots, latest 6.1%"':
+          - text: 23,801 6.1%
+          - 'img "STUDY007 · OQRY trend: 6 snapshots, latest 6.1%"'
+        - 'cell "28,298 14.9% STUDY007 · ODAT trend: 6 snapshots, latest 14.9%"':
+          - text: 28,298 14.9%
+          - 'img "STUDY007 · ODAT trend: 6 snapshots, latest 14.9%"'
+        - 'cell "217,876 4.8% STUDY007 · CDAT trend: 6 snapshots, latest 4.8%"':
+          - text: 217,876 4.8%
+          - 'img "STUDY007 · CDAT trend: 6 snapshots, latest 4.8%"'
+      - row:
+        - cell "STUDY001ATLAS-1 Study details":
+          - link "STUDY001":
+            - /url: "#/study/STUDY001"
+          - text: ATLAS-1
+          - img "Study details": i
+        - cell "2026-05-31"
+        - cell "1,341"
+        - cell "988"
+        - cell "26.3% 6.6% 12.2% 8.6% 2.5% 2.6%"
+        - 'cell "988 0.6% STUDY001 · DTH30 trend: 5 snapshots, latest 0.6%"':
+          - text: 988 0.6%
+          - 'img "STUDY001 · DTH30 trend: 5 snapshots, latest 0.6%"'
+        - 'cell "988 1.6% STUDY001 · DTH90 trend: 5 snapshots, latest 1.6%"':
+          - text: 988 1.6%
+          - 'img "STUDY001 · DTH90 trend: 5 snapshots, latest 1.6%"'
+        - 'cell "988 1.5% STUDY001 · IPNS trend: 5 snapshots, latest 1.5%"':
+          - text: 988 1.5%
+          - 'img "STUDY001 · IPNS trend: 5 snapshots, latest 1.5%"'
+        - 'cell "988 3.7% STUDY001 · IE trend: 5 snapshots, latest 3.7%"':
+          - text: 988 3.7%
+          - 'img "STUDY001 · IE trend: 5 snapshots, latest 3.7%"'
+        - 'cell "988 3.2% STUDY001 · STRAT trend: 5 snapshots, latest 3.2%"':
+          - text: 988 3.2%
+          - 'img "STUDY001 · STRAT trend: 5 snapshots, latest 3.2%"'
+        - 'cell "988 3.2% STUDY001 · PFSC trend: 5 snapshots, latest 3.2%"':
+          - text: 988 3.2%
+          - 'img "STUDY001 · PFSC trend: 5 snapshots, latest 3.2%"'
+        - 'cell "158,946 0.86 STUDY001 · AE trend: 5 snapshots, latest 3.1%"':
+          - text: 158,946 0.86
+          - 'img "STUDY001 · AE trend: 5 snapshots, latest 3.1%"'
+        - 'cell "158,946 0.14 STUDY001 · SAE trend: 5 snapshots, latest 0.5%"':
+          - text: 158,946 0.14
+          - 'img "STUDY001 · SAE trend: 5 snapshots, latest 0.5%"'
+        - 'cell "158,946 0.41 STUDY001 · PD trend: 5 snapshots, latest 1.5%"':
+          - text: 158,946 0.41
+          - 'img "STUDY001 · PD trend: 5 snapshots, latest 1.5%"'
+        - 'cell "158,946 0.05 STUDY001 · IPD trend: 5 snapshots, latest 0.2%"':
+          - text: 158,946 0.05
+          - 'img "STUDY001 · IPD trend: 5 snapshots, latest 0.2%"'
+        - 'cell "18,181 5.0% STUDY001 · LB trend: 5 snapshots, latest 5.0%"':
+          - text: 18,181 5.0%
+          - 'img "STUDY001 · LB trend: 5 snapshots, latest 5.0%"'
+        - 'cell "260,521 5.2% STUDY001 · QRY trend: 5 snapshots, latest 5.2%"':
+          - text: 260,521 5.2%
+          - 'img "STUDY001 · QRY trend: 5 snapshots, latest 5.2%"'
+        - 'cell "13,649 5.5% STUDY001 · OQRY trend: 5 snapshots, latest 5.5%"':
+          - text: 13,649 5.5%
+          - 'img "STUDY001 · OQRY trend: 5 snapshots, latest 5.5%"'
+        - 'cell "31,612 10.4% STUDY001 · ODAT trend: 5 snapshots, latest 10.4%"':
+          - text: 31,612 10.4%
+          - 'img "STUDY001 · ODAT trend: 5 snapshots, latest 10.4%"'
+        - 'cell "260,521 2.1% STUDY001 · CDAT trend: 5 snapshots, latest 2.1%"':
+          - text: 260,521 2.1%
+          - 'img "STUDY001 · CDAT trend: 5 snapshots, latest 2.1%"'
+      - row:
+        - cell "STUDY011KESTREL-3 Study details":
+          - link "STUDY011":
+            - /url: "#/study/STUDY011"
+          - text: KESTREL-3
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "780"
+        - cell "598"
+        - cell "23.3% 7.5% 11.5% 8.3% 2.2% 1.0%"
+        - 'cell "598 0.7% STUDY011 · DTH30 trend: 6 snapshots, latest 0.7%"':
+          - text: 598 0.7%
+          - 'img "STUDY011 · DTH30 trend: 6 snapshots, latest 0.7%"'
+        - 'cell "598 2.0% STUDY011 · DTH90 trend: 6 snapshots, latest 2.0%"':
+          - text: 598 2.0%
+          - 'img "STUDY011 · DTH90 trend: 6 snapshots, latest 2.0%"'
+        - 'cell "598 1.5% STUDY011 · IPNS trend: 6 snapshots, latest 1.5%"':
+          - text: 598 1.5%
+          - 'img "STUDY011 · IPNS trend: 6 snapshots, latest 1.5%"'
+        - 'cell "598 2.0% STUDY011 · IE trend: 6 snapshots, latest 2.0%"':
+          - text: 598 2.0%
+          - 'img "STUDY011 · IE trend: 6 snapshots, latest 2.0%"'
+        - 'cell "598 3.0% STUDY011 · STRAT trend: 6 snapshots, latest 3.0%"':
+          - text: 598 3.0%
+          - 'img "STUDY011 · STRAT trend: 6 snapshots, latest 3.0%"'
+        - 'cell "598 2.0% STUDY011 · PFSC trend: 6 snapshots, latest 2.0%"':
+          - text: 598 2.0%
+          - 'img "STUDY011 · PFSC trend: 6 snapshots, latest 2.0%"'
+        - 'cell "110,772 1.78 STUDY011 · AE trend: 6 snapshots, latest 6.3%"':
+          - text: 110,772 1.78
+          - 'img "STUDY011 · AE trend: 6 snapshots, latest 6.3%"'
+        - 'cell "110,772 0.09 STUDY011 · SAE trend: 6 snapshots, latest 0.3%"':
+          - text: 110,772 0.09
+          - 'img "STUDY011 · SAE trend: 6 snapshots, latest 0.3%"'
+        - 'cell "110,772 0.23 STUDY011 · PD trend: 6 snapshots, latest 0.8%"':
+          - text: 110,772 0.23
+          - 'img "STUDY011 · PD trend: 6 snapshots, latest 0.8%"'
+        - 'cell "110,772 0.05 STUDY011 · IPD trend: 6 snapshots, latest 0.2%"':
+          - text: 110,772 0.05
+          - 'img "STUDY011 · IPD trend: 6 snapshots, latest 0.2%"'
+        - 'cell "12,736 3.1% STUDY011 · LB trend: 6 snapshots, latest 3.1%"':
+          - text: 12,736 3.1%
+          - 'img "STUDY011 · LB trend: 6 snapshots, latest 3.1%"'
+        - 'cell "175,777 4.3% STUDY011 · QRY trend: 6 snapshots, latest 4.3%"':
+          - text: 175,777 4.3%
+          - 'img "STUDY011 · QRY trend: 6 snapshots, latest 4.3%"'
+        - 'cell "7,511 12.5% STUDY011 · OQRY trend: 6 snapshots, latest 12.5%"':
+          - text: 7,511 12.5%
+          - 'img "STUDY011 · OQRY trend: 6 snapshots, latest 12.5%"'
+        - 'cell "22,884 5.9% STUDY011 · ODAT trend: 6 snapshots, latest 5.9%"':
+          - text: 22,884 5.9%
+          - 'img "STUDY011 · ODAT trend: 6 snapshots, latest 5.9%"'
+        - 'cell "175,777 4.1% STUDY011 · CDAT trend: 6 snapshots, latest 4.1%"':
+          - text: 175,777 4.1%
+          - 'img "STUDY011 · CDAT trend: 6 snapshots, latest 4.1%"'
+      - row:
+        - cell "STUDY003COBALT-1 Study details":
+          - link "STUDY003":
+            - /url: "#/study/STUDY003"
+          - text: COBALT-1
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "1,011"
+        - cell "722"
+        - cell "28.6% 9.3% 12.8% 12.1% 2.8% 1.4%"
+        - 'cell "722 0.7% STUDY003 · DTH30 trend: 6 snapshots, latest 0.7%"':
+          - text: 722 0.7%
+          - 'img "STUDY003 · DTH30 trend: 6 snapshots, latest 0.7%"'
+        - 'cell "722 1.7% STUDY003 · DTH90 trend: 6 snapshots, latest 1.7%"':
+          - text: 722 1.7%
+          - 'img "STUDY003 · DTH90 trend: 6 snapshots, latest 1.7%"'
+        - 'cell "722 1.5% STUDY003 · IPNS trend: 6 snapshots, latest 1.5%"':
+          - text: 722 1.5%
+          - 'img "STUDY003 · IPNS trend: 6 snapshots, latest 1.5%"'
+        - 'cell "722 2.2% STUDY003 · IE trend: 6 snapshots, latest 2.2%"':
+          - text: 722 2.2%
+          - 'img "STUDY003 · IE trend: 6 snapshots, latest 2.2%"'
+        - 'cell "722 1.9% STUDY003 · STRAT trend: 6 snapshots, latest 1.9%"':
+          - text: 722 1.9%
+          - 'img "STUDY003 · STRAT trend: 6 snapshots, latest 1.9%"'
+        - 'cell "722 3.5% STUDY003 · PFSC trend: 6 snapshots, latest 3.5%"':
+          - text: 722 3.5%
+          - 'img "STUDY003 · PFSC trend: 6 snapshots, latest 3.5%"'
+        - 'cell "136,278 1.24 STUDY003 · AE trend: 6 snapshots, latest 4.4%"':
+          - text: 136,278 1.24
+          - 'img "STUDY003 · AE trend: 6 snapshots, latest 4.4%"'
+        - 'cell "136,278 0.06 STUDY003 · SAE trend: 6 snapshots, latest 0.2%"':
+          - text: 136,278 0.06
+          - 'img "STUDY003 · SAE trend: 6 snapshots, latest 0.2%"'
+        - 'cell "136,278 0.44 STUDY003 · PD trend: 6 snapshots, latest 1.6%"':
+          - text: 136,278 0.44
+          - 'img "STUDY003 · PD trend: 6 snapshots, latest 1.6%"'
+        - 'cell "136,278 0.05 STUDY003 · IPD trend: 6 snapshots, latest 0.2%"':
+          - text: 136,278 0.05
+          - 'img "STUDY003 · IPD trend: 6 snapshots, latest 0.2%"'
+        - 'cell "16,033 6.4% STUDY003 · LB trend: 6 snapshots, latest 6.4%"':
+          - text: 16,033 6.4%
+          - 'img "STUDY003 · LB trend: 6 snapshots, latest 6.4%"'
+        - 'cell "228,706 6.2% STUDY003 · QRY trend: 6 snapshots, latest 6.2%"':
+          - text: 228,706 6.2%
+          - 'img "STUDY003 · QRY trend: 6 snapshots, latest 6.2%"'
+        - 'cell "14,232 13.0% STUDY003 · OQRY trend: 6 snapshots, latest 13.0%"':
+          - text: 14,232 13.0%
+          - 'img "STUDY003 · OQRY trend: 6 snapshots, latest 13.0%"'
+        - 'cell "27,440 15.4% STUDY003 · ODAT trend: 6 snapshots, latest 15.4%"':
+          - text: 27,440 15.4%
+          - 'img "STUDY003 · ODAT trend: 6 snapshots, latest 15.4%"'
+        - 'cell "228,706 2.8% STUDY003 · CDAT trend: 6 snapshots, latest 2.8%"':
+          - text: 228,706 2.8%
+          - 'img "STUDY003 · CDAT trend: 6 snapshots, latest 2.8%"'
+      - row:
+        - cell "STUDY005EMBER-1 Study details":
+          - link "STUDY005":
+            - /url: "#/study/STUDY005"
+          - text: EMBER-1
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "1,168"
+        - cell "871"
+        - cell "25.4% 13.5% 7.0% 8.7% 2.0% 1.6%"
+        - 'cell "871 0.8% STUDY005 · DTH30 trend: 6 snapshots, latest 0.8%"':
+          - text: 871 0.8%
+          - 'img "STUDY005 · DTH30 trend: 6 snapshots, latest 0.8%"'
+        - 'cell "871 1.3% STUDY005 · DTH90 trend: 6 snapshots, latest 1.3%"':
+          - text: 871 1.3%
+          - 'img "STUDY005 · DTH90 trend: 6 snapshots, latest 1.3%"'
+        - 'cell "871 2.0% STUDY005 · IPNS trend: 6 snapshots, latest 2.0%"':
+          - text: 871 2.0%
+          - 'img "STUDY005 · IPNS trend: 6 snapshots, latest 2.0%"'
+        - 'cell "871 2.2% STUDY005 · IE trend: 6 snapshots, latest 2.2%"':
+          - text: 871 2.2%
+          - 'img "STUDY005 · IE trend: 6 snapshots, latest 2.2%"'
+        - 'cell "871 2.0% STUDY005 · STRAT trend: 6 snapshots, latest 2.0%"':
+          - text: 871 2.0%
+          - 'img "STUDY005 · STRAT trend: 6 snapshots, latest 2.0%"'
+        - 'cell "871 3.0% STUDY005 · PFSC trend: 6 snapshots, latest 3.0%"':
+          - text: 871 3.0%
+          - 'img "STUDY005 · PFSC trend: 6 snapshots, latest 3.0%"'
+        - 'cell "148,950 1.41 STUDY005 · AE trend: 6 snapshots, latest 5.0%"':
+          - text: 148,950 1.41
+          - 'img "STUDY005 · AE trend: 6 snapshots, latest 5.0%"'
+        - 'cell "148,950 0.11 STUDY005 · SAE trend: 6 snapshots, latest 0.4%"':
+          - text: 148,950 0.11
+          - 'img "STUDY005 · SAE trend: 6 snapshots, latest 0.4%"'
+        - 'cell "148,950 0.36 STUDY005 · PD trend: 6 snapshots, latest 1.3%"':
+          - text: 148,950 0.36
+          - 'img "STUDY005 · PD trend: 6 snapshots, latest 1.3%"'
+        - 'cell "148,950 0.04 STUDY005 · IPD trend: 6 snapshots, latest 0.1%"':
+          - text: 148,950 0.04
+          - 'img "STUDY005 · IPD trend: 6 snapshots, latest 0.1%"'
+        - 'cell "18,883 2.9% STUDY005 · LB trend: 6 snapshots, latest 2.9%"':
+          - text: 18,883 2.9%
+          - 'img "STUDY005 · LB trend: 6 snapshots, latest 2.9%"'
+        - 'cell "258,664 8.6% STUDY005 · QRY trend: 6 snapshots, latest 8.6%"':
+          - text: 258,664 8.6%
+          - 'img "STUDY005 · QRY trend: 6 snapshots, latest 8.6%"'
+        - 'cell "22,245 10.3% STUDY005 · OQRY trend: 6 snapshots, latest 10.3%"':
+          - text: 22,245 10.3%
+          - 'img "STUDY005 · OQRY trend: 6 snapshots, latest 10.3%"'
+        - 'cell "34,825 15.0% STUDY005 · ODAT trend: 6 snapshots, latest 15.0%"':
+          - text: 34,825 15.0%
+          - 'img "STUDY005 · ODAT trend: 6 snapshots, latest 15.0%"'
+        - 'cell "258,664 3.5% STUDY005 · CDAT trend: 6 snapshots, latest 3.5%"':
+          - text: 258,664 3.5%
+          - 'img "STUDY005 · CDAT trend: 6 snapshots, latest 3.5%"'
+      - row:
+        - cell "STUDY009IRIS-1 Study details":
+          - link "STUDY009":
+            - /url: "#/study/STUDY009"
+          - text: IRIS-1
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "708"
+        - cell "597"
+        - cell "15.7% 6.0% 7.2% 13.1% 4.4% 1.7%"
+        - 'cell "597 0.8% STUDY009 · DTH30 trend: 6 snapshots, latest 0.8%"':
+          - text: 597 0.8%
+          - 'img "STUDY009 · DTH30 trend: 6 snapshots, latest 0.8%"'
+        - 'cell "597 2.5% STUDY009 · DTH90 trend: 6 snapshots, latest 2.5%"':
+          - text: 597 2.5%
+          - 'img "STUDY009 · DTH90 trend: 6 snapshots, latest 2.5%"'
+        - 'cell "597 1.7% STUDY009 · IPNS trend: 6 snapshots, latest 1.7%"':
+          - text: 597 1.7%
+          - 'img "STUDY009 · IPNS trend: 6 snapshots, latest 1.7%"'
+        - 'cell "597 4.2% STUDY009 · IE trend: 6 snapshots, latest 4.2%"':
+          - text: 597 4.2%
+          - 'img "STUDY009 · IE trend: 6 snapshots, latest 4.2%"'
+        - 'cell "597 2.3% STUDY009 · STRAT trend: 6 snapshots, latest 2.3%"':
+          - text: 597 2.3%
+          - 'img "STUDY009 · STRAT trend: 6 snapshots, latest 2.3%"'
+        - 'cell "597 3.0% STUDY009 · PFSC trend: 6 snapshots, latest 3.0%"':
+          - text: 597 3.0%
+          - 'img "STUDY009 · PFSC trend: 6 snapshots, latest 3.0%"'
+        - 'cell "102,953 1.15 STUDY009 · AE trend: 6 snapshots, latest 4.1%"':
+          - text: 102,953 1.15
+          - 'img "STUDY009 · AE trend: 6 snapshots, latest 4.1%"'
+        - 'cell "102,953 0.12 STUDY009 · SAE trend: 6 snapshots, latest 0.4%"':
+          - text: 102,953 0.12
+          - 'img "STUDY009 · SAE trend: 6 snapshots, latest 0.4%"'
+        - 'cell "102,953 0.24 STUDY009 · PD trend: 6 snapshots, latest 0.9%"':
+          - text: 102,953 0.24
+          - 'img "STUDY009 · PD trend: 6 snapshots, latest 0.9%"'
+        - 'cell "102,953 0.06 STUDY009 · IPD trend: 6 snapshots, latest 0.2%"':
+          - text: 102,953 0.06
+          - 'img "STUDY009 · IPD trend: 6 snapshots, latest 0.2%"'
+        - 'cell "13,465 3.9% STUDY009 · LB trend: 6 snapshots, latest 3.9%"':
+          - text: 13,465 3.9%
+          - 'img "STUDY009 · LB trend: 6 snapshots, latest 3.9%"'
+        - 'cell "182,319 4.1% STUDY009 · QRY trend: 6 snapshots, latest 4.1%"':
+          - text: 182,319 4.1%
+          - 'img "STUDY009 · QRY trend: 6 snapshots, latest 4.1%"'
+        - 'cell "7,414 9.0% STUDY009 · OQRY trend: 6 snapshots, latest 9.0%"':
+          - text: 7,414 9.0%
+          - 'img "STUDY009 · OQRY trend: 6 snapshots, latest 9.0%"'
+        - 'cell "22,974 9.3% STUDY009 · ODAT trend: 6 snapshots, latest 9.3%"':
+          - text: 22,974 9.3%
+          - 'img "STUDY009 · ODAT trend: 6 snapshots, latest 9.3%"'
+        - 'cell "182,319 4.1% STUDY009 · CDAT trend: 6 snapshots, latest 4.1%"':
+          - text: 182,319 4.1%
+          - 'img "STUDY009 · CDAT trend: 6 snapshots, latest 4.1%"'
+      - row:
+        - cell "STUDY012LUMEN-1 Study details":
+          - link "STUDY012":
+            - /url: "#/study/STUDY012"
+          - text: LUMEN-1
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "1,281"
+        - cell "907"
+        - cell "29.2% 7.3% 11.9% 10.5% 4.1% 1.3%"
+        - 'cell "907 0.9% STUDY012 · DTH30 trend: 6 snapshots, latest 0.9%"':
+          - text: 907 0.9%
+          - 'img "STUDY012 · DTH30 trend: 6 snapshots, latest 0.9%"'
+        - 'cell "907 1.9% STUDY012 · DTH90 trend: 6 snapshots, latest 1.9%"':
+          - text: 907 1.9%
+          - 'img "STUDY012 · DTH90 trend: 6 snapshots, latest 1.9%"'
+        - 'cell "907 1.4% STUDY012 · IPNS trend: 6 snapshots, latest 1.4%"':
+          - text: 907 1.4%
+          - 'img "STUDY012 · IPNS trend: 6 snapshots, latest 1.4%"'
+        - 'cell "907 5.2% STUDY012 · IE trend: 6 snapshots, latest 5.2%"':
+          - text: 907 5.2%
+          - 'img "STUDY012 · IE trend: 6 snapshots, latest 5.2%"'
+        - 'cell "907 1.8% STUDY012 · STRAT trend: 6 snapshots, latest 1.8%"':
+          - text: 907 1.8%
+          - 'img "STUDY012 · STRAT trend: 6 snapshots, latest 1.8%"'
+        - 'cell "907 2.1% STUDY012 · PFSC trend: 6 snapshots, latest 2.1%"':
+          - text: 907 2.1%
+          - 'img "STUDY012 · PFSC trend: 6 snapshots, latest 2.1%"'
+        - 'cell "164,137 0.96 STUDY012 · AE trend: 6 snapshots, latest 3.4%"':
+          - text: 164,137 0.96
+          - 'img "STUDY012 · AE trend: 6 snapshots, latest 3.4%"'
+        - 'cell "164,137 0.08 STUDY012 · SAE trend: 6 snapshots, latest 0.3%"':
+          - text: 164,137 0.08
+          - 'img "STUDY012 · SAE trend: 6 snapshots, latest 0.3%"'
+        - 'cell "164,137 0.45 STUDY012 · PD trend: 6 snapshots, latest 1.6%"':
+          - text: 164,137 0.45
+          - 'img "STUDY012 · PD trend: 6 snapshots, latest 1.6%"'
+        - 'cell "164,137 0.09 STUDY012 · IPD trend: 6 snapshots, latest 0.3%"':
+          - text: 164,137 0.09
+          - 'img "STUDY012 · IPD trend: 6 snapshots, latest 0.3%"'
+        - 'cell "19,202 4.3% STUDY012 · LB trend: 6 snapshots, latest 4.3%"':
+          - text: 19,202 4.3%
+          - 'img "STUDY012 · LB trend: 6 snapshots, latest 4.3%"'
+        - 'cell "259,857 6.8% STUDY012 · QRY trend: 6 snapshots, latest 6.8%"':
+          - text: 259,857 6.8%
+          - 'img "STUDY012 · QRY trend: 6 snapshots, latest 6.8%"'
+        - 'cell "17,667 9.5% STUDY012 · OQRY trend: 6 snapshots, latest 9.5%"':
+          - text: 17,667 9.5%
+          - 'img "STUDY012 · OQRY trend: 6 snapshots, latest 9.5%"'
+        - 'cell "34,792 11.8% STUDY012 · ODAT trend: 6 snapshots, latest 11.8%"':
+          - text: 34,792 11.8%
+          - 'img "STUDY012 · ODAT trend: 6 snapshots, latest 11.8%"'
+        - 'cell "259,857 2.8% STUDY012 · CDAT trend: 6 snapshots, latest 2.8%"':
+          - text: 259,857 2.8%
+          - 'img "STUDY012 · CDAT trend: 6 snapshots, latest 2.8%"'
+      - row:
+        - cell "STUDY004DELTA-1 Study details":
+          - link "STUDY004":
+            - /url: "#/study/STUDY004"
+          - text: DELTA-1
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "844"
+        - cell "576"
+        - cell "31.8% 6.1% 6.9% 7.8% 1.9% 2.4%"
+        - 'cell "576 1.0% STUDY004 · DTH30 trend: 6 snapshots, latest 1.0%"':
+          - text: 576 1.0%
+          - 'img "STUDY004 · DTH30 trend: 6 snapshots, latest 1.0%"'
+        - 'cell "576 3.6% STUDY004 · DTH90 trend: 6 snapshots, latest 3.6%"':
+          - text: 576 3.6%
+          - 'img "STUDY004 · DTH90 trend: 6 snapshots, latest 3.6%"'
+        - 'cell "576 2.3% STUDY004 · IPNS trend: 6 snapshots, latest 2.3%"':
+          - text: 576 2.3%
+          - 'img "STUDY004 · IPNS trend: 6 snapshots, latest 2.3%"'
+        - 'cell "576 1.9% STUDY004 · IE trend: 6 snapshots, latest 1.9%"':
+          - text: 576 1.9%
+          - 'img "STUDY004 · IE trend: 6 snapshots, latest 1.9%"'
+        - 'cell "576 2.3% STUDY004 · STRAT trend: 6 snapshots, latest 2.3%"':
+          - text: 576 2.3%
+          - 'img "STUDY004 · STRAT trend: 6 snapshots, latest 2.3%"'
+        - 'cell "576 2.3% STUDY004 · PFSC trend: 6 snapshots, latest 2.3%"':
+          - text: 576 2.3%
+          - 'img "STUDY004 · PFSC trend: 6 snapshots, latest 2.3%"'
+        - 'cell "105,696 1.55 STUDY004 · AE trend: 6 snapshots, latest 5.5%"':
+          - text: 105,696 1.55
+          - 'img "STUDY004 · AE trend: 6 snapshots, latest 5.5%"'
+        - 'cell "105,696 0.14 STUDY004 · SAE trend: 6 snapshots, latest 0.5%"':
+          - text: 105,696 0.14
+          - 'img "STUDY004 · SAE trend: 6 snapshots, latest 0.5%"'
+        - 'cell "105,696 0.40 STUDY004 · PD trend: 6 snapshots, latest 1.4%"':
+          - text: 105,696 0.40
+          - 'img "STUDY004 · PD trend: 6 snapshots, latest 1.4%"'
+        - 'cell "105,696 0.08 STUDY004 · IPD trend: 6 snapshots, latest 0.3%"':
+          - text: 105,696 0.08
+          - 'img "STUDY004 · IPD trend: 6 snapshots, latest 0.3%"'
+        - 'cell "12,843 5.4% STUDY004 · LB trend: 6 snapshots, latest 5.4%"':
+          - text: 12,843 5.4%
+          - 'img "STUDY004 · LB trend: 6 snapshots, latest 5.4%"'
+        - 'cell "168,389 11.1% STUDY004 · QRY trend: 6 snapshots, latest 11.1%"':
+          - text: 168,389 11.1%
+          - 'img "STUDY004 · QRY trend: 6 snapshots, latest 11.1%"'
+        - 'cell "18,634 6.2% STUDY004 · OQRY trend: 6 snapshots, latest 6.2%"':
+          - text: 18,634 6.2%
+          - 'img "STUDY004 · OQRY trend: 6 snapshots, latest 6.2%"'
+        - 'cell "23,301 11.7% STUDY004 · ODAT trend: 6 snapshots, latest 11.7%"':
+          - text: 23,301 11.7%
+          - 'img "STUDY004 · ODAT trend: 6 snapshots, latest 11.7%"'
+        - 'cell "168,389 1.8% STUDY004 · CDAT trend: 6 snapshots, latest 1.8%"':
+          - text: 168,389 1.8%
+          - 'img "STUDY004 · CDAT trend: 6 snapshots, latest 1.8%"'
+      - row:
+        - cell "STUDY006FALCON-2 Study details":
+          - link "STUDY006":
+            - /url: "#/study/STUDY006"
+          - text: FALCON-2
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "1,023"
+        - cell "879"
+        - cell "14.1% 6.9% 17.3% 4.9% 2.4% 2.0%"
+        - 'cell "879 1.1% STUDY006 · DTH30 trend: 6 snapshots, latest 1.1%"':
+          - text: 879 1.1%
+          - 'img "STUDY006 · DTH30 trend: 6 snapshots, latest 1.1%"'
+        - 'cell "879 2.6% STUDY006 · DTH90 trend: 6 snapshots, latest 2.6%"':
+          - text: 879 2.6%
+          - 'img "STUDY006 · DTH90 trend: 6 snapshots, latest 2.6%"'
+        - 'cell "879 1.6% STUDY006 · IPNS trend: 6 snapshots, latest 1.6%"':
+          - text: 879 1.6%
+          - 'img "STUDY006 · IPNS trend: 6 snapshots, latest 1.6%"'
+        - 'cell "879 3.5% STUDY006 · IE trend: 6 snapshots, latest 3.5%"':
+          - text: 879 3.5%
+          - 'img "STUDY006 · IE trend: 6 snapshots, latest 3.5%"'
+        - 'cell "879 1.5% STUDY006 · STRAT trend: 6 snapshots, latest 1.5%"':
+          - text: 879 1.5%
+          - 'img "STUDY006 · STRAT trend: 6 snapshots, latest 1.5%"'
+        - 'cell "879 2.0% STUDY006 · PFSC trend: 6 snapshots, latest 2.0%"':
+          - text: 879 2.0%
+          - 'img "STUDY006 · PFSC trend: 6 snapshots, latest 2.0%"'
+        - 'cell "165,991 1.34 STUDY006 · AE trend: 6 snapshots, latest 4.8%"':
+          - text: 165,991 1.34
+          - 'img "STUDY006 · AE trend: 6 snapshots, latest 4.8%"'
+        - 'cell "165,991 0.09 STUDY006 · SAE trend: 6 snapshots, latest 0.3%"':
+          - text: 165,991 0.09
+          - 'img "STUDY006 · SAE trend: 6 snapshots, latest 0.3%"'
+        - 'cell "165,991 0.52 STUDY006 · PD trend: 6 snapshots, latest 1.8%"':
+          - text: 165,991 0.52
+          - 'img "STUDY006 · PD trend: 6 snapshots, latest 1.8%"'
+        - 'cell "165,991 0.06 STUDY006 · IPD trend: 6 snapshots, latest 0.2%"':
+          - text: 165,991 0.06
+          - 'img "STUDY006 · IPD trend: 6 snapshots, latest 0.2%"'
+        - 'cell "19,324 3.7% STUDY006 · LB trend: 6 snapshots, latest 3.7%"':
+          - text: 19,324 3.7%
+          - 'img "STUDY006 · LB trend: 6 snapshots, latest 3.7%"'
+        - 'cell "261,148 6.5% STUDY006 · QRY trend: 6 snapshots, latest 6.5%"':
+          - text: 261,148 6.5%
+          - 'img "STUDY006 · QRY trend: 6 snapshots, latest 6.5%"'
+        - 'cell "17,103 7.3% STUDY006 · OQRY trend: 6 snapshots, latest 7.3%"':
+          - text: 17,103 7.3%
+          - 'img "STUDY006 · OQRY trend: 6 snapshots, latest 7.3%"'
+        - 'cell "33,992 10.8% STUDY006 · ODAT trend: 6 snapshots, latest 10.8%"':
+          - text: 33,992 10.8%
+          - 'img "STUDY006 · ODAT trend: 6 snapshots, latest 10.8%"'
+        - 'cell "261,148 4.4% STUDY006 · CDAT trend: 6 snapshots, latest 4.4%"':
+          - text: 261,148 4.4%
+          - 'img "STUDY006 · CDAT trend: 6 snapshots, latest 4.4%"'
+      - row:
+        - cell "STUDY010JUNIPER-2 Study details":
+          - link "STUDY010":
+            - /url: "#/study/STUDY010"
+          - text: JUNIPER-2
+          - img "Study details": i
+        - cell "2026-06-30"
+        - cell "1,147"
+        - cell "857"
+        - cell "25.3% 7.5% 11.3% 9.1% 2.7% 1.2%"
+        - 'cell "857 1.4% STUDY010 · DTH30 trend: 6 snapshots, latest 1.4%"':
+          - text: 857 1.4%
+          - 'img "STUDY010 · DTH30 trend: 6 snapshots, latest 1.4%"'
+        - 'cell "857 3.2% STUDY010 · DTH90 trend: 6 snapshots, latest 3.2%"':
+          - text: 857 3.2%
+          - 'img "STUDY010 · DTH90 trend: 6 snapshots, latest 3.2%"'
+        - 'cell "857 2.1% STUDY010 · IPNS trend: 6 snapshots, latest 2.1%"':
+          - text: 857 2.1%
+          - 'img "STUDY010 · IPNS trend: 6 snapshots, latest 2.1%"'
+        - 'cell "857 1.6% STUDY010 · IE trend: 6 snapshots, latest 1.6%"':
+          - text: 857 1.6%
+          - 'img "STUDY010 · IE trend: 6 snapshots, latest 1.6%"'
+        - 'cell "857 3.4% STUDY010 · STRAT trend: 6 snapshots, latest 3.4%"':
+          - text: 857 3.4%
+          - 'img "STUDY010 · STRAT trend: 6 snapshots, latest 3.4%"'
+        - 'cell "857 2.8% STUDY010 · PFSC trend: 6 snapshots, latest 2.8%"':
+          - text: 857 2.8%
+          - 'img "STUDY010 · PFSC trend: 6 snapshots, latest 2.8%"'
+        - 'cell "146,728 1.29 STUDY010 · AE trend: 6 snapshots, latest 4.6%"':
+          - text: 146,728 1.29
+          - 'img "STUDY010 · AE trend: 6 snapshots, latest 4.6%"'
+        - 'cell "146,728 0.09 STUDY010 · SAE trend: 6 snapshots, latest 0.3%"':
+          - text: 146,728 0.09
+          - 'img "STUDY010 · SAE trend: 6 snapshots, latest 0.3%"'
+        - 'cell "146,728 0.22 STUDY010 · PD trend: 6 snapshots, latest 0.8%"':
+          - text: 146,728 0.22
+          - 'img "STUDY010 · PD trend: 6 snapshots, latest 0.8%"'
+        - 'cell "146,728 0.08 STUDY010 · IPD trend: 6 snapshots, latest 0.3%"':
+          - text: 146,728 0.08
+          - 'img "STUDY010 · IPD trend: 6 snapshots, latest 0.3%"'
+        - 'cell "18,039 4.6% STUDY010 · LB trend: 6 snapshots, latest 4.6%"':
+          - text: 18,039 4.6%
+          - 'img "STUDY010 · LB trend: 6 snapshots, latest 4.6%"'
+        - 'cell "254,193 5.2% STUDY010 · QRY trend: 6 snapshots, latest 5.2%"':
+          - text: 254,193 5.2%
+          - 'img "STUDY010 · QRY trend: 6 snapshots, latest 5.2%"'
+        - 'cell "13,321 11.0% STUDY010 · OQRY trend: 6 snapshots, latest 11.0%"':
+          - text: 13,321 11.0%
+          - 'img "STUDY010 · OQRY trend: 6 snapshots, latest 11.0%"'
+        - 'cell "32,840 11.1% STUDY010 · ODAT trend: 6 snapshots, latest 11.1%"':
+          - text: 32,840 11.1%
+          - 'img "STUDY010 · ODAT trend: 6 snapshots, latest 11.1%"'
+        - 'cell "254,193 3.0% STUDY010 · CDAT trend: 6 snapshots, latest 3.0%"':
+          - text: 254,193 3.0%
+          - 'img "STUDY010 · CDAT trend: 6 snapshots, latest 3.0%"'

@@ -1,0 +1,221 @@
+state: rows-grouped
+dom: sha256 2acf5b47ab520ef2c9f32e9848c7080e84be3da42c81c4335b0eb6c03be367e7 (207419 characters)
+tooltip: none
+cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
+distribution marks:
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+accessibility:
+- main:
+  - text: Controls
+  - button "Collapse controls" [expanded]: «
+  - group:
+    - text: ▸ Config Highlight study
+    - combobox:
+      - option "None" [selected]
+      - option "STUDY001 · ATLAS-1"
+      - option "STUDY002 · BEACON-1"
+      - option "STUDY003 · COBALT-1"
+      - option "STUDY004 · DELTA-1"
+      - option "STUDY005 · EMBER-1"
+      - option "STUDY006 · FALCON-2"
+      - option "STUDY007 · GRANITE-3"
+      - option "STUDY008 · HARBOR-2"
+      - option "STUDY009 · IRIS-1"
+      - option "STUDY010 · JUNIPER-2"
+      - option "STUDY011 · KESTREL-3"
+      - option "STUDY012 · LUMEN-1"
+    - paragraph: Marks the study in every view. Click a row or a dot to pick one.
+    - text: Cell display
+    - group [disabled]:
+      - button "As defined" [disabled]
+      - button "Custom" [disabled]
+    - paragraph: Overview tiles show one headline value per metric. Open a category or switch to Details.
+    - text: Also show
+    - button "Trend" [disabled]
+    - text: Heatmap (also drives column sort)
+    - combobox:
+      - option "None" [selected]
+      - option "Numerator"
+      - option "Denominator"
+      - option "Rate"
+    - text: Heatmap color
+    - group [disabled]:
+      - button "Blue" [disabled]
+      - button "Teal" [disabled]
+      - button "Purple" [disabled]
+      - button "Grey" [disabled]
+    - text: Group rows by
+    - combobox:
+      - option "None — one row per study"
+      - option "Therapeutic area"
+      - option "Indication"
+      - option "Phase" [selected]
+      - option "Status"
+      - option "Product"
+  - group:
+    - text: ▸ Metrics 21/21 Status
+    - button "Released8" [pressed]
+    - button "New4" [pressed]
+    - button "Planned9" [pressed]
+    - button "All"
+    - button "None"
+    - text: Disposition
+    - button "none"
+    - text: 6/6
+    - checkbox "SF Screen Failure Rate" [checked]
+    - text: SF Screen Failure Rate
+    - checkbox "SDSC Study Discontinuation Rate" [checked]
+    - text: SDSC Study Discontinuation Rate
+    - checkbox "TDSC Treatment Discontinuation Rate" [checked]
+    - text: TDSC Treatment Discontinuation Rate
+    - checkbox "PTDSC Premature Treatment Discontinuation Rate Planned" [checked]
+    - text: PTDSC Premature Treatment Discontinuation Rate Planned
+    - checkbox "WC Withdrawal of Consent Planned" [checked]
+    - text: WC Withdrawal of Consent Planned
+    - checkbox "LTFU Lost to Follow Up Planned" [checked]
+    - text: LTFU Lost to Follow Up Planned Early events
+    - button "none"
+    - text: 3/3
+    - checkbox "DTH30 Early Deaths (30 days) Planned" [checked]
+    - text: DTH30 Early Deaths (30 days) Planned
+    - checkbox "DTH90 Early Deaths (90 days) Planned" [checked]
+    - text: DTH90 Early Deaths (90 days) Planned
+    - checkbox "IPNS IP Non-starters Planned" [checked]
+    - text: IPNS IP Non-starters Planned Eligibility & integrity
+    - button "none"
+    - text: 3/3
+    - checkbox "IE Eligibility Planned" [checked]
+    - text: IE Eligibility Planned
+    - checkbox "STRAT Stratification Planned" [checked]
+    - text: STRAT Stratification Planned
+    - checkbox "PFSC Premature Censoring for PFS Planned" [checked]
+    - text: PFSC Premature Censoring for PFS Planned Safety & deviations
+    - button "none"
+    - text: 5/5
+    - checkbox "AE AE Reporting Rate New" [checked]
+    - text: AE AE Reporting Rate New
+    - checkbox "SAE SAE Reporting Rate New" [checked]
+    - text: SAE SAE Reporting Rate New
+    - checkbox "PD Non-Important Protocol Deviation Rate New" [checked]
+    - text: PD Non-Important Protocol Deviation Rate New
+    - checkbox "IPD Important Protocol Deviation Rate New" [checked]
+    - text: IPD Important Protocol Deviation Rate New
+    - checkbox "LB G3+ Lab Abnormality Rate" [checked]
+    - text: LB G3+ Lab Abnormality Rate Data quality
+    - button "none"
+    - text: 4/4
+    - checkbox "QRY Query Rate" [checked]
+    - text: QRY Query Rate
+    - checkbox "OQRY Delayed Query Resolution Rate" [checked]
+    - text: OQRY Delayed Query Resolution Rate
+    - checkbox "ODAT Delayed Data Entry Rate" [checked]
+    - text: ODAT Delayed Data Entry Rate
+    - checkbox "CDAT Data Change Rate" [checked]
+    - text: CDAT Data Change Rate
+    - paragraph: 1 metric is not site-level (Study) — held back until a future release adds that plumbing.
+  - group:
+    - text: ▸ Filter Therapeutic area
+    - button "Cardiology"
+    - button "Immunology"
+    - button "Neurology"
+    - button "Oncology"
+    - button "Virology"
+    - text: Phase
+    - button "P1"
+    - button "P2"
+    - button "P3"
+    - text: Status
+    - button "Active"
+    - button "Completed"
+    - button "Enrolling"
+  - tablist "Program view":
+    - text: Table
+    - tab "Overview" [selected]
+    - tab "Details"
+    - tab "Distribution"
+  - text: Every category folded to headline values · click a band to open it Showing 12 / 12 studies · 21 / 21 site-level metrics (8 released · 4 new · 9 planned) · one headline value per metric · each study at its own latest snapshot
+  - table:
+    - rowgroup:
+      - row "Group Studies Population Open Disposition Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU Open Early events Early events 3 metrics Planned DTH30 DTH90 IPNS Open Eligibility & integrity Eligibility & integrity 3 metrics Planned IE STRAT PFSC Open Safety & deviations Safety & deviations 5 metrics AE SAE PD IPD LB Open Data quality Data quality 4 metrics QRY OQRY ODAT CDAT":
+        - columnheader "Group"
+        - columnheader "Studies"
+        - columnheader "Population"
+        - columnheader "Open Disposition Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU":
+          - button "Open Disposition": +
+          - text: Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU
+        - columnheader "Open Early events Early events 3 metrics Planned DTH30 DTH90 IPNS":
+          - button "Open Early events": +
+          - text: Early events 3 metrics Planned DTH30 DTH90 IPNS
+        - columnheader "Open Eligibility & integrity Eligibility & integrity 3 metrics Planned IE STRAT PFSC":
+          - button "Open Eligibility & integrity": +
+          - text: Eligibility & integrity 3 metrics Planned IE STRAT PFSC
+        - columnheader "Open Safety & deviations Safety & deviations 5 metrics AE SAE PD IPD LB":
+          - button "Open Safety & deviations": +
+          - text: Safety & deviations 5 metrics AE SAE PD IPD LB
+        - columnheader "Open Data quality Data quality 4 metrics QRY OQRY ODAT CDAT":
+          - button "Open Data quality": +
+          - text: Data quality 4 metrics QRY OQRY ODAT CDAT
+      - row "Scr. n Enr. n":
+        - columnheader "Scr. n"
+        - columnheader "Enr. n"
+    - rowgroup:
+      - row "Portfolio total 12 11,645 8,874 23.8% 7.9% 11.3% 9.0% 2.6% 1.6% 0.8% 2.1% 1.8% 3.1% 2.3% 2.5% 1.20 0.10 0.37 0.06 4.5% 6.8% 9.0% 11.7% 3.3%":
+        - cell "Portfolio total"
+        - cell "12"
+        - cell "11,645"
+        - cell "8,874"
+        - cell "23.8% 7.9% 11.3% 9.0% 2.6% 1.6%"
+        - cell "0.8% 2.1% 1.8%"
+        - cell "3.1% 2.3% 2.5%"
+        - cell "1.20 0.10 0.37 0.06 4.5%"
+        - cell "6.8% 9.0% 11.7% 3.3%"
+      - row "P1 4 3,280 2,719 17.1% 6.8% 12.5% 8.6% 2.8% 1.6% 0.7% 2.2% 1.8% 3.2% 2.0% 2.2% 1.31 0.09 0.38 0.06 4.0% 5.5% 8.9% 9.1% 4.1%":
+        - cell "P1"
+        - cell "4"
+        - cell "3,280"
+        - cell "2,719"
+        - cell "17.1% 6.8% 12.5% 8.6% 2.8% 1.6%"
+        - cell "0.7% 2.2% 1.8%"
+        - cell "3.2% 2.0% 2.2%"
+        - cell "1.31 0.09 0.38 0.06 4.0%"
+        - cell "5.5% 8.9% 9.1% 4.1%"
+      - row "P2 7 7,754 5,656 27.1% 8.7% 10.9% 9.3% 2.6% 1.6% 0.8% 2.1% 1.8% 3.1% 2.5% 2.7% 1.14 0.10 0.38 0.06 4.9% 7.5% 8.6% 12.9% 3.0%":
+        - cell "P2"
+        - cell "7"
+        - cell "7,754"
+        - cell "5,656"
+        - cell "27.1% 8.7% 10.9% 9.3% 2.6% 1.6%"
+        - cell "0.8% 2.1% 1.8%"
+        - cell "3.1% 2.5% 2.7%"
+        - cell "1.14 0.10 0.38 0.06 4.9%"
+        - cell "7.5% 8.6% 12.9% 3.0%"
+      - row "P3 1 611 499 18.3% 5.2% 9.2% 8.8% 2.4% 1.4% 0.4% 1.2% 1.6% 2.8% 2.8% 2.0% 1.24 0.09 0.24 0.02 2.2% 6.8% 13.4% 12.2% 3.5%":
+        - cell "P3"
+        - cell "1"
+        - cell "611"
+        - cell "499"
+        - cell "18.3% 5.2% 9.2% 8.8% 2.4% 1.4%"
+        - cell "0.4% 1.2% 1.6%"
+        - cell "2.8% 2.8% 2.0%"
+        - cell "1.24 0.09 0.24 0.02 2.2%"
+        - cell "6.8% 13.4% 12.2% 3.5%"

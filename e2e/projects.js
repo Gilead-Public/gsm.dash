@@ -24,6 +24,7 @@ export const SPEC_ARTIFACTS = {
   'e2e/delivery.spec.js': ['spa'],
   'e2e/distribution.spec.js': ['spa', 'reports'],
   'e2e/portfolio.spec.js': ['spa'],
+  'e2e/portfolio-baseline.spec.js': ['spa'],
   'e2e/study-page.spec.js': ['spa', 'reports'],
   'e2e/summary.spec.js': ['spa'],
   'e2e/reports.spec.js': ['reports'],
