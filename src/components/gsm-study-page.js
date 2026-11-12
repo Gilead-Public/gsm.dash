@@ -1,7 +1,8 @@
 import { StoreElement, esc } from './util.js';
 import { attachHoverTooltip, metricInfoIcon, statusPill } from './tooltip.js';
 import { resolveWidget, resolveData, getWidget } from '../widgets/index.js';
-import { STUDY_PAGE_SPEC, EXEC_ALLOW_LIST, DETAIL_TABS, STANDARD_TILE_VIEWS, KIND_HELP } from '../app/study-page-spec.js';
+import { STUDY_PAGE_SPEC, EXEC_ALLOW_LIST, DETAIL_TABS, KIND_HELP } from '../app/study-page-spec.js';
+import { currentTileView, sharedTileViews, tileConfig, tileViews } from '../app/tile-views.js';
 
 /**
  * Study overview page: composes widgets per the framework's Design 3 —
@@ -184,17 +185,13 @@ export class GsmStudyPage extends StoreElement {
     return { def, degraded, result };
   }
 
-  /** The views a metric tile can page through: every standard view, then the metric's custom ones. */
   #viewsFor(metric) {
-    const custom = [metric?.Widget, ...(metric?.Widgets ?? [])].filter((n) => n && getWidget(n));
-    return [...STANDARD_TILE_VIEWS, ...custom.filter((n) => !STANDARD_TILE_VIEWS.includes(n))];
+    return tileViews(metric, this.#studyId);
   }
 
-  /** Current view: what the user paged to, else the metric's custom view, else Details. */
   #currentView(metricId, views) {
     const metric = this.store.metrics.find((m) => m.MetricID === metricId);
-    const chosen = this.store.state.tileViews.get(metricId) ?? metric?.Widget ?? 'scalar-tile';
-    return views.includes(chosen) ? chosen : views[0];
+    return currentTileView(metric, this.store.state.tileViews.get(metricId), views);
   }
 
   /** Visit scrubber: play/pause + a range over the study's snapshot dates. */
@@ -239,7 +236,7 @@ export class GsmStudyPage extends StoreElement {
     const body = document.createElement('div');
     body.className = 'tile-body';
     tile.append(body);
-    const config = metric.WidgetConfigs?.[current] ?? (current === metric.Widget ? metric.WidgetConfig : undefined);
+    const config = tileConfig(metric, current, this.#studyId);
     const { def } = this.#mountWidget(body, current, { metricId: metric.MetricID, config });
     if (def.size) tile.classList.add(def.size);
     const open = this.store.state.detail.metricId === metric.MetricID;
@@ -315,7 +312,7 @@ export class GsmStudyPage extends StoreElement {
     const allViews = this.#allViewsValue(visible);
     const viewOptions = [
       ['default', 'Default per metric'],
-      ...STANDARD_TILE_VIEWS.map((name) => [name, getWidget(name)?.label ?? name]),
+      ...sharedTileViews(study.StudyID).map((name) => [name, getWidget(name)?.label ?? name]),
       ...(allViews === 'mixed' ? [['mixed', 'Mixed']] : []),
     ];
 

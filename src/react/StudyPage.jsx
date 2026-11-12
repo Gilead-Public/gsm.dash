@@ -2,7 +2,8 @@
 import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { attachHoverTooltip, metricTip } from '../components/tooltip.js';
 import { getWidget, resolveWidget } from '../widgets/index.js';
-import { STUDY_PAGE_SPEC, EXEC_ALLOW_LIST, DETAIL_TABS, STANDARD_TILE_VIEWS, KIND_HELP } from '../app/study-page-spec.js';
+import { STUDY_PAGE_SPEC, EXEC_ALLOW_LIST, DETAIL_TABS, KIND_HELP } from '../app/study-page-spec.js';
+import { currentTileView, sharedTileViews, tileConfig, tileViews } from '../app/tile-views.js';
 import { useStore } from './useStore.js';
 import { Widget } from './Widget.jsx';
 
@@ -33,18 +34,6 @@ function KindBadge({ def }) {
       {def.kind}
     </span>
   );
-}
-
-/** The views a metric tile can page through: every standard view, then the metric's custom ones. */
-function viewsFor(/** @type {any} */ metric) {
-  const custom = [metric?.Widget, ...(metric?.Widgets ?? [])].filter((n) => n && getWidget(n));
-  return [...STANDARD_TILE_VIEWS, ...custom.filter((n) => !STANDARD_TILE_VIEWS.includes(n))];
-}
-
-/** Current view: what the user paged to, else the metric's custom view, else Details. */
-function currentView(/** @type {any} */ store, /** @type {any} */ metric, /** @type {string[]} */ views) {
-  const chosen = store.state.tileViews.get(metric.MetricID) ?? metric?.Widget ?? 'scalar-tile';
-  return views.includes(chosen) ? chosen : views[0];
 }
 
 /**
@@ -123,7 +112,7 @@ export function StudyPage({ store, studyId }) {
   const allViews = chosen.every((v) => v === null) ? 'default' : chosen[0] && chosen.every((v) => v === chosen[0]) ? chosen[0] : 'mixed';
   const viewOptions = [
     ['default', 'Default per metric'],
-    ...STANDARD_TILE_VIEWS.map((name) => [name, getWidget(name)?.label ?? name]),
+    ...sharedTileViews(studyId).map((name) => [name, getWidget(name)?.label ?? name]),
     ...(allViews === 'mixed' ? [['mixed', 'Mixed']] : []),
   ];
 
@@ -131,7 +120,7 @@ export function StudyPage({ store, studyId }) {
   const randomizeViews = () => {
     store.setTileViews(
       visible.map((/** @type {any} */ m) => {
-        const views = viewsFor(m);
+        const views = tileViews(m, studyId);
         return [m.MetricID, views[Math.floor(Math.random() * views.length)]];
       }),
     );
@@ -280,11 +269,11 @@ function SiteChip({ store, studyId }) {
  * @param {{ metric: any, open: boolean, store: any, studyId: string, version: number }} props
  */
 function Tile({ metric, open, store, studyId, version }) {
-  const views = viewsFor(metric);
-  const current = currentView(store, metric, views);
+  const views = tileViews(metric, studyId);
+  const current = currentTileView(metric, store.state.tileViews.get(metric.MetricID), views);
   const idx = views.indexOf(current);
   const { def, degraded } = resolveWidget(current, EXEC_ALLOW_LIST);
-  const config = metric.WidgetConfigs?.[current] ?? (current === metric.Widget ? metric.WidgetConfig : undefined);
+  const config = tileConfig(metric, current, studyId);
   const step = (/** @type {number} */ by) => store.setTileView(metric.MetricID, views[(idx + by + views.length) % views.length]);
   const toggleDetail = () => store.set('detail', { metricId: open ? null : metric.MetricID, tab: store.state.detail.tab });
   return (
