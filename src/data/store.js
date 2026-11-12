@@ -25,6 +25,7 @@ export class PortfolioStore extends EventTarget {
     this.inactiveMetrics = inactive;
     this.studies = manifest.studies;
     this.generated = manifest.generated;
+    this.reportBase = manifest.reportBase ?? null;
     if (comparison) this.#comparison = new Map(comparison.map((r) => [`${r.SnapshotDate}\n${r.MetricID}`, r]));
     else this.#summary = indexSummary(summary, manifest.studies);
 

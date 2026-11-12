@@ -20,7 +20,8 @@ export const EXEC_ALLOW_LIST = ['results', 'distributions', 'bounds', 'groups', 
 // Standard tile views, in paging order. Every one reads only the reporting
 // layer, so every site-level metric gets all of them for free. A metric's
 // custom views (meta.Widget) are appended after these.
-export const STANDARD_TILE_VIEWS = ['overview', 'scalar-tile', 'scatter-mini', 'bar-numerator', 'bar-outliers', 'flag-dist', 'trend-mini'];
+// Site-flag views (bar-outliers, flag-dist) are not standard: a study or a metric turns them on (#11).
+export const STANDARD_TILE_VIEWS = ['overview', 'scalar-tile', 'scatter-mini', 'bar-numerator', 'trend-mini'];
 
 export const KIND_HELP = {
   standard: 'Standard — built from the standardized reporting layer; available for every site-level metric automatically.',

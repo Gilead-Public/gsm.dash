@@ -1,7 +1,10 @@
 import { StoreElement, esc } from './util.js';
 import { attachHoverTooltip, metricInfoIcon, statusPill } from './tooltip.js';
-import { resolveWidget, resolveData, getWidget } from '../widgets/index.js';
-import { STUDY_PAGE_SPEC, EXEC_ALLOW_LIST, DETAIL_TABS, STANDARD_TILE_VIEWS, KIND_HELP } from '../app/study-page-spec.js';
+import { resolveData, getWidget } from '../widgets/index.js';
+import { configProblems, noticeHtml, problemHtml, resolveView } from '../app/references.js';
+import { reportLink, reportLinkHtml } from '../app/report-links.js';
+import { STUDY_PAGE_SPEC, DETAIL_TABS, KIND_HELP } from '../app/study-page-spec.js';
+import { currentTileView, sharedTileViews, tileConfig, tileViews, viewLabel } from '../app/tile-views.js';
 
 /**
  * Study overview page: composes widgets per the framework's Design 3 —
@@ -174,27 +177,27 @@ export class GsmStudyPage extends StoreElement {
     return this.getAttribute('study-id');
   }
 
-  /** Resolve + render one widget into `container`; returns the widget's render result. */
+  /** Resolves and renders one widget into `container`, or shows why it can't render. Returns the widget, if any. */
   #mountWidget(container, name, { metricId, config }) {
-    const { def, degraded } = resolveWidget(name, EXEC_ALLOW_LIST);
-    if (degraded) container.dataset.degradedFrom = name;
+    const metric = metricId ? this.store.metrics.find((m) => m.MetricID === metricId) : null;
+    const { def, problem } = resolveView(name, metric, config);
+    if (problem) {
+      container.innerHTML = problemHtml(problem);
+      return { def: null };
+    }
     const data = resolveData(def.dataSpec, { store: this.store, studyId: this.#studyId, metricId });
     const result = def.render(container, data, config ?? {});
     if (result?.chart) this.#charts.push(result.chart);
-    return { def, degraded, result };
+    return { def };
   }
 
-  /** The views a metric tile can page through: every standard view, then the metric's custom ones. */
   #viewsFor(metric) {
-    const custom = [metric?.Widget, ...(metric?.Widgets ?? [])].filter((n) => n && getWidget(n));
-    return [...STANDARD_TILE_VIEWS, ...custom.filter((n) => !STANDARD_TILE_VIEWS.includes(n))];
+    return tileViews(metric, this.#studyId);
   }
 
-  /** Current view: what the user paged to, else the metric's custom view, else Details. */
   #currentView(metricId, views) {
     const metric = this.store.metrics.find((m) => m.MetricID === metricId);
-    const chosen = this.store.state.tileViews.get(metricId) ?? metric?.Widget ?? 'scalar-tile';
-    return views.includes(chosen) ? chosen : views[0];
+    return currentTileView(metric, this.store.state.tileViews.get(metricId), views);
   }
 
   /** Visit scrubber: play/pause + a range over the study's snapshot dates. */
@@ -239,9 +242,9 @@ export class GsmStudyPage extends StoreElement {
     const body = document.createElement('div');
     body.className = 'tile-body';
     tile.append(body);
-    const config = metric.WidgetConfigs?.[current] ?? (current === metric.Widget ? metric.WidgetConfig : undefined);
+    const config = tileConfig(metric, current, this.#studyId);
     const { def } = this.#mountWidget(body, current, { metricId: metric.MetricID, config });
-    if (def.size) tile.classList.add(def.size);
+    if (def?.size) tile.classList.add(def.size);
     const open = this.store.state.detail.metricId === metric.MetricID;
     // The tile owns the metric's identity so it reads the same in every view;
     // views add only a chart subheader when one helps.
@@ -249,15 +252,15 @@ export class GsmStudyPage extends StoreElement {
       'afterbegin',
       `<div class="tile-head"><span class="abbr">${esc(metric.Abbreviation)}</span><span class="name">${esc(
         metric.Metric
-      )}</span>${metricInfoIcon(metric)}${statusPill(metric)}${this.#kindBadge(def)}</div>`
+      )}</span>${metricInfoIcon(metric)}${statusPill(metric)}${def ? this.#kindBadge(def) : ''}</div>`
     );
     tile.insertAdjacentHTML(
       'beforeend',
       `<div class="tile-foot">
         <button type="button" class="vbtn" data-view-step="-1" data-metric="${esc(metric.MetricID)}" aria-label="Previous view">‹</button>
-        <span class="view-name" title="${esc(def.label)} — view ${idx + 1} of ${views.length}">${esc(def.label)} <span class="muted">${idx + 1}/${views.length}</span></span>
+        <span class="view-name" title="${esc(viewLabel(current))} — view ${idx + 1} of ${views.length}">${esc(viewLabel(current))} <span class="muted">${idx + 1}/${views.length}</span></span>
         <button type="button" class="vbtn" data-view-step="1" data-metric="${esc(metric.MetricID)}" aria-label="Next view">›</button>
-        <button type="button" class="tile-more ${open ? 'on' : ''}" data-detail-metric="${esc(metric.MetricID)}" aria-expanded="${open}" title="Full-size gsm.viz charts">Charts ${open ? '▴' : '▾'}</button>
+        <button type="button" class="tile-more ${open ? 'on' : ''}" data-detail-metric="${esc(metric.MetricID)}" aria-expanded="${open}" title="Full-size gsm.viz charts">Charts ${open ? '▴' : '▾'}</button>${reportLinkHtml(reportLink(metric, this.store.reportBase, location.href))}
       </div>`
     );
   }
@@ -279,10 +282,7 @@ export class GsmStudyPage extends StoreElement {
       </div>
       <div class="detail-body"></div>`;
     row.append(panel);
-    const { degraded } = this.#mountWidget(panel.querySelector('.detail-body'), tab, { metricId: metric.MetricID });
-    if (degraded) {
-      panel.querySelector('.detail-body').insertAdjacentHTML('afterbegin', `<p class="muted small">This chart needs a data layer this build does not carry; showing the fallback view.</p>`);
-    }
+    this.#mountWidget(panel.querySelector('.detail-body'), tab, { metricId: metric.MetricID });
   }
 
   render() {
@@ -315,12 +315,13 @@ export class GsmStudyPage extends StoreElement {
     const allViews = this.#allViewsValue(visible);
     const viewOptions = [
       ['default', 'Default per metric'],
-      ...STANDARD_TILE_VIEWS.map((name) => [name, getWidget(name)?.label ?? name]),
+      ...sharedTileViews(study.StudyID).map((name) => [name, getWidget(name)?.label ?? name]),
       ...(allViews === 'mixed' ? [['mixed', 'Mixed']] : []),
     ];
 
+    const problems = configProblems([...this.store.metrics, ...this.store.inactiveMetrics], { reportBase: this.store.reportBase });
     this.innerHTML = `
-      <a href="#/program" class="back">← Program overview</a>
+      <a href="#/program" class="back">← Program overview</a>${noticeHtml(problems)}
       <div class="dd-head">
         <span class="study mono">${esc(study.StudyID)}</span>${
           study.params.nickname ? `<span class="study nick">${esc(study.params.nickname)}</span>` : ''
@@ -353,8 +354,8 @@ export class GsmStudyPage extends StoreElement {
         body.className = 'tile-body';
         tile.append(body);
         const { def } = this.#mountWidget(body, pw.widget, { config: pw.config });
-        if (def.size) tile.classList.add(def.size);
-        tile.insertAdjacentHTML('afterbegin', `<div class="tile-head">${this.#kindBadge(def)}</div>`);
+        if (def?.size) tile.classList.add(def.size);
+        tile.insertAdjacentHTML('afterbegin', `<div class="tile-head">${def ? this.#kindBadge(def) : ''}</div>`);
       }
       // The drill-in panel sits directly under the row that owns the selected metric.
       const selected = metrics.find((m) => m.MetricID === detail.metricId);

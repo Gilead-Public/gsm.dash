@@ -5,6 +5,7 @@ import validate from 'virtual:gsm/validate-study-document';
  * @typedef {object} StudyDocument
  * @property {string} schemaVersion
  * @property {string} generated
+ * @property {string} [reportBase]
  * @property {any[]} metrics
  * @property {{ StudyID: string, params: Record<string, string | number>, snapshots: string[] }} study
  * @property {any[]} snapshots

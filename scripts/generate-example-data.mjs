@@ -95,7 +95,8 @@ export const METRICS = GLOSSARY.map((g, i) => ({
   ...(DISTRIBUTION_CONFIG[g.id] && { Widget: 'distribution-bar' }),
   ...(g.abbr === 'DTH90' && {
     Widgets: ['link-out'],
-    WidgetConfigs: { 'link-out': { href: 'https://gilead-biostats.github.io/gsm.kri/', label: 'mortality report' } },
+    ReportLink: 'https://gilead-biostats.github.io/gsm.kri/',
+    WidgetConfigs: { 'link-out': { label: 'mortality report' } },
   }),
   // generator-only; stripped before writing
   base: g.base,

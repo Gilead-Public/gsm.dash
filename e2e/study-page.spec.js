@@ -4,6 +4,7 @@
 // metrics carried from the program view) is out of scope here; it moves with the portfolio page.
 import { expect, readData, test } from './fixtures/app.js';
 import { countText, displayed, latestSnapshot, pooled, readRate, shownMetrics, siteRows, tolerance } from '../test/qual/pooling.js';
+import { STUDY_VIEW_CONFIG } from '../src/config/study-views.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
 /** @typedef {import('../test/qual/pooling.js').MetricMeta} MetricMeta */
@@ -18,35 +19,43 @@ const newest = studies.map(latestSnapshot).sort().reverse()[0];
 const study = /** @type {StudyEntry} */ (studies.find((s) => latestSnapshot(s) < newest));
 const dates = study.snapshots;
 
-const STANDARD_VIEWS = ['Overview', 'Details', 'Scatter (n vs d)', 'Numerator by site', 'Outlier sites', 'Flag distribution', 'Trend over time'];
+const STANDARD_VIEWS = ['Overview', 'Details', 'Scatter (n vs d)', 'Numerator by site', 'Trend over time'];
+/** The site-flag views, which a study's or a metric's configuration turns on (#11). */
 /** @type {Record<string, string>} */
-const CUSTOM_VIEWS = { 'distribution-bar': 'Breakdowns', 'link-out': 'Report link' };
+const FLAG_VIEWS = { 'bar-outliers': 'Outlier sites', 'flag-dist': 'Flag distribution' };
+/** @type {Record<string, string>} */
+const CUSTOM_VIEWS = { 'distribution-bar': 'Breakdowns', 'link-out': 'Report link', ...FLAG_VIEWS };
 const tiles = shownMetrics(portfolio.metrics);
 
 /**
- * A metric's tile views in paging order: the standard views, then its own.
+ * A metric's tile views in paging order: the standard views, then those its study's configuration adds, then its own.
  * @param {MetricMeta} metric
+ * @param {StudyEntry} [of]
  */
-function viewsOf(metric) {
-  const own = [...new Set([metric.Widget, ...(metric.Widgets ?? [])].filter((w) => w !== undefined))];
-  for (const w of own) if (!(w in CUSTOM_VIEWS)) throw new Error(`no expected label for the custom view ${w}`);
-  return [...STANDARD_VIEWS, ...own.map((w) => CUSTOM_VIEWS[w])];
+function viewsOf(metric, of = study) {
+  const added = STUDY_VIEW_CONFIG[of.StudyID]?.views ?? [];
+  const own = [metric.Widget, ...(metric.Widgets ?? [])].filter((w) => w !== undefined);
+  const names = [...new Set([...added, ...own])];
+  for (const w of names) if (!(w in CUSTOM_VIEWS)) throw new Error(`no expected label for the view ${w}`);
+  return [...STANDARD_VIEWS, ...names.map((w) => CUSTOM_VIEWS[w])];
 }
 
 /**
  * The view-name text a tile shows for a view.
  * @param {MetricMeta} metric
  * @param {string} view
+ * @param {StudyEntry} [of]
  */
-function viewText(metric, view) {
-  const views = viewsOf(metric);
+function viewText(metric, view, of = study) {
+  const views = viewsOf(metric, of);
   return `${view} ${views.indexOf(view) + 1}/${views.length}`;
 }
 
 /**
  * @param {MetricMeta} metric
+ * @param {StudyEntry} [of]
  */
-const defaultView = (metric) => viewText(metric, metric.Widget ? CUSTOM_VIEWS[metric.Widget] : 'Details');
+const defaultView = (metric, of = study) => viewText(metric, metric.Widget ? CUSTOM_VIEWS[metric.Widget] : 'Details', of);
 
 /**
  * Every tile's metric and view name, in page order.
@@ -71,18 +80,29 @@ function tileContent(page, metricId) {
   return tile(page, metricId).evaluate((t) => {
     const body = /** @type {Element} */ (t.querySelector('.tile-body'));
     const text = (/** @type {Element | null | undefined} */ el) => (el?.textContent ?? '').replace(/\s+/g, ' ').trim();
+    /** Rendered: not hidden by display, visibility or opacity, and with a size. */
+    const shown = (/** @type {Element | null | undefined} */ el) => {
+      if (!el?.checkVisibility({ opacityProperty: true, visibilityProperty: true })) return false;
+      const r = el.getBoundingClientRect();
+      return r.width > 0 && r.height > 0;
+    };
+    /** What a user can read: the text if rendered, a marker if present but hidden. */
+    const seen = (/** @type {Element | null | undefined} */ el) => (el ? (shown(el) ? text(el) : '(hidden)') : '');
+    const fbar = body.querySelector('.fbar');
     return {
-      fallback: body.hasAttribute('data-degraded-from') || Boolean(body.querySelector('.viz-placeholder')),
-      heading: text(body.querySelector('.sub-h')),
+      fallback: Boolean(body.querySelector('.ref-problem, .viz-placeholder')),
+      heading: seen(body.querySelector('.sub-h')),
       big: text(body.querySelector('.big')),
       terms: [...body.querySelectorAll('dl.kv dt')].map(text),
       values: [...body.querySelectorAll('dl.kv dd')].map(text),
-      flagCounts: text(body.querySelector('.fcounts')),
+      flagBar: shown(fbar),
+      flagSegments: [...(fbar?.querySelectorAll('i') ?? [])].filter(shown).map((i) => [i.className, Number(getComputedStyle(i).flexGrow)]),
+      flagCounts: seen(body.querySelector('.fcounts')),
       cmp: text(body.querySelector('.cmp')),
       points: body.querySelectorAll('circle[data-site]').length,
       bars: body.querySelectorAll('rect[data-site]').length,
-      outliers: body.querySelectorAll('.hbar .r[data-site]').length,
-      flagRows: [...body.querySelectorAll('.hbar .r')].map((r) => [text(r.querySelector('.mono')), text(r.querySelector('.v'))]),
+      outliers: [...body.querySelectorAll('.hbar .r[data-site]')].filter((r) => shown(r.querySelector('.mono')) && shown(r.querySelector('.v'))).length,
+      flagRows: [...body.querySelectorAll('.hbar .r')].map((r) => [seen(r.querySelector('.mono')), seen(r.querySelector('.v')), shown(r.querySelector('.b'))]),
       trendDots: body.querySelectorAll('circle.trend-dot').length,
       trendLine: Boolean(body.querySelector('path.trend-line')),
       breakdowns: body.querySelectorAll('.dist-row').length,
@@ -107,36 +127,51 @@ function flagBins(rows) {
 }
 
 /**
- * Checks that a tile shows the content of the named view for this study at its latest visit.
+ * Checks that a tile shows the content of the named view for a study at its latest visit. Details shows site-flag
+ * counts only where configuration turns them on.
  * @param {Page} page
  * @param {string} metricId
  * @param {string} view
+ * @param {{ of?: StudyEntry, flags?: boolean }} [options]
  */
-async function expectViewContent(page, metricId, view) {
+async function expectViewContent(page, metricId, view, { of = study, flags = false } = {}) {
   const metric = /** @type {MetricMeta} */ (metrics.get(metricId));
-  const where = `${metric.Abbreviation} · ${view}`;
+  const where = `${of.StudyID} · ${metric.Abbreviation} · ${view}`;
   const shown = await tileContent(page, metricId);
-  const rows = siteRows(readData, study, metricId);
+  const rows = siteRows(readData, of, metricId);
   expect(rows.length, `${where}: the fixture has site rows`).toBeGreaterThan(3);
   expect(shown.fallback, `${where}: rendered without a fallback or error placeholder`).toBe(false);
   const bins = flagBins(rows);
   const flagged = rows.filter((r) => r.Flag != null && Math.abs(r.Flag) >= 1).length;
   switch (view) {
     case 'Overview': {
-      const total = pooled(readData, [study], metricId);
+      const total = pooled(readData, [of], metricId);
       expect(shown.terms, where).toEqual(['Numerator', 'Denominator', 'Shown as', 'Sites']);
       expect(shown.values[0], where).toMatch(new RegExp(`^${countText(total.numerator)}( |$)`));
       expect(shown.values[1], where).toMatch(new RegExp(`^${countText(total.denominator)}( |$)`));
       expect(shown.values[3], where).toBe(String(rows.length));
       break;
     }
-    case 'Details':
+    case 'Details': {
       expect(shown.big, where).not.toBe('');
-      expect(shown.flagCounts, where).toBe(
-        `${(bins.get('+2') ?? 0) + (bins.get('−2') ?? 0)}R·${(bins.get('+1') ?? 0) + (bins.get('−1') ?? 0)}A·${bins.get('0')}G·${bins.get('NA')}NA`,
+      const bySeverity = {
+        red: (bins.get('+2') ?? 0) + (bins.get('−2') ?? 0),
+        amber: (bins.get('+1') ?? 0) + (bins.get('−1') ?? 0),
+        green: bins.get('0') ?? 0,
+        na: bins.get('NA') ?? 0,
+      };
+      expect([shown.flagBar, shown.flagSegments, shown.flagCounts], where).toEqual(
+        flags
+          ? [
+              true,
+              Object.entries(bySeverity).filter(([, n]) => n > 0).map(([s, n]) => [`flag-${s}`, n]),
+              `${bySeverity.red}R·${bySeverity.amber}A·${bySeverity.green}G·${bySeverity.na}NA`,
+            ]
+          : [false, [], ''],
       );
       expect(shown.cmp, where).toMatch(/^portfolio /);
       break;
+    }
     case 'Scatter (n vs d)':
       expect(shown.heading, where).toBe('Sites: numerator vs denominator');
       expect(shown.points, where).toBe(rows.length);
@@ -152,11 +187,11 @@ async function expectViewContent(page, metricId, view) {
       break;
     case 'Flag distribution':
       expect(shown.heading, where).toBe('Sites by flag');
-      expect(shown.flagRows, where).toEqual([...bins].map(([b, n]) => [b, String(n)]));
+      expect(shown.flagRows, where).toEqual([...bins].map(([b, n]) => [b, String(n), n > 0]));
       break;
     case 'Trend over time':
       expect(shown.heading, where).toBe('Study rate over time');
-      expect([shown.trendDots, shown.trendLine], where).toEqual([dates.length, true]);
+      expect([shown.trendDots, shown.trendLine], where).toEqual([of.snapshots.length, true]);
       break;
     case 'Breakdowns':
       expect(shown.breakdowns, where).toBeGreaterThan(0);
@@ -235,7 +270,7 @@ test.describe('study page behaviour', () => {
     await app.openStudy(study.StudyID);
   });
 
-  test('a tile pages through the standard views in order, showing each one, and wraps around', async ({ page }) => {
+  test('12.02: a tile pages through the standard views in order, showing each one, and wraps around (#12)', async ({ page }) => {
     const id = await plainMetric(page);
     const name = tile(page, id).locator('.view-name');
     const n = STANDARD_VIEWS.length;
@@ -250,20 +285,20 @@ test.describe('study page behaviour', () => {
     await expect(name).toHaveText(`Trend over time ${STANDARD_VIEWS.length}/${STANDARD_VIEWS.length}`);
   });
 
-  test('a metric with its own view opens on it, after the standard views', async ({ page }) => {
+  test('12.02: a metric with its own view opens on it, after the standard views (#12)', async ({ page }) => {
     const custom = portfolio.metrics.find((/** @type {{ Widget?: string }} */ m) => m.Widget === 'distribution-bar');
     const n = STANDARD_VIEWS.length + 1;
     await expect(tile(page, custom.MetricID).locator('.view-name')).toHaveText(`Breakdowns ${n}/${n}`);
     await expectViewContent(page, custom.MetricID, 'Breakdowns');
   });
 
-  test('every metric in the catalog has a tile, opening on its own view or Details', async ({ page }) => {
+  test('12.02: every metric in the catalog has a tile, opening on its own view or Details (#12)', async ({ page }) => {
     expect(tiles.length).toBeGreaterThan(10);
     expect(tiles.some((m) => m.Widget) && tiles.some((m) => !m.Widget), 'the catalog has metrics with and without their own view').toBe(true);
     expect(await shownViews(page)).toEqual(expectedViews(defaultView));
   });
 
-  test('the all-tiles menu sets every tile to one view, shows Mixed once a tile differs, and restores the defaults', async ({ page }) => {
+  test('12.02: the all-tiles menu sets every tile to one view, shows Mixed once a tile differs, and restores the defaults (#12)', async ({ page }) => {
     const menu = page.locator('select[data-all-views]');
     await expect(menu).toHaveValue('default');
     await menu.selectOption('trend-mini');
@@ -279,7 +314,7 @@ test.describe('study page behaviour', () => {
     expect(await shownViews(page)).toEqual(expectedViews(defaultView));
   });
 
-  test('grouping by category splits the tiles into category rows; turning it off shows one flat grid', async ({ page }) => {
+  test('12.02: grouping by category splits the tiles into category rows; turning it off shows one flat grid (#12)', async ({ page }) => {
     const shownRows = () =>
       page.locator('.dd-row').evaluateAll((rows) =>
         rows.map((r) => [(r.querySelector('.rowlab')?.textContent ?? '').trim(), [...r.querySelectorAll('.tile[data-metric-id]')].map((t) => t.getAttribute('data-metric-id'))]),
@@ -297,7 +332,7 @@ test.describe('study page behaviour', () => {
     expect(await shownRows()).toEqual([[`All metrics · ${tiles.length}`, tiles.map((m) => m.MetricID)]]);
   });
 
-  test('the visit scrubber shows the chosen visit and play steps forward to the latest, then stops', async ({ page }) => {
+  test('12.02: the visit scrubber shows the chosen visit and play steps forward to the latest, then stops (#12)', async ({ page }) => {
     expect(dates.length).toBeGreaterThan(3);
     await expect(visitLabel(page)).toHaveText(visitText(dates.length - 1));
     await goToVisit(page, 0);
@@ -312,7 +347,7 @@ test.describe('study page behaviour', () => {
     await expect(play).toHaveAttribute('aria-label', 'Play through visits');
   });
 
-  test('play from the latest visit restarts at the first, and pressing it again pauses', async ({ page }) => {
+  test('12.02: play from the latest visit restarts at the first, and pressing it again pauses (#12)', async ({ page }) => {
     const play = page.locator('button[data-play]');
     await play.click();
     await expect(visitLabel(page)).toHaveText(visitText(0));
@@ -323,7 +358,7 @@ test.describe('study page behaviour', () => {
     await expect(visitLabel(page)).toHaveText(/** @type {string} */ (paused));
   });
 
-  test('selecting a site in one chart highlights it in every chart, and the chip clears it', async ({ page }) => {
+  test('12.02: selecting a site in one chart highlights it in every chart, and the chip clears it (#12)', async ({ page }) => {
     await page.locator('select[data-all-views]').selectOption('scatter-mini');
     const first = page.locator('.tile circle[data-site]').first();
     const site = /** @type {string} */ (await first.getAttribute('data-site'));
@@ -341,7 +376,7 @@ test.describe('study page behaviour', () => {
     await expect(page.locator('.tile circle.is-sel, .tile circle.is-dim')).toHaveCount(0);
   });
 
-  test('the chart panel opens under its tile, switches tabs, and closes', async ({ page }) => {
+  test('12.02: the chart panel opens under its tile, switches tabs, and closes (#12)', async ({ page }) => {
     const id = await plainMetric(page);
     const more = tile(page, id).locator('button[data-detail-metric]');
     await expect(page.locator('.detail')).toHaveCount(0);
@@ -367,7 +402,7 @@ test.describe('study page behaviour', () => {
     await expect(page.locator('.detail')).toHaveCount(0);
   });
 
-  test('the comparison line pools every study at its own snapshot as of the visit, at the latest and an earlier visit', async ({ page }) => {
+  test('12.02: the comparison line pools every study at its own snapshot as of the visit, at the latest and an earlier visit (#12)', async ({ page }) => {
     const latestOthers = studies.filter((s) => s.snapshots.at(-1) !== dates.at(-1));
     expect(latestOthers.length, 'other studies have a different latest snapshot').toBeGreaterThan(0);
     const earlier = 1;
@@ -469,7 +504,7 @@ function trackCharts() {
   /** @type {any} */ (window).__liveCharts = () => live.size;
 }
 
-test('stepping through visits and switching chart tabs and tile views leaves one live gsm.viz chart per chart shown', async ({ app, page }) => {
+test('12.02: stepping through visits and switching chart tabs and tile views leaves one live gsm.viz chart per chart shown (#12)', async ({ app, page }) => {
   await page.addInitScript(trackCharts);
   await app.openStudy(study.StudyID);
   const charts = () => page.evaluate(() => ({ live: /** @type {any} */ (window).__liveCharts(), shown: document.querySelectorAll('.viz canvas').length }));
@@ -487,4 +522,102 @@ test('stepping through visits and switching chart tabs and tile views leaves one
   await expect.poll(charts, 'a tile paged to its next view').toEqual({ live: 1, shown: 1 });
   await page.locator('.detail button[data-detail-close]').click();
   await expect.poll(charts, 'drill-in closed').toEqual({ live: 0, shown: 0 });
+});
+
+/** Everything that shows site-flag counts: the Details tile's flag bar and counts, and both flag views' rows. */
+const FLAG_MARKS = '.flags, .fbar, .fcounts, .hbar';
+
+/**
+ * Sites flagged amber or red across every shown metric at a study's latest snapshot.
+ * @param {StudyEntry} of
+ */
+const flaggedSites = (of) =>
+  tiles.flatMap((m) => siteRows(readData, of, m.MetricID)).filter((r) => r.Flag != null && Math.abs(r.Flag) >= 1).length;
+
+/**
+ * Pages a tile forward until it shows the named view.
+ * @param {Page} page
+ * @param {string} metricId
+ * @param {string} view
+ */
+async function pageTo(page, metricId, view) {
+  const name = tile(page, metricId).locator('.view-name');
+  for (let i = 0; i < 12 && !(await name.textContent())?.trim().startsWith(view); i++) {
+    await tile(page, metricId).locator('button[data-view-step="1"]').click();
+  }
+  await expect(name).toHaveText(new RegExp(`^${view} `));
+}
+
+test.describe('site-flag counts on the study view', () => {
+  test('11.01: the default study view shows no site-flag counts: no flag bar on any tile, and no flag view in any tile, the all-tiles menu or a random deal (#11)', async ({ app, page }) => {
+    expect(STUDY_VIEW_CONFIG[study.StudyID], `${study.StudyID} keeps the default`).toBeUndefined();
+    expect(flaggedSites(study), 'the study has flagged sites that could be counted').toBeGreaterThan(0);
+    await app.openStudy(study.StudyID);
+    await expect(page.locator('.tile[data-metric-id]')).toHaveCount(tiles.length);
+    await expect(page.locator(FLAG_MARKS)).toHaveCount(0);
+    expect(await shownViews(page), 'every tile offers only the standard views and its own').toEqual(expectedViews(defaultView));
+    const menu = page.locator('select[data-all-views]');
+    expect(await menu.locator('option').allTextContents()).toEqual(['Default per metric', ...STANDARD_VIEWS]);
+    for (const view of STANDARD_VIEWS) {
+      await menu.selectOption({ label: view });
+      await expect.poll(() => shownViews(page), view).toEqual(expectedViews((m) => viewText(m, view)));
+      await expect(page.locator(FLAG_MARKS), view).toHaveCount(0);
+    }
+    const allowed = new Map(tiles.map((m) => [m.MetricID, viewsOf(m)]));
+    for (let deal = 0; deal < 5; deal++) {
+      await page.locator('button[data-randomize-views]').click();
+      await expect(page.locator(FLAG_MARKS)).toHaveCount(0);
+      for (const [id, text] of await shownViews(page)) {
+        expect(allowed.get(/** @type {string} */ (id)), `random deal ${deal + 1}: ${id}`).toContain(String(text).replace(/ \d+\/\d+$/, ''));
+      }
+    }
+  });
+
+  test('11.02: a study configured for site flags shows them on every tile, with both flag views, while other studies keep the default (#11)', async ({ app, page }) => {
+    const [configuredId] = Object.keys(STUDY_VIEW_CONFIG);
+    const of = /** @type {StudyEntry} */ (studies.find((s) => s.StudyID === configuredId));
+    expect(of, 'the example configuration turns site flags on for a study').toBeTruthy();
+    await app.openStudy(of.StudyID);
+    expect(await shownViews(page)).toEqual(tiles.map((m) => [m.MetricID, defaultView(m, of)]));
+    const menu = page.locator('select[data-all-views]');
+    expect(await menu.locator('option').allTextContents()).toEqual(['Default per metric', ...STANDARD_VIEWS, 'Outlier sites', 'Flag distribution']);
+    for (const view of ['Details', 'Outlier sites', 'Flag distribution']) {
+      await menu.selectOption({ label: view });
+      await expect.poll(() => shownViews(page), view).toEqual(tiles.map((m) => [m.MetricID, viewText(m, view, of)]));
+      for (const m of tiles) await expectViewContent(page, m.MetricID, view, { of, flags: true });
+    }
+    await app.openStudy(study.StudyID);
+    await expect(page.locator('.tile[data-metric-id]')).toHaveCount(tiles.length);
+    await expect(page.locator(FLAG_MARKS), `${study.StudyID} keeps the default`).toHaveCount(0);
+    expect(await shownViews(page)).toEqual(expectedViews(defaultView));
+  });
+
+  test('11.02: a metric configured for site flags shows them on its tile, with both flag views, while other metrics keep the default (#11)', async ({ app, page }) => {
+    const metric = /** @type {MetricMeta} */ (tiles.find((m) => !m.Widget && !m.Widgets));
+    const added = ['bar-outliers', 'flag-dist'];
+    await app.openStudy(study.StudyID, {
+      portfolio: (p) => {
+        const meta = p.metrics.find((/** @type {MetricMeta} */ x) => x.MetricID === metric.MetricID);
+        meta.Widgets = [...(meta.Widgets ?? []), ...added];
+        meta.WidgetConfigs = { ...meta.WidgetConfigs, 'scalar-tile': { flags: true } };
+      },
+    });
+    const configured = { ...metric, Widgets: added };
+    await expect(tile(page, metric.MetricID).locator('.view-name')).toHaveText(viewText(configured, 'Details'));
+    await expectViewContent(page, metric.MetricID, 'Details', { flags: true });
+    for (const view of ['Outlier sites', 'Flag distribution']) {
+      await pageTo(page, metric.MetricID, view);
+      await expect(tile(page, metric.MetricID).locator('.view-name')).toHaveText(viewText(configured, view));
+      await expectViewContent(page, metric.MetricID, view);
+    }
+    const others = tiles.filter((m) => m.MetricID !== metric.MetricID);
+    await expect(page.locator(`.tile[data-metric-id]:not([data-metric-id="${metric.MetricID}"]) :is(${FLAG_MARKS})`)).toHaveCount(0);
+    expect((await shownViews(page)).filter(([id]) => id !== metric.MetricID)).toEqual(others.map((m) => [m.MetricID, defaultView(m)]));
+  });
+
+  test('11.04: the default study view, for visual comparison with the default its Scope describes (#11)', async ({ app, page }) => {
+    await app.openStudy(study.StudyID);
+    await expect(page.locator('.tile[data-metric-id]')).toHaveCount(tiles.length);
+    await expect(page.locator(FLAG_MARKS)).toHaveCount(0);
+  });
 });

@@ -1,9 +1,9 @@
 // Build-time widget registry (W5): every widget ships inside the tested
 // bundle; there is no runtime plug-in loading. A widget is:
-//   { name, version, dataSpec, render(el, data, config) -> {update?}, fallback? }
+//   { name, version, dataSpec, render(el, data, config) -> {update?}, appliesTo? }
 // dataSpec keys name the contract layers the widget needs (resolve.js).
-// `fallback` names a registered widget to degrade to when the host's
-// layer allow-list can't satisfy dataSpec (W2: graceful degrade, never error).
+// `appliesTo(metric, config)` returns why the widget can't show that metric, or null.
+// A widget that can't render is never swapped for another (#12): the host shows why.
 
 const widgets = new Map();
 
@@ -38,26 +38,20 @@ export function missingLayers(dataSpec = {}, allowList = []) {
 }
 
 /**
- * Resolve a widget name against the host allow-list. Unknown names and
- * unsatisfiable dataSpecs degrade along the fallback chain, ending at
- * `defaultName`. Returns { def, degraded }.
+ * Resolves a widget for a host: its definition, or the reason it can't render there. Nothing is substituted.
+ * @param {string} name
+ * @param {string[]} allowList The data layers the host carries.
+ * @param {object | null} [metric] The metric the widget would show, if it is bound to one.
+ * @param {object} [config]
+ * @returns {{ def: any, reason: null } | { def: null, reason: string }}
  */
-export function resolveWidget(name, allowList, defaultName = 'scalar-tile') {
-  const requested = name ?? defaultName;
-  let current = requested;
-  const seen = new Set();
-  while (current && !seen.has(current)) {
-    seen.add(current);
-    const def = widgets.get(current);
-    if (!def) break; // unknown name -> default
-    if (missingLayers(def.dataSpec, allowList).length === 0) {
-      return { def, degraded: current !== requested };
-    }
-    current = def.fallback ?? defaultName;
-  }
-  const def = widgets.get(defaultName);
-  if (!def) throw new Error(`resolveWidget: default widget "${defaultName}" is not registered`);
-  return { def, degraded: requested !== defaultName };
+export function resolveWidget(name, allowList, metric = null, config = {}) {
+  const def = widgets.get(name);
+  if (!def) return { def: null, reason: 'it is not a registered widget' };
+  const missing = missingLayers(def.dataSpec, allowList);
+  if (missing.length) return { def: null, reason: `it needs the ${missing.join(', ')} data, which this page does not carry` };
+  const reason = metric && def.appliesTo ? def.appliesTo(metric, config ?? {}) : null;
+  return reason ? { def: null, reason } : { def, reason: null };
 }
 
 export function listWidgets() {

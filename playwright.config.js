@@ -25,6 +25,8 @@ const specsFor = (artifact) =>
 
 export default defineConfig({
   testDir: 'e2e',
+  // One baseline per state, shared by both delivery modes and every platform: a mode or platform difference is a failure.
+  snapshotPathTemplate: '{testDir}/__snapshots__/{testFileName}/{arg}{ext}',
   outputDir: join(runDir, 'playwright-artifacts'),
   timeout: 20_000,
   retries: 0,

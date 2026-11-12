@@ -1,0 +1,233 @@
+state: site-highlighted (spa)
+dom: sha256 cb5ed6597f2ebe3156221677bf1f682c4ff2b523666d8812abb5344fb15fc7d1 (111636 characters)
+tooltip: none
+drill-in: closed
+tiles:
+  Analysis_kri0012 · Scatter (n vs d) 3/6: points 17
+  Analysis_kri0006 · Scatter (n vs d) 3/6: points 17
+  Analysis_kri0007 · Scatter (n vs d) 3/5: points 17
+  Analysis_kri0007-2 · Scatter (n vs d) 3/6: points 17
+  Analysis_ctq0001 · Scatter (n vs d) 3/5: points 17
+  Analysis_ctq0002 · Scatter (n vs d) 3/5: points 17
+  Analysis_ctq0003 · Scatter (n vs d) 3/5: points 17
+  Analysis_kri0015 · Scatter (n vs d) 3/7: points 17
+  Analysis_kri0019 · Scatter (n vs d) 3/6: points 17
+  Analysis_kri0014 · Scatter (n vs d) 3/6: points 17
+  Analysis_strat0001 · Scatter (n vs d) 3/6: points 17
+  Analysis_ctq0006 · Scatter (n vs d) 3/5: points 17
+  Analysis_kri0001 · Scatter (n vs d) 3/5: points 17
+  Analysis_kri0002 · Scatter (n vs d) 3/5: points 17
+  Analysis_kri0003 · Scatter (n vs d) 3/5: points 17
+  Analysis_kri0004 · Scatter (n vs d) 3/5: points 17
+  Analysis_kri0005 · Scatter (n vs d) 3/5: points 17
+  Analysis_kri0008 · Scatter (n vs d) 3/5: points 17
+  Analysis_kri0009 · Scatter (n vs d) 3/5: points 17
+  Analysis_kri0010 · Scatter (n vs d) 3/5: points 17
+  Analysis_kri0011 · Scatter (n vs d) 3/5: points 17
+accessibility:
+- link "← Program overview":
+  - /url: "#/program"
+- text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
+- button "Play through visits": ▶
+- slider "Visit": "4"
+- text: Visit 5/5 · 2026-05-31 SITE0001
+- button "Clear site highlight": ✕
+- checkbox "Group by category" [checked]
+- text: Group by category All tiles
+- combobox "Set every tile to a view":
+  - option "Default per metric"
+  - option "Overview"
+  - option "Details"
+  - option "Scatter (n vs d)" [selected]
+  - option "Numerator by site"
+  - option "Trend over time"
+- button "⤨ Randomize"
+- text: Disposition · 6 SF Screen Failure Rate
+- img "Screen Failure Rate definition": i
+- text: "standard Sites: numerator vs denominator"
+- img "SF numerator vs denominator by site": 0 175 113 0 Total screened participants
+- text: "y: Number of screen failed participants · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/6
+- button "Next view": ›
+- button "Charts ▾"
+- text: SDSC Study Discontinuation Rate
+- img "Study Discontinuation Rate definition": i
+- text: "standard Sites: numerator vs denominator"
+- img "SDSC numerator vs denominator by site": 0 80 10 0 All enrolled
+- text: "y: Number of participants with premature study discontinuation · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/6
+- button "Next view": ›
+- button "Charts ▾"
+- text: TDSC Treatment Discontinuation Rate
+- img "Treatment Discontinuation Rate definition": i
+- text: "standard Sites: numerator vs denominator"
+- img "TDSC numerator vs denominator by site": 0 79 12 0 All dosed
+- text: "y: Number of participants with premature treatment discontinuation · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: PTDSC Premature Treatment Discontinuation Rate
+- img "Premature Treatment Discontinuation Rate definition": i
+- text: "Planned standard Sites: numerator vs denominator"
+- img "PTDSC numerator vs denominator by site": 0 79 15 0 All dosed
+- text: "y: Number of participants with premature treatment discontinuation · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/6
+- button "Next view": ›
+- button "Charts ▾"
+- text: WC Withdrawal of Consent
+- img "Withdrawal of Consent definition": i
+- text: "Planned standard Sites: numerator vs denominator"
+- img "WC numerator vs denominator by site": 0 80 2 0 All enrolled
+- text: "y: Number of participants who withdrew consent from the study · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: LTFU Lost to Follow Up
+- img "Lost to Follow Up definition": i
+- text: "Planned standard Sites: numerator vs denominator"
+- img "LTFU numerator vs denominator by site": 0 80 4 0 All enrolled
+- text: "y: Number of participants lost to follow-up · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: Early events · 3 DTH30 Early Deaths (30 days)
+- img "Early Deaths (30 days) definition": i
+- text: "Planned standard Sites: numerator vs denominator"
+- img "DTH30 numerator vs denominator by site": 0 80 1 0 All enrolled
+- text: "y: Number of participants who died within 30 days from randomization · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: DTH90 Early Deaths (90 days)
+- img "Early Deaths (90 days) definition": i
+- text: "Planned standard Sites: numerator vs denominator"
+- img "DTH90 numerator vs denominator by site": 0 80 2 0 All enrolled
+- text: "y: Number of participants who died within 90 days from randomization · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: IPNS IP Non-starters
+- img "IP Non-starters definition": i
+- text: "Planned standard Sites: numerator vs denominator"
+- img "IPNS numerator vs denominator by site": 0 80 1 0 All enrolled
+- text: "y: Number of confirmed IP non-starters · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/6
+- button "Next view": ›
+- button "Charts ▾"
+- text: Eligibility & integrity · 3 IE Eligibility
+- img "Eligibility definition": i
+- text: "Planned standard Sites: numerator vs denominator"
+- img "IE numerator vs denominator by site": 0 80 3 0 All enrolled
+- text: "y: Number of ineligible participants · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/6
+- button "Next view": ›
+- button "Charts ▾"
+- text: STRAT Stratification
+- img "Stratification definition": i
+- text: "Planned standard Sites: numerator vs denominator"
+- img "STRAT numerator vs denominator by site": 0 80 7 0 All enrolled
+- text: "y: Number of confirmed mis-stratified participants · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/6
+- button "Next view": ›
+- button "Charts ▾"
+- text: PFSC Premature Censoring for PFS
+- img "Premature Censoring for PFS definition": i
+- text: "Planned standard Sites: numerator vs denominator"
+- img "PFSC numerator vs denominator by site": 0 80 4 0 All enrolled
+- text: "y: Number of participants at very high risk for premature censoring for PFS · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: Safety & deviations · 5 AE AE Reporting Rate
+- img "AE Reporting Rate definition": i
+- text: "New standard Sites: numerator vs denominator"
+- img "AE numerator vs denominator by site": 0 12,618 1,137 0 Exposure in days
+- text: "y: Number of AEs reported · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: SAE SAE Reporting Rate
+- img "SAE Reporting Rate definition": i
+- text: "New standard Sites: numerator vs denominator"
+- img "SAE numerator vs denominator by site": 0 12,618 97 0 Exposure in days
+- text: "y: Number of SAEs reported · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: PD Non-Important Protocol Deviation Rate
+- img "Non-Important Protocol Deviation Rate definition": i
+- text: "New standard Sites: numerator vs denominator"
+- img "PD numerator vs denominator by site": 0 12,618 279 0 Exposure in days
+- text: "y: Number of non-important PDs · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: IPD Important Protocol Deviation Rate
+- img "Important Protocol Deviation Rate definition": i
+- text: "New standard Sites: numerator vs denominator"
+- img "IPD numerator vs denominator by site": 0 12,618 37 0 Exposure in days
+- text: "y: Number of important PDs · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: LB G3+ Lab Abnormality Rate
+- img "G3+ Lab Abnormality Rate definition": i
+- text: "standard Sites: numerator vs denominator"
+- img "LB numerator vs denominator by site": "0 1,604 191 0 Total # lab samples"
+- text: "y: Number of G3+ abnormal lab samples · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: Data quality · 4 QRY Query Rate
+- img "Query Rate definition": i
+- text: "standard Sites: numerator vs denominator"
+- img "QRY numerator vs denominator by site": "0 22,543 2,195 0 Total # data points"
+- text: "y: Total # queries · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: OQRY Delayed Query Resolution Rate
+- img "Delayed Query Resolution Rate definition": i
+- text: "standard Sites: numerator vs denominator"
+- img "OQRY numerator vs denominator by site": "0 2,195 126 0 Total # queries"
+- text: "y: # queries ever open > 30 days · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: ODAT Delayed Data Entry Rate
+- img "Delayed Data Entry Rate definition": i
+- text: "standard Sites: numerator vs denominator"
+- img "ODAT numerator vs denominator by site": "0 3,150 433 0 Total # data pages"
+- text: "y: Total # data pages entered > 10 days · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/5
+- button "Next view": ›
+- button "Charts ▾"
+- text: CDAT Data Change Rate
+- img "Data Change Rate definition": i
+- text: "standard Sites: numerator vs denominator"
+- img "CDAT numerator vs denominator by site": "0 22,543 477 0 Total # data points"
+- text: "y: Total # data points with > 1 change · 17 sites · click a point to track it"
+- button "Previous view": ‹
+- text: Scatter (n vs d) 3/5
+- button "Next view": ›
+- button "Charts ▾"

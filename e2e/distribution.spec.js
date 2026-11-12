@@ -352,10 +352,14 @@ test.describe('Layout A distribution widget', () => {
         p.metrics.find((x) => x.ID === 'kri0001').Widget = 'distribution-bar';
       },
     });
+    // Since #12, a breakdown widget on a metric without a breakdown configuration is an inapplicable reference: the
+    // missing state is the placeholder naming the widget, the metric and the reason.
     const ae = page.locator('.tile[data-metric-id="Analysis_kri0001"] .tile-body');
-    await expect(ae).toHaveAttribute('data-state', 'missing');
-    const message = ae.getByText('No breakdowns are configured for this metric.');
-    await expect(message).toBeVisible();
+    await expect(ae.locator('.ref-problem')).toBeVisible();
+    await expect(ae.locator('.ref-problem')).toHaveText(
+      `Can't show this view. Widget "distribution-bar" for AE (Analysis_kri0001): it has no breakdown configuration.`,
+    );
+    await expect(ae.locator('.dist')).toHaveCount(0);
   });
 
   test('10.08: the rendered widgets are captured for comparison with the Layout A design (visual comparison) (#10)', async ({ app, page, evidence }) => {

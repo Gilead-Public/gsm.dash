@@ -1,0 +1,190 @@
+state: flags-flag-distribution (reports)
+dom: sha256 caea401844dd1f46b1de61c67aacdb1a06472d68db118e65b849cf8caaabf1da (62777 characters)
+tooltip: none
+drill-in: closed
+tiles:
+  Analysis_kri0012 · Flag distribution 7/8: rows 6
+  Analysis_kri0006 · Flag distribution 7/8: rows 6
+  Analysis_kri0007 · Flag distribution 7/7: rows 6
+  Analysis_kri0007-2 · Flag distribution 7/8: rows 6
+  Analysis_ctq0001 · Flag distribution 7/7: rows 6
+  Analysis_ctq0002 · Flag distribution 7/7: rows 6
+  Analysis_ctq0003 · Flag distribution 7/7: rows 6
+  Analysis_kri0015 · Flag distribution 7/9: rows 6
+  Analysis_kri0019 · Flag distribution 7/8: rows 6
+  Analysis_kri0014 · Flag distribution 7/8: rows 6
+  Analysis_strat0001 · Flag distribution 7/8: rows 6
+  Analysis_ctq0006 · Flag distribution 7/7: rows 6
+  Analysis_kri0001 · Flag distribution 7/7: rows 6
+  Analysis_kri0002 · Flag distribution 7/7: rows 6
+  Analysis_kri0003 · Flag distribution 7/7: rows 6
+  Analysis_kri0004 · Flag distribution 7/7: rows 6
+  Analysis_kri0005 · Flag distribution 7/7: rows 6
+  Analysis_kri0008 · Flag distribution 7/7: rows 6
+  Analysis_kri0009 · Flag distribution 7/7: rows 6
+  Analysis_kri0010 · Flag distribution 7/7: rows 6
+  Analysis_kri0011 · Flag distribution 7/7: rows 6
+accessibility:
+- text: STUDY006 FALCON-2 Immunology · Respiratory · P1 · Enrolling · Product F
+- button "Play through visits": ▶
+- slider "Visit": "5"
+- text: Visit 6/6 · 2026-06-30
+- checkbox "Group by category" [checked]
+- text: Group by category All tiles
+- combobox "Set every tile to a view":
+  - option "Default per metric"
+  - option "Overview"
+  - option "Details"
+  - option "Scatter (n vs d)"
+  - option "Numerator by site"
+  - option "Trend over time"
+  - option "Outlier sites"
+  - option "Flag distribution" [selected]
+- button "⤨ Randomize"
+- text: Disposition · 6 SF Screen Failure Rate
+- img "Screen Failure Rate definition": i
+- text: standard Sites by flag +2 1 +1 0 0 14 −1 2 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/8
+- button "Next view": ›
+- button "Charts ▾"
+- text: SDSC Study Discontinuation Rate
+- img "Study Discontinuation Rate definition": i
+- text: standard Sites by flag +2 0 +1 0 0 14 −1 3 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/8
+- button "Next view": ›
+- button "Charts ▾"
+- text: TDSC Treatment Discontinuation Rate
+- img "Treatment Discontinuation Rate definition": i
+- text: standard Sites by flag +2 2 +1 0 0 13 −1 2 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: PTDSC Premature Treatment Discontinuation Rate
+- img "Premature Treatment Discontinuation Rate definition": i
+- text: Planned standard Sites by flag +2 0 +1 0 0 14 −1 3 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/8
+- button "Next view": ›
+- button "Charts ▾"
+- text: WC Withdrawal of Consent
+- img "Withdrawal of Consent definition": i
+- text: Planned standard Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: LTFU Lost to Follow Up
+- img "Lost to Follow Up definition": i
+- text: Planned standard Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: Early events · 3 DTH30 Early Deaths (30 days)
+- img "Early Deaths (30 days) definition": i
+- text: Planned standard Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: DTH90 Early Deaths (90 days)
+- img "Early Deaths (90 days) definition": i
+- text: Planned standard Sites by flag +2 1 +1 1 0 14 −1 1 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/9
+- button "Next view": ›
+- button "Charts ▾"
+- text: IPNS IP Non-starters
+- img "IP Non-starters definition": i
+- text: Planned standard Sites by flag +2 1 +1 0 0 16 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/8
+- button "Next view": ›
+- button "Charts ▾"
+- text: Eligibility & integrity · 3 IE Eligibility
+- img "Eligibility definition": i
+- text: Planned standard Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/8
+- button "Next view": ›
+- button "Charts ▾"
+- text: STRAT Stratification
+- img "Stratification definition": i
+- text: Planned standard Sites by flag +2 0 +1 0 0 16 −1 1 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/8
+- button "Next view": ›
+- button "Charts ▾"
+- text: PFSC Premature Censoring for PFS
+- img "Premature Censoring for PFS definition": i
+- text: Planned standard Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: Safety & deviations · 5 AE AE Reporting Rate
+- img "AE Reporting Rate definition": i
+- text: New standard Sites by flag +2 0 +1 0 0 16 −1 1 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: SAE SAE Reporting Rate
+- img "SAE Reporting Rate definition": i
+- text: New standard Sites by flag +2 1 +1 0 0 12 −1 4 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: PD Non-Important Protocol Deviation Rate
+- img "Non-Important Protocol Deviation Rate definition": i
+- text: New standard Sites by flag +2 2 +1 0 0 15 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: IPD Important Protocol Deviation Rate
+- img "Important Protocol Deviation Rate definition": i
+- text: New standard Sites by flag +2 0 +1 0 0 13 −1 4 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: LB G3+ Lab Abnormality Rate
+- img "G3+ Lab Abnormality Rate definition": i
+- text: standard Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: Data quality · 4 QRY Query Rate
+- img "Query Rate definition": i
+- text: standard Sites by flag +2 1 +1 0 0 15 −1 1 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: OQRY Delayed Query Resolution Rate
+- img "Delayed Query Resolution Rate definition": i
+- text: standard Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: ODAT Delayed Data Entry Rate
+- img "Delayed Data Entry Rate definition": i
+- text: standard Sites by flag +2 1 +1 1 0 11 −1 4 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: CDAT Data Change Rate
+- img "Data Change Rate definition": i
+- text: standard Sites by flag +2 1 +1 0 0 13 −1 3 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- button "Previous view": ‹
+- text: Flag distribution 7/7
+- button "Next view": ›
+- button "Charts ▾"

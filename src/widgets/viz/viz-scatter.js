@@ -24,6 +24,5 @@ registerWidget({
   version: '0.1.0',
   size: 'wide',
   dataSpec: { results: 'self', bounds: 'self', groups: 'self' },
-  fallback: 'scalar-tile',
   render: renderVizScatter,
 });

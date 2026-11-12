@@ -1,0 +1,343 @@
+state: tooltip-definition (reports)
+dom: sha256 abec9c7ceeaaa7a8d85426104f83e3cb8106da97e93cd3eb8264bdc571d77feb (84645 characters)
+tooltip: <b>Screen Failure Rate</b><br><span class="tip-muted mono">SF · kri0012 · Disposition</span><dl class="tip-dl"><dt>Definition</dt><dd><span class="tip-muted">not yet supplied (Q2)</span></dd><dt>Numerator</dt><dd>Number of screen failed participants</dd><dt>Denominator</dt><dd>Total screened participants</dd><dt>Displayed as</dt><dd>percent (n ÷ d)</dd><dt>Flagging</dt><dd>Adjusted Z-Score · thresholds -2, -1, 2, 3</dd><dt>Note</dt><dd>The tracker also lists a Planned "Screen Failure" divided by all enrolled (open question Q1).</dd></dl>
+drill-in: closed
+tiles:
+  Analysis_kri0012 · Breakdowns 8/8: breakdowns 8, empty 1
+  Analysis_kri0006 · Breakdowns 8/8: breakdowns 12, empty 1
+  Analysis_kri0007 · Details 2/7: points 1, lines 2, segments 3, empty 1
+  Analysis_kri0007-2 · Breakdowns 8/8: breakdowns 9, empty 1
+  Analysis_ctq0001 · Details 2/7: points 1, lines 2, segments 1, empty 1
+  Analysis_ctq0002 · Details 2/7: points 1, lines 2, segments 1, empty 1
+  Analysis_ctq0003 · Details 2/7: points 1, lines 2, segments 1, empty 1
+  Analysis_kri0015 · Breakdowns 8/9: breakdowns 7, empty 1
+  Analysis_kri0019 · Breakdowns 8/8: breakdowns 6, empty 1
+  Analysis_kri0014 · Breakdowns 8/8: breakdowns 10, empty 1
+  Analysis_strat0001 · Breakdowns 8/8: breakdowns 7, empty 1
+  Analysis_ctq0006 · Details 2/7: points 1, lines 2, segments 1, empty 1
+  Analysis_kri0001 · Details 2/7: points 1, lines 2, segments 2, empty 1
+  Analysis_kri0002 · Details 2/7: points 1, lines 2, segments 3, empty 1
+  Analysis_kri0003 · Details 2/7: points 1, lines 2, segments 2, empty 1
+  Analysis_kri0004 · Details 2/7: points 1, lines 2, segments 2, empty 1
+  Analysis_kri0005 · Details 2/7: points 1, lines 2, segments 1, empty 1
+  Analysis_kri0008 · Details 2/7: points 1, lines 2, segments 3, empty 1
+  Analysis_kri0009 · Details 2/7: points 1, lines 2, segments 1, empty 1
+  Analysis_kri0010 · Details 2/7: points 1, lines 2, segments 3, empty 1
+  Analysis_kri0011 · Details 2/7: points 1, lines 2, segments 3, empty 1
+accessibility:
+- text: STUDY006 FALCON-2 Immunology · Respiratory · P1 · Enrolling · Product F
+- button "Play through visits": ▶
+- slider "Visit": "5"
+- text: Visit 6/6 · 2026-06-30
+- checkbox "Group by category" [checked]
+- text: Group by category All tiles
+- combobox "Set every tile to a view":
+  - option "Default per metric" [selected]
+  - option "Overview"
+  - option "Details"
+  - option "Scatter (n vs d)"
+  - option "Numerator by site"
+  - option "Trend over time"
+  - option "Outlier sites"
+  - option "Flag distribution"
+- button "⤨ Randomize"
+- text: Disposition · 6 SF Screen Failure Rate
+- img "Screen Failure Rate definition": i
+- text: standard
+- group "Screen Failure Rate breakdowns":
+  - text: 14.1% 144 / 1,023
+  - region "Screen failure reasons":
+    - text: Screen failure reasons
+    - list:
+      - 'listitem "Inclusion Criteria Not Met: 57, 39.6% % Screen failed"': Inclusion Criteria Not Met 57 39.6%
+      - 'listitem "Exclusion Criteria Met: 45, 31.3% % Screen failed"': Exclusion Criteria Met 45 31.3%
+      - 'listitem "Withdrawal by Participant: 21, 14.6% % Screen failed"': Withdrawal by Participant 21 14.6%
+      - 'listitem "Other: 16, 11.1% % Screen failed"': Other 16 11.1%
+      - 'listitem "Not recorded: 5, 3.5% % Screen failed"': Not recorded 5 3.5%
+    - paragraph: "Not recorded: the source value was blank."
+  - region "Screening status":
+    - text: Screening status
+    - list:
+      - 'listitem "Enrolled: 879, 85.9% % Screened"': Enrolled 879 85.9%
+      - 'listitem "Screen Failure: 144, 14.1% % Screened"': Screen Failure 144 14.1%
+      - 'listitem "In Screening: 0, 0.0% % Screened"': In Screening 0 0.0%
+- button "Previous view": ‹
+- text: Breakdowns 8/8
+- button "Next view": ›
+- button "Charts ▾"
+- text: SDSC Study Discontinuation Rate
+- img "Study Discontinuation Rate definition": i
+- text: standard
+- group "Study Discontinuation Rate breakdowns":
+  - text: 6.9% 61 / 879
+  - region "Reasons for study discontinuation":
+    - text: Reasons for study discontinuation
+    - list:
+      - 'listitem "Withdrawal by Participant: 21, 34.4% % Discontinued, 2.4% % Enrolled"': Withdrawal by Participant 21 34.4% 2.4%
+      - 'listitem "Lost to Follow-Up: 16, 26.2% % Discontinued, 1.8% % Enrolled"': Lost to Follow-Up 16 26.2% 1.8%
+      - 'listitem "Study Discontinuation: Other: 13, 21.3% % Discontinued, 1.5% % Enrolled"': "Study Discontinuation: Other 13 21.3% 1.5%"
+      - 'listitem "Death: 5, 8.2% % Discontinued, 0.6% % Enrolled"': Death 5 8.2% 0.6%
+      - 'listitem "Not recorded: 6, 9.8% % Discontinued, 0.7% % Enrolled"': Not recorded 6 9.8% 0.7%
+    - paragraph: "Not recorded: the source value was blank."
+  - region "Study disposition":
+    - text: Study disposition
+    - list:
+      - 'listitem "Study Completion: 469, 53.4% % Enrolled"': Study Completion 469 53.4%
+      - 'listitem "Ongoing: 349, 39.7% % Enrolled"': Ongoing 349 39.7%
+      - 'listitem "Withdrawal by Participant: 21, 2.4% % Enrolled"': Withdrawal by Participant 21 2.4%
+      - 'listitem "Lost to Follow-Up: 16, 1.8% % Enrolled"': Lost to Follow-Up 16 1.8%
+      - 'listitem "Study Discontinuation: Other: 13, 1.5% % Enrolled"': "Study Discontinuation: Other 13 1.5%"
+      - 'listitem "Death: 5, 0.6% % Enrolled"': Death 5 0.6%
+      - 'listitem "Not recorded: 6, 0.7% % Enrolled"': Not recorded 6 0.7%
+    - paragraph: "Not recorded: the source value was blank."
+- button "Previous view": ‹
+- text: Breakdowns 8/8
+- button "Next view": ›
+- button "Charts ▾"
+- text: TDSC Treatment Discontinuation Rate
+- img "Treatment Discontinuation Rate definition": i
+- text: standard 150 (17.3%) of 865 dosed 2R·2A·13G·0NA
+- 'img "TDSC study trend: 6 snapshots, latest 17.3%"'
+- text: portfolio 11.3% · this study +6.1 pt
+- button "Previous view": ‹
+- text: Details 2/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: PTDSC Premature Treatment Discontinuation Rate
+- img "Premature Treatment Discontinuation Rate definition": i
+- text: Planned standard
+- group "Premature Treatment Discontinuation Rate breakdowns":
+  - text: 4.9% 42 / 865
+  - region "Reasons for treatment discontinuation":
+    - text: Reasons for treatment discontinuation
+    - list:
+      - 'listitem "Physician Decision: 13, 31.0% % Discontinued"': Physician Decision 13 31.0%
+      - 'listitem "Other: 13, 31.0% % Discontinued"': Other 13 31.0%
+      - 'listitem "Progressive Disease: 11, 26.2% % Discontinued"': Progressive Disease 11 26.2%
+      - 'listitem "Withdrawal by Participant: 8, 19.0% % Discontinued"': Withdrawal by Participant 8 19.0%
+      - 'listitem "Adverse Event: 5, 11.9% % Discontinued"': Adverse Event 5 11.9%
+      - 'listitem "Not recorded: 2, 4.8% % Discontinued"': Not recorded 2 4.8%
+    - paragraph: A participant can fall in more than one category, so the counts add up to more than 42.
+    - paragraph: "Not recorded: the source value was blank."
+  - region "Treatment disposition":
+    - text: Treatment disposition
+    - list:
+      - 'listitem "Dosed – treatment complete: 480, 55.5% % Dosed"': Dosed – treatment complete 480 55.5%
+      - 'listitem "Dosed – ongoing: 343, 39.7% % Dosed"': Dosed – ongoing 343 39.7%
+      - 'listitem "Dosed – premature treatment discontinuation: 42, 4.9% % Dosed"': Dosed – premature treatment discontinuation 42 4.9%
+- button "Previous view": ‹
+- text: Breakdowns 8/8
+- button "Next view": ›
+- button "Charts ▾"
+- text: WC Withdrawal of Consent
+- img "Withdrawal of Consent definition": i
+- text: Planned standard 21 (2.4%) of 879 enrolled 0R·0A·17G·0NA
+- 'img "WC study trend: 6 snapshots, latest 2.4%"'
+- text: portfolio 2.6% · this study −0.2 pt
+- button "Previous view": ‹
+- text: Details 2/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: LTFU Lost to Follow Up
+- img "Lost to Follow Up definition": i
+- text: Planned standard 18 (2.0%) of 879 enrolled 0R·0A·17G·0NA
+- 'img "LTFU study trend: 6 snapshots, latest 2.0%"'
+- text: portfolio 1.6% · this study +0.4 pt
+- button "Previous view": ‹
+- text: Details 2/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: Early events · 3 DTH30 Early Deaths (30 days)
+- img "Early Deaths (30 days) definition": i
+- text: Planned standard 10 (1.1%) of 879 enrolled 0R·0A·17G·0NA
+- 'img "DTH30 study trend: 6 snapshots, latest 1.1%"'
+- text: portfolio 0.8% · this study +0.4 pt
+- button "Previous view": ‹
+- text: Details 2/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: DTH90 Early Deaths (90 days)
+- img "Early Deaths (90 days) definition": i
+- text: Planned standard
+- group "Early Deaths (90 days) breakdowns":
+  - text: 2.6% 23 / 879
+  - region "Deaths by time from randomisation":
+    - text: Deaths by time from randomisation
+    - list:
+      - 'listitem "Day 31–90: 13, 56.5% % Deaths, 1.5% % Enrolled"': Day 31–90 13 56.5% 1.5%
+      - 'listitem "Day 1–30: 10, 43.5% % Deaths, 1.1% % Enrolled"': Day 1–30 10 43.5% 1.1%
+  - region "Deaths by eligibility":
+    - text: Deaths by eligibility
+    - list:
+      - 'listitem "Eligible: 23, 100.0% % Deaths, 2.6% % Enrolled"': Eligible 23 100.0% 2.6%
+      - 'listitem "Ineligible: 0, 0.0% % Deaths, 0.0% % Enrolled"': Ineligible 0 0.0% 0.0%
+  - region "Deaths by relatedness to treatment":
+    - text: Deaths by relatedness to treatment
+    - list:
+      - 'listitem "Not related: 13, 56.5% % Deaths, 1.5% % Enrolled"': Not related 13 56.5% 1.5%
+      - 'listitem "Related: 8, 34.8% % Deaths, 0.9% % Enrolled"': Related 8 34.8% 0.9%
+      - 'listitem "Not recorded: 2, 8.7% % Deaths, 0.2% % Enrolled"': Not recorded 2 8.7% 0.2%
+    - paragraph: "Not recorded: the source value was blank."
+- button "Previous view": ‹
+- text: Breakdowns 8/9
+- button "Next view": ›
+- button "Charts ▾"
+- text: IPNS IP Non-starters
+- img "IP Non-starters definition": i
+- text: Planned standard
+- group "IP Non-starters breakdowns":
+  - text: 1.6% 14 / 879
+  - region "IP status":
+    - text: IP status
+    - list:
+      - 'listitem "Dosed – treatment complete: 466, 53.0% % Enrolled"': Dosed – treatment complete 466 53.0%
+      - 'listitem "Dosed – ongoing: 276, 31.4% % Enrolled"': Dosed – ongoing 276 31.4%
+      - 'listitem "Dosed – premature treatment discontinuation: 84, 9.6% % Enrolled"': Dosed – premature treatment discontinuation 84 9.6%
+      - 'listitem "Potential Non-Starter – within window: 20, 2.3% % Enrolled"': Potential Non-Starter – within window 20 2.3%
+      - 'listitem "Potential Non-Starter – outside window: 19, 2.2% % Enrolled"': Potential Non-Starter – outside window 19 2.2%
+      - 'listitem "Confirmed Non-Starter: 14, 1.6% % Enrolled"': Confirmed Non-Starter 14 1.6%
+- button "Previous view": ‹
+- text: Breakdowns 8/8
+- button "Next view": ›
+- button "Charts ▾"
+- text: Eligibility & integrity · 3 IE Eligibility
+- img "Eligibility definition": i
+- text: Planned standard
+- group "Eligibility breakdowns":
+  - text: 3.5% 31 / 879
+  - region "Top I/E criteria not met":
+    - text: Top I/E criteria not met
+    - list:
+      - 'listitem "IN01: 10, 32.3% % Ineligible, 1.1% % Enrolled"': IN01 10 32.3% 1.1%
+      - 'listitem "EX06: 8, 25.8% % Ineligible, 0.9% % Enrolled"': EX06 8 25.8% 0.9%
+      - 'listitem "EX03: 7, 22.6% % Ineligible, 0.8% % Enrolled"': EX03 7 22.6% 0.8%
+      - 'listitem "EX09: 7, 22.6% % Ineligible, 0.8% % Enrolled"': EX09 7 22.6% 0.8%
+      - 'listitem "IN07: 6, 19.4% % Ineligible, 0.7% % Enrolled"': IN07 6 19.4% 0.7%
+      - 'listitem "+ 3 more: 7, 22.6% % Ineligible, 0.8% % Enrolled"': + 3 more 7 22.6% 0.8%
+      - 'listitem "Not recorded: 1, 3.2% % Ineligible, 0.1% % Enrolled"': Not recorded 1 3.2% 0.1%
+    - paragraph: A participant can fall in more than one category, so the counts add up to more than 31.
+    - paragraph: "Not recorded: the source value was blank."
+  - region "Eligibility status":
+    - text: Eligibility status
+    - list:
+      - 'listitem "Eligible: 848, 96.5% % Enrolled"': Eligible 848 96.5%
+      - 'listitem "Ineligible: 19, 2.2% % Enrolled"': Ineligible 19 2.2%
+      - 'listitem "Potentially Ineligible: 12, 1.4% % Enrolled"': Potentially Ineligible 12 1.4%
+- button "Previous view": ‹
+- text: Breakdowns 8/8
+- button "Next view": ›
+- button "Charts ▾"
+- text: STRAT Stratification
+- img "Stratification definition": i
+- text: Planned standard
+- group "Stratification breakdowns":
+  - text: 1.5% 13 / 879
+  - region "Mis-stratification by factor":
+    - text: Mis-stratification by factor
+    - list:
+      - 'listitem "Prior Therapy: 6, 46.2% % Mis-stratified, 0.7% % Enrolled"': Prior Therapy 6 46.2% 0.7%
+      - 'listitem "Region: 4, 30.8% % Mis-stratified, 0.5% % Enrolled"': Region 4 30.8% 0.5%
+      - 'listitem "Disease Stage: 4, 30.8% % Mis-stratified, 0.5% % Enrolled"': Disease Stage 4 30.8% 0.5%
+      - 'listitem "Age Group: 1, 7.7% % Mis-stratified, 0.1% % Enrolled"': Age Group 1 7.7% 0.1%
+    - paragraph: A participant can fall in more than one category, so the counts add up to more than 13.
+  - region "Stratification status":
+    - text: Stratification status
+    - list:
+      - 'listitem "Correctly Stratified: 855, 97.3% % Enrolled"': Correctly Stratified 855 97.3%
+      - 'listitem "Mis-stratified: 13, 1.5% % Enrolled"': Mis-stratified 13 1.5%
+      - 'listitem "Not recorded: 11, 1.3% % Enrolled"': Not recorded 11 1.3%
+    - paragraph: "Not recorded: the source value was blank."
+- button "Previous view": ‹
+- text: Breakdowns 8/8
+- button "Next view": ›
+- button "Charts ▾"
+- text: PFSC Premature Censoring for PFS
+- img "Premature Censoring for PFS definition": i
+- text: Planned standard 18 (2.0%) of 879 enrolled 0R·0A·17G·0NA
+- 'img "PFSC study trend: 6 snapshots, latest 2.0%"'
+- text: portfolio 2.5% · this study −0.4 pt
+- button "Previous view": ‹
+- text: Details 2/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: Safety & deviations · 5 AE AE Reporting Rate
+- img "AE Reporting Rate definition": i
+- text: New standard 1.34 7,967 in 165,991 days 0R·1A·16G·0NA
+- 'img "AE study trend: 6 snapshots, latest 4.8%"'
+- text: portfolio 1.20 · this study +0.14 / 28 d
+- button "Previous view": ‹
+- text: Details 2/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: SAE SAE Reporting Rate
+- img "SAE Reporting Rate definition": i
+- text: New standard 0.09 551 in 165,991 days 1R·4A·12G·0NA
+- 'img "SAE study trend: 6 snapshots, latest 0.3%"'
+- text: portfolio 0.10 · this study −0.01 / 28 d
+- button "Previous view": ‹
+- text: Details 2/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: PD Non-Important Protocol Deviation Rate
+- img "Non-Important Protocol Deviation Rate definition": i
+- text: New standard 0.52 3,055 in 165,991 days 2R·0A·15G·0NA
+- 'img "PD study trend: 6 snapshots, latest 1.8%"'
+- text: portfolio 0.37 · this study +0.14 / 28 d
+- button "Previous view": ‹
+- text: Details 2/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: IPD Important Protocol Deviation Rate
+- img "Important Protocol Deviation Rate definition": i
+- text: New standard 0.06 380 in 165,991 days 0R·4A·13G·0NA
+- 'img "IPD study trend: 6 snapshots, latest 0.2%"'
+- text: portfolio 0.06 · this study +0.01 / 28 d
+- button "Previous view": ‹
+- text: Details 2/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: LB G3+ Lab Abnormality Rate
+- img "G3+ Lab Abnormality Rate definition": i
+- text: standard 720 (3.7%) of 19,324 0R·0A·17G·0NA
+- 'img "LB study trend: 6 snapshots, latest 3.7%"'
+- text: portfolio 4.5% · this study −0.7 pt
+- button "Previous view": ‹
+- text: Details 2/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: Data quality · 4 QRY Query Rate
+- img "Query Rate definition": i
+- text: standard 6.5% 17,103 / 261,148 1R·1A·15G·0NA
+- 'img "QRY study trend: 6 snapshots, latest 6.5%"'
+- text: portfolio 6.8% · this study −0.3 pt
+- button "Previous view": ‹
+- text: Details 2/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: OQRY Delayed Query Resolution Rate
+- img "Delayed Query Resolution Rate definition": i
+- text: standard 7.3% 1,256 / 17,103 0R·0A·17G·0NA
+- 'img "OQRY study trend: 6 snapshots, latest 7.3%"'
+- text: portfolio 9.0% · this study −1.6 pt
+- button "Previous view": ‹
+- text: Details 2/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: ODAT Delayed Data Entry Rate
+- img "Delayed Data Entry Rate definition": i
+- text: standard 10.8% 3,655 / 33,992 1R·5A·11G·0NA
+- 'img "ODAT study trend: 6 snapshots, latest 10.8%"'
+- text: portfolio 11.7% · this study −0.9 pt
+- button "Previous view": ‹
+- text: Details 2/7
+- button "Next view": ›
+- button "Charts ▾"
+- text: CDAT Data Change Rate
+- img "Data Change Rate definition": i
+- text: standard 4.4% 11,605 / 261,148 1R·3A·13G·0NA
+- 'img "CDAT study trend: 6 snapshots, latest 4.4%"'
+- text: portfolio 3.3% · this study +1.1 pt
+- button "Previous view": ‹
+- text: Details 2/7
+- button "Next view": ›
+- button "Charts ▾"

@@ -26,6 +26,5 @@ registerWidget({
   version: '0.1.0',
   size: 'wide',
   dataSpec: { history: 'self', groups: 'self' },
-  fallback: 'scalar-tile',
   render: renderVizTimeSeries,
 });

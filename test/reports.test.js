@@ -65,6 +65,16 @@ describe('the study document', () => {
     expect(compared).toBeGreaterThan(500);
   });
 
+  it('13.02: each study report carries the manifest\'s report base, so its links resolve against the configured base (#13)', () => {
+    const validate = schemaValidator();
+    const { StudyID } = data.manifest.studies[0];
+    expect(buildStudyDocument(data, StudyID)).not.toHaveProperty('reportBase');
+    const doc = buildStudyDocument({ ...data, manifest: { ...data.manifest, reportBase: '../reports/' } }, StudyID);
+    expect(doc.reportBase).toBe('../reports/');
+    expect(validate(doc), JSON.stringify(validate.errors?.slice(0, 3))).toBe(true);
+    expect(validate({ ...doc, reportBase: 3 })).toBe(false);
+  });
+
   it("holds the catalog, the study's manifest entry and exactly its snapshot files, and passes its schema", () => {
     const validate = schemaValidator();
     for (const study of data.manifest.studies) {

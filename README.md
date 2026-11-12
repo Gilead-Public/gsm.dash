@@ -61,8 +61,11 @@ npm run build:reports  # one self-contained study report per study, in dist/repo
   proposal artifact): a build-time registry of small composable views. Each
   widget declares a `dataSpec` naming the contract layers it needs; the host
   resolves the data against its layer allow-list (the exec build never
-  carries `listings`) and degrades unsatisfiable widgets along their
-  `fallback` chain. Metric tiles bind via metric metadata
+  carries `listings`). A widget that is unknown, needs a layer the host
+  doesn't carry, or doesn't apply to the metric (`appliesTo`) is never
+  swapped for another: its tile shows a placeholder naming it and the
+  reason, and configuration no tile can show is listed above the study
+  page (`src/app/references.js`). Metric tiles bind via metric metadata
   (`Category`/`Widget`/`WidgetConfig`); page-level widgets come from the
   minimal spec in `src/app/study-page-spec.js`. Shipped set: `scalar-tile`
   (default), `breakdown-bar` (contract `details`), `link-out`, and
@@ -122,6 +125,11 @@ One contract, two modes (auto-detected): **fetched** (static host serving
 `portfolio.json` + `summary.json` + `studies/...`) or **embedded**
 (`<script type="application/json" data-gsm="portfolio|summary|snapshot">` blocks for
 self-contained HTML / htmlwidget embedding).
+
+Detailed-report links (#13): a catalog entry's `ReportLink` is a path to that metric's
+report, resolved against the manifest's optional `reportBase`, which itself resolves
+against the page; a relative base therefore works wherever the dashboard is hosted.
+A metric without `ReportLink` shows no link.
 
 Study reports take one injected study document (`<script type="application/json"
 id="gsm-data">`): the catalog, the study's manifest entry, all its snapshots and

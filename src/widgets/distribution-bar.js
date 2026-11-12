@@ -73,5 +73,6 @@ registerWidget({
   label: 'Breakdowns',
   version: '0.1.0',
   dataSpec: { results: 'self', distributions: 'self' },
+  appliesTo: (metric, config) => (distributionConfig(metric, config) ? null : 'it has no breakdown configuration'),
   render: renderDistribution,
 });

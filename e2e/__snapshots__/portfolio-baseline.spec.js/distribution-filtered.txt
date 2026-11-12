@@ -1,0 +1,225 @@
+state: distribution-filtered
+dom: sha256 a6fcaa702642143f8b82f7569c69ad4bb80a2871bddc4110b3f99366301abd2f (127746 characters)
+tooltip: none
+cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×4 | rgb(224, 238, 236) ×5 | rgb(237, 240, 238) ×6 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×5 | rgb(224, 238, 236) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
+distribution marks:
+  pt[STUDY006]@0.9259 pt[STUDY009]@0.6816 pt[STUDY011]@0.5444 ptot@0.5987 psel[STUDY002]@0.1262 lsel@0.1262
+  pt[STUDY006]@0.9259 pt[STUDY009]@0.8891 pt[STUDY011]@0.7101 ptot@0.7809 psel[STUDY002]@0.5486 lsel@0.5486
+  pt[STUDY006]@0.6341 pt[STUDY009]@0.6669 pt[STUDY011]@0.5992 ptot@0.7029 psel[STUDY002]@0.9259 lsel@0.9259
+  pt[STUDY006]@0.7798 pt[STUDY009]@0.9259 pt[STUDY011]@0.4437 ptot@0.7156 psel[STUDY002]@0.6856 lsel@0.6856
+  pt[STUDY006]@0.4549 pt[STUDY009]@0.7214 pt[STUDY011]@0.9259 ptot@0.6222 psel[STUDY002]@0.4769 lsel@0.4769
+  pt[STUDY006]@0.6289 pt[STUDY009]@0.9259 pt[STUDY011]@0.6163 ptot@0.6890 psel[STUDY002]@0.6190 lsel@0.6190
+  pt[STUDY006]@0.7002 pt[STUDY009]@0.5978 pt[STUDY011]@0.9259 ptot@0.6851 psel[STUDY002]@0.4929 lsel@0.4929
+  pt[STUDY006]@0.7127 pt[STUDY009]@0.9259 pt[STUDY011]@0.7094 ptot@0.7264 psel[STUDY002]@0.5703 lsel@0.5703
+  pt[STUDY006]@0.9259 pt[STUDY009]@0.4325 pt[STUDY011]@0.4187 ptot@0.6743 psel[STUDY002]@0.7831 lsel@0.7831
+  pt[STUDY006]@0.9259 pt[STUDY009]@0.8761 pt[STUDY011]@0.7923 ptot@0.7960 psel[STUDY002]@0.5160 lsel@0.5160
+  pt[STUDY006]@0.6146 pt[STUDY009]@0.6481 pt[STUDY011]@0.5103 ptot@0.6639 psel[STUDY002]@0.9259 lsel@0.9259
+  pt[STUDY006]@0.9067 pt[STUDY009]@0.5630 pt[STUDY011]@0.5916 ptot@0.7611 psel[STUDY002]@0.9259 lsel@0.9259
+  pt[STUDY006]@0.5457 pt[STUDY009]@0.6654 pt[STUDY011]@0.9259 ptot@0.6608 psel[STUDY002]@0.6556 lsel@0.6556
+  pt[STUDY006]@0.9259 pt[STUDY009]@0.7973 pt[STUDY011]@0.5091 ptot@0.7863 psel[STUDY002]@0.8464 lsel@0.8464
+  pt[STUDY006]@0.9259 pt[STUDY009]@0.8570 pt[STUDY011]@0.8449 ptot@0.8475 psel[STUDY002]@0.7188 lsel@0.7188
+accessibility:
+- main:
+  - text: Controls
+  - button "Collapse controls" [expanded]: «
+  - group:
+    - text: ▸ Config Highlight study
+    - combobox:
+      - option "None"
+      - option "STUDY002 · BEACON-1" [selected]
+      - option "STUDY006 · FALCON-2"
+      - option "STUDY009 · IRIS-1"
+      - option "STUDY011 · KESTREL-3"
+    - paragraph: Marks the study in every view. Click a row or a dot to pick one.
+    - text: Cell display
+    - group [disabled]:
+      - button "As defined" [disabled]
+      - button "Custom" [disabled]
+    - paragraph: The distribution shows each value as defined in the glossary.
+    - text: Also show
+    - button "Trend" [disabled]
+    - text: Heatmap (also drives column sort)
+    - combobox [disabled]:
+      - option "None" [disabled] [selected]
+      - option "Numerator" [disabled]
+      - option "Denominator" [disabled]
+      - option "Rate" [disabled]
+    - paragraph: "Table only: the distribution plots every study on each metric’s line."
+    - text: Heatmap color
+    - group [disabled]:
+      - button "Blue" [disabled]
+      - button "Teal" [disabled]
+      - button "Purple" [disabled]
+      - button "Grey" [disabled]
+    - text: Group rows by
+    - combobox [disabled]:
+      - option "None — one row per study" [disabled] [selected]
+      - option "Therapeutic area" [disabled]
+      - option "Indication" [disabled]
+      - option "Phase" [disabled]
+      - option "Status" [disabled]
+      - option "Product" [disabled]
+    - paragraph: "Table only: the distribution plots every study on each metric’s line."
+  - group:
+    - text: ▸ Metrics 21/21 Status
+    - button "Released8" [pressed]
+    - button "New4" [pressed]
+    - button "Planned9" [pressed]
+    - button "All"
+    - button "None"
+    - text: Disposition
+    - button "none"
+    - text: 6/6
+    - checkbox "SF Screen Failure Rate" [checked]
+    - text: SF Screen Failure Rate
+    - checkbox "SDSC Study Discontinuation Rate" [checked]
+    - text: SDSC Study Discontinuation Rate
+    - checkbox "TDSC Treatment Discontinuation Rate" [checked]
+    - text: TDSC Treatment Discontinuation Rate
+    - checkbox "PTDSC Premature Treatment Discontinuation Rate Planned" [checked]
+    - text: PTDSC Premature Treatment Discontinuation Rate Planned
+    - checkbox "WC Withdrawal of Consent Planned" [checked]
+    - text: WC Withdrawal of Consent Planned
+    - checkbox "LTFU Lost to Follow Up Planned" [checked]
+    - text: LTFU Lost to Follow Up Planned Early events
+    - button "none"
+    - text: 3/3
+    - checkbox "DTH30 Early Deaths (30 days) Planned" [checked]
+    - text: DTH30 Early Deaths (30 days) Planned
+    - checkbox "DTH90 Early Deaths (90 days) Planned" [checked]
+    - text: DTH90 Early Deaths (90 days) Planned
+    - checkbox "IPNS IP Non-starters Planned" [checked]
+    - text: IPNS IP Non-starters Planned Eligibility & integrity
+    - button "none"
+    - text: 3/3
+    - checkbox "IE Eligibility Planned" [checked]
+    - text: IE Eligibility Planned
+    - checkbox "STRAT Stratification Planned" [checked]
+    - text: STRAT Stratification Planned
+    - checkbox "PFSC Premature Censoring for PFS Planned" [checked]
+    - text: PFSC Premature Censoring for PFS Planned Safety & deviations
+    - button "none"
+    - text: 5/5
+    - checkbox "AE AE Reporting Rate New" [checked]
+    - text: AE AE Reporting Rate New
+    - checkbox "SAE SAE Reporting Rate New" [checked]
+    - text: SAE SAE Reporting Rate New
+    - checkbox "PD Non-Important Protocol Deviation Rate New" [checked]
+    - text: PD Non-Important Protocol Deviation Rate New
+    - checkbox "IPD Important Protocol Deviation Rate New" [checked]
+    - text: IPD Important Protocol Deviation Rate New
+    - checkbox "LB G3+ Lab Abnormality Rate" [checked]
+    - text: LB G3+ Lab Abnormality Rate Data quality
+    - button "none"
+    - text: 4/4
+    - checkbox "QRY Query Rate" [checked]
+    - text: QRY Query Rate
+    - checkbox "OQRY Delayed Query Resolution Rate" [checked]
+    - text: OQRY Delayed Query Resolution Rate
+    - checkbox "ODAT Delayed Data Entry Rate" [checked]
+    - text: ODAT Delayed Data Entry Rate
+    - checkbox "CDAT Data Change Rate" [checked]
+    - text: CDAT Data Change Rate
+    - paragraph: 1 metric is not site-level (Study) — held back until a future release adds that plumbing.
+  - group:
+    - text: ▸ Filter 1 active Therapeutic area
+    - button "Cardiology"
+    - button "Immunology"
+    - button "Neurology"
+    - button "Oncology"
+    - button "Virology"
+    - text: Phase
+    - button "P1"
+    - button "P2"
+    - button "P3"
+    - text: Status
+    - button "Active"
+    - button "Completed"
+    - button "Enrolling"
+    - button "Clear filters"
+  - tablist "Program view":
+    - text: Table
+    - tab "Overview"
+    - tab "Details"
+    - tab "Distribution" [selected]
+  - text: One line per metric · each dot is a study portfolio highlighted study Showing 4 / 12 studies · 21 / 21 site-level metrics · each study at its own latest snapshot · highlighting STUDY002 · BEACON-1
+  - button "+ Disposition6 metrics SF · SDSC · TDSC · PTDSC · WC · LTFU · click to open":
+    - heading "+ Disposition6 metrics" [level=4]
+    - text: SF · SDSC · TDSC · PTDSC · WC · LTFU · click to open
+  - button "− Early events3 metrics Each dot = one study · scale 0 → max Portfolio · BEACON-1" [expanded]:
+    - heading "− Early events3 metrics" [level=4]
+    - text: Each dot = one study · scale 0 → max Portfolio · BEACON-1
+  - text: Early Deaths (30 days)DTH30
+  - img "Early Deaths (30 days) definition": i
+  - text: Planned n (% enr.)
+  - 'img "Early Deaths (30 days): 4 studies"': 0 1.2% 0.16%
+  - text: 20 (0.7%) BEACON-1 1 (0.2%) Early Deaths (90 days)DTH90
+  - img "Early Deaths (90 days) definition": i
+  - text: Planned n (% enr.)
+  - 'img "Early Deaths (90 days): 4 studies"': 0 2.8% 1.6%
+  - text: 60 (2.2%) BEACON-1 10 (1.6%) IP Non-startersIPNS
+  - img "IP Non-starters definition": i
+  - text: Planned n (% enr.)
+  - 'img "IP Non-starters: 4 studies"': 0 2.5% 2.3%
+  - text: 48 (1.8%) BEACON-1 15 (2.3%)
+  - button "− Eligibility & integrity3 metrics Each dot = one study · scale 0 → max Portfolio · BEACON-1" [expanded]:
+    - heading "− Eligibility & integrity3 metrics" [level=4]
+    - text: Each dot = one study · scale 0 → max Portfolio · BEACON-1
+  - text: EligibilityIE
+  - img "Eligibility definition": i
+  - text: Planned n (% enr.)
+  - 'img "Eligibility: 4 studies"': 0 4.5% 3.1%
+  - text: 88 (3.2%) BEACON-1 20 (3.1%) StratificationSTRAT
+  - img "Stratification definition": i
+  - text: Planned n (% enr.)
+  - 'img "Stratification: 4 studies"': 0 3.3% 1.6%
+  - text: 55 (2.0%) BEACON-1 10 (1.6%) Premature Censoring for PFSPFSC
+  - img "Premature Censoring for PFS definition": i
+  - text: Planned n (% enr.)
+  - 'img "Premature Censoring for PFS: 4 studies"': 0 3.3% 2.0%
+  - text: 61 (2.2%) BEACON-1 13 (2.0%)
+  - button "− Safety & deviations5 metrics Each dot = one study · scale 0 → max Portfolio · BEACON-1" [expanded]:
+    - heading "− Safety & deviations5 metrics" [level=4]
+    - text: Each dot = one study · scale 0 → max Portfolio · BEACON-1
+  - text: AE Reporting RateAE
+  - img "AE Reporting Rate definition": i
+  - text: New / 28 d
+  - 'img "AE Reporting Rate: 4 studies"': 0 1.92 0.95
+  - text: 1.31 BEACON-1 0.95 SAE Reporting RateSAE
+  - img "SAE Reporting Rate definition": i
+  - text: New / 28 d
+  - 'img "SAE Reporting Rate: 4 studies"': 0 0.13 0.074
+  - text: 0.09 BEACON-1 0.07 Non-Important Protocol Deviation RatePD
+  - img "Non-Important Protocol Deviation Rate definition": i
+  - text: New / 28 d
+  - 'img "Non-Important Protocol Deviation Rate: 4 studies"': 0 0.56 0.44
+  - text: 0.38 BEACON-1 0.44 Important Protocol Deviation RateIPD
+  - img "Important Protocol Deviation Rate definition": i
+  - text: New / 28 d
+  - 'img "Important Protocol Deviation Rate: 4 studies"': 0 0.069 0.036
+  - text: 0.06 BEACON-1 0.04 G3+ Lab Abnormality RateLB
+  - img "G3+ Lab Abnormality Rate definition": i
+  - text: n (%)
+  - 'img "G3+ Lab Abnormality Rate: 4 studies"': 0 6.1% 5.6%
+  - text: 2,312 (4.0%) BEACON-1 669 (5.6%)
+  - button "− Data quality4 metrics Each dot = one study · scale 0 → max Portfolio · BEACON-1" [expanded]:
+    - heading "− Data quality4 metrics" [level=4]
+    - text: Each dot = one study · scale 0 → max Portfolio · BEACON-1
+  - text: Query RateQRY
+  - img "Query Rate definition": i
+  - text: "%"
+  - 'img "Query Rate: 4 studies"': 0 7.2% 6.7%
+  - text: 5.5% BEACON-1 6.7% Delayed Query Resolution RateOQRY
+  - img "Delayed Query Resolution Rate definition": i
+  - text: "%"
+  - 'img "Delayed Query Resolution Rate: 4 studies"': 0 13.5% 8.8%
+  - text: 8.9% BEACON-1 8.8% Delayed Data Entry RateODAT
+  - img "Delayed Data Entry Rate definition": i
+  - text: "%"
+  - 'img "Delayed Data Entry Rate: 4 studies"': 0 11.6% 9.8%
+  - text: 9.1% BEACON-1 9.8% Data Change RateCDAT
+  - img "Data Change Rate definition": i
+  - text: "%"
+  - 'img "Data Change Rate: 4 studies"': 0 4.8% 3.4%
+  - text: 4.1% BEACON-1 3.4%
+  - paragraph: Dot = one study's value; the black rule is the pooled portfolio value. Click a dot to highlight that study, a category to fold it.

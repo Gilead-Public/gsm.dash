@@ -28,6 +28,7 @@ export function buildStudyDocument({ manifest, summary, read }, studyId) {
   return {
     schemaVersion: STUDY_DOCUMENT_SCHEMA_VERSION,
     generated: manifest.generated,
+    ...(manifest.reportBase != null && { reportBase: manifest.reportBase }),
     metrics: manifest.metrics,
     study: { StudyID: study.StudyID, params: study.params, snapshots: study.snapshots },
     snapshots: study.snapshots.map((/** @type {string} */ d) => read(study.files[d])),
