@@ -1,6 +1,8 @@
 // @ts-check
 import { createRoot } from 'react-dom/client';
 import { PortfolioStore } from '../data/store.js';
+import { openGlossary } from '../components/glossary.js';
+import { initTheme } from '../app/theme.js';
 import '../widgets/index.js';
 import { readStudyDocument } from './document.js';
 import { ErrorState } from './ErrorState.jsx';
@@ -15,10 +17,18 @@ function storeFor(doc) {
 /** @param {HTMLElement | null} el */
 export function mount(el) {
   if (!el) throw new Error('the report has no #app element');
+  initTheme();
+  const glossary = /** @type {HTMLButtonElement} */ (document.getElementById('glossaryBtn'));
   const result = readStudyDocument(document.getElementById('gsm-data')?.textContent);
   const root = createRoot(el);
-  if (!result.ok) return root.render(<ErrorState errors={result.errors} />);
+  if (!result.ok) {
+    glossary.hidden = true;
+    return root.render(<ErrorState errors={result.errors} />);
+  }
   const { StudyID } = result.doc.study;
+  const store = storeFor(result.doc);
   document.title = `${StudyID} · gsm.dash`;
-  root.render(<StudyPage store={storeFor(result.doc)} studyId={StudyID} />);
+  /** @type {HTMLElement} */ (document.getElementById('meta')).textContent = `${store.metrics.length} metrics · exported ${store.generated}`;
+  glossary.addEventListener('click', () => openGlossary(store));
+  root.render(<StudyPage store={store} studyId={StudyID} />);
 }
