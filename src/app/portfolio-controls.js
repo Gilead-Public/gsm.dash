@@ -1,6 +1,6 @@
 // @ts-check
 // The portfolio's controls: the sidebar's options and when each control applies, and the view switch's views and
-// note. Shared by both portfolio hosts.
+// note.
 
 export const GROUP_BY_OPTIONS = [
   ['none', 'None — one row per study'],

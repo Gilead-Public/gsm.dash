@@ -1,5 +1,5 @@
 // @ts-check
-export const REQUIRED_STEPS = /** @type {const} */ (['environment', 'scope', 'generate-data', 'build-file', 'build-subpath', 'build-reports', 'inventory', 'vitest', 'playwright', 'report']);
+export const REQUIRED_STEPS = /** @type {const} */ (['environment', 'scope', 'generate-data', 'build-reports', 'inventory', 'vitest', 'playwright', 'report']);
 
 /**
  * @typedef {object} StepRecord

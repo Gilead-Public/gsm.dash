@@ -5,7 +5,8 @@ import { acceptanceRecords, acceptanceTargets, mergeRecords } from './acceptance
 import { acceptedInEveryMode } from './gate.js';
 /** @typedef {import('./gate.js').CriterionStatus} CriterionStatus */
 
-const other = /** @type {const} */ ('spa');
+/** An artifact that doesn't ship. */
+const other = /** @type {import('../../e2e/projects.js').Artifact} */ (/** @type {unknown} */ ('other'));
 const hash = (/** @type {string} */ c) => c.repeat(64);
 
 /**

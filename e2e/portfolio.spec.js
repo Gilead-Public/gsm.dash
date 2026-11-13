@@ -28,7 +28,7 @@ const bands = categories.map((category) => ({ category, metrics: catalog.filter(
  * @returns {Promise<ShownTable>}
  */
 function shownTable(page) {
-  return page.locator(':is(gsm-portfolio-table, .portfolio-table) table.po').evaluate((table) => {
+  return page.locator('.portfolio-table table.po').evaluate((table) => {
     const text = (/** @type {Element | null} */ el, drop = '') => {
       if (!el) return '';
       const copy = /** @type {Element} */ (el.cloneNode(true));
@@ -71,7 +71,7 @@ async function expectHeadings(page, table) {
     bands.map((b) => ({ category: b.category, abbrs: b.metrics.map((m) => m.Abbreviation) })),
   );
   expect(table.populationHeadings).toEqual(['Scr.', 'Enr.']);
-  const head = page.locator(':is(gsm-portfolio-table, .portfolio-table) table.po thead');
+  const head = page.locator('.portfolio-table table.po thead');
   await expectEachVisible(head.locator('th.bandh:not(.pop)'), bands.length, 'category heading');
   await expectEachVisible(head.locator('th.bandh .tlab'), catalog.length, 'metric heading');
   await expectEachVisible(head.locator('th.bandh.pop'), 1, 'population heading');
@@ -94,7 +94,7 @@ async function expectRow(page, table, label, members) {
     countText(population(readData, members, 'ParticipantCount')),
   ]);
   expect(row.tiles.map((t) => t.length), `${label}: values under each category`).toEqual(bands.map((b) => b.metrics.length));
-  const tr = page.locator(':is(gsm-portfolio-table, .portfolio-table) table.po tbody tr').nth(index);
+  const tr = page.locator('.portfolio-table table.po tbody tr').nth(index);
   await expect(tr.locator(row.kind === 'study' ? 'td.grp a[data-study]' : 'td.grp'), `${label}: row label`).toBeVisible();
   await expectEachVisible(tr.locator('td.nstud, td.pop'), 3, `${label}: count and population`);
   const cells = tr.locator('td.cat');
@@ -137,7 +137,7 @@ test.describe('portfolio view numbers', () => {
   test('11.03: grouping pools each group of studies (#11)', async ({ app, page }) => {
     await app.open();
     await page.locator('select[data-groupby]').selectOption('phase');
-    await expect(page.locator(':is(gsm-portfolio-table, .portfolio-table) tr.bucket').first()).toBeVisible();
+    await expect(page.locator('.portfolio-table tr.bucket').first()).toBeVisible();
     const table = await shownTable(page);
     await expectHeadings(page, table);
     const groups = studiesBy(studies, 'phase');
@@ -159,7 +159,7 @@ test.describe('portfolio view numbers', () => {
     expect(kept.length).toBeLessThan(studies.length);
     await app.open();
     await page.locator(`button[data-filter="therapeutic_area"][data-value="${area}"]`).click();
-    await expect(page.locator(':is(gsm-portfolio-table, .portfolio-table) tr.study')).toHaveCount(kept.length);
+    await expect(page.locator('.portfolio-table tr.study')).toHaveCount(kept.length);
     const table = await shownTable(page);
     await expectHeadings(page, table);
     expect(table.rows.map((r) => [r.kind, r.label])).toEqual([['total', 'Portfolio total'], ...kept.map((s) => ['study', s.StudyID])]);

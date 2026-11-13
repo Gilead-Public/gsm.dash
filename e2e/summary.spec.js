@@ -22,7 +22,7 @@ const delta = Math.round(own.denominator / 4);
  * @param {string} row
  */
 async function shownValue(page, row) {
-  const table = page.locator(':is(gsm-portfolio-table, .portfolio-table) table.po');
+  const table = page.locator('.portfolio-table table.po');
   const headings = await table.locator('thead th.bandh .tlab').allTextContents();
   const index = headings.map((h) => h.trim()).indexOf(/** @type {string} */ (metric.Abbreviation));
   expect(index, `a visible ${metric.Abbreviation} heading`).toBeGreaterThanOrEqual(0);
@@ -107,21 +107,16 @@ test.describe('the portfolio reads the counts-only summary', () => {
     );
     expect(editedOwn.numerator).toBeGreaterThan(own.numerator);
 
-    if (app.artifact === 'reports') {
-      // The portfolio report holds no study file and asks for none, so no edit to one can reach it; the edit is made
-      // to the study's own report below.
-      /** @type {string[]} */
-      const requests = [];
-      page.on('request', (r) => requests.push(r.url()));
-      await app.open('');
-      const doc = JSON.parse((await page.locator('#gsm-data').textContent()) ?? '');
-      expect(Object.keys(doc).sort(), 'the portfolio report holds the catalog, the studies and the summary').toEqual(['generated', 'metrics', 'schemaVersion', 'studies', 'summary']);
-      expect(JSON.stringify(doc), 'no study file rows or file lists').not.toMatch(/"(results|files)":/);
-      expect(requests.map((u) => u.replace(/#.*$/, '')), 'requests besides the report itself').toEqual([expect.stringMatching(/\/portfolio\.html$/)]);
-    } else {
-      await app.open('', overrides);
-      expect(edited, 'the study file was edited before the page read it').toBeGreaterThan(0);
-    }
+    // The portfolio report holds no study file and asks for none, so no edit to one can reach it; the edit is made to
+    // the study's own report below.
+    /** @type {string[]} */
+    const requests = [];
+    page.on('request', (r) => requests.push(r.url()));
+    await app.open('');
+    const doc = JSON.parse((await page.locator('#gsm-data').textContent()) ?? '');
+    expect(Object.keys(doc).sort(), 'the portfolio report holds the catalog, the studies and the summary').toEqual(['generated', 'metrics', 'schemaVersion', 'studies', 'summary']);
+    expect(JSON.stringify(doc), 'no study file rows or file lists').not.toMatch(/"(results|files)":/);
+    expect(requests.map((u) => u.replace(/#.*$/, '')), 'requests besides the report itself').toEqual([expect.stringMatching(/\/portfolio\.html$/)]);
     const shownTotal = await shownValue(page, '.total');
     expect(near(shownTotal.rate, before.rate), `total ${shownTotal.rate}`).toBe(true);
     expect(shownTotal.nd).toEqual([countText(before.numerator), countText(before.denominator)]);
@@ -129,7 +124,7 @@ test.describe('the portfolio reads the counts-only summary', () => {
     expect(near(shownStudy.rate, own.rate), `${changed.StudyID} ${shownStudy.rate}`).toBe(true);
 
     await app.openStudy(changed.StudyID, overrides);
-    if (app.artifact === 'reports') expect(edited, "the study's file was edited before its report read it").toBeGreaterThan(0);
+    expect(edited, "the study's file was edited before its report read it").toBeGreaterThan(0);
     const line = await comparison(page);
     expect(near(line.portfolio, before.rate), 'the comparison keeps the summary\'s portfolio rate').toBe(true);
     const diff = displayed(metric, /** @type {number} */ (editedOwn.rate)) - displayed(metric, /** @type {number} */ (before.rate));

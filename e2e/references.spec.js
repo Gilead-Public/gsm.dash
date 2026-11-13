@@ -1,6 +1,6 @@
 // @ts-check
 // #12: an unknown or inapplicable reference in configuration shows a placeholder naming it and the reason, and logs
-// a warning; nothing is substituted. Every case is supplied through real configuration (the catalog), on both hosts.
+// a warning; nothing is substituted. Every case is supplied through real configuration (the catalog).
 import { expect, readData, test } from './fixtures/app.js';
 import { DISTRIBUTION_CONFIG } from '../src/config/distributions.js';
 /** @typedef {import('@playwright/test').Page} Page */

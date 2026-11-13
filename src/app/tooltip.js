@@ -1,5 +1,5 @@
 // The shared hover tooltip. One `<div id="gsm-tooltip">` serves the whole page;
-// components call attachHoverTooltip(this) once and then emit `data-tip`
+// a component calls attachHoverTooltip(root) once and then emits `data-tip`
 // wherever a rich tooltip is wanted. Native `title` cannot carry markup, cannot
 // be positioned, and cannot be styled — so anything multi-line goes through
 // here, and `title` is left for one-line hints.
@@ -85,14 +85,4 @@ export function metricTip(metric) {
     }</span>` +
     `<dl class="tip-dl">${rows.map(([k, v, raw]) => `<dt>${k}</dt><dd>${raw ? v : esc(v)}</dd>`).join('')}</dl>`
   );
-}
-
-/** The ⓘ affordance that carries a rich tooltip. */
-export function infoIcon(tip, label) {
-  return `<span class="info" data-tip="${esc(tip)}" role="img" aria-label="${esc(label)}">i</span>`;
-}
-
-/** The ⓘ for a metric — the one every metric header should use. */
-export function metricInfoIcon(metric) {
-  return infoIcon(metricTip(metric), `${metric.Metric} definition`);
 }

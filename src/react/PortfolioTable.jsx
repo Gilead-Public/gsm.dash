@@ -1,5 +1,5 @@
 // @ts-check
-import { metricTip } from '../components/tooltip.js';
+import { metricTip } from '../app/tooltip.js';
 import { fmtInt, fmtRate, metricUnit } from '../util/format.js';
 import {
   POP_COLUMNS, MEASURE_LABELS, bandTitle, cellTip, heatClasses, metricHeadTip, popHeadTip, popTip, popValue, sortMeasure,
@@ -25,7 +25,7 @@ export function PortfolioTable({ store, hidden }) {
   const measureLabel = MEASURE_LABELS[sortMeasure(heatmap)];
   let sparks = 0;
 
-  /** The same delegation as the original element, so a click means the same thing wherever it lands. */
+  /** One delegated handler, so a click means the same thing wherever it lands. */
   const onClick = (/** @type {import('react').MouseEvent} */ e) => {
     const target = /** @type {Element} */ (e.target);
     if (target.closest('a[data-study]')) return;
@@ -245,7 +245,7 @@ export function PortfolioTable({ store, hidden }) {
     );
   };
 
-  // Rows are built in document order, so each sparkline's index matches the original element's.
+  // Rows are built in document order, so the sparklines are numbered in page order.
   const body = [
     <tr key="total" className="total">
       <td className="grp">Portfolio total</td>

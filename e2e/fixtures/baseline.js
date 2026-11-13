@@ -96,35 +96,32 @@ export function computedStyles(root) {
 
 /**
  * The accessibility tree with each study link's URL written as `study:<StudyID>`, by the same rule as `canonicalDom`:
- * only either host's link to a study (`#/study/<id>`, or `./<id>.html` with or without a `#` view state) is rewritten.
+ * only a link to a study's report (`./<id>.html`, with or without a `#` view state) is rewritten.
  * @param {string} aria
  */
 export const ariaStudyLinks = (aria) =>
-  aria.replace(/^(\s*- \/url: )(?:"(#\/study\/[^/?#"]+)"|(\.\/[^/?#\s]+\.html)(?:#\S*)?|"(\.\/[^/?#"]+\.html)(?:#[^"]*)?")$/gm, (_, lead, route, file, quoted) => {
-    const id = route ? route.slice('#/study/'.length) : (file ?? quoted).slice(2, -'.html'.length);
-    return `${lead}study:${decodeURIComponent(id)}`;
-  });
+  aria.replace(/^(\s*- \/url: )(?:(\.\/[^/?#\s]+\.html)(?:#\S*)?|"(\.\/[^/?#"]+\.html)(?:#[^"]*)?")$/gm, (_, lead, file, quoted) =>
+    `${lead}study:${decodeURIComponent((file ?? quoted).slice(2, -'.html'.length))}`);
 
 /** @param {string} canonical */
 export const canonicalLine = (canonical) => `canonical dom: sha256 ${createHash('sha256').update(canonical).digest('hex')} (${canonical.length} characters)`;
 
 /**
- * A subtree's markup in a form two hosts share when they render the same thing. Runs in the page. Only differences that
- * can't render are normalised:
- * - an element named in `hosts` is written as its counterpart, a tag carrying the element's name as a class;
+ * A subtree's markup in a form that stays the same whenever it renders the same thing; the portfolio's records were
+ * made from the original app's elements, and compared with the React page in this form. Runs in the page. Only
+ * differences that can't render are normalised:
  * - attributes and class tokens are sorted, `style` is read through the CSSOM, and an empty `class` or `style` is dropped;
  * - form controls carry their live state (`:checked`, `:value`, `:selected`) in place of the attributes that seed it;
  * - collapsible whitespace is kept as one space where CSS renders one, between inline content on the same line, and
  *   dropped elsewhere, with adjacent text nodes joined;
  * - comments are dropped;
- * - a study link's href is written as `study:<StudyID>` when it is either host's link to that same study: the old
- *   app's `#/study/<id>` route, or the reports' `./<id>.html`, with or without a `#` view state. Any other href stays.
+ * - a study link's href is written as `study:<StudyID>` when it links to that study's report, `./<id>.html`, with or
+ *   without a `#` view state. Any other href stays.
  * Everything else, including every attribute value, text and element order, is kept exactly.
  * @param {Element} root
- * @param {Record<string, string>} hosts element name -> `tag.class` of its counterpart
  * @returns {string}
  */
-export function canonicalDom(root, hosts) {
+export function canonicalDom(root) {
   const SPACE = /[ \t\n\r\f]/;
   const REPLACED = new Set(['img', 'svg', 'input', 'select', 'button', 'textarea', 'canvas', 'video', 'iframe', 'object']);
   /** @type {Map<Element, string>} */
@@ -195,12 +192,12 @@ export function canonicalDom(root, hosts) {
   const studyHref = (el) => {
     const id = el.getAttribute('data-study');
     const href = el.getAttribute('href') ?? '';
-    const m = /^#\/study\/([^/?#]+)$/.exec(href) ?? /^\.\/([^/?#]+)\.html(?:#.*)?$/.exec(href);
+    const m = /^\.\/([^/?#]+)\.html(?:#.*)?$/.exec(href);
     return m && id !== null && decodeURIComponent(m[1]) === id ? `study:${id}` : href;
   };
   /** @param {Element} el */
   const open = (el) => {
-    const [tag, hostClass] = (hosts[el.localName] ?? el.localName).split('.');
+    const tag = el.localName;
     const control = ['input', 'select', 'textarea', 'option'].includes(el.localName);
     const toggle = el instanceof HTMLInputElement && (el.type === 'checkbox' || el.type === 'radio');
     /** @type {Map<string, string>} */
@@ -213,7 +210,6 @@ export function canonicalDom(root, hosts) {
       if (name === 'href' && el.localName === 'a' && el.hasAttribute('data-study')) value = studyHref(el);
       attrs.set(name, value);
     }
-    if (hostClass) attrs.set('class', [...(attrs.get('class') ?? '').split(' ').filter(Boolean), hostClass].sort().join(' '));
     for (const name of ['class', 'style']) if (attrs.get(name) === '') attrs.delete(name);
     if (toggle) attrs.set(':checked', String(/** @type {HTMLInputElement} */ (el).checked));
     else if (control && el.localName !== 'option') attrs.set(':value', /** @type {HTMLInputElement} */ (el).value);
@@ -246,9 +242,6 @@ export function canonicalDom(root, hosts) {
   return lines.join('\n');
 }
 
-/** The old elements and their React counterparts: a div carrying the element's name as a class. */
-const HOSTS = { 'gsm-sidebar': 'div.sidebar', 'gsm-view-switch': 'div.view-switch', 'gsm-portfolio-table': 'div.portfolio-table', 'gsm-portfolio-dist': 'div.portfolio-dist' };
-
 /**
  * The portfolio as the 11.03 baseline records it: its canonical DOM and computed styles (by hash), every sparkline's
  * points, its accessibility tree, every Distribution mark's position, every table cell's background and any open
@@ -258,7 +251,7 @@ const HOSTS = { 'gsm-sidebar': 'div.sidebar', 'gsm-view-switch': 'div.view-switc
  */
 export async function capturePortfolio(page, name) {
   const dom = await page.locator('#app').evaluate((el) => el.innerHTML);
-  const canonical = await page.locator('#app').evaluate(canonicalDom, HOSTS);
+  const canonical = await page.locator('#app').evaluate(canonicalDom);
   const aria = ariaStudyLinks(await page.locator('#app').ariaSnapshot());
   const rendered = await page.evaluate(() => {
     const visible = (/** @type {Element} */ el) => el.checkVisibility({ opacityProperty: true, visibilityProperty: true });
@@ -283,7 +276,7 @@ export async function capturePortfolio(page, name) {
     return { tracks, cells, sparklines, tooltip: tip && visible(tip) ? tip.innerHTML : 'none' };
   });
   // Styles are read with the pointer off the page, as :hover rules would otherwise depend on which element it is over,
-  // and once transitions end: the React page keeps elements the original replaced, so CSS transitions run on it.
+  // and once transitions end: React keeps elements across renders, so CSS transitions run on them.
   await page.mouse.move(0, 0);
   await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished)));
   const styles = await page.locator('#app').evaluate(computedStyles);

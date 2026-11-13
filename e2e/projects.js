@@ -3,13 +3,12 @@ import { MODES } from '../validation/lib/criteria.js';
 /** @typedef {import('../validation/lib/criteria.js').Mode} Mode */
 
 /**
- * `spa`: the single-page app the reports replace (standalone file and sub-path build).
  * `reports`: one self-contained file per report, which is what ships.
- * @typedef {'spa' | 'reports'} Artifact
+ * @typedef {'reports'} Artifact
  */
 
 /** @type {readonly Artifact[]} */
-export const ARTIFACTS = ['spa', 'reports'];
+export const ARTIFACTS = ['reports'];
 
 /** Visual acceptance is recorded against the artifact users receive. */
 /** @type {Artifact} */
@@ -22,15 +21,15 @@ export const SHIPPED = 'reports';
  */
 export const SPEC_ARTIFACTS = {
   'e2e/cross-report.spec.js': ['reports'],
-  'e2e/delivery.spec.js': ['spa', 'reports'],
-  'e2e/distribution.spec.js': ['spa', 'reports'],
-  'e2e/portfolio.spec.js': ['spa', 'reports'],
-  'e2e/portfolio-baseline.spec.js': ['spa', 'reports'],
-  'e2e/study-baseline.spec.js': ['spa', 'reports'],
-  'e2e/references.spec.js': ['spa', 'reports'],
-  'e2e/report-links.spec.js': ['spa', 'reports'],
-  'e2e/study-page.spec.js': ['spa', 'reports'],
-  'e2e/summary.spec.js': ['spa', 'reports'],
+  'e2e/delivery.spec.js': ['reports'],
+  'e2e/distribution.spec.js': ['reports'],
+  'e2e/portfolio.spec.js': ['reports'],
+  'e2e/portfolio-baseline.spec.js': ['reports'],
+  'e2e/study-baseline.spec.js': ['reports'],
+  'e2e/references.spec.js': ['reports'],
+  'e2e/report-links.spec.js': ['reports'],
+  'e2e/study-page.spec.js': ['reports'],
+  'e2e/summary.spec.js': ['reports'],
   'e2e/reports.spec.js': ['reports'],
 };
 

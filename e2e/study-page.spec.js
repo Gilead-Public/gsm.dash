@@ -467,7 +467,7 @@ test('the study page sits in the app shell: brand, Study view tag, export date, 
   await header.locator('button[data-theme-pref="auto"]').click();
   expect(await page.evaluate(() => document.documentElement.dataset.theme ?? 'auto')).toBe('auto');
   const shell = await header.boundingBox();
-  const content = await page.locator('#app > gsm-study-page, #app > .study-page').boundingBox();
+  const content = await page.locator('#app > .study-page').boundingBox();
   expect(shell && content, 'header and study page both laid out').toBeTruthy();
   expect(Math.round(content?.x ?? 0), 'the study page lines up with the header').toBe(Math.round(shell?.x ?? -1));
   expect(content?.x ?? 0, 'inside the page margins').toBeGreaterThanOrEqual(20);

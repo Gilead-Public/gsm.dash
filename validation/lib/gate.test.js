@@ -229,8 +229,8 @@ describe('gate', () => {
 });
 
 describe('artifacts', () => {
-  // The artifact that doesn't ship, run alongside the one that does.
-  const other = /** @type {const} */ ('spa');
+  // An artifact that doesn't ship, run alongside the one that does.
+  const other = /** @type {import('../../e2e/projects.js').Artifact} */ (/** @type {unknown} */ ('other'));
   const both = { 'e2e/a.spec.js': [SHIPPED, other] };
   /** @returns {ResultRow[]} */
   const otherRows = () =>
