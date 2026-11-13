@@ -22,6 +22,8 @@ export const EVIDENCE = 'evidence';
  * @property {string} criterion
  * @property {string} screenshotSha256
  * @property {string} baselineHash
+ * @property {string} [reviewer] Who accepted it.
+ * @property {string} [acceptedAt] When, as an ISO timestamp.
  */
 
 /**
