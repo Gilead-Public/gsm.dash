@@ -245,3 +245,61 @@ export function canonicalDom(root, hosts) {
   walk(root, '');
   return lines.join('\n');
 }
+
+/** The old elements and their React counterparts: a div carrying the element's name as a class. */
+const HOSTS = { 'gsm-sidebar': 'div.sidebar', 'gsm-view-switch': 'div.view-switch', 'gsm-portfolio-table': 'div.portfolio-table', 'gsm-portfolio-dist': 'div.portfolio-dist' };
+
+/**
+ * The portfolio as the 11.03 baseline records it: its canonical DOM and computed styles (by hash), every sparkline's
+ * points, its accessibility tree, every Distribution mark's position, every table cell's background and any open
+ * tooltip.
+ * @param {import('@playwright/test').Page} page
+ * @param {string} name
+ */
+export async function capturePortfolio(page, name) {
+  const dom = await page.locator('#app').evaluate((el) => el.innerHTML);
+  const canonical = await page.locator('#app').evaluate(canonicalDom, HOSTS);
+  const aria = ariaStudyLinks(await page.locator('#app').ariaSnapshot());
+  const rendered = await page.evaluate(() => {
+    const visible = (/** @type {Element} */ el) => el.checkVisibility({ opacityProperty: true, visibilityProperty: true });
+    const along = (/** @type {Element} */ el, /** @type {Element} */ track) => {
+      const t = track.getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      // Marks are placed by a percentage with two decimals and centred by a transform, so four decimals of the track
+      // width reproduce the placement exactly on any platform; layout rounding is far smaller.
+      return t.width ? ((r.left + r.width / 2 - t.left) / t.width).toFixed(4) : 'n/a';
+    };
+    const tracks = [...document.querySelectorAll('#app .track')].map((track) =>
+      [...track.querySelectorAll('.pt, .ptot, .psel, .lsel')]
+        .map((el) => `${el.className}${el instanceof HTMLElement && el.dataset.pick ? `[${el.dataset.pick}]` : ''}@${along(el, track)}${visible(el) ? '' : ' hidden'}`)
+        .join(' '),
+    );
+    const cells = [...document.querySelectorAll('#app td, #app .otile')].map((el) => getComputedStyle(el).backgroundColor);
+    const sparklines = [...document.querySelectorAll('#app .spark svg')].map((svg) => {
+      const dot = svg.querySelector('.spark-dot');
+      return `${svg.getAttribute('aria-label')}: line ${svg.querySelector('.spark-line')?.getAttribute('d')}; dot ${dot?.getAttribute('cx')},${dot?.getAttribute('cy')}${visible(svg) ? '' : ' hidden'}`;
+    });
+    const tip = document.getElementById('gsm-tooltip');
+    return { tracks, cells, sparklines, tooltip: tip && visible(tip) ? tip.innerHTML : 'none' };
+  });
+  // Styles are read with the pointer off the page, as :hover rules would otherwise depend on which element it is over,
+  // and once transitions end: the React page keeps elements the original replaced, so CSS transitions run on it.
+  await page.mouse.move(0, 0);
+  await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished)));
+  const styles = await page.locator('#app').evaluate(computedStyles);
+  const text = [
+    `state: ${name}`,
+    canonicalLine(canonical),
+    stylesLine(styles),
+    `tooltip: ${rendered.tooltip}`,
+    `cell backgrounds: ${runs(rendered.cells)}`,
+    'distribution marks:',
+    ...rendered.tracks.map((t) => `  ${t}`),
+    'sparklines:',
+    ...(rendered.sparklines.length ? rendered.sparklines.map((t) => `  ${t}`) : ['  none']),
+    'accessibility:',
+    aria,
+    '',
+  ].join('\n');
+  return { text, dom, canonical, styles };
+}

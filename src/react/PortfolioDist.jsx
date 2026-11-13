@@ -1,11 +1,11 @@
 // @ts-check
 import { metricUnit } from '../util/format.js';
 import { distRow, distShowing, distStudies } from '../app/portfolio-dist.js';
-import { InfoIcon, StatusPill, useHoverTooltip } from './parts.jsx';
+import { InfoIcon, StatusPill, studyHref, useHoverTooltip } from './parts.jsx';
 
 /**
  * The Distribution view: one strip per metric, a dot per study at its latest snapshot, the pooled portfolio value as a
- * rule and the highlighted study as a labelled diamond. Categories fold independently of the table's bands.
+ * rule and the highlighted study as a labelled diamond. The highlighted study's name above the view opens its report. Categories fold independently of the table's bands.
  * @param {{ store: any, hidden: boolean }} props
  */
 export function PortfolioDist({ store, hidden }) {
@@ -72,10 +72,14 @@ export function PortfolioDist({ store, hidden }) {
     <div className="portfolio-dist" hidden={hidden} ref={ref} onClick={onClick}>
       <div className="showing">
         {showing.lead}
-        {showing.highlight && (
+        {sel && (
           <>
             {' · highlighting '}
-            <b>{showing.highlight}</b>
+            <b>
+              <a href={studyHref(store, sel.StudyID)} data-study={sel.StudyID}>
+                {showing.highlight}
+              </a>
+            </b>
           </>
         )}
       </div>

@@ -65,7 +65,9 @@ export class GsmPortfolioDist extends StoreElement {
       .join('');
     const showing = distShowing(store, plotted.studies, sel);
     this.innerHTML = `
-      <div class="showing">${esc(showing.lead)}${showing.highlight ? ` · highlighting <b>${esc(showing.highlight)}</b>` : ''}</div>
+      <div class="showing">${esc(showing.lead)}${
+        sel ? ` · highlighting <b><a href="#/study/${esc(sel.StudyID)}" data-study="${esc(sel.StudyID)}">${esc(showing.highlight)}</a></b>` : ''
+      }</div>
       <div class="dist">${html || '<p class="muted">No metrics selected.</p>'}</div>
       <p class="notes"><span><b>Dot</b> = one study's value; the black rule is the pooled portfolio value.</span><span><b>Click</b> a dot to highlight that study, a category to fold it.</span></p>`;
   }

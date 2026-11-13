@@ -1,6 +1,6 @@
 state: distribution-filtered
-canonical dom: sha256 825302718830f995fe1d4c1b22a67800e84ba9368f436a638731d38629c14691 (134612 characters)
-computed styles: sha256 e4f2cedc1bbb0f1bddc9e9e3247dc48d959c71b0af32f390ba1b9be1e4d3efb2 (818 elements)
+canonical dom: sha256 ffb546c518ebfe886f7cdfd7cbfd8d4d1c004f24930b897bda42190d9eed5fda (134687 characters)
+computed styles: sha256 9239cb8bae44b199f2cdd75c9e55facb67ea92b0298eddeeb29a23b7e89ba0fa (819 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×4 | rgb(224, 238, 236) ×5 | rgb(237, 240, 238) ×6 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×5 | rgb(224, 238, 236) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
@@ -145,7 +145,9 @@ accessibility:
     - tab "Overview"
     - tab "Details"
     - tab "Distribution" [selected]
-  - text: One line per metric · each dot is a study portfolio highlighted study Showing 4 / 12 studies · 21 / 21 site-level metrics · each study at its own latest snapshot · highlighting STUDY002 · BEACON-1
+  - text: One line per metric · each dot is a study portfolio highlighted study Showing 4 / 12 studies · 21 / 21 site-level metrics · each study at its own latest snapshot · highlighting
+  - link "STUDY002 · BEACON-1":
+    - /url: study:STUDY002
   - button "+ Disposition6 metrics SF · SDSC · TDSC · PTDSC · WC · LTFU · click to open":
     - heading "+ Disposition6 metrics" [level=4]
     - text: SF · SDSC · TDSC · PTDSC · WC · LTFU · click to open

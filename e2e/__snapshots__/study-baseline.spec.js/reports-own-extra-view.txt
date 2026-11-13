@@ -1,5 +1,5 @@
 state: own-extra-view (reports)
-dom: sha256 8eee0223dbde93debfe4819b5df087fb8dbeef3e49bc884a3ec6a03c99edd5a1 (77579 characters)
+dom: sha256 9b27b9def0fe15b5f54d8094815132167e5482e590f56f2767455d705088f7fc (77641 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -25,6 +25,8 @@ tiles:
   Analysis_kri0010 · Details 2/5: points 1, lines 2, empty 1
   Analysis_kri0011 · Details 2/5: points 1, lines 2, empty 1
 accessibility:
+- link "← Program overview":
+  - /url: ./portfolio.html
 - text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
 - button "Play through visits": ▶
 - slider "Visit": "4"

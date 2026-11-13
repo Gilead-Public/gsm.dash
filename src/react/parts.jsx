@@ -5,6 +5,16 @@ import { attachHoverTooltip, metricTip } from '../components/tooltip.js';
 import { metricParts } from '../util/format.js';
 import { sparkline } from '../charts/sparkline.js';
 
+/**
+ * A study report's address, carrying the portfolio's view in its hash.
+ * @param {any} store
+ * @param {string} studyId
+ */
+export function studyHref(store, studyId) {
+  const view = store.programParams().toString();
+  return `./${encodeURIComponent(studyId)}.html${view ? `#${view}` : ''}`;
+}
+
 /** @param {{ metric: any }} props */
 export function InfoIcon({ metric }) {
   return (

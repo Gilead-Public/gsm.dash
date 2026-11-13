@@ -68,9 +68,9 @@ function ConfigNotice({ problems }) {
 }
 
 /**
- * @param {{ store: any, studyId: string }} props
+ * @param {{ store: any, studyId: string, back: string }} props `back` is the portfolio's address, with the view it was left in.
  */
-export function StudyPage({ store, studyId }) {
+export function StudyPage({ store, studyId, back }) {
   const version = useStore(store);
   const root = useRef(/** @type {HTMLDivElement | null} */ (null));
   const timer = useRef(/** @type {ReturnType<typeof setInterval> | null} */ (null));
@@ -168,6 +168,9 @@ export function StudyPage({ store, studyId }) {
 
   return (
     <div className="study-page" data-study={studyId} ref={root} onClick={onClick}>
+      <a href={back} className="back">
+        ← Program overview
+      </a>
       <ConfigNotice problems={configProblems([...store.metrics, ...store.inactiveMetrics], { reportBase: store.reportBase })} />
       <div className="dd-head">
         <span className="study mono">{study.StudyID}</span>

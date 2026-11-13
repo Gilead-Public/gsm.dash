@@ -1,6 +1,6 @@
 state: rows-highlighted
-canonical dom: sha256 fe8f1248005fafe584163e4df11605899acbb0765cf2f7336d183f44d76bbfa7 (113865 characters)
-computed styles: sha256 d38340837187787098dfd43f833132907ddf96ff5d7c5fc05ed9a74b4f93f86a (749 elements)
+canonical dom: sha256 7887e0b9bcd2d626ddd965041af96c505a6a2ce170ae66d8846318fbc4fc6c61 (113940 characters)
+computed styles: sha256 17b497c3792f00dae72e0736b196854f82da6353a0805d0ddb3cb3c62705f474 (750 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) | rgb(237, 240, 238) | rgb(255, 255, 255) ×4 | rgb(224, 238, 236) ×5 | rgb(237, 240, 238) ×5 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) | rgb(224, 238, 236) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:

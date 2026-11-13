@@ -278,7 +278,7 @@ table.po th .info { cursor: help; }
 
 /* study page + widget tiles */
 gsm-study-page { display: block; }
-gsm-study-page .back { color: var(--accent); text-decoration: none; font-size: 13px; }
+:is(gsm-study-page, div:where(.study-page)) .back { color: var(--accent); text-decoration: none; font-size: 13px; }
 .dd-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px; padding: 12px 0 14px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
 .dd-head .study { font-family: "Archivo", sans-serif; font-size: 21px; font-weight: 700; }
 .dd-head .meta { font-size: 13.5px; color: var(--ink-2); }
@@ -505,6 +505,7 @@ tr.total td .pc { font-weight: 600; }
 :is(gsm-view-switch, div:where(.view-switch)) .legend .pline { width: 2px; height: 14px; background: var(--ink); }
 :is(gsm-view-switch, div:where(.view-switch)) .legend .dmd { width: 9px; height: 9px; background: var(--accent); transform: rotate(45deg); }
 .showing b { color: var(--ink); font-weight: 600; }
+.showing a { color: var(--accent); text-decoration: none; }
 
 /* bands: the whole band header folds / opens its category */
 table.po thead tr.band th[data-fold] { cursor: pointer; user-select: none; }

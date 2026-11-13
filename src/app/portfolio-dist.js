@@ -71,7 +71,7 @@ export function distRow(store, metric, { filtered, studies, sel }) {
 }
 
 /**
- * The line above the view. `highlight` names the highlighted study, shown in bold.
+ * The line above the view. `highlight` names the highlighted study, shown in bold as a link to its report.
  * @param {any} store
  * @param {any[]} studies
  * @param {any} sel

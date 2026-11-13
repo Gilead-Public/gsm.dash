@@ -5,7 +5,7 @@ import {
   POP_COLUMNS, MEASURE_LABELS, bandTitle, cellTip, heatClasses, metricHeadTip, popHeadTip, popTip, popValue, sortMeasure,
   studyTip, tableRows, tableShowing, tileTip,
 } from '../app/portfolio-table.js';
-import { InfoIcon, MetricValue, Sparkline, StatusPill, useHoverTooltip } from './parts.jsx';
+import { InfoIcon, MetricValue, Sparkline, StatusPill, studyHref, useHoverTooltip } from './parts.jsx';
 /** @typedef {import('../app/portfolio-table.js').Row} Row */
 
 /**
@@ -230,7 +230,7 @@ export function PortfolioTable({ store, hidden }) {
     return (
       <tr key={`study ${study.StudyID}`} className={`study ${child ? 'child' : ''} ${state.highlightStudy === study.StudyID ? 'sel' : ''}`} data-hl={study.StudyID} title="Click to highlight in every view">
         <td className="grp">
-          <a href={`./${encodeURIComponent(study.StudyID)}.html`} data-study={study.StudyID} className="mono">
+          <a href={studyHref(store, study.StudyID)} data-study={study.StudyID} className="mono">
             {study.StudyID}
           </a>
           {nick && <span className="nick">{nick}</span>}

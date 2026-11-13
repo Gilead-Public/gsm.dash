@@ -1,5 +1,5 @@
 state: tooltip-definition (reports)
-dom: sha256 abec9c7ceeaaa7a8d85426104f83e3cb8106da97e93cd3eb8264bdc571d77feb (84645 characters)
+dom: sha256 572ba5f0bca33038d1543f25df5d7720c6c33da23353e08aaab0a4c72a3e77ec (84707 characters)
 tooltip: <b>Screen Failure Rate</b><br><span class="tip-muted mono">SF · kri0012 · Disposition</span><dl class="tip-dl"><dt>Definition</dt><dd><span class="tip-muted">not yet supplied (Q2)</span></dd><dt>Numerator</dt><dd>Number of screen failed participants</dd><dt>Denominator</dt><dd>Total screened participants</dd><dt>Displayed as</dt><dd>percent (n ÷ d)</dd><dt>Flagging</dt><dd>Adjusted Z-Score · thresholds -2, -1, 2, 3</dd><dt>Note</dt><dd>The tracker also lists a Planned "Screen Failure" divided by all enrolled (open question Q1).</dd></dl>
 drill-in: closed
 tiles:
@@ -25,6 +25,8 @@ tiles:
   Analysis_kri0010 · Details 2/7: points 1, lines 2, segments 3, empty 1
   Analysis_kri0011 · Details 2/7: points 1, lines 2, segments 3, empty 1
 accessibility:
+- link "← Program overview":
+  - /url: ./portfolio.html
 - text: STUDY006 FALCON-2 Immunology · Respiratory · P1 · Enrolling · Product F
 - button "Play through visits": ▶
 - slider "Visit": "5"

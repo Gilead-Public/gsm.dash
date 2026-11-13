@@ -19,7 +19,8 @@ function route() {
 /** Keep the program view in the URL without adding history entries or firing hashchange. */
 function writeProgramHash(store) {
   if (route().page !== 'program') return;
-  const hash = `#/program?${store.programParams()}`;
+  const params = store.programParams().toString();
+  const hash = params ? `#/program?${params}` : '#/program';
   if (location.hash !== hash) history.replaceState(null, '', hash);
 }
 

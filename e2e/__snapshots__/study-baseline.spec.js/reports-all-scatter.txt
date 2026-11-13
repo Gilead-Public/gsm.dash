@@ -1,5 +1,5 @@
 state: all-scatter (reports)
-dom: sha256 0751a6e6aed9e0a95174dfb0bba1a28fb717839c1b288d443206a8f1a9b115e8 (107907 characters)
+dom: sha256 bebef3d6cac776a2c9a3e7f658dd10fa3f347724455f7bd621d00a05296238a9 (107969 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -25,6 +25,8 @@ tiles:
   Analysis_kri0010 · Scatter (n vs d) 3/5: points 17
   Analysis_kri0011 · Scatter (n vs d) 3/5: points 17
 accessibility:
+- link "← Program overview":
+  - /url: ./portfolio.html
 - text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
 - button "Play through visits": ▶
 - slider "Visit": "4"

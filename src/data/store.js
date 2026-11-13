@@ -3,6 +3,32 @@ import { selectLatestSnapshots, poolResults, bucketStudies, filterStudies } from
 import { indexSummary, poolSummary, POPULATIONS } from './summary.js';
 import { nextSort } from './sort.js';
 import { STATUS_ORDER, CATEGORY_ORDER, groupByCategory } from './catalog.js';
+import { CELL_MODES, GROUP_BY_OPTIONS, HEATMAPS, RAMPS, showOptions } from '../app/portfolio-controls.js';
+import { POP_COLUMNS } from '../app/portfolio-table.js';
+
+// The portfolio's single-valued settings in its URL: [param, state field, default, the controls' choices].
+const SCALARS = [
+  ['group', 'groupBy', 'none', GROUP_BY_OPTIONS],
+  ['cell', 'cellMode', 'defined', CELL_MODES],
+  ['heatmap', 'heatmap', 'none', HEATMAPS],
+  ['ramp', 'ramp', 'blue', RAMPS],
+];
+const SHOW_PARTS = showOptions(false).map(([part]) => part);
+const DEFAULT_SHOW = ['num', 'rate'];
+
+/**
+ * The known values of a set the user can empty. An emptied set is written as one empty value; a set whose values are
+ * all unknown is the default rather than empty.
+ * @param {URLSearchParams} params
+ * @param {string} key
+ * @param {string[]} options
+ * @param {string[]} fallback
+ */
+function chosen(params, key, options, fallback) {
+  const values = params.getAll(key);
+  const kept = options.filter((o) => values.includes(o));
+  return kept.length || (values.length && values.every((v) => v === '')) ? kept : fallback;
+}
 
 /**
  * PortfolioStore owns the loaded data and all view state for the program page.
@@ -41,7 +67,7 @@ export class PortfolioStore extends EventTarget {
     }
 
     this.state = {
-      show: new Set(['num', 'rate']), // any of num | den | rate | trend; cells stack what's on
+      show: new Set(DEFAULT_SHOW), // any of num | den | rate | trend; cells stack what's on
       heatmap: 'none', // 'none' | 'num' | 'den' | 'rate' — column-relative cell shading (and the metric sort measure)
       ramp: 'blue', // heatmap palette: 'blue' | 'teal' | 'purple' | 'grey'
       groupBy: 'none', // 'none' (one row per study) | a study param
@@ -191,40 +217,81 @@ export class PortfolioStore extends EventTarget {
   }
 
   /**
-   * The program view as URL query params (view, open bands, highlighted
-   * study, folded distribution categories) — so a link reopens the same view.
-   * `open` lists the table's open bands; `all` stands for every band.
+   * The portfolio view as URL params, so a link reopens the same view and a study report can carry it there and back.
+   * Defaults are left out, so the default view has no params. A list is one param per value, in catalog order, since
+   * study values may contain commas. `open` lists the table's open bands; `all` stands for every band.
    */
   programParams() {
     const { state } = this;
     const cats = this.#allCategories();
     const open = cats.filter((c) => !state.collapsedGroups.has(c));
     const zoom = open.length === 0 ? 'overview' : open.length === cats.length ? 'details' : 'mixed';
+    const view = state.programView === 'distribution' ? 'distribution' : zoom;
     const params = new URLSearchParams();
-    params.set('view', state.programView === 'distribution' ? 'distribution' : zoom);
-    if (zoom === 'mixed' || (zoom === 'details' && state.programView === 'distribution')) {
-      params.set('open', zoom === 'details' ? 'all' : open.join(','));
-    }
+    const add = (key, values) => values.forEach((v) => params.append(key, v));
+    // A set that can be emptied writes an empty value, so that it differs from the default.
+    const addSet = (key, values) => (values.length ? add(key, values) : params.set(key, ''));
+    if (view !== 'overview') params.set('view', view);
+    if (zoom === 'mixed' || (zoom === 'details' && view === 'distribution')) add('open', zoom === 'details' ? ['all'] : open);
+    add('dfold', cats.filter((c) => state.distCollapsed.has(c)));
     if (state.highlightStudy) params.set('study', state.highlightStudy);
-    if (state.distCollapsed.size) params.set('dfold', [...state.distCollapsed].join(','));
+    for (const [key, field, value] of SCALARS) if (state[field] !== value) params.set(key, state[field]);
+    if (state.groupBy !== 'none') add('expand', this.#bucketValues().filter((v) => state.expanded.has(v)));
+    if (state.sort.key && state.sort.dir) {
+      params.set('sort', state.sort.key);
+      params.set('dir', state.sort.dir);
+    }
+    if (SHOW_PARTS.some((p) => state.show.has(p) !== DEFAULT_SHOW.includes(p))) addSet('show', SHOW_PARTS.filter((p) => state.show.has(p)));
+    const options = this.filterOptions();
+    for (const param of Object.keys(state.filters)) add(`filter.${param}`, options[param].filter((v) => state.filters[param].has(v)));
+    if (STATUS_ORDER.some((s) => !state.statuses.has(s))) addSet('statuses', STATUS_ORDER.filter((s) => state.statuses.has(s)));
+    add('hide', this.metrics.map((m) => m.MetricID).filter((id) => state.hiddenMetrics.has(id)));
     return params;
   }
 
-  /** Restore what programParams() wrote; unknown studies / categories are ignored. One 'change'. */
+  /** Restore what programParams() wrote: an absent param is its default, and unknown values are dropped. One 'change'. */
   applyProgramParams(params) {
     const { state } = this;
     const cats = this.#allCategories();
+    const known = (values, options) => values.filter((v) => options.includes(v));
     const view = params.get('view');
-    const open = params.get('open');
-    const list = (v) => (v ? v.split(',').filter((c) => cats.includes(c)) : []);
+    const open = params.getAll('open');
     state.programView = view === 'distribution' ? 'distribution' : 'table';
-    if (open === 'all' || (open == null && view === 'details')) state.collapsedGroups = new Set();
-    else if (open != null) state.collapsedGroups = new Set(cats.filter((c) => !list(open).includes(c)));
+    if (open.includes('all') || (!open.length && view === 'details')) state.collapsedGroups = new Set();
+    else if (open.length) state.collapsedGroups = new Set(cats.filter((c) => !open.includes(c)));
     else state.collapsedGroups = new Set(cats);
+    state.distCollapsed = new Set(known(params.getAll('dfold'), cats));
     const study = params.get('study');
     state.highlightStudy = this.studies.some((st) => st.StudyID === study) ? study : null;
-    state.distCollapsed = new Set(list(params.get('dfold')));
+    for (const [key, field, value, choices] of SCALARS) {
+      const v = params.get(key);
+      state[field] = choices.some(([choice]) => choice === v) ? v : value;
+    }
+    state.expanded = new Set(state.groupBy === 'none' ? [] : known(params.getAll('expand'), this.#bucketValues()));
+    const [sortKey, dir] = [params.get('sort'), params.get('dir')];
+    const sortable = ['label', 'meta', ...POP_COLUMNS.map((c) => c.key), ...this.metrics.map((m) => m.MetricID)];
+    state.sort = sortable.includes(sortKey) && (dir === 'asc' || dir === 'desc') ? { key: sortKey, dir } : { key: null, dir: null };
+    state.show = new Set(chosen(params, 'show', SHOW_PARTS, DEFAULT_SHOW));
+    const options = this.filterOptions();
+    for (const param of Object.keys(state.filters)) state.filters[param] = new Set(known(params.getAll(`filter.${param}`), options[param]));
+    this.#applyMetricParams(params);
     this.#emit();
+  }
+
+  /** What a study report takes from the portfolio's params: the metric-status filters and hidden metrics. One 'change'. */
+  applyMetricParams(params) {
+    this.#applyMetricParams(params);
+    this.#emit();
+  }
+
+  #applyMetricParams(params) {
+    const hide = params.getAll('hide');
+    this.state.statuses = new Set(chosen(params, 'statuses', STATUS_ORDER, STATUS_ORDER));
+    this.state.hiddenMetrics = new Set(this.metrics.map((m) => m.MetricID).filter((id) => hide.includes(id)));
+  }
+
+  #bucketValues() {
+    return bucketStudies(this.studies, this.state.groupBy).map((b) => String(b.value));
   }
 
   /** Fold / unfold one category in the distribution view (independent of the table's folds). */

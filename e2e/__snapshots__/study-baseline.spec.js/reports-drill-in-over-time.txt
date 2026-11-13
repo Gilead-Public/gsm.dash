@@ -1,5 +1,5 @@
 state: drill-in-over-time (reports)
-dom: sha256 d1c3f46cc63f7c5b132d5b7f4ff130f88ffd51e2b9dafb686e59c57a42b78f86 (79560 characters)
+dom: sha256 44177f600703fc23dbc736a82881f8fdc4c02bdeec66b5cd2eba3f779303a905 (79622 characters)
 tooltip: none
 drill-in: TDSC · Over time · gsm.viz · timeSeries · TDSC: charts 1
   type undefined; labels: 2026-01-31 | 2026-02-28 | 2026-03-31 | 2026-04-30 | 2026-05-31
@@ -55,6 +55,8 @@ tiles:
   Analysis_kri0010 · Details 2/5: points 1, lines 2, empty 1
   Analysis_kri0011 · Details 2/5: points 1, lines 2, empty 1
 accessibility:
+- link "← Program overview":
+  - /url: ./portfolio.html
 - text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
 - button "Play through visits": ▶
 - slider "Visit": "4"

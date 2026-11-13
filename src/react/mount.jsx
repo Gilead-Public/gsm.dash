@@ -22,6 +22,21 @@ function portfolioStoreFor(doc) {
 }
 
 /**
+ * The portfolio keeps its view in the URL's hash, rewritten in place on every change so the history is not filled.
+ * @param {PortfolioStore} store
+ */
+function syncHash(store) {
+  const write = () => {
+    const params = store.programParams().toString();
+    const url = `${location.href.split('#')[0]}${params ? `#${params}` : ''}`;
+    if (url !== location.href) history.replaceState(null, '', url);
+  };
+  store.applyProgramParams(new URLSearchParams(location.hash.slice(1)));
+  write();
+  store.addEventListener('change', write);
+}
+
+/**
  * Starts whichever page this is. Every page carries the same code, so the page names itself in `data-page`.
  * @param {HTMLElement | null} el
  */
@@ -43,6 +58,7 @@ export function mount(el) {
     const store = portfolioStoreFor(/** @type {import('./document.js').PortfolioDocument} */ (result.doc));
     meta.textContent = `${store.studies.length} studies · ${store.metrics.length} metrics · exported ${store.generated}`;
     glossary.addEventListener('click', () => openGlossary(store));
+    syncHash(store);
     return root.render(<PortfolioPage store={store} />);
   }
   const doc = /** @type {import('./document.js').StudyDocument} */ (result.doc);
@@ -51,5 +67,6 @@ export function mount(el) {
   document.title = `${StudyID} · gsm.dash`;
   meta.textContent = `${store.metrics.length} metrics · exported ${store.generated}`;
   glossary.addEventListener('click', () => openGlossary(store));
-  root.render(<StudyPage store={store} studyId={StudyID} />);
+  store.applyMetricParams(new URLSearchParams(location.hash.slice(1)));
+  root.render(<StudyPage store={store} studyId={StudyID} back={`./portfolio.html${location.hash}`} />);
 }
