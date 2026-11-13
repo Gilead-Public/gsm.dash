@@ -1,5 +1,6 @@
 state: rows-status-hidden
-dom: sha256 c4562392ac96bde8fab3db94c8f9339e95e7095c90d5c40f225c8068a4c9121d (109610 characters)
+canonical dom: sha256 809032f1e632bdf923220feb5615d2625bdc8c5a9bbc88e551bd546dbd49487c (115313 characters)
+computed styles: sha256 1474a548c32013f70a6776d2ef59fa1f8bb7c38b2cf805846b28cae755ea1e30 (719 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
@@ -20,6 +21,8 @@ distribution marks:
   pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
   pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
   pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+sparklines:
+  none
 accessibility:
 - main:
   - text: Controls
@@ -180,7 +183,7 @@ accessibility:
       - row "STUDY001ATLAS-1 Study details 2026-05-31 1,341 988 26.3% 6.6% 12.2% 8.6% 2.5% 2.6% 0.6% 1.6% 1.5% 3.7% 3.2% 3.2% 5.0% 5.2% 5.5% 10.4% 2.1%":
         - cell "STUDY001ATLAS-1 Study details":
           - link "STUDY001":
-            - /url: "#/study/STUDY001"
+            - /url: study:STUDY001
           - text: ATLAS-1
           - img "Study details": i
         - cell "2026-05-31"
@@ -194,7 +197,7 @@ accessibility:
       - row "STUDY008HARBOR-2 Study details 2026-06-30 611 499 18.3% 5.2% 9.2% 8.8% 2.4% 1.4% 0.4% 1.2% 1.6% 2.8% 2.8% 2.0% 2.2% 6.8% 13.4% 12.2% 3.5%":
         - cell "STUDY008HARBOR-2 Study details":
           - link "STUDY008":
-            - /url: "#/study/STUDY008"
+            - /url: study:STUDY008
           - text: HARBOR-2
           - img "Study details": i
         - cell "2026-06-30"
@@ -208,7 +211,7 @@ accessibility:
       - row "STUDY012LUMEN-1 Study details 2026-06-30 1,281 907 29.2% 7.3% 11.9% 10.5% 4.1% 1.3% 0.9% 1.9% 1.4% 5.2% 1.8% 2.1% 4.3% 6.8% 9.5% 11.8% 2.8%":
         - cell "STUDY012LUMEN-1 Study details":
           - link "STUDY012":
-            - /url: "#/study/STUDY012"
+            - /url: study:STUDY012
           - text: LUMEN-1
           - img "Study details": i
         - cell "2026-06-30"

@@ -114,7 +114,8 @@ npm run build:reports  # one self-contained study report per study, in dist/repo
   replacing the app's study route. `scripts/package-reports.mjs` inlines the
   built page into a template; `scripts/inject.mjs` puts one study document
   (`schemas/study-document.schema.json`, built by `scripts/study-document.mjs`)
-  into it. A document that fails its schema shows an error state.
+  into it; `Rscript scripts/inject.R` does the same in base R, writing the
+  same bytes. A document that fails its schema shows an error state.
 - `scripts/generate-example-data.mjs` — deterministic simulated portfolio
   (12 studies × ~6 monthly snapshots, real gsm.kri metric catalog IDs, all
   numbers fake).

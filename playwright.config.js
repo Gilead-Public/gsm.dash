@@ -40,8 +40,7 @@ export default defineConfig({
   })),
   webServer: [...new Set(projects.map((p) => p.artifact))].map((artifact) => ({
     command: `node validation/serve.js ${join(runDir, artifact === 'spa' ? 'build/subpath' : 'build/reports')} ${ports[artifact]} --prefix ${PREFIX}`,
-    // The reports have no index page to poll, so their server counts as ready once it accepts connections.
-    ...(artifact === 'spa' ? { url: `http://127.0.0.1:${ports.spa}${PREFIX}` } : { port: ports.reports }),
+    url: `http://127.0.0.1:${ports[artifact]}${PREFIX}${artifact === 'spa' ? '' : 'portfolio.html'}`,
     reuseExistingServer: false,
   })),
 });

@@ -1,12 +1,13 @@
 // @ts-check
 // Packages each page Astro built into a single-file template (scripts and styles inline, the data placeholder left
-// in place), then writes one report per study by injecting its data document.
+// in place), then writes the reports by injecting their data documents: one per study, and the portfolio.
 // Usage: node scripts/package-reports.mjs <out dir> [data dir]   (after `astro build`)
 import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { init, parse } from 'es-module-lexer';
 import { buildStudyDocument } from './study-document.mjs';
+import { buildPortfolioDocument } from './portfolio-document.mjs';
 import { inject, PLACEHOLDER } from './inject.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -84,6 +85,15 @@ export async function packagePage(dist, page) {
   return { html, inlined };
 }
 
+/**
+ * Each template and the reports written from it, as file name and data document.
+ * @type {Array<{ template: string, reports: (data: ReturnType<typeof readData>) => Array<[string, unknown]> }>}
+ */
+export const REPORTS = [
+  { template: 'study.html', reports: (data) => data.manifest.studies.map((/** @type {any} */ { StudyID }) => [`${StudyID}.html`, buildStudyDocument(data, StudyID)]) },
+  { template: 'portfolio.html', reports: (data) => [['portfolio.html', buildPortfolioDocument(data)]] },
+];
+
 /** @param {string} dir */
 function readData(dir) {
   /** @param {string} path */
@@ -101,12 +111,16 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     writeFileSync(join(TEMPLATES, page), html);
     console.log(`Packaged ${page} (${(html.length / 1e3).toFixed(0)} kB; inlined ${inlined.join(', ')})`);
   }
-  const template = readFileSync(join(TEMPLATES, 'study.html'), 'utf8');
   const data = readData(dataDir);
   rmSync(out, { recursive: true, force: true });
   mkdirSync(out, { recursive: true });
-  for (const { StudyID } of data.manifest.studies) {
-    writeFileSync(join(out, `${StudyID}.html`), inject(template, JSON.stringify(buildStudyDocument(data, StudyID))));
+  let written = 0;
+  for (const { template, reports } of REPORTS) {
+    const html = readFileSync(join(TEMPLATES, template), 'utf8');
+    for (const [file, doc] of reports(data)) {
+      writeFileSync(join(out, file), inject(html, JSON.stringify(doc)));
+      written++;
+    }
   }
-  console.log(`Wrote ${data.manifest.studies.length} study reports to ${out}`);
+  console.log(`Wrote ${written} reports to ${out}`);
 }

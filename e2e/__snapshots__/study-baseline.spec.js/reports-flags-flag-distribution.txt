@@ -1,5 +1,5 @@
 state: flags-flag-distribution (reports)
-dom: sha256 caea401844dd1f46b1de61c67aacdb1a06472d68db118e65b849cf8caaabf1da (62777 characters)
+dom: sha256 df51667d65a20b91f7b0d61c03b7173a5cefa18dd47ed4738e1ba02e7eda1b0e (62839 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -25,6 +25,8 @@ tiles:
   Analysis_kri0010 · Flag distribution 7/7: rows 6
   Analysis_kri0011 · Flag distribution 7/7: rows 6
 accessibility:
+- link "← Program overview":
+  - /url: ./portfolio.html
 - text: STUDY006 FALCON-2 Immunology · Respiratory · P1 · Enrolling · Product F
 - button "Play through visits": ▶
 - slider "Visit": "5"

@@ -4,6 +4,7 @@ import { test as base, expect } from '@playwright/test';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { parseProject, requireRunDir } from '../projects.js';
+import { buildStudyDocument } from '../../scripts/study-document.mjs';
 
 const RUN_DIR = resolve(requireRunDir());
 const RUN_ID = process.env.VALIDATION_RUN_ID ?? 'dev';
@@ -45,9 +46,9 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
  * @typedef {object} App
  * @property {Artifact} artifact
  * @property {Mode} mode
- * @property {(route?: string, overrides?: DataOverrides) => Promise<void>} open Opens the build under test at a route such as `#/study/AA-AA-000-0000` and waits for the page to render.
+ * @property {(route?: string, overrides?: DataOverrides) => Promise<void>} open Opens the portfolio: on the spa at a route such as `#/program?view=details`, on the reports `portfolio.html` with the route as its hash. Waits for the page to render.
  * @property {(studyId: string, overrides?: DataOverrides) => Promise<void>} openStudy Opens one study's page in the artifact under test.
- * @property {(studyId: string, overrides?: ReportOverrides) => Promise<string>} openReport Opens one study's report and waits for it to show its data or its error state. Returns the URL opened.
+ * @property {(name: string, overrides?: ReportOverrides, hash?: string) => Promise<string>} openReport Opens one report, `portfolio` or a StudyID, at an optional `#` hash, and waits for it to show its data or its error state. Returns the URL opened, without the hash.
  */
 
 /**
@@ -58,15 +59,21 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
  */
 
 /**
- * The same data changes for a report's document: `portfolio` sees the report base, the catalog and the study's entry
- * as a one-study manifest, and `snapshot` sees each of the study's snapshots.
+ * The same data changes for a study report's document: `portfolio` sees the report base, the catalog and the study's
+ * entry as a one-study manifest, and `snapshot` sees each of the study's snapshots. A study report carries its
+ * portfolio comparison rather than the summary, so a `summary` change rebuilds that comparison from the changed
+ * summary, as the build would.
  * @param {DataOverrides} overrides
  * @returns {ReportOverrides}
  */
 function asReportOverrides(overrides) {
-  if (overrides.summary) throw new Error('a report carries no portfolio summary; summary overrides need the spa artifact');
   return {
     document(doc) {
+      if (overrides.summary) {
+        const summary = structuredClone(readData('summary.json'));
+        overrides.summary(summary);
+        doc.comparison = buildStudyDocument({ manifest: readData('portfolio.json'), summary, read: readData }, doc.study.StudyID).comparison;
+      }
       if (overrides.portfolio) {
         const manifest = { generated: doc.generated, reportBase: doc.reportBase, metrics: doc.metrics, studies: [doc.study] };
         overrides.portfolio(manifest);
@@ -76,6 +83,29 @@ function asReportOverrides(overrides) {
         else doc.reportBase = manifest.reportBase;
       }
       if (overrides.snapshot) for (const snapshot of doc.snapshots) overrides.snapshot(snapshot);
+    },
+  };
+}
+
+/**
+ * The same data changes for the portfolio report's document: `portfolio` sees the report base, the catalog and the
+ * studies as a manifest, and `summary` sees the summary. The portfolio report carries no study files.
+ * @param {DataOverrides} overrides
+ * @returns {ReportOverrides}
+ */
+function asPortfolioOverrides(overrides) {
+  if (overrides.snapshot) throw new Error('the portfolio report carries no study files; snapshot overrides need a study report');
+  return {
+    document(doc) {
+      if (overrides.portfolio) {
+        const manifest = { generated: doc.generated, reportBase: doc.reportBase, metrics: doc.metrics, studies: doc.studies };
+        overrides.portfolio(manifest);
+        doc.metrics = manifest.metrics;
+        doc.studies = manifest.studies;
+        if (manifest.reportBase === undefined) delete doc.reportBase;
+        else doc.reportBase = manifest.reportBase;
+      }
+      overrides.summary?.(doc.summary);
     },
   };
 }
@@ -147,6 +177,11 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
       artifact,
       mode,
       async open(route = '', overrides) {
+        if (artifact === 'reports') {
+          await this.openReport('portfolio', overrides && asPortfolioOverrides(overrides), route);
+          await page.locator('#app > .layout').waitFor();
+          return;
+        }
         let url = `${base}${route}`;
         if (overrides && mode === 'file') {
           const variant = testInfo.outputPath('variant.html');
@@ -175,12 +210,12 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
         await this.open(`#/study/${encodeURIComponent(studyId)}`, overrides);
         await page.locator('gsm-study-page .tile').first().waitFor();
       },
-      async openReport(studyId, overrides) {
+      async openReport(name, overrides, hash = '') {
         if (artifact !== 'reports') throw new Error(`openReport needs the reports artifact, not ${artifact}`);
-        const file = join(REPORTS_DIR, `${studyId}.html`);
-        let url = mode === 'file' ? `file://${file}` : `${base}${encodeURIComponent(studyId)}.html`;
+        const file = join(REPORTS_DIR, `${name}.html`);
+        let url = mode === 'file' ? `file://${file}` : `${base}${encodeURIComponent(name)}.html`;
         if (overrides && mode === 'file') {
-          const variant = testInfo.outputPath(`${studyId}.html`);
+          const variant = testInfo.outputPath(`${name}.html`);
           writeFileSync(variant, rewriteReport(readFileSync(file, 'utf8'), overrides));
           url = `file://${variant}`;
         } else if (overrides) {
@@ -189,8 +224,8 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
             await r.fulfill({ response, body: rewriteReport(await response.text(), overrides) });
           });
         }
-        await page.goto(url);
-        await page.locator('#app > [data-study], #app > [role=alert]').waitFor();
+        await page.goto(`${url}${hash}`);
+        await page.locator('#app > [data-study], #app > .layout, #app > [role=alert]').first().waitFor();
         return url;
       },
     });

@@ -1,17 +1,11 @@
 import { StoreElement, esc } from './util.js';
 import { STATUS_ORDER } from '../data/catalog.js';
 import { statusPill } from './tooltip.js';
+import {
+  CELL_MODES, FILTER_LABELS, GROUP_BY_OPTIONS, HEATMAPS, HIGHLIGHT_HINT, RAMPS, cellModeHint, controlStates, showLabel,
+  showOptions, studyLabel, unsupportedNote,
+} from '../app/portfolio-controls.js';
 
-const GROUP_BY_OPTIONS = [
-  ['none', 'None — one row per study'],
-  ['therapeutic_area', 'Therapeutic area'],
-  ['protocol_indication', 'Indication'],
-  ['phase', 'Phase'],
-  ['status', 'Status'],
-  ['product', 'Product'],
-];
-const FILTER_LABELS = { therapeutic_area: 'Therapeutic area', phase: 'Phase', status: 'Status' };
-const RAMPS = [['blue', 'Blue'], ['teal', 'Teal'], ['purple', 'Purple'], ['grey', 'Grey']];
 const COLLAPSE_KEY = 'gsm-dash-sidebar';
 
 /**
@@ -91,15 +85,12 @@ export class GsmSidebar extends StoreElement {
       return;
     }
 
-    // One sidebar drives every program view. A control that does not apply to
-    // the current view stays visible but disabled, with the reason under it.
-    const dist = state.programView === 'distribution';
-    const overview = !dist && this.store.tableZoom() === 'overview';
+    const na = controlStates(this.store);
+    const { dist } = na;
     const ctl = (body, { na = '' } = {}) =>
       `<div class="ctl ${na ? 'na' : ''}"${na ? ' aria-disabled="true"' : ''}>${body}${
         na.trim() ? `<p class="sb-why">${na}</p>` : ''
       }</div>`;
-    const tableOnly = dist ? 'Table only: the distribution plots every study on each metric’s line.' : '';
 
     const studies = this.store.filteredStudies();
     const hl = studies.some((st) => st.StudyID === state.highlightStudy) ? state.highlightStudy : '';
@@ -107,11 +98,9 @@ export class GsmSidebar extends StoreElement {
       `<label>Highlight study</label><select data-highlight><option value="">None</option>${studies
         .map(
           (st) =>
-            `<option value="${esc(st.StudyID)}" ${st.StudyID === hl ? 'selected' : ''}>${esc(st.StudyID)}${
-              st.params?.nickname ? ` · ${esc(st.params.nickname)}` : ''
-            }</option>`
+            `<option value="${esc(st.StudyID)}" ${st.StudyID === hl ? 'selected' : ''}>${esc(studyLabel(st))}</option>`
         )
-        .join('')}</select><p class="sb-hint">Marks the study in every view. Click a row or a dot to pick one.</p>`
+        .join('')}</select><p class="sb-hint">${HIGHLIGHT_HINT}</p>`
     );
 
     // P2: cells follow each metric's glossary display rule by default; the
@@ -119,49 +108,31 @@ export class GsmSidebar extends StoreElement {
     const defined = state.cellMode === 'defined';
     const chip = ([k, label]) =>
       `<button type="button" class="chip ${state.show.has(k) ? 'on' : ''}" data-show="${k}" aria-pressed="${state.show.has(k)}">${label}</button>`;
-    const extras = [['trend', 'Trend']];
-    const cellsNa = dist
-      ? 'The distribution shows each value as defined in the glossary.'
-      : overview
-        ? 'Overview tiles show one headline value per metric. Open a category or switch to Details.'
-        : '';
     const config =
       highlight +
       ctl(
-        `<label>Cell display</label>${this.#seg('cellMode', [['defined', 'As defined'], ['custom', 'Custom']])}${
-          cellsNa
-            ? ''
-            : `<p class="sb-hint">${defined ? 'Each metric as its glossary defines it: n (%), per 28 days, or %.' : 'The same numbers stacked in every cell.'}</p>`
+        `<label>Cell display</label>${this.#seg('cellMode', CELL_MODES)}${
+          na.cellMode ? '' : `<p class="sb-hint">${cellModeHint(defined)}</p>`
         }`,
-        { na: cellsNa }
+        { na: na.cellMode }
       ) +
+      ctl(`<label>${showLabel(defined)}</label><div class="chips">${showOptions(defined).map(chip).join('')}</div>`, { na: na.show }) +
       ctl(
-        `<label>${defined ? 'Also show' : 'Show in each cell'}</label><div class="chips">${(defined
-          ? extras
-          : [['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate'], ...extras]
-        )
-          .map(chip)
-          .join('')}</div>`,
-        { na: cellsNa ? ' ' : '' }
-      ) +
-      ctl(
-        `<label>Heatmap (also drives column sort)</label><select data-heatmap ${dist ? 'disabled' : ''}>${[
-          ['none', 'None'], ['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate'],
-        ]
+        `<label>Heatmap (also drives column sort)</label><select data-heatmap ${dist ? 'disabled' : ''}>${HEATMAPS
           .map(([k, label]) => `<option value="${k}" ${state.heatmap === k ? 'selected' : ''}>${label}</option>`)
           .join('')}</select>`,
-        { na: tableOnly }
+        { na: na.heatmap }
       ) +
-      ctl(`<label>Heatmap color</label>${this.#seg('ramp', RAMPS)}`, { na: dist || state.heatmap === 'none' ? ' ' : '' }) +
+      ctl(`<label>Heatmap color</label>${this.#seg('ramp', RAMPS)}`, { na: na.ramp }) +
       ctl(
         `<label>Group rows by</label><select data-groupby ${dist ? 'disabled' : ''}>${GROUP_BY_OPTIONS.map(
           ([value, label]) => `<option value="${value}" ${value === state.groupBy ? 'selected' : ''}>${label}</option>`
         ).join('')}</select>`,
-        { na: tableOnly }
+        { na: na.groupBy }
       );
 
     const supported = this.store.supportedMetrics();
-    const unsupported = this.store.unsupportedMetrics();
+    const note = unsupportedNote(this.store.unsupportedMetrics());
     const visible = this.store.visibleMetrics().length;
     const statusCount = (st) => supported.filter((m) => (m.Status ?? 'Released') === st).length;
     const metrics =
@@ -188,11 +159,9 @@ export class GsmSidebar extends StoreElement {
             .join('')}</div>`;
         })
         .join('')}</div>` +
-      (unsupported.length
-        ? `<p class="sb-note" title="${esc(unsupported.map((m) => `${m.Abbreviation} (${m.GroupLevel}-level)`).join(', '))}">
-            ${unsupported.length} ${unsupported.length === 1 ? 'metric is' : 'metrics are'} not site-level (${esc(
-              [...new Set(unsupported.map((m) => m.GroupLevel))].join('/')
-            )}) — held back until a future release adds that plumbing.</p>`
+      (note
+        ? `<p class="sb-note" title="${esc(note.title)}">
+            ${esc(note.text)}</p>`
         : '');
 
     const options = this.store.filterOptions();

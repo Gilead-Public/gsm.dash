@@ -21,15 +21,16 @@ export const SHIPPED = 'spa';
  * @type {Readonly<Record<string, readonly Artifact[]>>}
  */
 export const SPEC_ARTIFACTS = {
-  'e2e/delivery.spec.js': ['spa'],
+  'e2e/cross-report.spec.js': ['reports'],
+  'e2e/delivery.spec.js': ['spa', 'reports'],
   'e2e/distribution.spec.js': ['spa', 'reports'],
-  'e2e/portfolio.spec.js': ['spa'],
-  'e2e/portfolio-baseline.spec.js': ['spa'],
+  'e2e/portfolio.spec.js': ['spa', 'reports'],
+  'e2e/portfolio-baseline.spec.js': ['spa', 'reports'],
   'e2e/study-baseline.spec.js': ['spa', 'reports'],
   'e2e/references.spec.js': ['spa', 'reports'],
   'e2e/report-links.spec.js': ['spa', 'reports'],
   'e2e/study-page.spec.js': ['spa', 'reports'],
-  'e2e/summary.spec.js': ['spa'],
+  'e2e/summary.spec.js': ['spa', 'reports'],
   'e2e/reports.spec.js': ['reports'],
 };
 

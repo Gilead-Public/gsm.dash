@@ -9,7 +9,8 @@ import { writeExampleData } from '../scripts/generate-example-data.mjs';
 import { assertNoImports, flatten, packagePage } from '../scripts/package-reports.mjs';
 import { inject, PLACEHOLDER } from '../scripts/inject.mjs';
 import { buildStudyDocument } from '../scripts/study-document.mjs';
-import { readStudyDocument } from '../src/react/document.js';
+import { buildPortfolioDocument } from '../scripts/portfolio-document.mjs';
+import { readPortfolioDocument, readStudyDocument } from '../src/react/document.js';
 import { pooled } from './qual/pooling.js';
 
 let dir;
@@ -36,6 +37,13 @@ function schemaValidator() {
   ajv.addSchema(schema('study-snapshot'));
   ajv.addSchema(schema('portfolio'));
   return ajv.compile(schema('study-document'));
+}
+function portfolioValidator() {
+  const ajv = new Ajv({ allErrors: true, strict: false });
+  addFormats(ajv);
+  ajv.addSchema(schema('portfolio'));
+  ajv.addSchema(schema('portfolio-summary'));
+  return ajv.compile(schema('portfolio-document'));
 }
 
 describe('the study document', () => {
@@ -103,6 +111,93 @@ describe('the study document', () => {
       change(copy);
       expect(validate(copy), what).toBe(false);
     }
+  });
+});
+
+describe('the portfolio document', () => {
+  it("holds the catalog, each study's manifest entry without its file list, and the summary, and passes its schema", () => {
+    const validate = portfolioValidator();
+    const doc = buildPortfolioDocument(data);
+    expect(validate(doc), JSON.stringify(validate.errors?.slice(0, 3))).toBe(true);
+    expect(doc.metrics).toEqual(data.manifest.metrics);
+    expect(doc.studies).toEqual(data.manifest.studies.map(({ StudyID, params, snapshots }) => ({ StudyID, params, snapshots })));
+    expect(doc.summary).toEqual(data.summary);
+    expect(doc).not.toHaveProperty('reportBase');
+    expect(buildPortfolioDocument({ ...data, manifest: { ...data.manifest, reportBase: '../reports/' } }).reportBase).toBe('../reports/');
+  });
+
+  it("15.01: the portfolio document is built without reading any study's file, and is byte-identical when those files change (#15)", () => {
+    let reads = 0;
+    const counting = { ...data, read: (path) => (reads++, data.read(path)) };
+    const before = JSON.stringify(buildPortfolioDocument(counting));
+    const edited = {
+      ...data,
+      read: (path) => {
+        reads++;
+        const snap = structuredClone(data.read(path));
+        for (const r of snap.results) r.Numerator += 1;
+        return snap;
+      },
+    };
+    expect(JSON.stringify(buildPortfolioDocument(edited))).toBe(before);
+    expect(reads, 'study files read').toBe(0);
+    const { Numerator } = data.read(data.manifest.studies[0].files[data.manifest.studies[0].snapshots[0]]).results[0];
+    expect(edited.read(data.manifest.studies[0].files[data.manifest.studies[0].snapshots[0]]).results[0].Numerator, 'the edit changes the files').toBe(Numerator + 1);
+  });
+
+  it('the schema rejects stored rates, unknown fields, file lists and snapshot rows', () => {
+    const validate = portfolioValidator();
+    const doc = buildPortfolioDocument(data);
+    const rejected = {
+      'an unknown top-level field': (d) => (d.note = 'x'),
+      'a stored rate in the summary': (d) => (d.summary.counts[0].Rate = 0.5),
+      'a summary numerator as text': (d) => (d.summary.counts[0].Numerator = '5'),
+      'no summary': (d) => delete d.summary,
+      'no studies': (d) => (d.studies = []),
+      'a manifest file list on a study': (d) => (d.studies[0].files = {}),
+      'snapshot rows': (d) => (d.snapshots = []),
+      'a metric without an ID': (d) => delete d.metrics[0].MetricID,
+    };
+    for (const [what, change] of Object.entries(rejected)) {
+      const copy = structuredClone(doc);
+      change(copy);
+      expect(validate(copy), what).toBe(false);
+    }
+  });
+});
+
+describe('reading the injected portfolio document in the page', () => {
+  const doc = () => structuredClone(buildPortfolioDocument(data));
+
+  it('accepts a generated document', () => {
+    expect(readPortfolioDocument(JSON.stringify(doc())).ok).toBe(true);
+  });
+
+  it('refuses text that is not JSON, and what the schema rejects, as the schema does', () => {
+    for (const text of ['{"studies": ', PLACEHOLDER, '', null]) {
+      expect(readPortfolioDocument(text)).toMatchObject({ ok: false, errors: [expect.stringMatching(/not JSON/)] });
+    }
+    const validate = portfolioValidator();
+    for (const change of [(d) => (d.note = 'x'), (d) => (d.summary.counts[0].Rate = 0.5), (d) => (d.studies[0].files = {})]) {
+      const d = doc();
+      change(d);
+      expect(validate(d)).toBe(false);
+      const result = readPortfolioDocument(JSON.stringify(d));
+      expect(result.ok).toBe(false);
+      expect(!result.ok && result.errors.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('refuses a summary that describes other studies or snapshots than the document lists', () => {
+    const extra = doc();
+    extra.studies.push({ ...extra.studies[0], StudyID: 'ELSEWHERE' });
+    expect(readPortfolioDocument(JSON.stringify(extra))).toMatchObject({ ok: false, errors: [expect.stringMatching(/^\/summary: .*ELSEWHERE/)] });
+    const date = doc();
+    date.summary.counts[0].SnapshotDate = '1999-01-01';
+    expect(readPortfolioDocument(JSON.stringify(date))).toMatchObject({ ok: false, errors: [expect.stringMatching(/^\/summary: .*1999-01-01/)] });
+    const dates = doc();
+    dates.studies[0].snapshots = dates.studies[0].snapshots.slice(1);
+    expect(readPortfolioDocument(JSON.stringify(dates))).toMatchObject({ ok: false, errors: [expect.stringMatching(/^\/summary: .*different snapshots/)] });
   });
 });
 

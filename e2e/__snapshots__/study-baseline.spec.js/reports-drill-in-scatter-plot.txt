@@ -1,5 +1,5 @@
 state: drill-in-scatter-plot (reports)
-dom: sha256 5edef6ff80e244db76ffeccac633563ab408b3a6a4db48430b883776ae7f476d (79561 characters)
+dom: sha256 3dc3aac6e8596db88559fee0fca235cff91b887dbe75a98edf1e0bba6e011789 (79623 characters)
 tooltip: none
 drill-in: TDSC · Scatter plot · gsm.viz · scatterPlot · TDSC: charts 1
   type undefined; labels: 
@@ -54,6 +54,8 @@ tiles:
   Analysis_kri0010 · Details 2/5: points 1, lines 2, empty 1
   Analysis_kri0011 · Details 2/5: points 1, lines 2, empty 1
 accessibility:
+- link "← Program overview":
+  - /url: ./portfolio.html
 - text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
 - button "Play through visits": ▶
 - slider "Visit": "4"

@@ -1,5 +1,5 @@
 state: drill-in-bar-chart (reports)
-dom: sha256 cc31d0c22ecf1131f4a0762cc87b6ada87fc18c18eda2a232bff294cbb8a187e (79558 characters)
+dom: sha256 66d734c2cd49438f018f976ab0027269501e780e568b77131c048af2b731ea7c (79620 characters)
 tooltip: none
 drill-in: TDSC · Bar chart · gsm.viz · barChart · TDSC: charts 1
   type undefined; labels: SITE0008 | SITE0013 | SITE0002 | SITE0004 | SITE0003 | SITE0016 | SITE0015 | SITE0007 | SITE0010 | SITE0014 | SITE0001 | SITE0017 | SITE0005 | SITE0011 | SITE0009 | SITE0006 | SITE0012
@@ -46,6 +46,8 @@ tiles:
   Analysis_kri0010 · Details 2/5: points 1, lines 2, empty 1
   Analysis_kri0011 · Details 2/5: points 1, lines 2, empty 1
 accessibility:
+- link "← Program overview":
+  - /url: ./portfolio.html
 - text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
 - button "Play through visits": ▶
 - slider "Visit": "4"

@@ -1,7 +1,7 @@
-import { StoreElement, esc, fmtInt } from './util.js';
+import { StoreElement, esc } from './util.js';
 import { attachHoverTooltip, metricInfoIcon, statusPill } from './tooltip.js';
-import { fmtMetric, displayRate, displayLabel, metricUnit } from '../util/format.js';
-import { stripScale, axisLabel } from '../scales/strip.js';
+import { metricUnit } from '../util/format.js';
+import { distRow, distShowing, distStudies } from '../app/portfolio-dist.js';
 
 /**
  * Distribution view of the program page: one line per metric, one dot per
@@ -26,52 +26,25 @@ export class GsmPortfolioDist extends StoreElement {
   render() {
     const store = this.store;
     const { state } = store;
-    const filtered = store.filteredStudies();
-    const latest = store.latestFor(filtered);
-    const studies = filtered.filter((s) => latest.has(s.StudyID));
-    const sel = studies.find((s) => s.StudyID === state.highlightStudy) ?? null;
-    const label = (s) => `${s.StudyID}${s.params?.nickname ? ` · ${s.params.nickname}` : ''}`;
+    const plotted = distStudies(store);
+    const { sel } = plotted;
     const selName = sel ? esc(sel.params?.nickname ?? sel.StudyID) : '';
 
     const metricRow = (m) => {
-      const rollups = studies.map((s) => ({ s, r: store.rollup([s], m.MetricID) }));
-      const total = store.rollup(filtered, m.MetricID);
-      const totalV = displayRate(m, total.Rate);
-      const { max, x } = stripScale(rollups.map(({ r }) => displayRate(m, r.Rate)), totalV);
-      const tip = (who, r) =>
-        esc(
-          `<b>${esc(who)}</b><br><span class="tip-muted">${esc(m.Metric)}</span><br>` +
-            `${esc(fmtMetric(m, r).text)} <span class="tip-muted">— ${esc(displayLabel(m))}</span><br>` +
-            `Σn/Σd = ${fmtInt(r.Numerator)} / ${fmtInt(r.Denominator)}`
-        );
-      const dots = rollups
-        .filter(({ s, r }) => s !== sel && r.Rate != null)
-        .map(
-          ({ s, r }) =>
-            `<span class="pt" style="left:${x(displayRate(m, r.Rate)).toFixed(2)}%" data-pick="${esc(s.StudyID)}" data-tip="${tip(label(s), r)}${esc(
-              '<br><span class="tip-muted">Click to highlight this study</span>'
-            )}"></span>`
-        )
-        .join('');
-      let mark = '';
-      let selLine = '';
-      if (sel) {
-        const r = rollups.find((o) => o.s === sel).r;
-        const v = displayRate(m, r.Rate);
-        if (v != null) {
-          mark =
-            `<span class="psel" style="left:${x(v).toFixed(2)}%" data-pick="${esc(sel.StudyID)}" data-tip="${tip(label(sel), r)}"></span>` +
-            `<span class="lsel" style="left:${Math.min(95, Math.max(4, x(v))).toFixed(2)}%">${axisLabel(m, v)}</span>`;
-        }
-        selLine = `<div class="sv">${selName} <b>${esc(fmtMetric(m, r).text)}</b></div>`;
-      }
-      const rule = totalV == null ? '' : `<span class="ptot" style="left:${x(totalV).toFixed(2)}%" data-tip="${tip(`Portfolio total · ${filtered.length} studies`, total)}"></span>`;
+      const row = distRow(store, m, plotted);
+      const dots = row.dots.map((d) => `<span class="pt" style="left:${d.left}%" data-pick="${esc(d.id)}" data-tip="${esc(d.tip)}"></span>`).join('');
+      const mark = row.mark
+        ? `<span class="psel" style="left:${row.mark.left}%" data-pick="${esc(row.mark.id)}" data-tip="${esc(row.mark.tip)}"></span>` +
+          `<span class="lsel" style="left:${row.mark.labelLeft}%">${row.mark.label}</span>`
+        : '';
+      const selLine = sel ? `<div class="sv">${selName} <b>${esc(row.selValue)}</b></div>` : '';
+      const rule = row.rule ? `<span class="ptot" style="left:${row.rule.left}%" data-tip="${esc(row.rule.tip)}"></span>` : '';
       return `<div class="dcols mrow ${m.Status === 'Planned' ? 'plan' : ''}" data-metric="${esc(m.MetricID)}">
         <div class="mn"><b>${esc(m.Metric)}</b><span class="ab" data-abbr="${esc(m.Abbreviation)}">${esc(m.Abbreviation)}</span>${metricInfoIcon(m)}${statusPill(m)}<span class="u">${esc(
           metricUnit(m)
         )}</span></div>
-        <div class="track ${sel ? 'dim' : ''}" role="img" aria-label="${esc(m.Metric)}: ${rollups.length} studies"><span class="tick">0</span><span class="tick r">${axisLabel(m, max)}</span>${dots}${rule}${mark}</div>
-        <div class="pv"><div class="m">${esc(fmtMetric(m, total).text)}</div>${selLine}</div>
+        <div class="track ${sel ? 'dim' : ''}" role="img" aria-label="${esc(m.Metric)}: ${row.count} studies"><span class="tick">0</span><span class="tick r">${row.maxLabel}</span>${dots}${rule}${mark}</div>
+        <div class="pv"><div class="m">${esc(row.totalValue)}</div>${selLine}</div>
       </div>`;
     };
 
@@ -90,11 +63,11 @@ export class GsmPortfolioDist extends StoreElement {
         return folded ? head : head + g.metrics.map(metricRow).join('');
       })
       .join('');
-    const hl = sel ? ` · highlighting <b>${esc(label(sel))}</b>` : '';
+    const showing = distShowing(store, plotted.studies, sel);
     this.innerHTML = `
-      <div class="showing">Showing ${studies.length} / ${store.studies.length} studies · ${store.visibleMetrics().length} / ${
-        store.supportedMetrics().length
-      } site-level metrics · each study at its own latest snapshot${hl}</div>
+      <div class="showing">${esc(showing.lead)}${
+        sel ? ` · highlighting <b><a href="#/study/${esc(sel.StudyID)}" data-study="${esc(sel.StudyID)}">${esc(showing.highlight)}</a></b>` : ''
+      }</div>
       <div class="dist">${html || '<p class="muted">No metrics selected.</p>'}</div>
       <p class="notes"><span><b>Dot</b> = one study's value; the black rule is the pooled portfolio value.</span><span><b>Click</b> a dot to highlight that study, a category to fold it.</span></p>`;
   }

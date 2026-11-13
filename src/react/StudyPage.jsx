@@ -1,6 +1,7 @@
 // @ts-check
 import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { attachHoverTooltip, metricTip } from '../components/tooltip.js';
+import { attachHoverTooltip } from '../components/tooltip.js';
+import { InfoIcon, StatusPill } from './parts.jsx';
 import { getWidget } from '../widgets/index.js';
 import { configProblems, problemText, resolveView } from '../app/references.js';
 import { reportLink } from '../app/report-links.js';
@@ -13,21 +14,6 @@ import { Widget } from './Widget.jsx';
 // keeps the markup of the original <gsm-study-page> element, so the same tests and styles apply.
 
 const PARAMS = ['therapeutic_area', 'protocol_indication', 'phase', 'status', 'product'];
-
-/** @param {{ metric: any }} props */
-function InfoIcon({ metric }) {
-  return (
-    <span className="info" data-tip={metricTip(metric)} role="img" aria-label={`${metric.Metric} definition`}>
-      i
-    </span>
-  );
-}
-
-/** @param {{ metric: any }} props */
-function StatusPill({ metric }) {
-  const status = metric?.Status ?? 'Released';
-  return status === 'Released' ? null : <span className={`pill ${status.toLowerCase()}`}>{status}</span>;
-}
 
 /** @param {{ def: any }} props */
 function KindBadge({ def }) {
@@ -82,9 +68,9 @@ function ConfigNotice({ problems }) {
 }
 
 /**
- * @param {{ store: any, studyId: string }} props
+ * @param {{ store: any, studyId: string, back: string }} props `back` is the portfolio's address, with the view it was left in.
  */
-export function StudyPage({ store, studyId }) {
+export function StudyPage({ store, studyId, back }) {
   const version = useStore(store);
   const root = useRef(/** @type {HTMLDivElement | null} */ (null));
   const timer = useRef(/** @type {ReturnType<typeof setInterval> | null} */ (null));
@@ -182,6 +168,9 @@ export function StudyPage({ store, studyId }) {
 
   return (
     <div className="study-page" data-study={studyId} ref={root} onClick={onClick}>
+      <a href={back} className="back">
+        ← Program overview
+      </a>
       <ConfigNotice problems={configProblems([...store.metrics, ...store.inactiveMetrics], { reportBase: store.reportBase })} />
       <div className="dd-head">
         <span className="study mono">{study.StudyID}</span>

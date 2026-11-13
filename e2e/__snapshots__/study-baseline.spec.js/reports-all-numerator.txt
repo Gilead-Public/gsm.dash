@@ -1,5 +1,5 @@
 state: all-numerator (reports)
-dom: sha256 ad8b6dbb4ca5b0bdae8d9752a64349979f368f23ecfd5f4400a1bc6003a6a4b9 (108618 characters)
+dom: sha256 d158b8cdd6c78083c791e1fb44cd84893a224f2907d10ddb2ee386416e9d2871 (108680 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -25,6 +25,8 @@ tiles:
   Analysis_kri0010 · Numerator by site 4/5: bars 17
   Analysis_kri0011 · Numerator by site 4/5: bars 17
 accessibility:
+- link "← Program overview":
+  - /url: ./portfolio.html
 - text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
 - button "Play through visits": ▶
 - slider "Visit": "4"

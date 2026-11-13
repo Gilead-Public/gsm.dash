@@ -1,5 +1,6 @@
 state: table-details
-dom: sha256 44251b08056a927710267fe376a8f9a82aa5f2a41fd4e329baeb09b37a9b64ec (324302 characters)
+canonical dom: sha256 f76c83125d8358f2b15f3c05ab01707ba01d11043efa4a05c23df9269d677740 (338668 characters)
+computed styles: sha256 45d15fa2fd1f0b448428b5cbf6a75b809879ff43a27ad3eeb0a9265e9960ab09 (1969 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×25 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21
 distribution marks:
@@ -24,6 +25,8 @@ distribution marks:
   pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
   pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
   pt[STUDY001]@n/a hidden pt[STUDY002]@n/a hidden pt[STUDY003]@n/a hidden pt[STUDY004]@n/a hidden pt[STUDY005]@n/a hidden pt[STUDY006]@n/a hidden pt[STUDY007]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY009]@n/a hidden pt[STUDY010]@n/a hidden pt[STUDY011]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+sparklines:
+  none
 accessibility:
 - main:
   - text: Controls
@@ -292,7 +295,7 @@ accessibility:
       - row "STUDY001ATLAS-1 Study details 2026-05-31 1,341 988 26.3% 65 (6.6%) 119 (12.2%) 84 (8.6%) 25 (2.5%) 26 (2.6%) 6 (0.6%) 16 (1.6%) 15 (1.5%) 37 (3.7%) 32 (3.2%) 32 (3.2%) 0.86 0.14 0.41 0.05 907 (5.0%) 5.2% 5.5% 10.4% 2.1%":
         - cell "STUDY001ATLAS-1 Study details":
           - link "STUDY001":
-            - /url: "#/study/STUDY001"
+            - /url: study:STUDY001
           - text: ATLAS-1
           - img "Study details": i
         - cell "2026-05-31"
@@ -322,7 +325,7 @@ accessibility:
       - row "STUDY002BEACON-1 Study details 2026-05-31 769 645 16.1% 44 (6.8%) 74 (11.7%) 62 (9.8%) 16 (2.5%) 9 (1.4%) 1 (0.2%) 10 (1.6%) 15 (2.3%) 20 (3.1%) 10 (1.6%) 13 (2.0%) 0.95 0.07 0.44 0.04 669 (5.6%) 6.7% 8.8% 9.8% 3.4%":
         - cell "STUDY002BEACON-1 Study details":
           - link "STUDY002":
-            - /url: "#/study/STUDY002"
+            - /url: study:STUDY002
           - text: BEACON-1
           - img "Study details": i
         - cell "2026-05-31"
@@ -352,7 +355,7 @@ accessibility:
       - row "STUDY003COBALT-1 Study details 2026-06-30 1,011 722 28.6% 67 (9.3%) 91 (12.8%) 86 (12.1%) 20 (2.8%) 10 (1.4%) 5 (0.7%) 12 (1.7%) 11 (1.5%) 16 (2.2%) 14 (1.9%) 25 (3.5%) 1.24 0.06 0.44 0.05 1,032 (6.4%) 6.2% 13.0% 15.4% 2.8%":
         - cell "STUDY003COBALT-1 Study details":
           - link "STUDY003":
-            - /url: "#/study/STUDY003"
+            - /url: study:STUDY003
           - text: COBALT-1
           - img "Study details": i
         - cell "2026-06-30"
@@ -382,7 +385,7 @@ accessibility:
       - row "STUDY004DELTA-1 Study details 2026-06-30 844 576 31.8% 35 (6.1%) 39 (6.9%) 44 (7.8%) 11 (1.9%) 14 (2.4%) 6 (1.0%) 21 (3.6%) 13 (2.3%) 11 (1.9%) 13 (2.3%) 13 (2.3%) 1.55 0.14 0.40 0.08 693 (5.4%) 11.1% 6.2% 11.7% 1.8%":
         - cell "STUDY004DELTA-1 Study details":
           - link "STUDY004":
-            - /url: "#/study/STUDY004"
+            - /url: study:STUDY004
           - text: DELTA-1
           - img "Study details": i
         - cell "2026-06-30"
@@ -412,7 +415,7 @@ accessibility:
       - row "STUDY005EMBER-1 Study details 2026-06-30 1,168 871 25.4% 118 (13.5%) 60 (7.0%) 74 (8.7%) 17 (2.0%) 14 (1.6%) 7 (0.8%) 11 (1.3%) 17 (2.0%) 19 (2.2%) 17 (2.0%) 26 (3.0%) 1.41 0.11 0.36 0.04 544 (2.9%) 8.6% 10.3% 15.0% 3.5%":
         - cell "STUDY005EMBER-1 Study details":
           - link "STUDY005":
-            - /url: "#/study/STUDY005"
+            - /url: study:STUDY005
           - text: EMBER-1
           - img "Study details": i
         - cell "2026-06-30"
@@ -442,7 +445,7 @@ accessibility:
       - row "STUDY006FALCON-2 Study details 2026-06-30 1,023 879 14.1% 61 (6.9%) 150 (17.3%) 42 (4.9%) 21 (2.4%) 18 (2.0%) 10 (1.1%) 23 (2.6%) 14 (1.6%) 31 (3.5%) 13 (1.5%) 18 (2.0%) 1.34 0.09 0.52 0.06 720 (3.7%) 6.5% 7.3% 10.8% 4.4%":
         - cell "STUDY006FALCON-2 Study details":
           - link "STUDY006":
-            - /url: "#/study/STUDY006"
+            - /url: study:STUDY006
           - text: FALCON-2
           - img "Study details": i
         - cell "2026-06-30"
@@ -472,7 +475,7 @@ accessibility:
       - row "STUDY007GRANITE-3 Study details 2026-06-30 962 735 23.6% 77 (10.5%) 95 (13.2%) 56 (7.8%) 12 (1.6%) 7 (1.0%) 3 (0.4%) 14 (1.9%) 16 (2.2%) 33 (4.5%) 18 (2.4%) 11 (1.5%) 0.81 0.10 0.40 0.03 965 (6.0%) 10.9% 6.1% 14.9% 4.8%":
         - cell "STUDY007GRANITE-3 Study details":
           - link "STUDY007":
-            - /url: "#/study/STUDY007"
+            - /url: study:STUDY007
           - text: GRANITE-3
           - img "Study details": i
         - cell "2026-06-30"
@@ -502,7 +505,7 @@ accessibility:
       - row "STUDY008HARBOR-2 Study details 2026-06-30 611 499 18.3% 26 (5.2%) 45 (9.2%) 43 (8.8%) 12 (2.4%) 7 (1.4%) 2 (0.4%) 6 (1.2%) 8 (1.6%) 14 (2.8%) 14 (2.8%) 10 (2.0%) 1.24 0.09 0.24 0.02 225 (2.2%) 6.8% 13.4% 12.2% 3.5%":
         - cell "STUDY008HARBOR-2 Study details":
           - link "STUDY008":
-            - /url: "#/study/STUDY008"
+            - /url: study:STUDY008
           - text: HARBOR-2
           - img "Study details": i
         - cell "2026-06-30"
@@ -532,7 +535,7 @@ accessibility:
       - row "STUDY009IRIS-1 Study details 2026-06-30 708 597 15.7% 36 (6.0%) 42 (7.2%) 77 (13.1%) 26 (4.4%) 10 (1.7%) 5 (0.8%) 15 (2.5%) 10 (1.7%) 25 (4.2%) 14 (2.3%) 18 (3.0%) 1.15 0.12 0.24 0.06 529 (3.9%) 4.1% 9.0% 9.3% 4.1%":
         - cell "STUDY009IRIS-1 Study details":
           - link "STUDY009":
-            - /url: "#/study/STUDY009"
+            - /url: study:STUDY009
           - text: IRIS-1
           - img "Study details": i
         - cell "2026-06-30"
@@ -562,7 +565,7 @@ accessibility:
       - row "STUDY010JUNIPER-2 Study details 2026-06-30 1,147 857 25.3% 64 (7.5%) 95 (11.3%) 76 (9.1%) 23 (2.7%) 10 (1.2%) 12 (1.4%) 27 (3.2%) 18 (2.1%) 14 (1.6%) 29 (3.4%) 24 (2.8%) 1.29 0.09 0.22 0.08 821 (4.6%) 5.2% 11.0% 11.1% 3.0%":
         - cell "STUDY010JUNIPER-2 Study details":
           - link "STUDY010":
-            - /url: "#/study/STUDY010"
+            - /url: study:STUDY010
           - text: JUNIPER-2
           - img "Study details": i
         - cell "2026-06-30"
@@ -592,7 +595,7 @@ accessibility:
       - row "STUDY011KESTREL-3 Study details 2026-06-30 780 598 23.3% 45 (7.5%) 68 (11.5%) 49 (8.3%) 13 (2.2%) 6 (1.0%) 4 (0.7%) 12 (2.0%) 9 (1.5%) 12 (2.0%) 18 (3.0%) 12 (2.0%) 1.78 0.09 0.23 0.05 394 (3.1%) 4.3% 12.5% 5.9% 4.1%":
         - cell "STUDY011KESTREL-3 Study details":
           - link "STUDY011":
-            - /url: "#/study/STUDY011"
+            - /url: study:STUDY011
           - text: KESTREL-3
           - img "Study details": i
         - cell "2026-06-30"
@@ -622,7 +625,7 @@ accessibility:
       - row "STUDY012LUMEN-1 Study details 2026-06-30 1,281 907 29.2% 66 (7.3%) 106 (11.9%) 94 (10.5%) 37 (4.1%) 12 (1.3%) 8 (0.9%) 17 (1.9%) 13 (1.4%) 47 (5.2%) 16 (1.8%) 19 (2.1%) 0.96 0.08 0.45 0.09 821 (4.3%) 6.8% 9.5% 11.8% 2.8%":
         - cell "STUDY012LUMEN-1 Study details":
           - link "STUDY012":
-            - /url: "#/study/STUDY012"
+            - /url: study:STUDY012
           - text: LUMEN-1
           - img "Study details": i
         - cell "2026-06-30"

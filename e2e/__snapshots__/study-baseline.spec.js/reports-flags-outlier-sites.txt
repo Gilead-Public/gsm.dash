@@ -1,5 +1,5 @@
 state: flags-outlier-sites (reports)
-dom: sha256 b2c3d4e7a470447ec252e9ac70c30fffee1588d04253416f64681ed67e0f291d (51259 characters)
+dom: sha256 409bed2d417fb5c556f26a1d1e27bdbdb95d250f09dc65a20f32dd3c41826af2 (51321 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -25,6 +25,8 @@ tiles:
   Analysis_kri0010 · Outlier sites 6/7: rows 6
   Analysis_kri0011 · Outlier sites 6/7: rows 4
 accessibility:
+- link "← Program overview":
+  - /url: ./portfolio.html
 - text: STUDY006 FALCON-2 Immunology · Respiratory · P1 · Enrolling · Product F
 - button "Play through visits": ▶
 - slider "Visit": "5"

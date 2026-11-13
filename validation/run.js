@@ -110,6 +110,8 @@ step('environment', () => {
    */
   const version = (pkg) => (JSON.parse(readFileSync(join('node_modules', pkg, 'package.json'), 'utf8'))).version;
   const probe = "import { chromium } from '@playwright/test'; const b = await chromium.launch(); console.log(b.version()); await b.close();";
+  // The R that 27.03's injector test runs; with none installed that test fails, and the record says so here.
+  const r = spawnSync('Rscript', ['-e', 'cat(as.character(getRversion()))'], { encoding: 'utf8' });
   /** @type {Environment} */
   const environment = {
     os: `${type()} ${release()}`,
@@ -118,6 +120,7 @@ step('environment', () => {
     npm: execFileSync('npm', ['--version'], { encoding: 'utf8' }).trim(),
     packages: Object.fromEntries(['@playwright/test', 'vitest', 'vite', 'typescript', 'ajv', 'ajv-formats', 'astro', '@astrojs/react', 'react', 'react-dom', 'es-module-lexer'].map((p) => [p, version(p)])),
     browser: { name: 'chromium', version: execFileSync('node', ['--input-type=module', '-e', probe], { encoding: 'utf8' }).trim() },
+    r: r.status === 0 ? r.stdout.trim() : null,
     lockfileSha256: sha256File('package-lock.json'),
   };
   record.environment = environment;

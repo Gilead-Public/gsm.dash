@@ -1,10 +1,12 @@
 // @ts-check
 // 11.03 regression evidence: the portfolio as it rendered before #11's changes, recorded state by state in
-// e2e/__snapshots__/portfolio-baseline.spec.js/. Each state is reached through the UI and recorded as its DOM (by
-// hash), its accessibility tree (which leaves out hidden elements) and what CSS places or colours: every Distribution
-// mark's position along its track and whether it is visible, every table cell's background, and any open tooltip.
+// e2e/__snapshots__/portfolio-baseline.spec.js/, at 69b2240. Each state is reached through the UI and recorded as its
+// canonical DOM and computed styles (by hash), every sparkline's points, its accessibility tree (which leaves out
+// hidden elements) and what CSS places or colours: every Distribution mark's position along its track and whether it
+// is visible, every table cell's background, and any open tooltip. The canonical DOM lets the React page be compared
+// with the same records.
 import { readData, test } from './fixtures/app.js';
-import { domLine, expectRecorded, runs } from './fixtures/baseline.js';
+import { capturePortfolio as capture, expectRecorded } from './fixtures/baseline.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('@playwright/test').TestInfo} TestInfo */
 
@@ -13,45 +15,6 @@ test.describe.configure({ timeout: 60_000 });
 const portfolio = readData('portfolio.json');
 /** @type {Array<{ StudyID: string, params: Record<string, string> }>} */
 const studies = portfolio.studies;
-
-/**
- * @param {Page} page
- * @param {string} name
- */
-async function capture(page, name) {
-  const dom = await page.locator('#app').evaluate((el) => el.innerHTML);
-  const aria = await page.locator('#app').ariaSnapshot();
-  const rendered = await page.evaluate(() => {
-    const visible = (/** @type {Element} */ el) => el.checkVisibility({ opacityProperty: true, visibilityProperty: true });
-    const along = (/** @type {Element} */ el, /** @type {Element} */ track) => {
-      const t = track.getBoundingClientRect();
-      const r = el.getBoundingClientRect();
-      // Marks are placed by a percentage with two decimals and centred by a transform, so four decimals of the track
-      // width reproduce the placement exactly on any platform; layout rounding is far smaller.
-      return t.width ? ((r.left + r.width / 2 - t.left) / t.width).toFixed(4) : 'n/a';
-    };
-    const tracks = [...document.querySelectorAll('#app .track')].map((track) =>
-      [...track.querySelectorAll('.pt, .ptot, .psel, .lsel')]
-        .map((el) => `${el.className}${el instanceof HTMLElement && el.dataset.pick ? `[${el.dataset.pick}]` : ''}@${along(el, track)}${visible(el) ? '' : ' hidden'}`)
-        .join(' '),
-    );
-    const cells = [...document.querySelectorAll('#app td, #app .otile')].map((el) => getComputedStyle(el).backgroundColor);
-    const tip = document.getElementById('gsm-tooltip');
-    return { tracks, cells, tooltip: tip && visible(tip) ? tip.innerHTML : 'none' };
-  });
-  const text = [
-    `state: ${name}`,
-    domLine(dom),
-    `tooltip: ${rendered.tooltip}`,
-    `cell backgrounds: ${runs(rendered.cells)}`,
-    'distribution marks:',
-    ...rendered.tracks.map((t) => `  ${t}`),
-    'accessibility:',
-    aria,
-    '',
-  ].join('\n');
-  return { text, dom };
-}
 
 /**
  * Compares one state with its recorded baseline, and keeps going so every changed state is reported.
@@ -64,7 +27,7 @@ async function expectState(page, testInfo, name) {
 }
 
 /** @param {Page} page */
-const sidebar = (page) => page.locator('gsm-sidebar');
+const sidebar = (page) => page.locator('gsm-sidebar, .sidebar');
 
 test.describe('the portfolio against its recorded baseline', () => {
   test('11.03: the table matches its baseline in Overview, Details and Mixed, sorted both ways, with a heatmap and with each cell display (#11)', async ({ app, page }, testInfo) => {
@@ -92,7 +55,7 @@ test.describe('the portfolio against its recorded baseline', () => {
     await app.open();
     await sidebar(page).locator('select[data-groupby]').selectOption('phase');
     await expectState(page, testInfo, 'rows-grouped');
-    await page.locator('tr[data-bucket]').first().click();
+    await page.locator('tr[data-bucket] td.grp').first().click();
     await expectState(page, testInfo, 'rows-group-open');
     await sidebar(page).locator('select[data-groupby]').selectOption('none');
     const area = studies[0].params.therapeutic_area;

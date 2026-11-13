@@ -1,7 +1,7 @@
 // @ts-check
 // 12.02 regression evidence: the study page as it rendered before #12's changes, recorded state by state for each
-// host in e2e/__snapshots__/study-baseline.spec.js/. The two hosts' markup differs only in ways the tests don't read
-// (the old element's back link and whitespace), so each has its own records, shared by its two delivery modes. Each
+// host in e2e/__snapshots__/study-baseline.spec.js/. The two hosts' markup differs in whitespace and in where the back
+// link points, so each has its own records, shared by its two delivery modes. Each
 // state is reached through the UI and recorded as the page's DOM (by hash), its accessibility tree, every tile's view
 // and the marks it visibly draws, the drill-in panel with the series and values its gsm.viz chart draws, and any open
 // tooltip. Chart contents are recorded from the chart's data rather than its pixels, which differ by platform.
