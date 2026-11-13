@@ -5,6 +5,7 @@ import { hashIssues } from './baseline.js';
 /** @typedef {import('./baseline.js').Criterion} Criterion */
 import { sha256 } from './criteria.js';
 import { evaluate } from './gate.js';
+import { SHIPPED } from '../../e2e/projects.js';
 import { groupFailures } from './matrix.js';
 /** @typedef {import('./gate.js').GateInput} GateInput */
 /** @typedef {import('./results.js').ResultRow} ResultRow */
@@ -47,7 +48,7 @@ const row = (title, over = {}) =>
  * @returns {ResultRow}
  */
 const pw = (title, mode, over = {}) =>
-  row(title, { source: 'playwright', file: 'e2e/a.spec.js', artifact: 'spa', mode, ...over });
+  row(title, { source: 'playwright', file: 'e2e/a.spec.js', artifact: SHIPPED, mode, ...over });
 /**
  * @param {string} mode
  */
@@ -83,7 +84,7 @@ function input(over = {}, rows = cleanRows()) {
     baseline: baselineOf([unit, e2e, visual]),
     scope: new Set([1]),
     modes: ['file', 'subpath'],
-    artifacts: { 'e2e/a.spec.js': ['spa'] },
+    artifacts: { 'e2e/a.spec.js': [SHIPPED] },
     reports: { vitest: { rows: vitest, errors: [] }, playwright: { rows: playwright, errors: [] } },
     inventory: inventoryOf(rows),
     evidence: new Map([['/run/file.png', 'a'.repeat(64)], ['/run/subpath.png', 'b'.repeat(64)], ['/run/file-e2e.png', 'c'.repeat(64)], ['/run/subpath-e2e.png', 'd'.repeat(64)]]),
@@ -133,12 +134,12 @@ describe('gate', () => {
 
   it('fails a passed visual criterion with no screenshot', () => {
     const rows = cleanRows().map((r) => (r.mode === 'subpath' && r.titlePath[0].startsWith('1.03') ? { ...r, attachments: [] } : r));
-    failsWith(input({}, rows), /1\.03: no screenshot in spa\/subpath/);
+    failsWith(input({}, rows), new RegExp(`1\\.03: no screenshot in ${SHIPPED}/subpath`));
   });
 
   it('fails a passed e2e criterion with no screenshot in a mode', () => {
     const rows = cleanRows().map((r) => (r.mode === 'file' && r.titlePath[0].startsWith('1.02') ? { ...r, attachments: [] } : r));
-    failsWith(input({}, rows), /1\.02: no screenshot in spa\/file/);
+    failsWith(input({}, rows), new RegExp(`1\\.02: no screenshot in ${SHIPPED}/file`));
   });
 
   it('does not let one passing test mask a failing one', () => {
@@ -152,13 +153,13 @@ describe('gate', () => {
   });
 
   it('fails an e2e criterion that passed in only one delivery mode', () => {
-    failsWith(input({}, cleanRows().filter((r) => !(r.titlePath[0].startsWith('1.02') && r.mode === 'subpath'))), /1\.02: no passing result in spa\/subpath/);
+    failsWith(input({}, cleanRows().filter((r) => !(r.titlePath[0].startsWith('1.02') && r.mode === 'subpath'))), new RegExp(`1\\.02: no passing result in ${SHIPPED}/subpath`));
   });
 
   it('fails and marks incomplete when a delivery mode produced no results at all', () => {
     const result = evaluate(input({}, cleanRows().filter((r) => r.mode !== 'subpath')));
     expect(result.incomplete).toBe(true);
-    expect(result.failures.join('\n')).toMatch(/spa\/subpath produced no results/);
+    expect(result.failures.join('\n')).toMatch(new RegExp(`${SHIPPED}/subpath produced no results`));
   });
 
   it('fails and marks incomplete when a report is missing', () => {
@@ -228,39 +229,41 @@ describe('gate', () => {
 });
 
 describe('artifacts', () => {
-  const both = { 'e2e/a.spec.js': /** @type {const} */ (['spa', 'reports']) };
+  // The artifact that doesn't ship, run alongside the one that does.
+  const other = /** @type {const} */ ('spa');
+  const both = { 'e2e/a.spec.js': [SHIPPED, other] };
   /** @returns {ResultRow[]} */
-  const reportRows = () =>
+  const otherRows = () =>
     cleanRows()
       .filter((r) => r.source === 'playwright')
-      .map((r) => ({ ...r, artifact: 'reports', attachments: r.attachments.map((a) => ({ ...a, path: a.path.replace('/run/', '/run/reports-') })) }));
+      .map((r) => ({ ...r, artifact: other, attachments: r.attachments.map((a) => ({ ...a, path: a.path.replace('/run/', '/run/other-') })) }));
   /**
    * @param {ResultRow[]} rows
    */
-  const withReportShots = (rows) => {
+  const withOtherShots = (rows) => {
     const i = input({ artifacts: both }, rows);
-    for (const [path, hash] of [...i.evidence]) i.evidence.set(path.replace('/run/', '/run/reports-'), hash.replace(/./g, 'e'));
+    for (const [path, hash] of [...i.evidence]) i.evidence.set(path.replace('/run/', '/run/other-'), hash.replace(/./g, 'e'));
     return i;
   };
 
   it('passes when every targeted artifact passes in every mode with a screenshot', () => {
-    expect(evaluate(withReportShots([...cleanRows(), ...reportRows()])).failures).toEqual([]);
+    expect(evaluate(withOtherShots([...cleanRows(), ...otherRows()])).failures).toEqual([]);
   });
 
   it('fails a criterion whose spec targets an artifact that did not pass in one mode', () => {
-    const rows = [...cleanRows(), ...reportRows().filter((r) => !(r.titlePath[0].startsWith('1.02') && r.mode === 'subpath'))];
-    failsWith(withReportShots(rows), /1\.02: no passing result in reports\/subpath/);
+    const rows = [...cleanRows(), ...otherRows().filter((r) => !(r.titlePath[0].startsWith('1.02') && r.mode === 'subpath'))];
+    failsWith(withOtherShots(rows), new RegExp(`1\\.02: no passing result in ${other}/subpath`));
   });
 
   it('fails a targeted artifact with no screenshot in a mode', () => {
-    const rows = [...cleanRows(), ...reportRows().map((r) => (r.mode === 'file' && r.titlePath[0].startsWith('1.02') ? { ...r, attachments: [] } : r))];
-    failsWith(withReportShots(rows), /1\.02: no screenshot in reports\/file/);
+    const rows = [...cleanRows(), ...otherRows().map((r) => (r.mode === 'file' && r.titlePath[0].startsWith('1.02') ? { ...r, attachments: [] } : r))];
+    failsWith(withOtherShots(rows), new RegExp(`1\\.02: no screenshot in ${other}/file`));
   });
 
   it('fails and marks incomplete when a declared artifact produced no results at all', () => {
     const result = evaluate(input({ artifacts: both }));
     expect(result.incomplete).toBe(true);
-    expect(result.failures.join('\n')).toMatch(/reports\/file produced no results/);
+    expect(result.failures.join('\n')).toMatch(new RegExp(`${other}/file produced no results`));
   });
 
   it('fails a browser test from a spec that declares no artifacts', () => {
@@ -268,11 +271,11 @@ describe('artifacts', () => {
   });
 
   it('never accepts a visual criterion on screenshots of an artifact that does not ship', () => {
-    const i = withReportShots([...cleanRows(), ...reportRows()]);
+    const i = withOtherShots([...cleanRows(), ...otherRows()]);
     const record = { runId: 'r1', criterion: '1.03', baselineHash: i.baseline.hash };
-    const reports = [{ ...record, screenshotSha256: 'e'.repeat(64) }];
+    const unshipped = [{ ...record, screenshotSha256: 'e'.repeat(64) }];
     const shipped = [{ ...record, screenshotSha256: 'a'.repeat(64) }, { ...record, screenshotSha256: 'b'.repeat(64) }];
-    expect(evaluate({ ...i, acceptance: reports }).criteria.find((c) => c.id === '1.03')?.acceptance).toBe('awaiting');
+    expect(evaluate({ ...i, acceptance: unshipped }).criteria.find((c) => c.id === '1.03')?.acceptance).toBe('awaiting');
     expect(evaluate({ ...i, acceptance: shipped }).criteria.find((c) => c.id === '1.03')?.acceptance).toBe('accepted');
   });
 });

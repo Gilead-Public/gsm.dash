@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest';
 /** @typedef {import('./gate.js').GateResult} GateResult */
 import { packageProblems } from './package-check.js';
+import { SHIPPED } from '../../e2e/projects.js';
 /** @typedef {import('./package-check.js').PackageInput} PackageInput */
 import { REQUIRED_STEPS } from './record.js';
 /** @typedef {import('./record.js').RunRecord} RunRecord */
@@ -24,7 +25,7 @@ function clean() {
   /** @type {GateResult} */
   const gate = {
     criteria: [{ id: '1.03', issue: 1, text: 'x (visual check)', kind: 'visual', inScope: true, automated: 'pass', acceptance: 'awaiting', modes: ['file', 'subpath'], tests: [], notes: [],
-      evidence: [{ artifact: 'spa', mode: 'file', path: 'e.png', sha256: SHOT, test: 't', file: 'f' }, { artifact: 'spa', mode: 'subpath', path: 'e2.png', sha256: SHOT2, test: 't', file: 'f' }] }],
+      evidence: [{ artifact: SHIPPED, mode: 'file', path: 'e.png', sha256: SHOT, test: 't', file: 'f' }, { artifact: SHIPPED, mode: 'subpath', path: 'e2.png', sha256: SHOT2, test: 't', file: 'f' }] }],
     failures: [], incomplete: false, untraced: 0, inScope: 1,
   };
   return {

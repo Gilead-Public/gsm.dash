@@ -3,8 +3,8 @@ import { MODES } from '../validation/lib/criteria.js';
 /** @typedef {import('../validation/lib/criteria.js').Mode} Mode */
 
 /**
- * `spa`: the single-page app that ships today (standalone file and sub-path build).
- * `reports`: one self-contained file per report, which replaces it.
+ * `spa`: the single-page app the reports replace (standalone file and sub-path build).
+ * `reports`: one self-contained file per report, which is what ships.
  * @typedef {'spa' | 'reports'} Artifact
  */
 
@@ -13,7 +13,7 @@ export const ARTIFACTS = ['spa', 'reports'];
 
 /** Visual acceptance is recorded against the artifact users receive. */
 /** @type {Artifact} */
-export const SHIPPED = 'spa';
+export const SHIPPED = 'reports';
 
 /**
  * The artifacts each spec runs against. The gate requires a pass, and for browser criteria a screenshot, in every
