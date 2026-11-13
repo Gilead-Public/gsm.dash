@@ -1,7 +1,7 @@
 // @ts-check
 import { createRoot } from 'react-dom/client';
 import { PortfolioStore } from '../data/store.js';
-import { openGlossary } from '../components/glossary.js';
+import { openGlossary } from '../app/glossary.js';
 import { initTheme } from '../app/theme.js';
 import '../widgets/index.js';
 import { readPortfolioDocument, readStudyDocument } from './document.js';

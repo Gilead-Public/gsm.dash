@@ -1,6 +1,6 @@
 // @ts-check
 import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { attachHoverTooltip } from '../components/tooltip.js';
+import { attachHoverTooltip } from '../app/tooltip.js';
 import { InfoIcon, StatusPill } from './parts.jsx';
 import { getWidget } from '../widgets/index.js';
 import { configProblems, problemText, resolveView } from '../app/references.js';
@@ -230,8 +230,8 @@ export function StudyPage({ store, studyId, back }) {
 
 /**
  * Play/pause and a range over the study's snapshot dates. The range commits on `change` (pointer release), not
- * `input`: `input` only retitles the live label, so nothing re-renders mid-drag. Both are native listeners, as in
- * the original element, so a value set by script and then dispatched behaves like a user's.
+ * `input`: `input` only retitles the live label, so nothing re-renders mid-drag. Both are native listeners, so a
+ * value set by script and then dispatched behaves like a user's.
  * @param {{ dates: string[], visit: number, date: string | null, playing: boolean, onPlay: () => void, onPause: () => void, goToVisit: (i: number) => void }} props
  */
 function VisitScrubber({ dates, visit, date, playing, onPlay, onPause, goToVisit }) {

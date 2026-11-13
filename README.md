@@ -4,7 +4,7 @@
 > framework are all subject to change. Every number in the example data is
 > simulated.
 
-Executive dashboard components and app shell for the gsm ecosystem.
+Executive dashboard reports for the gsm ecosystem: a portfolio overview and one report per study.
 
 ## Intended use
 
@@ -26,8 +26,8 @@ References in code comments to "design doc §n", "Qn" and "Wn" point at this
 project's internal requirements and design documentation.
 
 gsm.dash consumes **standardized metric outputs from the gsm.reporting data
-model** — never raw clinical data. It is a framework-free web-component
-library plus a thin static app shell (vanilla JS, no runtime dependencies).
+model** — never raw clinical data. Each report is one self-contained HTML file,
+built with Astro and React, that opens from disk or from any static host.
 
 **Input model:** site-level metrics are the core input. The dashboard derives
 study rates and multi-study rates itself by pooling site-level rows, so any
@@ -39,24 +39,42 @@ and are held back until a future release.
 
 ```sh
 npm install
-npm run dev        # generates example data, serves the app
-npm test           # rollup/normalize units + contract schema conformance
-npm run build:reports  # one self-contained study report per study, in dist/reports
+npm test               # rollup/normalize units + contract schema conformance
+npm run build:reports  # portfolio.html and one report per study in dist/reports; each opens from disk
 ```
 
-## What's here (v1: the program page)
+## Publishing
 
-- `src/data/` — `PortfolioStore` plus the load / normalize / **rollup** modules.
+GitHub Pages shows only a release: the reports from a validation run that came from a push to main, reviewed and
+published byte for byte.
+
+1. Download that run's artifact (`validation-run-<id>-<attempt>`). After comparing the screenshots it lists, accept
+   every in-scope visual criterion:
+   `node validation/accept.js <run folder> <ids> --accept --reviewer "<name>"`.
+2. Tag the run's commit and create a GitHub release on the tag, with the run folder's `acceptance.json` attached.
+3. `gh workflow run pages.yml --ref main -f tag=<tag>`. The workflow checks the run with `validation/release.js` and
+   publishes its reports. On any problem, it publishes nothing.
+
+The run's artifact must still exist, which is 90 days by default.
+
+To share a build for feedback without releasing it: every CI run that passes also uploads
+`gsm-dash-reports-<id>-<attempt>`, which holds just its tested reports and a read-me. It isn't a reviewed release.
+
+## What's here
+
+- `src/data/` — `PortfolioStore` plus the normalize / **rollup** modules.
   `rollup.js` is the numeric heart (pooled Σn/Σd, per-study latest-snapshot
   selection, NA-inclusive flag distributions) and the double-programming QC
   target.
-- `src/components/` — light-DOM custom elements: `<gsm-filter-bar>` (D2),
-  `<gsm-portfolio-table>` (D1/D3/D4 + D5 trend row), and `<gsm-study-page>`,
-  which composes the study view from widgets. The table carries an **Enrolled**
-  column — `Reporting_Groups` `ParticipantCount` summed over the row's studies
-  at the same latest snapshots the metric rollups use — and every metric header
-  carries an ⓘ with that metric's definition from `Reporting_Metrics`
-  (numerator, denominator, model, score, thresholds, accrual rule).
+- `src/pages/`, `src/react/` — the reports: an Astro page each for the
+  portfolio and a study, with one React root rendering it from one injected
+  document (gsm.viz inlined into study reports). The portfolio table carries an
+  **Enrolled** column (`Reporting_Groups` `ParticipantCount` summed over the
+  row's studies at the same latest snapshots the metric rollups use), and every
+  metric header carries an ⓘ with that metric's definition from
+  `Reporting_Metrics`. The study page composes its view from widgets. Links
+  between reports are relative and carry the portfolio's view in the hash.
+  `src/app/` holds the rules and text both pages share.
 - `src/widgets/` — the **widget framework** (see the Widget Framework
   proposal artifact): a build-time registry of small composable views. Each
   widget declares a `dataSpec` naming the contract layers it needs; the host
@@ -109,36 +127,24 @@ npm run build:reports  # one self-contained study report per study, in dist/repo
   one study-snapshot file per study × snapshot date, columns mirroring the
   gsm.core reporting data model exactly. The R-side export writer validates
   against these.
-- `src/pages/`, `src/react/` — the study report (Astro page, one React root
-  rendering the study page from one injected document, gsm.viz inlined),
-  replacing the app's study route. `scripts/package-reports.mjs` inlines the
-  built page into a template; `scripts/inject.mjs` puts one study document
-  (`schemas/study-document.schema.json`, built by `scripts/study-document.mjs`)
-  into it; `Rscript scripts/inject.R` does the same in base R, writing the
-  same bytes. A document that fails its schema shows an error state.
+- `scripts/package-reports.mjs` inlines each built page into a template;
+  `scripts/inject.mjs` puts one data document into it (built by
+  `scripts/portfolio-document.mjs` or `scripts/study-document.mjs`, with a
+  schema in `schemas/`); `Rscript scripts/inject.R` does the same in base R,
+  writing the same bytes. A document that fails its schema shows an error state.
 - `scripts/generate-example-data.mjs` — deterministic simulated portfolio
   (12 studies × ~6 monthly snapshots, real gsm.kri metric catalog IDs, all
   numbers fake).
 
-## Data loading
+## Data
 
-One contract, two modes (auto-detected): **fetched** (static host serving
-`portfolio.json` + `summary.json` + `studies/...`) or **embedded**
-(`<script type="application/json" data-gsm="portfolio|summary|snapshot">` blocks for
-self-contained HTML / htmlwidget embedding).
+Each report carries its data as one injected document (`<script type="application/json"
+id="gsm-data">`), checked against its schema when it loads. The portfolio's holds the
+catalog, the studies and the counts-only summary. A study's holds the catalog, the
+study's manifest entry, all its snapshots, and the portfolio comparison per snapshot
+date, pooled from the summary.
 
 Detailed-report links (#13): a catalog entry's `ReportLink` is a path to that metric's
 report, resolved against the manifest's optional `reportBase`, which itself resolves
 against the page; a relative base therefore works wherever the dashboard is hosted.
 A metric without `ReportLink` shows no link.
-
-Study reports take one injected study document (`<script type="application/json"
-id="gsm-data">`): the catalog, the study's manifest entry, all its snapshots and
-the portfolio comparison per snapshot date, pooled from the summary.
-
-## Events
-
-Components extend the gsm.viz CustomEvent vocabulary
-(`riskSignalSelected` / `groupSelected`): the table dispatches bubbling
-`studySelected` events; the app shell answers with navigation. Hosts that
-embed components without the shell subscribe to the same events.

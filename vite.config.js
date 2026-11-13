@@ -1,11 +1,8 @@
 import { defineConfig } from 'vite';
 import { documentValidatorsPlugin } from './scripts/document-validators.mjs';
 
+// Vitest's configuration. The reports are built by Astro (astro.config.mjs); the tests need the same schema validators.
 export default defineConfig({
-  // The app shell is the default build target. A library build (ESM + IIFE)
-  // for embedding components in gsm.kri htmlwidgets is planned once
-  // @gilead-biostats/gsm.viz ships as an ESM package (design doc §7).
-  server: { open: false },
   plugins: [documentValidatorsPlugin()],
   test: {
     environment: 'node',

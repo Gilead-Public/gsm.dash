@@ -130,10 +130,14 @@ export function containedIn(repo, base, branch) {
 }
 
 /**
+ * One attempt of an Actions run as GitHub records it: its conclusion (empty while it runs), the commit it checked out,
+ * the workflow file it came from, and the event and branch that triggered it.
  * @param {string} repo
- * @param {string} runId
- * @returns {string}
+ * @param {string} id
+ * @param {string} attempt
+ * @returns {{ conclusion: string, headSha: string, workflow: string, event: string, branch: string }}
  */
-export function runConclusion(repo, runId) {
-  return gh(['run', 'view', runId, '-R', repo, '--json', 'conclusion', '--jq', '.conclusion']).trim();
+export function actionsRun(repo, id, attempt) {
+  const r = JSON.parse(gh(['api', `repos/${repo}/actions/runs/${id}/attempts/${attempt}`]));
+  return { conclusion: r.conclusion ?? '', headSha: r.head_sha, workflow: r.path, event: r.event, branch: r.head_branch ?? '' };
 }

@@ -1,53 +1,72 @@
-name: Deploy demo to GitHub Pages
+name: Publish a release to GitHub Pages
 
-# Publishes the app shell running on the SYNTHETIC example portfolio
-# (scripts/generate-example-data.mjs) — gsm.dash never ships with or fetches
-# real study data, so there is nothing sensitive in this deployment.
+# Publishes one release: the reports that a qualifying validation run built and tested, copied byte for byte, never
+# rebuilt. The data is the SYNTHETIC example portfolio (scripts/generate-example-data.mjs); nothing sensitive is
+# deployed.
+#
+# Run it from main with the release's tag. The tag must be on a commit whose validation run came from a push to main,
+# and the GitHub release on that tag must carry the reviewers' acceptance.json (validation/accept.js).
+# validation/release.js refuses anything else, and then nothing is deployed.
 on:
-  push:
-    branches: [main]
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag, on the commit whose validation run is published
+        required: true
+        type: string
 
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 
-# Only one deployment at a time; a newer push supersedes an in-flight one
-# rather than queuing behind it.
+# One deployment at a time; a release that has started finishes rather than being cancelled.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  build:
+  release:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ inputs.tag }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: npm
-      - run: npm ci
-      - run: npm test
-      - run: npm run generate-data
-      - name: Configure Pages
-        id: pages
-        uses: actions/configure-pages@v5
-      # base_path handles the org/project-page subpath (e.g. /gsm.dash/)
-      # so the vendored gsm.viz script/CSS and the built asset URLs resolve
-      # correctly once served from Pages.
-      - run: npx vite build --base="${{ steps.pages.outputs.base_path }}/"
-      # The app fetches its data as `examples/data/portfolio.json`, a path
-      # relative to index.html (see src/data/load.js) — so this only needs
-      # to sit alongside the build output, not be baked into it.
-      - run: mkdir -p dist/examples && cp -r examples/data dist/examples/data
+      - name: Find the tag's commit and its validation run
+        id: find
+        run: |
+          git fetch --depth=1 --no-tags origin "refs/tags/$TAG:refs/tags/$TAG"
+          commit=$(git rev-parse "refs/tags/$TAG^{commit}")
+          run=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/validation.yml/runs?head_sha=$commit&event=push&branch=main&status=success" \
+            --jq '.workflow_runs | sort_by(.run_number) | last | select(. != null) | "\(.id) \(.run_attempt)"')
+          if [ -z "$run" ]; then echo "::error::no successful validation run from a push to main on $commit"; exit 1; fi
+          read -r id attempt <<< "$run"
+          { echo "commit=$commit"; echo "id=$id"; echo "attempt=$attempt"; } >> "$GITHUB_OUTPUT"
+      - name: Download that run's record and the release's acceptance
+        env:
+          ID: ${{ steps.find.outputs.id }}
+          ATTEMPT: ${{ steps.find.outputs.attempt }}
+        run: |
+          gh run download "$ID" -R "$GITHUB_REPOSITORY" -n "validation-run-$ID-$ATTEMPT" -D run
+          gh release download "$TAG" -R "$GITHUB_REPOSITORY" -p acceptance.json -D acceptance
+      - name: Check the run and stage its reports
+        env:
+          RUN: run/gh-${{ steps.find.outputs.id }}-${{ steps.find.outputs.attempt }}
+          COMMIT: ${{ steps.find.outputs.commit }}
+        run: node validation/release.js "$RUN" --tag-commit "$COMMIT" --acceptance acceptance/acceptance.json --out site
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: site
 
   deploy:
-    needs: build
+    needs: release
     runs-on: ubuntu-latest
     environment:
       name: github-pages

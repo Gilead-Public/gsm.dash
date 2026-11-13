@@ -1,6 +1,6 @@
 // @ts-check
-// The portfolio table's rules: its rows and their order, cell shading, and the text of its tooltips and notes. Shared
-// by both portfolio hosts; tooltip text is HTML for the shared hover tooltip, and every other string is plain text.
+// The portfolio table's rules: its rows and their order, cell shading, and the text of its tooltips and notes. Tooltip
+// text is HTML for the shared hover tooltip, and every other string is plain text.
 import { esc, fmtInt, fmtPct, fmtMetric, displayLabel, DAYS_PER_MONTH } from '../util/format.js';
 import { relativeBin, heatValue, RELATIVE_MEASURES } from '../scales/flags.js';
 import { sortRows } from '../data/sort.js';

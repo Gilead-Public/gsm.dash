@@ -1,8 +1,6 @@
 // @ts-check
-// 12.02 regression evidence: the study page as it rendered before #12's changes, recorded state by state for each
-// host in e2e/__snapshots__/study-baseline.spec.js/. The two hosts' markup differs in whitespace and in where the back
-// link points, so each has its own records, shared by its two delivery modes. Each
-// state is reached through the UI and recorded as the page's DOM (by hash), its accessibility tree, every tile's view
+// 12.02 regression evidence: the study page as it rendered before #12's changes, recorded state by state in
+// e2e/__snapshots__/study-baseline.spec.js/ and shared by both delivery modes. Each state is reached through the UI and recorded as the page's DOM (by hash), its accessibility tree, every tile's view
 // and the marks it visibly draws, the drill-in panel with the series and values its gsm.viz chart draws, and any open
 // tooltip. Chart contents are recorded from the chart's data rather than its pixels, which differ by platform.
 import { readData, test } from './fixtures/app.js';
@@ -27,7 +25,7 @@ const STANDARD = { overview: 'overview', details: 'scalar-tile', scatter: 'scatt
  * @param {string} artifact
  */
 async function capture(page, name, artifact) {
-  const root = page.locator('#app > gsm-study-page, #app > .study-page');
+  const root = page.locator('#app > .study-page');
   // #13 adds a report link to configured tiles after this baseline was pinned; its own tests check those links, so
   // they are left out here and every other part of the page is still compared with the page before #12.
   const dom = await root.evaluate((el) => {

@@ -6,8 +6,8 @@ import { projectName, requireRunDir, SPEC_ARTIFACTS, targetedProjects } from './
 
 const runDir = resolve(requireRunDir());
 const port = Number(process.env.VALIDATION_PORT ?? 4410);
-/** Each artifact's sub-path build gets its own server, so both are hosted under the same prefix. */
-const ports = { spa: port, reports: port + 1 };
+/** Each artifact's sub-path build gets its own server, hosted under the same prefix. */
+const ports = { reports: port };
 const projects = targetedProjects();
 export const PREFIX = '/cod-demo/';
 
@@ -39,8 +39,8 @@ export default defineConfig({
     ...(mode === 'subpath' ? { use: { baseURL: `http://127.0.0.1:${ports[artifact]}${PREFIX}` } } : {}),
   })),
   webServer: [...new Set(projects.map((p) => p.artifact))].map((artifact) => ({
-    command: `node validation/serve.js ${join(runDir, artifact === 'spa' ? 'build/subpath' : 'build/reports')} ${ports[artifact]} --prefix ${PREFIX}`,
-    url: `http://127.0.0.1:${ports[artifact]}${PREFIX}${artifact === 'spa' ? '' : 'portfolio.html'}`,
+    command: `node validation/serve.js ${join(runDir, 'build/reports')} ${ports[artifact]} --prefix ${PREFIX}`,
+    url: `http://127.0.0.1:${ports[artifact]}${PREFIX}portfolio.html`,
     reuseExistingServer: false,
   })),
 });

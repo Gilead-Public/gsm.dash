@@ -22,8 +22,8 @@ function projectOf(testInfo) {
   return project;
 }
 
-/** The example data every build under test was made from. */
-export const DATA_DIR = join(RUN_DIR, 'build/subpath/examples/data');
+/** The example data the reports under test were built from, as the run kept it. */
+export const DATA_DIR = join(RUN_DIR, 'build/data');
 /** One report per study, each a single file. */
 export const REPORTS_DIR = join(RUN_DIR, 'build/reports');
 /**
@@ -32,10 +32,8 @@ export const REPORTS_DIR = join(RUN_DIR, 'build/reports');
 export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 'utf8'));
 
 /**
- * Test-only data changes, applied in place. The code under test is unchanged: in file mode the embedded JSON blocks
- * of the built file are rewritten into a copy; in sub-path mode the data requests are intercepted.
- */
-/**
+ * Test-only data changes, applied in place to the report's injected document. The code under test is unchanged: in
+ * file mode the report is rewritten into a copy; in sub-path mode its request is intercepted.
  * @typedef {object} DataOverrides
  * @property {(manifest: any) => void} [portfolio]
  * @property {(summary: any) => void} [summary]
@@ -46,8 +44,8 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
  * @typedef {object} App
  * @property {Artifact} artifact
  * @property {Mode} mode
- * @property {(route?: string, overrides?: DataOverrides) => Promise<void>} open Opens the portfolio: on the spa at a route such as `#/program?view=details`, on the reports `portfolio.html` with the route as its hash. Waits for the page to render.
- * @property {(studyId: string, overrides?: DataOverrides) => Promise<void>} openStudy Opens one study's page in the artifact under test.
+ * @property {(hash?: string, overrides?: DataOverrides) => Promise<void>} open Opens `portfolio.html`, at an optional `#` hash, and waits for it to render.
+ * @property {(studyId: string, overrides?: DataOverrides) => Promise<void>} openStudy Opens one study's report and waits for its tiles.
  * @property {(name: string, overrides?: ReportOverrides, hash?: string) => Promise<string>} openReport Opens one report, `portfolio` or a StudyID, at an optional `#` hash, and waits for it to show its data or its error state. Returns the URL opened, without the hash.
  */
 
@@ -127,23 +125,6 @@ function rewriteReport(html, overrides) {
   });
 }
 
-const BLOCK = /<script type="application\/json" data-gsm="(portfolio|summary|snapshot)">([\s\S]*?)<\/script>/g;
-
-/**
- * @param {string} html
- * @param {DataOverrides} overrides
- * @returns {string}
- */
-function rewriteEmbedded(html, overrides) {
-  return html.replace(BLOCK, (_, kind, text) => {
-    const data = JSON.parse(text);
-    if (kind === 'portfolio') overrides.portfolio?.(data);
-    else if (kind === 'summary') overrides.summary?.(data);
-    else overrides.snapshot?.(data);
-    return `<script type="application/json" data-gsm="${kind}">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
-  });
-}
-
 /**
  * @typedef {object} Evidence
  * @property {(page: Page, label: string) => Promise<string>} shot A stamped full-page screenshot, attached to the test as evidence. Returns its path.
@@ -170,48 +151,19 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
     void pageErrors;
     const { artifact, mode } = projectOf(testInfo);
     if (mode === 'file') await context.route(/^https?:/, (route) => route.abort());
-    const base = mode === 'file'
-      ? `file://${join(RUN_DIR, 'build/file/gsm-dash-standalone.html')}`
-      : (testInfo.project.use.baseURL);
+    const base = testInfo.project.use.baseURL;
     await use({
       artifact,
       mode,
-      async open(route = '', overrides) {
-        if (artifact === 'reports') {
-          await this.openReport('portfolio', overrides && asPortfolioOverrides(overrides), route);
-          await page.locator('#app > .layout').waitFor();
-          return;
-        }
-        let url = `${base}${route}`;
-        if (overrides && mode === 'file') {
-          const variant = testInfo.outputPath('variant.html');
-          writeFileSync(variant, rewriteEmbedded(readFileSync(join(RUN_DIR, 'build/file/gsm-dash-standalone.html'), 'utf8'), overrides));
-          url = `file://${variant}${route}`;
-        } else if (overrides) {
-          await page.route('**/examples/data/**', async (r) => {
-            const response = await r.fetch();
-            const json = await response.json();
-            const url = r.request().url();
-            if (url.endsWith('/portfolio.json')) overrides.portfolio?.(json);
-            else if (url.endsWith('/summary.json')) overrides.summary?.(json);
-            else overrides.snapshot?.(json);
-            await r.fulfill({ response, json });
-          });
-        }
-        await page.goto(url);
-        await page.locator('#app > .layout, #app > gsm-study-page').first().waitFor();
+      async open(hash = '', overrides) {
+        await this.openReport('portfolio', overrides && asPortfolioOverrides(overrides), hash);
+        await page.locator('#app > .layout').waitFor();
       },
       async openStudy(studyId, overrides) {
-        if (artifact === 'reports') {
-          await this.openReport(studyId, overrides && asReportOverrides(overrides));
-          await page.locator('#app .tile').first().waitFor();
-          return;
-        }
-        await this.open(`#/study/${encodeURIComponent(studyId)}`, overrides);
-        await page.locator('gsm-study-page .tile').first().waitFor();
+        await this.openReport(studyId, overrides && asReportOverrides(overrides));
+        await page.locator('#app .tile').first().waitFor();
       },
       async openReport(name, overrides, hash = '') {
-        if (artifact !== 'reports') throw new Error(`openReport needs the reports artifact, not ${artifact}`);
         const file = join(REPORTS_DIR, `${name}.html`);
         let url = mode === 'file' ? `file://${file}` : `${base}${encodeURIComponent(name)}.html`;
         if (overrides && mode === 'file') {

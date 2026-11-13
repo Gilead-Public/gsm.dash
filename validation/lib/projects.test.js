@@ -7,12 +7,12 @@ import { parseProject, projectName, requireRunDir, SPEC_ARTIFACTS, targetedProje
 describe('browser projects', () => {
   it('round-trips artifact and mode through the project name and rejects anything else', () => {
     expect(parseProject(projectName('reports', 'subpath'))).toEqual({ artifact: 'reports', mode: 'subpath' });
-    for (const name of ['file', 'subpath', 'spa', 'spa-other', undefined]) expect(parseProject(name), String(name)).toBeNull();
+    for (const name of ['file', 'subpath', 'spa-file', 'spa-subpath', 'reports', 'reports-other', undefined]) expect(parseProject(name), String(name)).toBeNull();
   });
 
   it('targets each mode of every artifact some spec lists, and nothing else', () => {
-    expect(targetedProjects({ 'e2e/a.spec.js': ['spa'] })).toEqual([{ artifact: 'spa', mode: 'file' }, { artifact: 'spa', mode: 'subpath' }]);
-    expect(targetedProjects({ 'e2e/a.spec.js': ['spa'], 'e2e/b.spec.js': ['reports'] })).toHaveLength(4);
+    expect(targetedProjects({ 'e2e/a.spec.js': ['reports'] })).toEqual([{ artifact: 'reports', mode: 'file' }, { artifact: 'reports', mode: 'subpath' }]);
+    expect(targetedProjects({ 'e2e/a.spec.js': [] })).toEqual([]);
   });
 
   it('declares the artifacts of every spec file', () => {

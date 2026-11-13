@@ -27,7 +27,7 @@ async function expectState(page, testInfo, name) {
 }
 
 /** @param {Page} page */
-const sidebar = (page) => page.locator('gsm-sidebar, .sidebar');
+const sidebar = (page) => page.locator('.sidebar');
 
 test.describe('the portfolio against its recorded baseline', () => {
   test('11.03: the table matches its baseline in Overview, Details and Mixed, sorted both ways, with a heatmap and with each cell display (#11)', async ({ app, page }, testInfo) => {
