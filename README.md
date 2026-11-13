@@ -57,6 +57,9 @@ published byte for byte.
 
 The run's artifact must still exist, which is 90 days by default.
 
+To share a build for feedback without releasing it: every CI run that passes also uploads
+`gsm-dash-reports-<id>-<attempt>`, which holds just its tested reports and a read-me. It isn't a reviewed release.
+
 ## What's here
 
 - `src/data/` — `PortfolioStore` plus the normalize / **rollup** modules.

@@ -37,3 +37,10 @@ jobs:
           name: validation-run-${{ github.run_id }}-${{ github.run_attempt }}
           path: validation-runs/
           if-no-files-found: error
+      # The tested reports on their own, to download and pass around for feedback. Only a run that passed gets one.
+      - run: node validation/share.js "validation-runs/gh-${{ github.run_id }}-${{ github.run_attempt }}" --out share/gsm-dash-reports
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gsm-dash-reports-${{ github.run_id }}-${{ github.run_attempt }}
+          path: share/
+          if-no-files-found: error
