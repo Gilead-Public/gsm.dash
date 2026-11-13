@@ -21,6 +21,7 @@ export const REQUIRED_STEPS = /** @type {const} */ (['environment', 'scope', 'ge
  * @property {string} npm
  * @property {Record<string, string>} packages
  * @property {{ name: string; version: string }} browser
+ * @property {string | null} [r] The R version, or null when none is installed; absent from runs before the R injector.
  * @property {string} lockfileSha256
  */
 

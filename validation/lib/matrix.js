@@ -35,7 +35,8 @@ export function environmentLine(run) {
   const e = run.environment;
   if (!e) return 'not recorded';
   const pkgs = Object.entries(e.packages).map(([p, v]) => `${p} ${v}`).join(', ');
-  return `Node ${e.node} (npm ${e.npm}) · ${e.browser.name} ${e.browser.version} · ${e.os} ${e.arch} · ${pkgs} · package-lock ${e.lockfileSha256.slice(0, 12)}`;
+  const r = e.r === undefined ? '' : ` · R ${e.r ?? 'not installed'}`;
+  return `Node ${e.node} (npm ${e.npm})${r} · ${e.browser.name} ${e.browser.version} · ${e.os} ${e.arch} · ${pkgs} · package-lock ${e.lockfileSha256.slice(0, 12)}`;
 }
 
 /**
