@@ -44,6 +44,20 @@ npm test           # rollup/normalize units + contract schema conformance
 npm run build:reports  # one self-contained study report per study, in dist/reports
 ```
 
+## Publishing
+
+GitHub Pages shows only a release: the reports from a validation run that came from a push to main, reviewed and
+published byte for byte.
+
+1. Download that run's artifact (`validation-run-<id>-<attempt>`). After comparing the screenshots it lists, accept
+   every in-scope visual criterion:
+   `node validation/accept.js <run folder> <ids> --accept --reviewer "<name>"`.
+2. Tag the run's commit and create a GitHub release on the tag, with the run folder's `acceptance.json` attached.
+3. `gh workflow run pages.yml --ref main -f tag=<tag>`. The workflow checks the run with `validation/release.js` and
+   publishes its reports. On any problem, it publishes nothing.
+
+The run's artifact must still exist, which is 90 days by default.
+
 ## What's here (v1: the program page)
 
 - `src/data/` — `PortfolioStore` plus the load / normalize / **rollup** modules.
