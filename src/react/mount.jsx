@@ -7,6 +7,7 @@ import '../widgets/index.js';
 import { readPortfolioDocument, readStudyDocument } from './document.js';
 import { ErrorState } from './ErrorState.jsx';
 import { StudyPage } from './StudyPage.jsx';
+import { PortfolioPage } from './PortfolioPage.jsx';
 
 /** @param {import('./document.js').StudyDocument} doc */
 function storeFor(doc) {
@@ -42,7 +43,7 @@ export function mount(el) {
     const store = portfolioStoreFor(/** @type {import('./document.js').PortfolioDocument} */ (result.doc));
     meta.textContent = `${store.studies.length} studies · ${store.metrics.length} metrics · exported ${store.generated}`;
     glossary.addEventListener('click', () => openGlossary(store));
-    return root.render(<div className="layout" />);
+    return root.render(<PortfolioPage store={store} />);
   }
   const doc = /** @type {import('./document.js').StudyDocument} */ (result.doc);
   const { StudyID } = doc.study;

@@ -168,3 +168,29 @@ test.describe('portfolio view numbers', () => {
     for (const study of kept) await expectRow(page, table, study.StudyID, [study]);
   });
 });
+
+test('the portfolio sits in the app shell: brand, Program overview tag, study count and export date, change log, a working metric glossary and theme switch, inside the page margins', async ({ app, page }) => {
+  await app.open();
+  const header = page.locator('header.app');
+  await expect(header.locator('h1')).toHaveText('gsm.dash');
+  await expect(header.locator('#page-tag')).toHaveText('Program overview');
+  const active = portfolio.metrics.filter((/** @type {{ Active?: boolean }} */ m) => m.Active !== false).length;
+  await expect(header.locator('#meta')).toHaveText(`${studies.length} studies · ${active} metrics · exported ${portfolio.generated}`);
+  await expect(header.locator('a#changelogLink')).toHaveAttribute('target', '_blank');
+  await expect(header.locator('a#changelogLink')).toHaveAttribute('href', /^https:\/\/.+change-log\.html$/);
+  await header.locator('#glossaryBtn').click();
+  const glossary = page.locator('dialog#gsm-glossary');
+  await expect(glossary).toBeVisible();
+  await expect(glossary).toContainText(catalog[0].Abbreviation);
+  await page.keyboard.press('Escape');
+  await expect(glossary).toBeHidden();
+  await header.locator('button[data-theme-pref="dark"]').click();
+  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('dark');
+  await header.locator('button[data-theme-pref="auto"]').click();
+  expect(await page.evaluate(() => document.documentElement.dataset.theme ?? 'auto')).toBe('auto');
+  const shell = await header.boundingBox();
+  const content = await page.locator('#app > .layout').boundingBox();
+  expect(shell && content, 'header and portfolio both laid out').toBeTruthy();
+  expect(Math.round(content?.x ?? 0), 'the portfolio lines up with the header').toBe(Math.round(shell?.x ?? -1));
+  expect(content?.x ?? 0, 'inside the page margins').toBeGreaterThanOrEqual(20);
+});

@@ -56,14 +56,22 @@ export function displayLabel(metric) {
  * A rollup ({Numerator, Denominator, Rate}) rendered by the metric's display
  * rule. `html` carries markup for the secondary percent; `text` is plain.
  */
-export function fmtMetric(metric, { Numerator, Denominator, Rate } = {}) {
+export function fmtMetric(metric, rollup = {}) {
+  const parts = metricParts(metric, rollup);
+  if (!parts) return { html: '<span class="muted">—</span>', text: '—' };
+  if (parts.pc) return { html: `${parts.main}<span class="pc">${parts.pc}</span>`, text: `${parts.main}${parts.pc}` };
+  return { html: parts.main, text: parts.main };
+}
+
+/**
+ * What fmtMetric shows, in pieces: nothing when there is no rate, else the main figure and, for n (%) metrics, the
+ * secondary percent.
+ */
+export function metricParts(metric, { Numerator, Denominator, Rate } = {}) {
   const rate = Rate ?? (Denominator ? Numerator / Denominator : null);
-  if (rate == null) return { html: '<span class="muted">—</span>', text: '—' };
-  if (metric?.Display === 'count_pct') {
-    return { html: `${fmtInt(Numerator)}<span class="pc"> (${fmtPct(rate)})</span>`, text: `${fmtInt(Numerator)} (${fmtPct(rate)})` };
-  }
-  const text = fmtRate(metric, rate);
-  return { html: text, text };
+  if (rate == null) return null;
+  if (metric?.Display === 'count_pct') return { main: fmtInt(Numerator), pc: ` (${fmtPct(rate)})` };
+  return { main: fmtRate(metric, rate), pc: null };
 }
 
 /** The small n / d line beside a headline: "of 988 enrolled" when the headline already carries the count. */

@@ -26,18 +26,84 @@ export const domLine = (dom) => `dom: sha256 ${createHash('sha256').update(dom).
 
 /**
  * Compares one state's record with its baseline file, and keeps going so every changed state is reported. A mismatch
- * attaches the actual DOM, and the canonical DOM when there is one, for comparison with the pinned commit's.
+ * attaches the actual DOM, and the canonical DOM and computed styles when recorded, for comparison with the pinned
+ * commit's.
  * @param {TestInfo} testInfo
  * @param {string} file
- * @param {{ text: string, dom: string, canonical?: string }} record
+ * @param {{ text: string, dom: string, canonical?: string, styles?: string }} record
  */
-export async function expectRecorded(testInfo, file, { text, dom, canonical }) {
+export async function expectRecorded(testInfo, file, { text, dom, canonical, styles }) {
   const before = testInfo.errors.length;
   expect.soft(text, file).toMatchSnapshot(file);
   if (testInfo.errors.length === before) return;
   await testInfo.attach(`${file} DOM`, { body: dom, contentType: 'text/html' });
   if (canonical !== undefined) await testInfo.attach(`${file} canonical DOM`, { body: canonical, contentType: 'text/plain' });
+  if (styles !== undefined) await testInfo.attach(`${file} computed styles`, { body: styles, contentType: 'text/plain' });
 }
+
+/** @param {string} styles */
+export const stylesLine = (styles) => `computed styles: sha256 ${createHash('sha256').update(styles).digest('hex')} (${styles.split('\n').length} elements)`;
+
+/**
+ * Every element's computed style under `root`, in document order, with its ::before and ::after where they render.
+ * Runs in the page. What is read can't depend on fonts, layout or platform:
+ * - properties the stylesheet alone decides, as `getComputedStyle` resolves them;
+ * - sizes, offsets, margins, grid and flex placement and transforms as computed values (CSS Typed OM), so `auto`,
+ *   percentages and transform functions stay as written rather than becoming the pixels layout gave them;
+ * - for a pseudo-element, which has no Typed OM: its content, the same stylesheet properties, its offsets, and the
+ *   rotation and scale of its transform.
+ * @param {Element} root
+ * @returns {string}
+ */
+export function computedStyles(root) {
+  const sides = ['top', 'right', 'bottom', 'left'];
+  const PROPS = [
+    'display', 'position', 'float', 'visibility', 'opacity', 'z-index', 'color', 'background-color', 'background-image',
+    ...sides.flatMap((s) => [`border-${s}-width`, `border-${s}-style`, `border-${s}-color`, `padding-${s}`]),
+    'border-top-left-radius', 'border-top-right-radius', 'border-bottom-right-radius', 'border-bottom-left-radius',
+    'box-shadow', 'outline-style', 'font-family', 'font-size', 'font-weight', 'font-style', 'line-height', 'text-align',
+    'text-transform', 'text-decoration-line', 'letter-spacing', 'white-space', 'cursor', 'row-gap', 'column-gap',
+    'flex-direction', 'flex-wrap', 'justify-content', 'align-items', 'overflow-x', 'overflow-y', 'text-overflow',
+    'vertical-align', 'pointer-events', 'user-select', 'font-variant-numeric',
+  ];
+  const GEOMETRY = [
+    'width', 'height', 'min-width', 'max-width', 'min-height', 'max-height', ...sides, ...sides.map((s) => `margin-${s}`),
+    'box-sizing', 'transform', 'translate', 'rotate', 'scale', 'grid-template-columns', 'grid-template-rows',
+    'grid-column-start', 'grid-column-end', 'grid-row-start', 'grid-row-end', 'align-self', 'justify-self', 'flex-grow',
+    'flex-shrink', 'flex-basis', 'order',
+  ];
+  /** The rotation, scale and skew of a resolved transform; its translation can depend on the element's size. */
+  const linear = (/** @type {string} */ t) => {
+    if (t === 'none') return t;
+    const m = new DOMMatrix(t);
+    return [m.a, m.b, m.c, m.d].map((v) => v.toFixed(4)).join(',');
+  };
+  /** @param {Element} el */
+  const pseudo = (el, /** @type {string} */ which) => {
+    const cs = getComputedStyle(el, which);
+    const content = cs.getPropertyValue('content');
+    if (content === 'none' || content === 'normal' || cs.display === 'none') return '';
+    return ` ${which} ${[content, ...PROPS.map((p) => cs.getPropertyValue(p)), ...sides.map((s) => cs.getPropertyValue(s)), linear(cs.transform)].join(';')}`;
+  };
+  return [...root.querySelectorAll('*')]
+    .map((el) => {
+      const cs = getComputedStyle(el);
+      const typed = el.computedStyleMap();
+      return [...PROPS.map((p) => cs.getPropertyValue(p)), ...GEOMETRY.map((p) => String(typed.get(p)))].join(';') + pseudo(el, '::before') + pseudo(el, '::after');
+    })
+    .join('\n');
+}
+
+/**
+ * The accessibility tree with each study link's URL written as `study:<StudyID>`, by the same rule as `canonicalDom`:
+ * only either host's link to a study (`#/study/<id>`, or `./<id>.html` with or without a `#` view state) is rewritten.
+ * @param {string} aria
+ */
+export const ariaStudyLinks = (aria) =>
+  aria.replace(/^(\s*- \/url: )(?:"(#\/study\/[^/?#"]+)"|(\.\/[^/?#\s]+\.html)(?:#\S*)?|"(\.\/[^/?#"]+\.html)(?:#[^"]*)?")$/gm, (_, lead, route, file, quoted) => {
+    const id = route ? route.slice('#/study/'.length) : (file ?? quoted).slice(2, -'.html'.length);
+    return `${lead}study:${decodeURIComponent(id)}`;
+  });
 
 /** @param {string} canonical */
 export const canonicalLine = (canonical) => `canonical dom: sha256 ${createHash('sha256').update(canonical).digest('hex')} (${canonical.length} characters)`;
@@ -50,7 +116,9 @@ export const canonicalLine = (canonical) => `canonical dom: sha256 ${createHash(
  * - form controls carry their live state (`:checked`, `:value`, `:selected`) in place of the attributes that seed it;
  * - collapsible whitespace is kept as one space where CSS renders one, between inline content on the same line, and
  *   dropped elsewhere, with adjacent text nodes joined;
- * - comments are dropped.
+ * - comments are dropped;
+ * - a study link's href is written as `study:<StudyID>` when it is either host's link to that same study: the old
+ *   app's `#/study/<id>` route, or the reports' `./<id>.html`, with or without a `#` view state. Any other href stays.
  * Everything else, including every attribute value, text and element order, is kept exactly.
  * @param {Element} root
  * @param {Record<string, string>} hosts element name -> `tag.class` of its counterpart
@@ -124,6 +192,13 @@ export function canonicalDom(root, hosts) {
     return `${lead && beside(t, -1) === 'content' ? ' ' : ''}${inner}${trail && beside(t, 1) === 'content' ? ' ' : ''}`;
   };
   /** @param {Element} el */
+  const studyHref = (el) => {
+    const id = el.getAttribute('data-study');
+    const href = el.getAttribute('href') ?? '';
+    const m = /^#\/study\/([^/?#]+)$/.exec(href) ?? /^\.\/([^/?#]+)\.html(?:#.*)?$/.exec(href);
+    return m && id !== null && decodeURIComponent(m[1]) === id ? `study:${id}` : href;
+  };
+  /** @param {Element} el */
   const open = (el) => {
     const [tag, hostClass] = (hosts[el.localName] ?? el.localName).split('.');
     const control = ['input', 'select', 'textarea', 'option'].includes(el.localName);
@@ -135,6 +210,7 @@ export function canonicalDom(root, hosts) {
       let value = /** @type {string} */ (el.getAttribute(name));
       if (name === 'class') value = [...el.classList].sort().join(' ');
       if (name === 'style') value = /** @type {HTMLElement} */ (el).style.cssText;
+      if (name === 'href' && el.localName === 'a' && el.hasAttribute('data-study')) value = studyHref(el);
       attrs.set(name, value);
     }
     if (hostClass) attrs.set('class', [...(attrs.get('class') ?? '').split(' ').filter(Boolean), hostClass].sort().join(' '));

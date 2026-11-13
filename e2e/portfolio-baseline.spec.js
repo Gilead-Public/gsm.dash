@@ -1,11 +1,12 @@
 // @ts-check
 // 11.03 regression evidence: the portfolio as it rendered before #11's changes, recorded state by state in
 // e2e/__snapshots__/portfolio-baseline.spec.js/, at 69b2240. Each state is reached through the UI and recorded as its
-// canonical DOM (by hash), every sparkline's points, its accessibility tree (which leaves out hidden elements) and what
-// CSS places or colours: every Distribution mark's position along its track and whether it is visible, every table
-// cell's background, and any open tooltip. The canonical DOM lets the React page be compared with the same records.
+// canonical DOM and computed styles (by hash), every sparkline's points, its accessibility tree (which leaves out
+// hidden elements) and what CSS places or colours: every Distribution mark's position along its track and whether it
+// is visible, every table cell's background, and any open tooltip. The canonical DOM lets the React page be compared
+// with the same records.
 import { readData, test } from './fixtures/app.js';
-import { canonicalDom, canonicalLine, expectRecorded, runs } from './fixtures/baseline.js';
+import { ariaStudyLinks, canonicalDom, canonicalLine, computedStyles, expectRecorded, runs, stylesLine } from './fixtures/baseline.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('@playwright/test').TestInfo} TestInfo */
 
@@ -24,7 +25,7 @@ const HOSTS = { 'gsm-sidebar': 'div.sidebar', 'gsm-view-switch': 'div.view-switc
 async function capture(page, name) {
   const dom = await page.locator('#app').evaluate((el) => el.innerHTML);
   const canonical = await page.locator('#app').evaluate(canonicalDom, HOSTS);
-  const aria = await page.locator('#app').ariaSnapshot();
+  const aria = ariaStudyLinks(await page.locator('#app').ariaSnapshot());
   const rendered = await page.evaluate(() => {
     const visible = (/** @type {Element} */ el) => el.checkVisibility({ opacityProperty: true, visibilityProperty: true });
     const along = (/** @type {Element} */ el, /** @type {Element} */ track) => {
@@ -47,9 +48,15 @@ async function capture(page, name) {
     const tip = document.getElementById('gsm-tooltip');
     return { tracks, cells, sparklines, tooltip: tip && visible(tip) ? tip.innerHTML : 'none' };
   });
+  // Styles are read with the pointer off the page, as :hover rules would otherwise depend on which element it is over,
+  // and once transitions end: the React page keeps elements the original replaced, so CSS transitions run on it.
+  await page.mouse.move(0, 0);
+  await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished)));
+  const styles = await page.locator('#app').evaluate(computedStyles);
   const text = [
     `state: ${name}`,
     canonicalLine(canonical),
+    stylesLine(styles),
     `tooltip: ${rendered.tooltip}`,
     `cell backgrounds: ${runs(rendered.cells)}`,
     'distribution marks:',
@@ -60,7 +67,7 @@ async function capture(page, name) {
     aria,
     '',
   ].join('\n');
-  return { text, dom, canonical };
+  return { text, dom, canonical, styles };
 }
 
 /**
@@ -102,7 +109,7 @@ test.describe('the portfolio against its recorded baseline', () => {
     await app.open();
     await sidebar(page).locator('select[data-groupby]').selectOption('phase');
     await expectState(page, testInfo, 'rows-grouped');
-    await page.locator('tr[data-bucket]').first().click();
+    await page.locator('tr[data-bucket] td.grp').first().click();
     await expectState(page, testInfo, 'rows-group-open');
     await sidebar(page).locator('select[data-groupby]').selectOption('none');
     const area = studies[0].params.therapeutic_area;

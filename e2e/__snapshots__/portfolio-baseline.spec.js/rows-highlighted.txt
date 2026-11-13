@@ -1,5 +1,6 @@
 state: rows-highlighted
-canonical dom: sha256 b3a591451984bfcfc7681a555f1e2d6302c1392d87fce8dcfecc9710e44d8241 (113871 characters)
+canonical dom: sha256 fe8f1248005fafe584163e4df11605899acbb0765cf2f7336d183f44d76bbfa7 (113865 characters)
+computed styles: sha256 d38340837187787098dfd43f833132907ddf96ff5d7c5fc05ed9a74b4f93f86a (749 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) | rgb(237, 240, 238) | rgb(255, 255, 255) ×4 | rgb(224, 238, 236) ×5 | rgb(237, 240, 238) ×5 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) | rgb(224, 238, 236) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
@@ -181,7 +182,7 @@ accessibility:
       - row "STUDY001ATLAS-1 Study details 2026-05-31 1,341 988 6.6% 12.2% 8.6% 2.5% 2.6% 0.6% 1.6% 1.5% 3.7% 3.2% 3.2% 5.0% 5.2% 5.5% 10.4% 2.1%":
         - cell "STUDY001ATLAS-1 Study details":
           - link "STUDY001":
-            - /url: "#/study/STUDY001"
+            - /url: study:STUDY001
           - text: ATLAS-1
           - img "Study details": i
         - cell "2026-05-31"
@@ -195,7 +196,7 @@ accessibility:
       - row "STUDY008HARBOR-2 Study details 2026-06-30 611 499 5.2% 9.2% 8.8% 2.4% 1.4% 0.4% 1.2% 1.6% 2.8% 2.8% 2.0% 2.2% 6.8% 13.4% 12.2% 3.5%":
         - cell "STUDY008HARBOR-2 Study details":
           - link "STUDY008":
-            - /url: "#/study/STUDY008"
+            - /url: study:STUDY008
           - text: HARBOR-2
           - img "Study details": i
         - cell "2026-06-30"
@@ -209,7 +210,7 @@ accessibility:
       - row "STUDY012LUMEN-1 Study details 2026-06-30 1,281 907 7.3% 11.9% 10.5% 4.1% 1.3% 0.9% 1.9% 1.4% 5.2% 1.8% 2.1% 4.3% 6.8% 9.5% 11.8% 2.8%":
         - cell "STUDY012LUMEN-1 Study details":
           - link "STUDY012":
-            - /url: "#/study/STUDY012"
+            - /url: study:STUDY012
           - text: LUMEN-1
           - img "Study details": i
         - cell "2026-06-30"

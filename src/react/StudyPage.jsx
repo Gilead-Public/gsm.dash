@@ -1,6 +1,7 @@
 // @ts-check
 import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { attachHoverTooltip, metricTip } from '../components/tooltip.js';
+import { attachHoverTooltip } from '../components/tooltip.js';
+import { InfoIcon, StatusPill } from './parts.jsx';
 import { getWidget } from '../widgets/index.js';
 import { configProblems, problemText, resolveView } from '../app/references.js';
 import { reportLink } from '../app/report-links.js';
@@ -13,21 +14,6 @@ import { Widget } from './Widget.jsx';
 // keeps the markup of the original <gsm-study-page> element, so the same tests and styles apply.
 
 const PARAMS = ['therapeutic_area', 'protocol_indication', 'phase', 'status', 'product'];
-
-/** @param {{ metric: any }} props */
-function InfoIcon({ metric }) {
-  return (
-    <span className="info" data-tip={metricTip(metric)} role="img" aria-label={`${metric.Metric} definition`}>
-      i
-    </span>
-  );
-}
-
-/** @param {{ metric: any }} props */
-function StatusPill({ metric }) {
-  const status = metric?.Status ?? 'Released';
-  return status === 'Released' ? null : <span className={`pill ${status.toLowerCase()}`}>{status}</span>;
-}
 
 /** @param {{ def: any }} props */
 function KindBadge({ def }) {
