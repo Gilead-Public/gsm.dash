@@ -8,6 +8,7 @@ import './views/bar-outliers.js';
 import './views/flag-dist.js';
 import './views/trend-mini.js';
 import './distribution-bar.js';
+import './kri-summary.js';
 // Custom / page-level widgets:
 import './link-out.js';
 import './threshold-list.js';

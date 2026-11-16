@@ -1,5 +1,5 @@
 state: flags-flag-distribution (reports)
-dom: sha256 df51667d65a20b91f7b0d61c03b7173a5cefa18dd47ed4738e1ba02e7eda1b0e (62839 characters)
+dom: sha256 ccec99c2a0a8b2efeb94a6806df9982f0df4590ff28e0999756120dc2463b624 (55496 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -15,15 +15,15 @@ tiles:
   Analysis_kri0014 · Flag distribution 7/8: rows 6
   Analysis_strat0001 · Flag distribution 7/8: rows 6
   Analysis_ctq0006 · Flag distribution 7/7: rows 6
-  Analysis_kri0001 · Flag distribution 7/7: rows 6
-  Analysis_kri0002 · Flag distribution 7/7: rows 6
-  Analysis_kri0003 · Flag distribution 7/7: rows 6
-  Analysis_kri0004 · Flag distribution 7/7: rows 6
-  Analysis_kri0005 · Flag distribution 7/7: rows 6
-  Analysis_kri0008 · Flag distribution 7/7: rows 6
-  Analysis_kri0009 · Flag distribution 7/7: rows 6
-  Analysis_kri0010 · Flag distribution 7/7: rows 6
-  Analysis_kri0011 · Flag distribution 7/7: rows 6
+  Analysis_kri0001 · -: no marks
+  Analysis_kri0002 · -: no marks
+  Analysis_kri0005 · -: no marks
+  Analysis_kri0003 · -: no marks
+  Analysis_kri0004 · -: no marks
+  Analysis_kri0008 · -: no marks
+  Analysis_kri0009 · -: no marks
+  Analysis_kri0010 · -: no marks
+  Analysis_kri0011 · -: no marks
 accessibility:
 - link "← Program overview":
   - /url: ./portfolio.html
@@ -127,66 +127,84 @@ accessibility:
 - text: Flag distribution 7/7
 - button "Next view": ›
 - button "Charts ▾"
-- text: Safety & deviations · 5 AE AE Reporting Rate
+- text: AE, SAE and labs · 3 AE AE Reporting Rate
 - img "AE Reporting Rate definition": i
-- text: New standard Sites by flag +2 0 +1 0 0 16 −1 1 −2 0 NA 0 17 sites · flags as assigned by the pipeline
-- button "Previous view": ‹
-- text: Flag distribution 7/7
-- button "Next view": ›
+- text: New 1.34 per 28 days 7,967 / 5,928.3
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 1 5.9%
+  - listitem: Green 16 94.1%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: SAE SAE Reporting Rate
 - img "SAE Reporting Rate definition": i
-- text: New standard Sites by flag +2 1 +1 0 0 12 −1 4 −2 0 NA 0 17 sites · flags as assigned by the pipeline
-- button "Previous view": ‹
-- text: Flag distribution 7/7
-- button "Next view": ›
-- button "Charts ▾"
-- text: PD Non-Important Protocol Deviation Rate
-- img "Non-Important Protocol Deviation Rate definition": i
-- text: New standard Sites by flag +2 2 +1 0 0 15 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
-- button "Previous view": ‹
-- text: Flag distribution 7/7
-- button "Next view": ›
-- button "Charts ▾"
-- text: IPD Important Protocol Deviation Rate
-- img "Important Protocol Deviation Rate definition": i
-- text: New standard Sites by flag +2 0 +1 0 0 13 −1 4 −2 0 NA 0 17 sites · flags as assigned by the pipeline
-- button "Previous view": ‹
-- text: Flag distribution 7/7
-- button "Next view": ›
+- text: New 0.09 per 28 days 551 / 5,928.3
+- list "Sites by flag":
+  - listitem: Red 1 5.9%
+  - listitem: Amber 4 23.5%
+  - listitem: Green 12 70.6%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: LB G3+ Lab Abnormality Rate
 - img "G3+ Lab Abnormality Rate definition": i
-- text: standard Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
-- button "Previous view": ‹
-- text: Flag distribution 7/7
-- button "Next view": ›
+- text: 3.7% 720 / 19,324
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 0 0.0%
+  - listitem: Green 17 100.0%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
-- text: Data quality · 4 QRY Query Rate
+- text: Protocol deviations · 2 PD Non-Important Protocol Deviation Rate
+- img "Non-Important Protocol Deviation Rate definition": i
+- text: New 0.52 per 28 days 3,055 / 5,928.3
+- list "Sites by flag":
+  - listitem: Red 2 11.8%
+  - listitem: Amber 0 0.0%
+  - listitem: Green 15 88.2%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: IPD Important Protocol Deviation Rate
+- img "Important Protocol Deviation Rate definition": i
+- text: New 0.06 per 28 days 380 / 5,928.3
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 4 23.5%
+  - listitem: Green 13 76.5%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: EDC and query rates · 4 QRY Query Rate
 - img "Query Rate definition": i
-- text: standard Sites by flag +2 1 +1 0 0 15 −1 1 −2 0 NA 0 17 sites · flags as assigned by the pipeline
-- button "Previous view": ‹
-- text: Flag distribution 7/7
-- button "Next view": ›
+- text: 6.5% 17,103 / 261,148
+- list "Sites by flag":
+  - listitem: Red 1 5.9%
+  - listitem: Amber 1 5.9%
+  - listitem: Green 15 88.2%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: OQRY Delayed Query Resolution Rate
 - img "Delayed Query Resolution Rate definition": i
-- text: standard Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
-- button "Previous view": ‹
-- text: Flag distribution 7/7
-- button "Next view": ›
+- text: 7.3% 1,256 / 17,103
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 0 0.0%
+  - listitem: Green 17 100.0%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: ODAT Delayed Data Entry Rate
 - img "Delayed Data Entry Rate definition": i
-- text: standard Sites by flag +2 1 +1 1 0 11 −1 4 −2 0 NA 0 17 sites · flags as assigned by the pipeline
-- button "Previous view": ‹
-- text: Flag distribution 7/7
-- button "Next view": ›
+- text: 10.8% 3,655 / 33,992
+- list "Sites by flag":
+  - listitem: Red 1 5.9%
+  - listitem: Amber 5 29.4%
+  - listitem: Green 11 64.7%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: CDAT Data Change Rate
 - img "Data Change Rate definition": i
-- text: standard Sites by flag +2 1 +1 0 0 13 −1 3 −2 0 NA 0 17 sites · flags as assigned by the pipeline
-- button "Previous view": ‹
-- text: Flag distribution 7/7
-- button "Next view": ›
+- text: 4.4% 11,605 / 261,148
+- list "Sites by flag":
+  - listitem: Red 1 5.9%
+  - listitem: Amber 3 17.6%
+  - listitem: Green 13 76.5%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"

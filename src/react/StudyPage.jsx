@@ -7,6 +7,7 @@ import { configProblems, problemText, resolveView } from '../app/references.js';
 import { reportLink } from '../app/report-links.js';
 import { STUDY_PAGE_SPEC, DETAIL_TABS, KIND_HELP } from '../app/study-page-spec.js';
 import { currentTileView, sharedTileViews, tileConfig, tileViews, viewLabel } from '../app/tile-views.js';
+import { kriLayout } from '../app/kri-groups.js';
 import { useStore } from './useStore.js';
 import { Widget } from './Widget.jsx';
 
@@ -75,6 +76,7 @@ export function StudyPage({ store, studyId, back }) {
   const root = useRef(/** @type {HTMLDivElement | null} */ (null));
   const timer = useRef(/** @type {ReturnType<typeof setInterval> | null} */ (null));
   const [playing, setPlaying] = useState(false);
+  const [expanded, setExpanded] = useState(() => /** @type {Set<string>} */ (new Set()));
 
   useEffect(() => {
     if (root.current) attachHoverTooltip(root.current);
@@ -127,7 +129,7 @@ export function StudyPage({ store, studyId, back }) {
   const spec = STUDY_PAGE_SPEC;
   const date = store.latestDate(studyId);
   const detail = store.state.detail;
-  const visible = store.visibleMetrics();
+  const { ctq: visible, groups: kriGroups } = kriLayout(store.visibleMetrics());
   const grouped = store.state.groupByCategory;
   /** @type {Map<string, any[]>} */
   const categories = grouped ? new Map(spec.rows.map((/** @type {string} */ row) => [row, []])) : new Map([['All metrics', []]]);
@@ -219,6 +221,27 @@ export function StudyPage({ store, studyId, back }) {
                 .map((/** @type {any} */ pw, /** @type {number} */ i) => (
                   <PageWidget key={`${pw.widget}-${i}`} name={pw.widget} config={pw.config} {...shared} />
                 ))}
+            </div>
+            {selected ? <DetailPanel metric={selected} {...shared} /> : null}
+          </div>
+        );
+      })}
+      {kriGroups.map((g) => {
+        const open = expanded.has(g.id);
+        const members = open ? g.members : g.shown;
+        const selected = members.find((m) => m.MetricID === detail.metricId);
+        return (
+          <div className="dd-row kri-group" data-row={g.label} data-kri-group={g.id} key={g.id}>
+            <div className="rowlab">{`${g.label} · ${members.length}`}</div>
+            <div className="tiles">
+              {members.map((metric) => (
+                <KriTile key={metric.MetricID} metric={metric} open={detail.metricId === metric.MetricID} {...shared} />
+              ))}
+              {g.hidden.length && !open ? (
+                <button type="button" className="kri-more" data-kri-expand={g.id} onClick={() => setExpanded(new Set([...expanded, g.id]))}>
+                  Show more
+                </button>
+              ) : null}
             </div>
             {selected ? <DetailPanel metric={selected} {...shared} /> : null}
           </div>
@@ -334,6 +357,37 @@ function Tile({ metric, open, store, studyId, version }) {
         <button type="button" className="vbtn" data-view-step="1" data-metric={metric.MetricID} aria-label="Next view" onClick={() => step(1)}>
           ›
         </button>
+        <button type="button" className={`tile-more ${open ? 'on' : ''}`} data-detail-metric={metric.MetricID} aria-expanded={open} title="Full-size gsm.viz charts" onClick={toggleDetail}>
+          Charts {open ? '▴' : '▾'}
+        </button>
+        {link ? (
+          <a className="report-link" href={link} target="_blank" rel="noopener">
+            Detailed report ↗
+          </a>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * A standard KRI in its group (#32): the compact summary, the drill-in charts and the detailed-report link, with no
+ * view pager.
+ * @param {{ metric: any, open: boolean, store: any, studyId: string, version: number }} props
+ */
+function KriTile({ metric, open, store, studyId, version }) {
+  const link = reportLink(metric, store.reportBase, location.href);
+  const toggleDetail = () => store.set('detail', { metricId: open ? null : metric.MetricID, tab: store.state.detail.tab });
+  return (
+    <div className="tile kri" data-metric-id={metric.MetricID}>
+      <div className="tile-head">
+        <span className="abbr">{metric.Abbreviation}</span>
+        <span className="name">{metric.Metric}</span>
+        <InfoIcon metric={metric} />
+        <StatusPill metric={metric} />
+      </div>
+      <Widget className="tile-body" def={getWidget('kri-summary')} metricId={metric.MetricID} store={store} studyId={studyId} version={version} />
+      <div className="tile-foot">
         <button type="button" className={`tile-more ${open ? 'on' : ''}`} data-detail-metric={metric.MetricID} aria-expanded={open} title="Full-size gsm.viz charts" onClick={toggleDetail}>
           Charts {open ? '▴' : '▾'}
         </button>

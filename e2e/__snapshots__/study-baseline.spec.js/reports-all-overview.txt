@@ -1,5 +1,5 @@
 state: all-overview (reports)
-dom: sha256 3d5a2581ef957b44fc9f69227bed2033f518e8518fa08b4e00f4fe9c8e6d7932 (46665 characters)
+dom: sha256 82aadb053a010f3e5c81fc5061afcbc8d3e4e788b917051cc5a7caf6020c8ce1 (46375 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -15,15 +15,15 @@ tiles:
   Analysis_kri0014 · Overview 1/6: no marks
   Analysis_strat0001 · Overview 1/6: no marks
   Analysis_ctq0006 · Overview 1/5: no marks
-  Analysis_kri0001 · Overview 1/5: no marks
-  Analysis_kri0002 · Overview 1/5: no marks
-  Analysis_kri0003 · Overview 1/5: no marks
-  Analysis_kri0004 · Overview 1/5: no marks
-  Analysis_kri0005 · Overview 1/5: no marks
-  Analysis_kri0008 · Overview 1/5: no marks
-  Analysis_kri0009 · Overview 1/5: no marks
-  Analysis_kri0010 · Overview 1/5: no marks
-  Analysis_kri0011 · Overview 1/5: no marks
+  Analysis_kri0001 · -: no marks
+  Analysis_kri0002 · -: no marks
+  Analysis_kri0005 · -: no marks
+  Analysis_kri0003 · -: no marks
+  Analysis_kri0004 · -: no marks
+  Analysis_kri0008 · -: no marks
+  Analysis_kri0009 · -: no marks
+  Analysis_kri0010 · -: no marks
+  Analysis_kri0011 · -: no marks
 accessibility:
 - link "← Program overview":
   - /url: ./portfolio.html
@@ -221,138 +221,84 @@ accessibility:
 - text: Overview 1/5
 - button "Next view": ›
 - button "Charts ▾"
-- text: Safety & deviations · 5 AE AE Reporting Rate
+- text: AE, SAE and labs · 3 AE AE Reporting Rate
 - img "AE Reporting Rate definition": i
-- text: New standard 0.86
-- term: Numerator
-- definition: 4,862 Number of AEs reported
-- term: Denominator
-- definition: 158,946 Exposure in days
-- term: Shown as
-- definition: events per 28 days of exposure (n ÷ d × 28)
-- term: Sites
-- definition: "17"
-- button "Previous view": ‹
-- text: Overview 1/5
-- button "Next view": ›
+- text: New 0.86 per 28 days 4,862 / 5,676.6
+- list "Sites by flag":
+  - listitem: Red 4 23.5%
+  - listitem: Amber 3 17.6%
+  - listitem: Green 10 58.8%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: SAE SAE Reporting Rate
 - img "SAE Reporting Rate definition": i
-- text: New standard 0.14
-- term: Numerator
-- definition: 772 Number of SAEs reported
-- term: Denominator
-- definition: 158,946 Exposure in days
-- term: Shown as
-- definition: events per 28 days of exposure (n ÷ d × 28)
-- term: Sites
-- definition: "17"
-- button "Previous view": ‹
-- text: Overview 1/5
-- button "Next view": ›
-- button "Charts ▾"
-- text: PD Non-Important Protocol Deviation Rate
-- img "Non-Important Protocol Deviation Rate definition": i
-- text: New standard 0.41
-- term: Numerator
-- definition: 2,331 Number of non-important PDs
-- term: Denominator
-- definition: 158,946 Exposure in days
-- term: Shown as
-- definition: events per 28 days of exposure (n ÷ d × 28)
-- term: Sites
-- definition: "17"
-- button "Previous view": ‹
-- text: Overview 1/5
-- button "Next view": ›
-- button "Charts ▾"
-- text: IPD Important Protocol Deviation Rate
-- img "Important Protocol Deviation Rate definition": i
-- text: New standard 0.05
-- term: Numerator
-- definition: 298 Number of important PDs
-- term: Denominator
-- definition: 158,946 Exposure in days
-- term: Shown as
-- definition: events per 28 days of exposure (n ÷ d × 28)
-- term: Sites
-- definition: "17"
-- button "Previous view": ‹
-- text: Overview 1/5
-- button "Next view": ›
+- text: New 0.14 per 28 days 772 / 5,676.6
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 6 35.3%
+  - listitem: Green 11 64.7%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: LB G3+ Lab Abnormality Rate
 - img "G3+ Lab Abnormality Rate definition": i
-- text: standard 907 (5.0%)
-- term: Numerator
-- definition: 907 Number of G3+ abnormal lab samples
-- term: Denominator
-- definition: "18,181 Total # lab samples"
-- term: Shown as
-- definition: "count (% of total # lab samples)"
-- term: Sites
-- definition: "17"
-- button "Previous view": ‹
-- text: Overview 1/5
-- button "Next view": ›
+- text: 5.0% 907 / 18,181
+- list "Sites by flag":
+  - listitem: Red 1 5.9%
+  - listitem: Amber 3 17.6%
+  - listitem: Green 13 76.5%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
-- text: Data quality · 4 QRY Query Rate
+- text: Protocol deviations · 2 PD Non-Important Protocol Deviation Rate
+- img "Non-Important Protocol Deviation Rate definition": i
+- text: New 0.41 per 28 days 2,331 / 5,676.6
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 1 5.9%
+  - listitem: Green 16 94.1%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: IPD Important Protocol Deviation Rate
+- img "Important Protocol Deviation Rate definition": i
+- text: New 0.05 per 28 days 298 / 5,676.6
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 4 23.5%
+  - listitem: Green 13 76.5%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: EDC and query rates · 4 QRY Query Rate
 - img "Query Rate definition": i
-- text: standard 5.2%
-- term: Numerator
-- definition: "13,649 Total # queries"
-- term: Denominator
-- definition: "260,521 Total # data points"
-- term: Shown as
-- definition: percent (n ÷ d)
-- term: Sites
-- definition: "17"
-- button "Previous view": ‹
-- text: Overview 1/5
-- button "Next view": ›
+- text: 5.2% 13,649 / 260,521
+- list "Sites by flag":
+  - listitem: Red 2 11.8%
+  - listitem: Amber 3 17.6%
+  - listitem: Green 12 70.6%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: OQRY Delayed Query Resolution Rate
 - img "Delayed Query Resolution Rate definition": i
-- text: standard 5.5%
-- term: Numerator
-- definition: "753 # queries ever open > 30 days"
-- term: Denominator
-- definition: "13,649 Total # queries"
-- term: Shown as
-- definition: percent (n ÷ d)
-- term: Sites
-- definition: "17"
-- button "Previous view": ‹
-- text: Overview 1/5
-- button "Next view": ›
+- text: 5.5% 753 / 13,649
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 2 11.8%
+  - listitem: Green 15 88.2%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: ODAT Delayed Data Entry Rate
 - img "Delayed Data Entry Rate definition": i
-- text: standard 10.4%
-- term: Numerator
-- definition: "3,297 Total # data pages entered > 10 days"
-- term: Denominator
-- definition: "31,612 Total # data pages"
-- term: Shown as
-- definition: percent (n ÷ d)
-- term: Sites
-- definition: "17"
-- button "Previous view": ‹
-- text: Overview 1/5
-- button "Next view": ›
+- text: 10.4% 3,297 / 31,612
+- list "Sites by flag":
+  - listitem: Red 1 5.9%
+  - listitem: Amber 5 29.4%
+  - listitem: Green 11 64.7%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: CDAT Data Change Rate
 - img "Data Change Rate definition": i
-- text: standard 2.1%
-- term: Numerator
-- definition: "5,569 Total # data points with > 1 change"
-- term: Denominator
-- definition: "260,521 Total # data points"
-- term: Shown as
-- definition: percent (n ÷ d)
-- term: Sites
-- definition: "17"
-- button "Previous view": ‹
-- text: Overview 1/5
-- button "Next view": ›
+- text: 2.1% 5,569 / 260,521
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 0 0.0%
+  - listitem: Green 17 100.0%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"

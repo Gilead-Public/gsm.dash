@@ -5,6 +5,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { countText, displayed, latestSnapshot, pooled, readRate, shownMetrics, siteRows, tolerance } from '../test/qual/pooling.js';
 import { STUDY_VIEW_CONFIG } from '../src/config/study-views.js';
+import { KRI_GROUPS } from '../src/config/kri-groups.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
 /** @typedef {import('../test/qual/pooling.js').MetricMeta} MetricMeta */
@@ -25,7 +26,9 @@ const STANDARD_VIEWS = ['Overview', 'Details', 'Scatter (n vs d)', 'Numerator by
 const FLAG_VIEWS = { 'bar-outliers': 'Outlier sites', 'flag-dist': 'Flag distribution' };
 /** @type {Record<string, string>} */
 const CUSTOM_VIEWS = { 'distribution-bar': 'Breakdowns', 'link-out': 'Report link', ...FLAG_VIEWS };
-const tiles = shownMetrics(portfolio.metrics);
+/** Standard KRIs in a group are compact widgets (#32); every other shown metric is a full tile. */
+const KRIS = new Set(KRI_GROUPS.flatMap((g) => g.metrics));
+const tiles = shownMetrics(portfolio.metrics).filter((m) => !KRIS.has(/** @type {any} */ (m).ID));
 
 /**
  * A metric's tile views in paging order: the standard views, then those its study's configuration adds, then its own.
@@ -62,7 +65,7 @@ const defaultView = (metric, of = study) => viewText(metric, metric.Widget ? CUS
  * @param {Page} page
  */
 const shownViews = (page) =>
-  page.locator('.tile[data-metric-id]').evaluateAll((els) =>
+  page.locator('.tile:not(.kri)[data-metric-id]').evaluateAll((els) =>
     els.map((t) => [t.getAttribute('data-metric-id'), (t.querySelector('.view-name')?.textContent ?? '').replace(/\s+/g, ' ').trim()]),
   );
 
@@ -294,6 +297,7 @@ test.describe('study page behaviour', () => {
 
   test('12.02: every metric in the catalog has a tile, opening on its own view or Details (#12)', async ({ page }) => {
     expect(tiles.length).toBeGreaterThan(10);
+    await expect(page.locator('.tile.kri[data-metric-id]'), 'the standard KRIs are compact widgets (#32)').toHaveCount(KRIS.size);
     expect(tiles.some((m) => m.Widget) && tiles.some((m) => !m.Widget), 'the catalog has metrics with and without their own view').toBe(true);
     expect(await shownViews(page)).toEqual(expectedViews(defaultView));
   });
@@ -316,7 +320,7 @@ test.describe('study page behaviour', () => {
 
   test('12.02: grouping by category splits the tiles into category rows; turning it off shows one flat grid (#12)', async ({ page }) => {
     const shownRows = () =>
-      page.locator('.dd-row').evaluateAll((rows) =>
+      page.locator('.dd-row:not(.kri-group)').evaluateAll((rows) =>
         rows.map((r) => [(r.querySelector('.rowlab')?.textContent ?? '').trim(), [...r.querySelectorAll('.tile[data-metric-id]')].map((t) => t.getAttribute('data-metric-id'))]),
       );
     const categories = [...new Set(tiles.map((m) => m.Category))];
@@ -328,7 +332,7 @@ test.describe('study page behaviour', () => {
       }),
     );
     await page.locator('input[data-group-cat]').uncheck();
-    await expect(page.locator('.dd-row')).toHaveCount(1);
+    await expect(page.locator('.dd-row:not(.kri-group)')).toHaveCount(1);
     expect(await shownRows()).toEqual([[`All metrics · ${tiles.length}`, tiles.map((m) => m.MetricID)]]);
   });
 
@@ -424,7 +428,7 @@ test.describe('study page behaviour', () => {
         tiles.map((t) => ({ id: t.getAttribute('data-metric-id') ?? '', view: t.querySelector('.view-name')?.textContent?.trim() ?? '', cmp: t.querySelector('.cmp')?.textContent?.trim() ?? null })),
       );
       const details = shown.filter((t) => t.view.startsWith('Details'));
-      expect(details.length).toBeGreaterThan(5);
+      expect(details.length).toBeGreaterThan(3);
       let compared = 0;
       for (const t of details) {
         const metric = /** @type {MetricMeta} */ (metrics.get(t.id));
@@ -444,7 +448,7 @@ test.describe('study page behaviour', () => {
         expect(Math.abs(diff - (displayed(metric, mine) - displayed(metric, all))), `${where}: difference`).toBeLessThanOrEqual(tolerance(metric));
         compared++;
       }
-      expect(compared, `visit ${index + 1}: comparison lines checked`).toBeGreaterThan(5);
+      expect(compared, `visit ${index + 1}: comparison lines checked`).toBeGreaterThan(3);
     }
   });
 });
@@ -526,6 +530,8 @@ test('12.02: stepping through visits and switching chart tabs and tile views lea
 
 /** Everything that shows site-flag counts: the Details tile's flag bar and counts, and both flag views' rows. */
 const FLAG_MARKS = '.flags, .fbar, .fcounts, .hbar';
+/** Flag marks on the CTQ widgets: the full tiles, outside #32's standard-KRI groups, which show flag counts by design. */
+const CTQ_FLAG_MARKS = `.tile:not(.kri) :is(${FLAG_MARKS})`;
 
 /**
  * Sites flagged amber or red across every shown metric at a study's latest snapshot.
@@ -549,24 +555,25 @@ async function pageTo(page, metricId, view) {
 }
 
 test.describe('site-flag counts on the study view', () => {
-  test('11.01: the default study view shows no site-flag counts: no flag bar on any tile, and no flag view in any tile, the all-tiles menu or a random deal (#11)', async ({ app, page }) => {
+  test('11.01: in the default study view, no metric outside the standard-KRI groups shows site-flag counts: no flag bar on any of their tiles, and no flag view in any tile, the all-tiles menu or a random deal (#11)', async ({ app, page }) => {
     expect(STUDY_VIEW_CONFIG[study.StudyID], `${study.StudyID} keeps the default`).toBeUndefined();
     expect(flaggedSites(study), 'the study has flagged sites that could be counted').toBeGreaterThan(0);
     await app.openStudy(study.StudyID);
-    await expect(page.locator('.tile[data-metric-id]')).toHaveCount(tiles.length);
-    await expect(page.locator(FLAG_MARKS)).toHaveCount(0);
+    await expect(page.locator('.tile:not(.kri)[data-metric-id]')).toHaveCount(tiles.length);
+    await expect(page.locator('.tile.kri[data-metric-id]'), 'only the grouped standard KRIs are compact widgets').toHaveCount(KRIS.size);
+    await expect(page.locator(CTQ_FLAG_MARKS)).toHaveCount(0);
     expect(await shownViews(page), 'every tile offers only the standard views and its own').toEqual(expectedViews(defaultView));
     const menu = page.locator('select[data-all-views]');
     expect(await menu.locator('option').allTextContents()).toEqual(['Default per metric', ...STANDARD_VIEWS]);
     for (const view of STANDARD_VIEWS) {
       await menu.selectOption({ label: view });
       await expect.poll(() => shownViews(page), view).toEqual(expectedViews((m) => viewText(m, view)));
-      await expect(page.locator(FLAG_MARKS), view).toHaveCount(0);
+      await expect(page.locator(CTQ_FLAG_MARKS), view).toHaveCount(0);
     }
     const allowed = new Map(tiles.map((m) => [m.MetricID, viewsOf(m)]));
     for (let deal = 0; deal < 5; deal++) {
       await page.locator('button[data-randomize-views]').click();
-      await expect(page.locator(FLAG_MARKS)).toHaveCount(0);
+      await expect(page.locator(CTQ_FLAG_MARKS)).toHaveCount(0);
       for (const [id, text] of await shownViews(page)) {
         expect(allowed.get(/** @type {string} */ (id)), `random deal ${deal + 1}: ${id}`).toContain(String(text).replace(/ \d+\/\d+$/, ''));
       }
@@ -587,8 +594,8 @@ test.describe('site-flag counts on the study view', () => {
       for (const m of tiles) await expectViewContent(page, m.MetricID, view, { of, flags: true });
     }
     await app.openStudy(study.StudyID);
-    await expect(page.locator('.tile[data-metric-id]')).toHaveCount(tiles.length);
-    await expect(page.locator(FLAG_MARKS), `${study.StudyID} keeps the default`).toHaveCount(0);
+    await expect(page.locator('.tile:not(.kri)[data-metric-id]')).toHaveCount(tiles.length);
+    await expect(page.locator(CTQ_FLAG_MARKS), `${study.StudyID} keeps the default`).toHaveCount(0);
     expect(await shownViews(page)).toEqual(expectedViews(defaultView));
   });
 
@@ -611,13 +618,13 @@ test.describe('site-flag counts on the study view', () => {
       await expectViewContent(page, metric.MetricID, view);
     }
     const others = tiles.filter((m) => m.MetricID !== metric.MetricID);
-    await expect(page.locator(`.tile[data-metric-id]:not([data-metric-id="${metric.MetricID}"]) :is(${FLAG_MARKS})`)).toHaveCount(0);
+    await expect(page.locator(`.tile:not(.kri)[data-metric-id]:not([data-metric-id="${metric.MetricID}"]) :is(${FLAG_MARKS})`)).toHaveCount(0);
     expect((await shownViews(page)).filter(([id]) => id !== metric.MetricID)).toEqual(others.map((m) => [m.MetricID, defaultView(m)]));
   });
 
   test('11.04: the default study view, for visual comparison with the default its Scope describes (#11)', async ({ app, page }) => {
     await app.openStudy(study.StudyID);
-    await expect(page.locator('.tile[data-metric-id]')).toHaveCount(tiles.length);
-    await expect(page.locator(FLAG_MARKS)).toHaveCount(0);
+    await expect(page.locator('.tile:not(.kri)[data-metric-id]')).toHaveCount(tiles.length);
+    await expect(page.locator(CTQ_FLAG_MARKS)).toHaveCount(0);
   });
 });

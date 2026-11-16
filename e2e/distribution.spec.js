@@ -376,17 +376,17 @@ test.describe('Layout A distribution widget', () => {
   test('10.07: a metric without a breakdown configuration shows the missing state (#10)', async ({ app, page }) => {
     await app.openStudy(study.StudyID, {
       portfolio: (p) => {
-        p.metrics.find((x) => x.ID === 'kri0001').Widget = 'distribution-bar';
+        p.metrics.find((x) => x.ID === 'kri0007').Widget = 'distribution-bar';
       },
     });
     // Since #12, a breakdown widget on a metric without a breakdown configuration is an inapplicable reference: the
     // missing state is the placeholder naming the widget, the metric and the reason.
-    const ae = page.locator('.tile[data-metric-id="Analysis_kri0001"] .tile-body');
-    await expect(ae.locator('.ref-problem')).toBeVisible();
-    await expect(ae.locator('.ref-problem')).toHaveText(
-      `Can't show this view. Widget "distribution-bar" for AE (Analysis_kri0001): it has no breakdown configuration.`,
+    const tdsc = page.locator('.tile[data-metric-id="Analysis_kri0007"] .tile-body');
+    await expect(tdsc.locator('.ref-problem')).toBeVisible();
+    await expect(tdsc.locator('.ref-problem')).toHaveText(
+      `Can't show this view. Widget "distribution-bar" for TDSC (Analysis_kri0007): it has no breakdown configuration.`,
     );
-    await expect(ae.locator('.dist')).toHaveCount(0);
+    await expect(tdsc.locator('.dist')).toHaveCount(0);
   });
 
   test('10.08: the rendered widgets are captured for comparison with the Layout A design (visual comparison) (#10)', async ({ app, page, evidence }) => {

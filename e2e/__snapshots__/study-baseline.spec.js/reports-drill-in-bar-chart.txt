@@ -1,5 +1,5 @@
 state: drill-in-bar-chart (reports)
-dom: sha256 cbd523168dc9e4c0f15bc052f0e2c5be48f077541ad8bf4bfeb9d1389be211eb (75041 characters)
+dom: sha256 b9843e7fc966e6dc1b80ad08cf3dbc3560200ac046a08964978b108e84acc3ad (72809 characters)
 tooltip: none
 drill-in: TDSC · Bar chart · gsm.viz · barChart · TDSC: charts 1
   type undefined; labels: SITE0008 | SITE0013 | SITE0002 | SITE0004 | SITE0003 | SITE0016 | SITE0015 | SITE0007 | SITE0010 | SITE0014 | SITE0001 | SITE0017 | SITE0005 | SITE0011 | SITE0009 | SITE0006 | SITE0012
@@ -36,15 +36,15 @@ tiles:
   Analysis_kri0014 · Breakdowns 6/6: breakdowns 10, empty 1
   Analysis_strat0001 · Breakdowns 6/6: breakdowns 7, empty 1
   Analysis_ctq0006 · Details 2/5: points 1, lines 2, empty 1
-  Analysis_kri0001 · Details 2/5: points 1, lines 2, empty 1
-  Analysis_kri0002 · Details 2/5: points 1, lines 2, empty 1
-  Analysis_kri0003 · Details 2/5: points 1, lines 2, empty 1
-  Analysis_kri0004 · Details 2/5: points 1, lines 2, empty 1
-  Analysis_kri0005 · Details 2/5: points 1, lines 2, empty 1
-  Analysis_kri0008 · Details 2/5: points 1, lines 2, empty 1
-  Analysis_kri0009 · Details 2/5: points 1, lines 2, empty 1
-  Analysis_kri0010 · Details 2/5: points 1, lines 2, empty 1
-  Analysis_kri0011 · Details 2/5: points 1, lines 2, empty 1
+  Analysis_kri0001 · -: no marks
+  Analysis_kri0002 · -: no marks
+  Analysis_kri0005 · -: no marks
+  Analysis_kri0003 · -: no marks
+  Analysis_kri0004 · -: no marks
+  Analysis_kri0008 · -: no marks
+  Analysis_kri0009 · -: no marks
+  Analysis_kri0010 · -: no marks
+  Analysis_kri0011 · -: no marks
 accessibility:
 - link "← Program overview":
   - /url: ./portfolio.html
@@ -274,84 +274,84 @@ accessibility:
 - text: Details 2/5
 - button "Next view": ›
 - button "Charts ▾"
-- text: Safety & deviations · 5 AE AE Reporting Rate
+- text: AE, SAE and labs · 3 AE AE Reporting Rate
 - img "AE Reporting Rate definition": i
-- text: New standard 0.86 4,862 in 158,946 days
-- 'img "AE study trend: 5 snapshots, latest 3.1%"'
-- text: portfolio 1.20 · this study −0.34 / 28 d
-- button "Previous view": ‹
-- text: Details 2/5
-- button "Next view": ›
+- text: New 0.86 per 28 days 4,862 / 5,676.6
+- list "Sites by flag":
+  - listitem: Red 4 23.5%
+  - listitem: Amber 3 17.6%
+  - listitem: Green 10 58.8%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: SAE SAE Reporting Rate
 - img "SAE Reporting Rate definition": i
-- text: New standard 0.14 772 in 158,946 days
-- 'img "SAE study trend: 5 snapshots, latest 0.5%"'
-- text: portfolio 0.10 · this study +0.04 / 28 d
-- button "Previous view": ‹
-- text: Details 2/5
-- button "Next view": ›
-- button "Charts ▾"
-- text: PD Non-Important Protocol Deviation Rate
-- img "Non-Important Protocol Deviation Rate definition": i
-- text: New standard 0.41 2,331 in 158,946 days
-- 'img "PD study trend: 5 snapshots, latest 1.5%"'
-- text: portfolio 0.37 · this study +0.04 / 28 d
-- button "Previous view": ‹
-- text: Details 2/5
-- button "Next view": ›
-- button "Charts ▾"
-- text: IPD Important Protocol Deviation Rate
-- img "Important Protocol Deviation Rate definition": i
-- text: New standard 0.05 298 in 158,946 days
-- 'img "IPD study trend: 5 snapshots, latest 0.2%"'
-- text: portfolio 0.06 · this study −0.00 / 28 d
-- button "Previous view": ‹
-- text: Details 2/5
-- button "Next view": ›
+- text: New 0.14 per 28 days 772 / 5,676.6
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 6 35.3%
+  - listitem: Green 11 64.7%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: LB G3+ Lab Abnormality Rate
 - img "G3+ Lab Abnormality Rate definition": i
-- text: standard 907 (5.0%) of 18,181
-- 'img "LB study trend: 5 snapshots, latest 5.0%"'
-- text: portfolio 4.5% · this study +0.5 pt
-- button "Previous view": ‹
-- text: Details 2/5
-- button "Next view": ›
+- text: 5.0% 907 / 18,181
+- list "Sites by flag":
+  - listitem: Red 1 5.9%
+  - listitem: Amber 3 17.6%
+  - listitem: Green 13 76.5%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
-- text: Data quality · 4 QRY Query Rate
+- text: Protocol deviations · 2 PD Non-Important Protocol Deviation Rate
+- img "Non-Important Protocol Deviation Rate definition": i
+- text: New 0.41 per 28 days 2,331 / 5,676.6
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 1 5.9%
+  - listitem: Green 16 94.1%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: IPD Important Protocol Deviation Rate
+- img "Important Protocol Deviation Rate definition": i
+- text: New 0.05 per 28 days 298 / 5,676.6
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 4 23.5%
+  - listitem: Green 13 76.5%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: EDC and query rates · 4 QRY Query Rate
 - img "Query Rate definition": i
-- text: standard 5.2% 13,649 / 260,521
-- 'img "QRY study trend: 5 snapshots, latest 5.2%"'
-- text: portfolio 6.8% · this study −1.6 pt
-- button "Previous view": ‹
-- text: Details 2/5
-- button "Next view": ›
+- text: 5.2% 13,649 / 260,521
+- list "Sites by flag":
+  - listitem: Red 2 11.8%
+  - listitem: Amber 3 17.6%
+  - listitem: Green 12 70.6%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: OQRY Delayed Query Resolution Rate
 - img "Delayed Query Resolution Rate definition": i
-- text: standard 5.5% 753 / 13,649
-- 'img "OQRY study trend: 5 snapshots, latest 5.5%"'
-- text: portfolio 9.0% · this study −3.5 pt
-- button "Previous view": ‹
-- text: Details 2/5
-- button "Next view": ›
+- text: 5.5% 753 / 13,649
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 2 11.8%
+  - listitem: Green 15 88.2%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: ODAT Delayed Data Entry Rate
 - img "Delayed Data Entry Rate definition": i
-- text: standard 10.4% 3,297 / 31,612
-- 'img "ODAT study trend: 5 snapshots, latest 10.4%"'
-- text: portfolio 11.7% · this study −1.3 pt
-- button "Previous view": ‹
-- text: Details 2/5
-- button "Next view": ›
+- text: 10.4% 3,297 / 31,612
+- list "Sites by flag":
+  - listitem: Red 1 5.9%
+  - listitem: Amber 5 29.4%
+  - listitem: Green 11 64.7%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: CDAT Data Change Rate
 - img "Data Change Rate definition": i
-- text: standard 2.1% 5,569 / 260,521
-- 'img "CDAT study trend: 5 snapshots, latest 2.1%"'
-- text: portfolio 3.3% · this study −1.2 pt
-- button "Previous view": ‹
-- text: Details 2/5
-- button "Next view": ›
+- text: 2.1% 5,569 / 260,521
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 0 0.0%
+  - listitem: Green 17 100.0%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"

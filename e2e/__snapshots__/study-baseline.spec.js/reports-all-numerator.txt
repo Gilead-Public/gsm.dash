@@ -1,5 +1,5 @@
 state: all-numerator (reports)
-dom: sha256 d158b8cdd6c78083c791e1fb44cd84893a224f2907d10ddb2ee386416e9d2871 (108680 characters)
+dom: sha256 675bfcc6a3217af8673dd237cd9af002c5290faa54ed3ec40c7709c1a2a8e643 (81354 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -15,15 +15,15 @@ tiles:
   Analysis_kri0014 · Numerator by site 4/6: bars 17
   Analysis_strat0001 · Numerator by site 4/6: bars 17
   Analysis_ctq0006 · Numerator by site 4/5: bars 15
-  Analysis_kri0001 · Numerator by site 4/5: bars 17
-  Analysis_kri0002 · Numerator by site 4/5: bars 17
-  Analysis_kri0003 · Numerator by site 4/5: bars 17
-  Analysis_kri0004 · Numerator by site 4/5: bars 17
-  Analysis_kri0005 · Numerator by site 4/5: bars 17
-  Analysis_kri0008 · Numerator by site 4/5: bars 17
-  Analysis_kri0009 · Numerator by site 4/5: bars 17
-  Analysis_kri0010 · Numerator by site 4/5: bars 17
-  Analysis_kri0011 · Numerator by site 4/5: bars 17
+  Analysis_kri0001 · -: no marks
+  Analysis_kri0002 · -: no marks
+  Analysis_kri0005 · -: no marks
+  Analysis_kri0003 · -: no marks
+  Analysis_kri0004 · -: no marks
+  Analysis_kri0008 · -: no marks
+  Analysis_kri0009 · -: no marks
+  Analysis_kri0010 · -: no marks
+  Analysis_kri0011 · -: no marks
 accessibility:
 - link "← Program overview":
   - /url: ./portfolio.html
@@ -149,84 +149,84 @@ accessibility:
 - text: Numerator by site 4/5
 - button "Next view": ›
 - button "Charts ▾"
-- text: Safety & deviations · 5 AE AE Reporting Rate
+- text: AE, SAE and labs · 3 AE AE Reporting Rate
 - img "AE Reporting Rate definition": i
-- text: New standard Number of AEs reported by site
-- img "AE numerator by site": 1,137 0
-- text: 17 sites, sorted by numerator · click a bar to track it
-- button "Previous view": ‹
-- text: Numerator by site 4/5
-- button "Next view": ›
+- text: New 0.86 per 28 days 4,862 / 5,676.6
+- list "Sites by flag":
+  - listitem: Red 4 23.5%
+  - listitem: Amber 3 17.6%
+  - listitem: Green 10 58.8%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: SAE SAE Reporting Rate
 - img "SAE Reporting Rate definition": i
-- text: New standard Number of SAEs reported by site
-- img "SAE numerator by site": 97 0
-- text: 17 sites, sorted by numerator · click a bar to track it
-- button "Previous view": ‹
-- text: Numerator by site 4/5
-- button "Next view": ›
-- button "Charts ▾"
-- text: PD Non-Important Protocol Deviation Rate
-- img "Non-Important Protocol Deviation Rate definition": i
-- text: New standard Number of non-important PDs by site
-- img "PD numerator by site": 279 0
-- text: 17 sites, sorted by numerator · click a bar to track it
-- button "Previous view": ‹
-- text: Numerator by site 4/5
-- button "Next view": ›
-- button "Charts ▾"
-- text: IPD Important Protocol Deviation Rate
-- img "Important Protocol Deviation Rate definition": i
-- text: New standard Number of important PDs by site
-- img "IPD numerator by site": 37 0
-- text: 17 sites, sorted by numerator · click a bar to track it
-- button "Previous view": ‹
-- text: Numerator by site 4/5
-- button "Next view": ›
+- text: New 0.14 per 28 days 772 / 5,676.6
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 6 35.3%
+  - listitem: Green 11 64.7%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: LB G3+ Lab Abnormality Rate
 - img "G3+ Lab Abnormality Rate definition": i
-- text: standard Number of G3+ abnormal lab samples by site
-- img "LB numerator by site": 191 0
-- text: 17 sites, sorted by numerator · click a bar to track it
-- button "Previous view": ‹
-- text: Numerator by site 4/5
-- button "Next view": ›
+- text: 5.0% 907 / 18,181
+- list "Sites by flag":
+  - listitem: Red 1 5.9%
+  - listitem: Amber 3 17.6%
+  - listitem: Green 13 76.5%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
-- text: Data quality · 4 QRY Query Rate
+- text: Protocol deviations · 2 PD Non-Important Protocol Deviation Rate
+- img "Non-Important Protocol Deviation Rate definition": i
+- text: New 0.41 per 28 days 2,331 / 5,676.6
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 1 5.9%
+  - listitem: Green 16 94.1%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: IPD Important Protocol Deviation Rate
+- img "Important Protocol Deviation Rate definition": i
+- text: New 0.05 per 28 days 298 / 5,676.6
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 4 23.5%
+  - listitem: Green 13 76.5%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: EDC and query rates · 4 QRY Query Rate
 - img "Query Rate definition": i
-- text: "standard Total # queries by site"
-- img "QRY numerator by site": 2,195 0
-- text: 17 sites, sorted by numerator · click a bar to track it
-- button "Previous view": ‹
-- text: Numerator by site 4/5
-- button "Next view": ›
+- text: 5.2% 13,649 / 260,521
+- list "Sites by flag":
+  - listitem: Red 2 11.8%
+  - listitem: Amber 3 17.6%
+  - listitem: Green 12 70.6%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: OQRY Delayed Query Resolution Rate
 - img "Delayed Query Resolution Rate definition": i
-- text: "standard # queries ever open > 30 days by site"
-- img "OQRY numerator by site": 126 0
-- text: 17 sites, sorted by numerator · click a bar to track it
-- button "Previous view": ‹
-- text: Numerator by site 4/5
-- button "Next view": ›
+- text: 5.5% 753 / 13,649
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 2 11.8%
+  - listitem: Green 15 88.2%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: ODAT Delayed Data Entry Rate
 - img "Delayed Data Entry Rate definition": i
-- text: "standard Total # data pages entered > 10 days by site"
-- img "ODAT numerator by site": 433 0
-- text: 17 sites, sorted by numerator · click a bar to track it
-- button "Previous view": ‹
-- text: Numerator by site 4/5
-- button "Next view": ›
+- text: 10.4% 3,297 / 31,612
+- list "Sites by flag":
+  - listitem: Red 1 5.9%
+  - listitem: Amber 5 29.4%
+  - listitem: Green 11 64.7%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: CDAT Data Change Rate
 - img "Data Change Rate definition": i
-- text: "standard Total # data points with > 1 change by site"
-- img "CDAT numerator by site": 477 0
-- text: 17 sites, sorted by numerator · click a bar to track it
-- button "Previous view": ‹
-- text: Numerator by site 4/5
-- button "Next view": ›
+- text: 2.1% 5,569 / 260,521
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 0 0.0%
+  - listitem: Green 17 100.0%
+  - listitem: No flag 0 0.0%
 - button "Charts ▾"

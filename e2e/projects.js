@@ -23,6 +23,7 @@ export const SPEC_ARTIFACTS = {
   'e2e/cross-report.spec.js': ['reports'],
   'e2e/delivery.spec.js': ['reports'],
   'e2e/distribution.spec.js': ['reports'],
+  'e2e/kri-groups.spec.js': ['reports'],
   'e2e/portfolio.spec.js': ['reports'],
   'e2e/portfolio-baseline.spec.js': ['reports'],
   'e2e/study-baseline.spec.js': ['reports'],

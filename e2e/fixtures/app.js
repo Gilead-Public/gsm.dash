@@ -45,7 +45,7 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
  * @property {Artifact} artifact
  * @property {Mode} mode
  * @property {(hash?: string, overrides?: DataOverrides) => Promise<void>} open Opens `portfolio.html`, at an optional `#` hash, and waits for it to render.
- * @property {(studyId: string, overrides?: DataOverrides) => Promise<void>} openStudy Opens one study's report and waits for its tiles.
+ * @property {(studyId: string, overrides?: DataOverrides, hash?: string) => Promise<void>} openStudy Opens one study's report, at an optional `#` hash, and waits for its tiles.
  * @property {(name: string, overrides?: ReportOverrides, hash?: string) => Promise<string>} openReport Opens one report, `portfolio` or a StudyID, at an optional `#` hash, and waits for it to show its data or its error state. Returns the URL opened, without the hash.
  */
 
@@ -159,8 +159,8 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
         await this.openReport('portfolio', overrides && asPortfolioOverrides(overrides), hash);
         await page.locator('#app > .layout').waitFor();
       },
-      async openStudy(studyId, overrides) {
-        await this.openReport(studyId, overrides && asReportOverrides(overrides));
+      async openStudy(studyId, overrides, hash = '') {
+        await this.openReport(studyId, overrides && asReportOverrides(overrides), hash);
         await page.locator('#app .tile').first().waitFor();
       },
       async openReport(name, overrides, hash = '') {

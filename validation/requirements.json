@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "b1e4a12e627dbb5250454a32b56e3688fdba88585d488d552de08fc74a6678f3",
+  "hash": "7520ed68dee08b5f45e1b2b382060842e65b080b47a9232f23d510cb6e8c6392",
   "issues": [
     {
       "number": 8,
@@ -617,6 +617,64 @@
           "text": "The portfolio view state carries over to a study report and back: the selected view, folded categories in the table and distribution views, grouping and open groups, sorting, cell display, heatmap and palette, study filters, metric-status filters, hidden metrics and the highlighted study. The study report applies the metric-status filters and hidden metrics.",
           "sha256": "74c00c0cbf32083a40068aed8baef97b502964042d595575f87e6f40efe8399d",
           "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 32,
+      "title": "Show standard KRIs as a grouped, compact rate view",
+      "parent": "Gilead-BioStats/gsm.roadmap#618",
+      "userTest": true,
+      "scopeSection": "**In:**\n- Each standard KRI is a compact widget showing, for the visit shown:\n  - its name;\n  - its rate: Σ numerator ÷ Σ denominator over the metric's site rows, displayed by the metric's display rule (per 28 days to two decimals; percentages to one decimal);\n  - n / N: Σ numerator and Σ denominator;\n  - how many of the metric's sites are red (|flag| 2), amber (|flag| 1), green (flag 0), or have no flag (they can't be evaluated), each with its percentage of all the metric's sites, to one decimal.\n- **Per 28 days:** for metrics displayed per 28 days (AE, SAE and both protocol-deviation rates), the rate is n ÷ exposure days × 28 and N is exposure days ÷ 28, to one decimal, both from unrounded inputs. The unit label comes from configuration; the factor stays 28.\n- Each compact widget keeps the existing \"Charts\" drill-in and, where one is configured, the detailed-report link (#13). It has no view pager.\n- **Three groups**, with members and their order set in configuration:\n  - AE, SAE and labs;\n  - protocol deviations;\n  - EDC and query rates.\n- **Placement:** the CTQ widgets come first, then the groups, in configured order. The groups show whether or not the CTQ widgets are grouped by category; that setting affects only the CTQ widgets. A KRI in a group appears nowhere else on the page.\n- **Hiding:**\n  - configuration lists KRIs hidden by default, one list for every study. They appear only after their group's expand control, at the end of the group, is used;\n  - by default, no KRI is hidden, so no expand control shows;\n  - a KRI hidden from the portfolio (a hidden metric or a metric-status filter, #27) doesn't appear, even after expanding. A group left with no KRIs isn't shown.\n\n**Out:** flag computation (owned by the metric workflows); the CTQ widgets (#10); a user setting for which KRIs are hidden.",
+      "criteria": [
+        {
+          "id": "32.01",
+          "text": "Each compact widget's displayed rate, n / N, and site counts and percentages per flag equal values computed independently from the fixture's site rows, at the latest and an earlier visit (test).",
+          "sha256": "795fdf246ed85c5232ed79f42d13535d6712b15a2ff2fb946dfb3560a983dc8f",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "32.02",
+          "text": "For metrics displayed per 28 days, the displayed rate and N follow the per-28-day rule, and a configured unit label is shown (test).",
+          "sha256": "b5eacee9237452a839e2a6170535bf25d7e9543d7ff72b60a2df3bd90a3acbdf",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "32.03",
+          "text": "Each group shows its configured KRIs in configured order, after the CTQ widgets, with category grouping on and off; a grouped KRI appears nowhere else; KRIs hidden from the portfolio are left out (test).",
+          "sha256": "109449aca578da530ccd93ea9422701af6c422f3224139ffbc08d047a7a86c87",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "32.04",
+          "text": "KRIs configured as hidden by default appear only after their group's expand control is used, and with the default configuration no expand control shows (test).",
+          "sha256": "5a28816c8cb53ae87054348547759d79f56ba212ca557437601f2982508e505c",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "32.05",
+          "text": "A user compares the grouped KRI view, with a KRI hidden by default, against this issue's Scope and accepts it (user acceptance).",
+          "sha256": "e2259c2e21cb11755ce01e84bce09153e0eac7f672be4fea1973eebc0df12bca",
+          "kind": "visual",
+          "reviewed": true
+        },
+        {
+          "id": "32.06",
+          "text": "Each compact widget keeps the Charts drill-in and, where configured, the detailed-report link, and has no view pager (test).",
+          "sha256": "20f09eeac0a852dd1d795d3bcb885df54fa7e6231b71f7d591d22b070ce26f56",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "32.07",
+          "text": "Pooling a metric's site rows into the study's value sits in one tested function, so it can be qualified as dashboard logic (gsm.roadmap#625).",
+          "sha256": "0aebfd223ee080c9859d59f1e6ea94f0ad35a9bd201381d35e5717d57a13b8ba",
+          "kind": "unit",
           "reviewed": true
         }
       ]
