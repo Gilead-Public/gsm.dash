@@ -11,11 +11,13 @@ const sectionKey = (source, variable) => `${source}:${variable}`;
 /**
  * Sum one metric's site rows to study level (or keep one group with `groupId`).
  * Per Source × Variable × Category: Σ Count and Σ Participants. Per Source × Variable: Σ Total, taking each
- * site's Total once (it repeats on every category row). Category order is first appearance.
+ * site's Total once (it repeats on every category row). Category order is first appearance. Rows at other group levels
+ * (country, study) are left out, so they're never counted as extra sites.
  */
 export function sumSitesToStudy(rows, { groupId = null } = {}) {
   const sections = new Map();
   for (const r of rows) {
+    if (r.GroupLevel !== 'Site') continue;
     if (groupId != null && r.GroupID !== groupId) continue;
     const key = sectionKey(r.Source, r.Variable);
     let s = sections.get(key);

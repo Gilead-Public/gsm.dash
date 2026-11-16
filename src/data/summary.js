@@ -24,7 +24,9 @@ export const POPULATIONS = { screened: 'ScreenedCount', enrolled: 'ParticipantCo
  */
 export function indexSummary(summary, studies) {
   if (!summary) throw new Error('the portfolio summary (summary.json) is missing');
+  if (new Set(studies.map((s) => s.StudyID)).size !== studies.length) throw new Error('the manifest lists a study more than once');
   const entries = new Map(summary.studies.map((s) => [s.StudyID, s]));
+  if (entries.size !== summary.studies.length) throw new Error('the portfolio summary lists a study more than once');
   const same = (a, b) => [...a].sort().join() === [...b].sort().join();
   for (const study of studies) {
     const entry = entries.get(study.StudyID);

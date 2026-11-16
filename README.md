@@ -86,7 +86,8 @@ To share a build for feedback without releasing it: every CI run that passes als
   page (`src/app/references.js`). Metric tiles bind via metric metadata
   (`Category`/`Widget`/`WidgetConfig`); page-level widgets come from the
   minimal spec in `src/app/study-page-spec.js`. Shipped set: `scalar-tile`
-  (default), `breakdown-bar` (contract `details`), `link-out`, and
+  (default), `distribution-bar` (#10), `kri-summary` (the grouped standard
+  KRIs, #32, configured in `src/config/kri-groups.js`), `link-out`, and
   `threshold-list` (watch sites — its derivation is a pure, unit-tested
   export per the "widgets render, the pipeline computes" boundary).
 - `src/widgets/views/` — the **standard tile views** every site-level metric

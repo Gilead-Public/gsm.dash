@@ -30,6 +30,7 @@ describe('references that fail visibly (#12)', () => {
       studies: { STUDY006: { configs: { 'flag-dsit': {}, 'scalar-tile': { flags: true } } } },
       pageWidgets: [{ widget: 'threshold-lst' }, { widget: 'threshold-list' }],
       detailTabs: [{ widget: 'viz-bar' }, { widget: 'viz-scater' }],
+      kriGroups: [],
     });
     expect(problems.map(problemText)).toEqual([
       'Metric "kri9999" in the breakdown configuration: it is not in the metric catalog.',
@@ -38,7 +39,23 @@ describe('references that fail visibly (#12)', () => {
       'Widget "threshold-lst" in the study page layout: it is not a registered widget.',
       'Widget "viz-scater" in the drill-in tabs: it is not a registered widget.',
     ]);
-    expect(configProblems([metric('kri0012')], { breakdowns: { kri0012: {} }, studies: {}, pageWidgets: [], detailTabs: [{ widget: 'viz-bar' }] })).toEqual([]);
+    expect(configProblems([metric('kri0012')], { breakdowns: { kri0012: {} }, studies: {}, pageWidgets: [], detailTabs: [{ widget: 'viz-bar' }], kriGroups: [] })).toEqual([]);
+  });
+
+  it('lists KRI group configuration no tile can show: a group naming an unknown metric, and a metric naming an unknown group', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const catalog = [metric('kri0001'), metric('kri0010', { WidgetConfigs: { 'kri-summary': { group: 'dta' } } }), metric('kri0011', { WidgetConfigs: { 'kri-summary': { group: null } } })];
+    const problems = configProblems(catalog, {
+      breakdowns: {},
+      studies: {},
+      pageWidgets: [],
+      detailTabs: [],
+      kriGroups: [{ id: 'data', label: 'EDC and query rates', metrics: ['kri0001', 'kri0010x'] }],
+    });
+    expect(problems.map(problemText)).toEqual([
+      'Metric "kri0010x" in the KRI group "EDC and query rates": it is not in the metric catalog.',
+      'KRI group "dta" in the view options of KRI0010 (Analysis_kri0010): it is not a configured KRI group.',
+    ]);
   });
 
   it('the shipped configuration, page layout and drill-in tabs match the shipped catalog and widgets', async () => {

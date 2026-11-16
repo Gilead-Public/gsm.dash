@@ -529,9 +529,8 @@ test('12.02: stepping through visits and switching chart tabs and tile views lea
 });
 
 /** Everything that shows site-flag counts: the Details tile's flag bar and counts, and both flag views' rows. */
+/** The full tiles' flag marks. The grouped standard KRIs (#32) show their flag counts in `.kri-flags`, which this doesn't match. */
 const FLAG_MARKS = '.flags, .fbar, .fcounts, .hbar';
-/** Flag marks on the CTQ widgets: the full tiles, outside #32's standard-KRI groups, which show flag counts by design. */
-const CTQ_FLAG_MARKS = `.tile:not(.kri) :is(${FLAG_MARKS})`;
 
 /**
  * Sites flagged amber or red across every shown metric at a study's latest snapshot.
@@ -561,19 +560,19 @@ test.describe('site-flag counts on the study view', () => {
     await app.openStudy(study.StudyID);
     await expect(page.locator('.tile:not(.kri)[data-metric-id]')).toHaveCount(tiles.length);
     await expect(page.locator('.tile.kri[data-metric-id]'), 'only the grouped standard KRIs are compact widgets').toHaveCount(KRIS.size);
-    await expect(page.locator(CTQ_FLAG_MARKS)).toHaveCount(0);
+    await expect(page.locator(FLAG_MARKS)).toHaveCount(0);
     expect(await shownViews(page), 'every tile offers only the standard views and its own').toEqual(expectedViews(defaultView));
     const menu = page.locator('select[data-all-views]');
     expect(await menu.locator('option').allTextContents()).toEqual(['Default per metric', ...STANDARD_VIEWS]);
     for (const view of STANDARD_VIEWS) {
       await menu.selectOption({ label: view });
       await expect.poll(() => shownViews(page), view).toEqual(expectedViews((m) => viewText(m, view)));
-      await expect(page.locator(CTQ_FLAG_MARKS), view).toHaveCount(0);
+      await expect(page.locator(FLAG_MARKS), view).toHaveCount(0);
     }
     const allowed = new Map(tiles.map((m) => [m.MetricID, viewsOf(m)]));
     for (let deal = 0; deal < 5; deal++) {
       await page.locator('button[data-randomize-views]').click();
-      await expect(page.locator(CTQ_FLAG_MARKS)).toHaveCount(0);
+      await expect(page.locator(FLAG_MARKS)).toHaveCount(0);
       for (const [id, text] of await shownViews(page)) {
         expect(allowed.get(/** @type {string} */ (id)), `random deal ${deal + 1}: ${id}`).toContain(String(text).replace(/ \d+\/\d+$/, ''));
       }
@@ -595,7 +594,7 @@ test.describe('site-flag counts on the study view', () => {
     }
     await app.openStudy(study.StudyID);
     await expect(page.locator('.tile:not(.kri)[data-metric-id]')).toHaveCount(tiles.length);
-    await expect(page.locator(CTQ_FLAG_MARKS), `${study.StudyID} keeps the default`).toHaveCount(0);
+    await expect(page.locator(FLAG_MARKS), `${study.StudyID} keeps the default`).toHaveCount(0);
     expect(await shownViews(page)).toEqual(expectedViews(defaultView));
   });
 
@@ -625,6 +624,6 @@ test.describe('site-flag counts on the study view', () => {
   test('11.04: the default study view, for visual comparison with the default its Scope describes (#11)', async ({ app, page }) => {
     await app.openStudy(study.StudyID);
     await expect(page.locator('.tile:not(.kri)[data-metric-id]')).toHaveCount(tiles.length);
-    await expect(page.locator(CTQ_FLAG_MARKS)).toHaveCount(0);
+    await expect(page.locator(FLAG_MARKS)).toHaveCount(0);
   });
 });

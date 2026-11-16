@@ -50,6 +50,7 @@ export const rowKey = (row) => key(row.Source, row.Variable, row.Category);
 export function studyTotals(rows, groupId = null) {
   const out = {};
   for (const r of rows) {
+    if (r.GroupLevel !== 'Site') continue;
     if (groupId !== null && r.GroupID !== groupId) continue;
     out[r.Source] ??= {};
     const v = (out[r.Source][r.Variable] ??= { siteTotals: {}, categories: {} });
@@ -73,10 +74,11 @@ export const categoryName = (category) => (category === null ? '\u0001' : catego
  * order, the top N then one "+ k more" bar holding the rest, "Not recorded" last and only when non-zero. A
  * denominator (status) section shows each bar's share of the section total; a numerator (reason) section shows its
  * count. Every bar's hover is its count out of the section total.
- * @param {{ Source: string, Variable: string, Category: string | null, GroupID: string, Count: number, Participants: number, Total: number }[]} rows one metric's site rows
+ * @param {{ Source: string, Variable: string, Category: string | null, GroupID: string, GroupLevel?: string, Count: number, Participants: number, Total: number }[]} allRows one metric's rows; only site rows count
  * @param {{ sections?: Record<string, { title?: string, topN?: number }>, topN?: number }} config keyed by 'Source:Variable'
  */
-export function expectedView(rows, config) {
+export function expectedView(allRows, config) {
+  const rows = allRows.filter((r) => r.GroupLevel === 'Site');
   const sums = studyTotals(rows);
   const seen = [];
   for (const r of rows) if (!seen.includes(`${r.Source}|${r.Variable}`)) seen.push(`${r.Source}|${r.Variable}`);

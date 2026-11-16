@@ -75,6 +75,14 @@ describe('site-to-study summing', () => {
     expect(compared).toBeGreaterThan(configured.length);
   });
 
+  it('10.03: rows at country or study level are left out, never summed as extra sites (#10)', () => {
+    const rows = [site('S1', 'x', 2, 10), site('S2', 'x', 3, 20)];
+    const other = [site('US', 'x', 5, 30, { GroupLevel: 'Country' }), site('STUDY001', 'x', 5, 30, { GroupLevel: 'Study' })];
+    expect(sumSitesToStudy([...rows, ...other])).toEqual(sumSitesToStudy(rows));
+    expect(sumSitesToStudy([...rows, ...other])[0]).toMatchObject({ Total: 30, categories: [{ Category: 'x', Count: 5 }] });
+    expect(withoutSiteTotals(studyTotals([...rows, ...other]))).toEqual(withoutSiteTotals(studyTotals(rows)));
+  });
+
   it('10.03: each site Total counts once however many categories repeat it (#10)', () => {
     const rows = [site('A', 'x', 1, 5), site('A', 'y', 2, 5), site('B', 'x', 3, 7)];
     expect(sumSitesToStudy(rows)[0]).toMatchObject({ Total: 12 });

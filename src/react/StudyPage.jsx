@@ -11,8 +11,8 @@ import { kriLayout } from '../app/kri-groups.js';
 import { useStore } from './useStore.js';
 import { Widget } from './Widget.jsx';
 
-// The study overview: metric tiles in category rows, a drill-in panel of gsm.viz charts, and a visit scrubber. It
-// keeps the markup of the original <gsm-study-page> element, so the same tests and styles apply.
+// The study overview: metric tiles in category rows, the grouped standard KRIs, a drill-in panel of gsm.viz charts, and
+// a visit scrubber.
 
 const PARAMS = ['therapeutic_area', 'protocol_indication', 'phase', 'status', 'product'];
 

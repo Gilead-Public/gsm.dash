@@ -27,8 +27,19 @@ describe('detailed-report links', () => {
     expect(reportLinkHtml(null)).toBe('');
     expect(reportLink(metric('ae.html'), 'https://[bad', page)).toBeNull();
     vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const problems = configProblems([metric('ae.html')], { breakdowns: {}, studies: {}, pageWidgets: [], detailTabs: [], reportBase: 'https://[bad', page });
+    const problems = configProblems([metric('ae.html')], { breakdowns: {}, studies: {}, pageWidgets: [], detailTabs: [], kriGroups: [], reportBase: 'https://[bad', page });
     expect(problems.map(problemText)).toEqual(['Report link "ae.html" for AE (Analysis_kri0001): it can\'t be resolved against the report base "https://[bad".']);
+  });
+
+  it('13.03: a link whose scheme isn\'t http, https or file is reported rather than shown (#13)', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    for (const link of ['javascript:alert(1)', ' JavaScript:alert(1)', 'data:text/html,<p>x</p>', 'vbscript:x']) {
+      expect(reportLink(metric(link), null, page), link).toBeNull();
+    }
+    expect(reportLink(metric('file:///reports/ae.html'), null, page)).toBe('file:///reports/ae.html');
+    expect(reportLink(metric('ae.html'), 'javascript:alert(1)//', page)).toBeNull();
+    const problems = configProblems([metric('javascript:alert(1)')], { breakdowns: {}, studies: {}, pageWidgets: [], detailTabs: [], kriGroups: [], page });
+    expect(problems.map(problemText)).toEqual(['Report link "javascript:alert(1)" for AE (Analysis_kri0001): its scheme "javascript:" isn\'t allowed; links must be http, https or file.']);
   });
 
   it('the manifest and the study report accept a report base and per-metric links, and refuse other types', () => {

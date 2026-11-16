@@ -230,6 +230,11 @@ describe('reading the summary', () => {
     expect(() => indexSummary(doc([], [...doc().studies, { StudyID: 'B', snapshots: ['2026-01-31'] }]), studies)).toThrow(/studies the manifest does not list/);
   });
 
+  it('refuses a manifest or a summary that lists a study twice', () => {
+    expect(() => indexSummary(doc([], [...doc().studies, ...doc().studies]), studies)).toThrow(/summary lists a study more than once/);
+    expect(() => indexSummary(doc(), [...studies, ...studies])).toThrow(/manifest lists a study more than once/);
+  });
+
   it('refuses counts for an unknown snapshot, or two rows for one study, snapshot and metric', () => {
     expect(() => indexSummary(doc([row('2026-03-31')]), studies)).toThrow(/not one of its snapshots/);
     expect(() => indexSummary(doc([row('2026-01-31'), row('2026-01-31')]), studies)).toThrow(/more than one row/);
