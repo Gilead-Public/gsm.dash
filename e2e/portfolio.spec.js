@@ -53,13 +53,28 @@ function shownTable(page) {
 }
 
 /**
+ * That a user can see the element: rendered with a size, and neither it nor an ancestor hidden or fully transparent.
+ * Playwright's toBeVisible ignores opacity.
+ * @param {import('@playwright/test').Locator} locator
+ * @param {string} what
+ */
+async function expectSeen(locator, what) {
+  const sees = () =>
+    locator.evaluate((el) => {
+      const box = el.getBoundingClientRect();
+      return el.checkVisibility({ opacityProperty: true, visibilityProperty: true }) && box.width > 0 && box.height > 0;
+    });
+  await expect.poll(sees, { message: what }).toBe(true);
+}
+
+/**
  * @param {import('@playwright/test').Locator} locator
  * @param {number} count
  * @param {string} what
  */
 async function expectEachVisible(locator, count, what) {
   await expect(locator, what).toHaveCount(count);
-  for (let i = 0; i < count; i++) await expect(locator.nth(i), `${what} ${i + 1}`).toBeVisible();
+  for (let i = 0; i < count; i++) await expectSeen(locator.nth(i), `${what} ${i + 1}`);
 }
 
 /**
@@ -95,7 +110,7 @@ async function expectRow(page, table, label, members) {
   ]);
   expect(row.tiles.map((t) => t.length), `${label}: values under each category`).toEqual(bands.map((b) => b.metrics.length));
   const tr = page.locator('.portfolio-table table.po tbody tr').nth(index);
-  await expect(tr.locator(row.kind === 'study' ? 'td.grp a[data-study]' : 'td.grp'), `${label}: row label`).toBeVisible();
+  await expectSeen(tr.locator(row.kind === 'study' ? 'td.grp a[data-study]' : 'td.grp'), `${label}: row label`);
   await expectEachVisible(tr.locator('td.nstud, td.pop'), 3, `${label}: count and population`);
   const cells = tr.locator('td.cat');
   const tooltip = page.locator('#gsm-tooltip');
@@ -106,8 +121,10 @@ async function expectRow(page, table, label, members) {
       const shown = readRate(metric, row.tiles[j][k]);
       if (want.rate === null) expect(shown, where).toBeNull();
       else expect(Math.abs(/** @type {number} */ (shown) - displayed(metric, want.rate)), `${where}: ${row.tiles[j][k]}`).toBeLessThanOrEqual(tolerance(metric));
-      await cells.nth(j).locator('.otile').nth(k).hover();
-      await expect(tooltip, where).toBeVisible();
+      const tile = cells.nth(j).locator('.otile').nth(k);
+      await expectSeen(tile, `${where}: value`);
+      await tile.hover();
+      await expectSeen(tooltip, `${where}: tooltip`);
       await expect(tooltip.locator('b').first(), where).toHaveText(`${label} · ${metric.Abbreviation}`);
       const nd = /Σn\/Σd = ([\d,]+) \/ ([\d,]+)/.exec(await tooltip.innerText());
       expect(nd?.slice(1, 3), `${where}: Σn/Σd`).toEqual([countText(want.numerator), countText(want.denominator)]);
@@ -166,6 +183,87 @@ test.describe('portfolio view numbers', () => {
     expect(table.rows[0].count).toBe(String(kept.length));
     await expectRow(page, table, 'Portfolio total', kept);
     for (const study of kept) await expectRow(page, table, study.StudyID, [study]);
+  });
+
+  test('22.01: the study filter, alone and with a phase filter, limits the table, the Distribution view and the highlight menu to the selected studies that pass the other filters, and its totals pool exactly those studies (#22)', async ({ app, page }) => {
+    test.setTimeout(180_000);
+    const [[phase, inPhase], [, other]] = [...studiesBy(studies, 'phase')].sort((a, b) => b[1].length - a[1].length);
+    expect(inPhase.length, 'the largest phase has more than one study').toBeGreaterThan(1);
+    const picked = new Set([inPhase[0].StudyID, inPhase[1].StudyID, other[0].StudyID]);
+    const selected = studies.filter((s) => picked.has(s.StudyID));
+    /** @type {Array<[string, StudyEntry[], boolean]>} */
+    const cases = [['alone', selected, false], ['with a phase filter', selected.filter((s) => s.params.phase === phase), true]];
+    for (const [what, members, withPhase] of cases) {
+      await app.open();
+      for (const s of selected) await page.locator(`input[data-filter="study"][data-value="${s.StudyID}"]`).check();
+      if (withPhase) await page.locator(`button[data-filter="phase"][data-value="${phase}"]`).click();
+      const ids = members.map((s) => s.StudyID);
+
+      await expect(page.locator('.portfolio-table tr.study'), what).toHaveCount(members.length);
+      let table = await shownTable(page);
+      expect(table.rows.map((r) => [r.kind, r.label]), `${what}: ungrouped rows`).toEqual([['total', 'Portfolio total'], ...ids.map((id) => ['study', id])]);
+      expect(table.rows[0].count, what).toBe(String(members.length));
+      await expectRow(page, table, 'Portfolio total', members);
+
+      const groups = studiesBy(members, 'phase');
+      const labels = [...groups.keys()].sort((a, b) => a.localeCompare(b));
+      const open = labels[0];
+      const inGroup = (/** @type {string} */ label) => /** @type {StudyEntry[]} */ (groups.get(label));
+      await page.locator('select[data-groupby]').selectOption('phase');
+      await page.locator(`tr[data-bucket="${open}"] td.grp`).click();
+      await expect(page.locator('.portfolio-table tr.study'), what).toHaveCount(inGroup(open).length);
+      table = await shownTable(page);
+      expect(table.rows.map((r) => [r.kind, r.label]), `${what}: grouped rows, ${open} open`).toEqual([
+        ['total', 'Portfolio total'],
+        ...labels.flatMap((l) => [['bucket', l], ...(l === open ? inGroup(l).map((s) => ['study', s.StudyID]) : [])]),
+      ]);
+      await expectRow(page, table, 'Portfolio total', members);
+      for (const label of labels) {
+        expect(table.rows.find((r) => r.kind === 'bucket' && r.label === label)?.count, `${what}: ${label}`).toBe(String(inGroup(label).length));
+        await expectRow(page, table, label, inGroup(label));
+      }
+
+      const menu = await page.locator('select[data-highlight] option').evaluateAll((os) => os.map((o) => /** @type {HTMLOptionElement} */ (o).value).filter(Boolean));
+      expect(menu, `${what}: highlight menu`).toEqual(ids);
+
+      await page.locator('button[data-view="distribution"]').click();
+      const rows = page.locator('.portfolio-dist .mrow[data-metric]');
+      await expect(rows).toHaveCount(catalog.length);
+      // What a user can see: rendered with a size, and neither it nor an ancestor hidden or fully transparent.
+      const dist = await rows.evaluateAll((els) => {
+        const sees = (/** @type {Element | null} */ e) => {
+          if (!e) return false;
+          const box = e.getBoundingClientRect();
+          return e.checkVisibility({ opacityProperty: true, visibilityProperty: true }) && box.width > 0 && box.height > 0;
+        };
+        return els.map((el) => {
+          const value = el.querySelector('.pv .m');
+          return {
+            id: el.getAttribute('data-metric'),
+            dots: [...el.querySelectorAll('.track .pt[data-pick]')].map((d) => ({ id: d.getAttribute('data-pick'), seen: sees(d) })),
+            rule: sees(el.querySelector('.track .ptot')),
+            total: value?.textContent ?? '',
+            totalSeen: sees(value),
+          };
+        });
+      });
+      for (const row of dist) {
+        const metric = /** @type {MetricMeta} */ (catalog.find((m) => m.MetricID === row.id));
+        const want = pooled(readData, members, metric.MetricID);
+        const where = `${what}: Distribution ${metric.Abbreviation} ${row.total}`;
+        const plotted = members.filter((st) => pooled(readData, [st], metric.MetricID).rate !== null).map((st) => st.StudyID);
+        expect(row.dots.map((d) => d.id).sort(), `${where}: a dot for each selected study with a value`).toEqual(plotted.sort());
+        expect(row.dots.filter((d) => !d.seen).map((d) => d.id), `${where}: dots a user cannot see`).toEqual([]);
+        expect([row.totalSeen, row.rule], `${where}: the pooled value and its rule can be seen`).toEqual([true, want.rate !== null]);
+        // An n (%) metric shows its pooled count with the percent.
+        const countPct = metric.Display === 'count_pct' && want.rate !== null ? /^([\d,]+) \((\d+\.\d)%\)$/.exec(row.total) : null;
+        if (metric.Display === 'count_pct' && want.rate !== null) expect(countPct, where).not.toBeNull();
+        if (countPct) expect(countPct[1], where).toBe(countText(want.numerator));
+        const shown = countPct ? Number(countPct[2]) : readRate(metric, row.total);
+        if (want.rate === null) expect(shown, where).toBeNull();
+        else expect(Math.abs(/** @type {number} */ (shown) - displayed(metric, want.rate)), where).toBeLessThanOrEqual(tolerance(metric));
+      }
+    }
   });
 });
 

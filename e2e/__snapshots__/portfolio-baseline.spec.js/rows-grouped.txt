@@ -1,6 +1,6 @@
 state: rows-grouped
-canonical dom: sha256 0976769361e73563b50bc4a762f5e838d997e46c0e2c5ce693d540422ce8c3d4 (199522 characters)
-computed styles: sha256 7477da5a917a8766123cf40b5ef0df6c290f42b89bf01fff346cba98cd094522 (992 elements)
+canonical dom: sha256 634c24ea1472c5987d485e99d8a7fcf01e835f5ce425cc474e1f86389b33d64b (203967 characters)
+computed styles: sha256 6ffe5fc6382dac200de789ed61d748a9b22138ee3cfe971a4c39af6ccc6d081f (1044 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
@@ -30,6 +30,7 @@ sparklines:
 accessibility:
 - main:
   - text: Controls
+  - button "Reset"
   - button "Collapse controls" [expanded]: «
   - group:
     - text: ▸ Config Highlight study
@@ -151,6 +152,31 @@ accessibility:
     - button "Active"
     - button "Completed"
     - button "Enrolling"
+    - text: Study
+    - checkbox "STUDY001 ATLAS-1"
+    - text: STUDY001 ATLAS-1
+    - checkbox "STUDY002 BEACON-1"
+    - text: STUDY002 BEACON-1
+    - checkbox "STUDY003 COBALT-1"
+    - text: STUDY003 COBALT-1
+    - checkbox "STUDY004 DELTA-1"
+    - text: STUDY004 DELTA-1
+    - checkbox "STUDY005 EMBER-1"
+    - text: STUDY005 EMBER-1
+    - checkbox "STUDY006 FALCON-2"
+    - text: STUDY006 FALCON-2
+    - checkbox "STUDY007 GRANITE-3"
+    - text: STUDY007 GRANITE-3
+    - checkbox "STUDY008 HARBOR-2"
+    - text: STUDY008 HARBOR-2
+    - checkbox "STUDY009 IRIS-1"
+    - text: STUDY009 IRIS-1
+    - checkbox "STUDY010 JUNIPER-2"
+    - text: STUDY010 JUNIPER-2
+    - checkbox "STUDY011 KESTREL-3"
+    - text: STUDY011 KESTREL-3
+    - checkbox "STUDY012 LUMEN-1"
+    - text: STUDY012 LUMEN-1
   - tablist "Program view":
     - text: Table
     - tab "Overview" [selected]

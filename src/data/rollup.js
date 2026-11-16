@@ -84,11 +84,11 @@ export function bucketStudies(studies, param) {
     .map(([value, bucketStudies]) => ({ value, studies: bucketStudies }));
 }
 
-/** AND across params, OR within a param; empty selection = no constraint. */
+/** AND across params, OR within a param; empty selection = no constraint. `study` filters by StudyID. */
 export function filterStudies(studies, filters) {
   return studies.filter((study) =>
     Object.entries(filters).every(
-      ([param, values]) => values.size === 0 || values.has(String(study.params?.[param]))
+      ([param, values]) => values.size === 0 || values.has(String(param === 'study' ? study.StudyID : study.params?.[param]))
     )
   );
 }

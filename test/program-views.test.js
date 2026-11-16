@@ -178,6 +178,43 @@ describe('configured defaults (#16)', () => {
   });
 });
 
+describe('the study filter and Reset (#22)', () => {
+  it('limits the studies to those selected, combined with the other filters, and counts as an active filter', () => {
+    const [a, , c] = store.studies;
+    store.toggleFilter('study', a.StudyID);
+    store.toggleFilter('study', c.StudyID);
+    expect(store.filteredStudies().map((s) => s.StudyID)).toEqual([a.StudyID, c.StudyID]);
+    expect(store.activeFilterCount()).toBe(2);
+    store.toggleFilter('phase', a.params.phase);
+    expect(store.filteredStudies().map((s) => s.StudyID)).toEqual([a, c].filter((s) => s.params.phase === a.params.phase).map((s) => s.StudyID));
+    expect(store.filterOptions().study).toEqual(store.studies.map((s) => s.StudyID).sort());
+    store.clearFilters();
+    expect(store.filteredStudies()).toHaveLength(store.studies.length);
+  });
+
+  it('carries the study filter in the address', () => {
+    store.toggleFilter('study', store.studies[1].StudyID);
+    const params = store.programParams();
+    expect(params.getAll('filter.study')).toEqual([store.studies[1].StudyID]);
+    const other = new PortfolioStore(portfolio);
+    other.applyProgramParams(new URLSearchParams(params.toString()));
+    expect([...other.state.filters.study]).toEqual([store.studies[1].StudyID]);
+  });
+
+  it('Reset returns every setting the address holds to a fresh load, under the default and a configured view', () => {
+    const config = { groupBy: 'phase', heatmap: 'rate', show: ['den'], metrics: ['Analysis_kri0003'] };
+    for (const data of [portfolio, { ...portfolio, config }]) {
+      const s = new PortfolioStore(data);
+      const fresh = new PortfolioStore(data);
+      fresh.applyProgramParams(new URLSearchParams());
+      changeEveryField(s);
+      s.reset();
+      expect(viewState(s)).toEqual(viewState(fresh));
+      expect(s.programParams().toString()).toBe(fresh.programParams().toString());
+    }
+  });
+});
+
 function viewState(s) {
   const { state } = s;
   const sorted = (set) => [...set].map(String).sort();
@@ -216,6 +253,7 @@ function changeEveryField(s) {
   s.toggleFilter('phase', 'P2');
   s.toggleFilter('status', 'Active');
   s.toggleFilter('therapeutic_area', 'Oncology');
+  s.toggleFilter('study', s.studies[2].StudyID);
   s.toggleStatus('Planned');
   s.toggleMetric(s.supportedMetrics()[1].MetricID);
   s.highlight(s.studies[1].StudyID);

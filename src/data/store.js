@@ -74,7 +74,7 @@ export class PortfolioStore extends EventTarget {
       heatmap: this.#defaults.heatmap, // 'none' | 'num' | 'den' | 'rate' — column-relative cell shading (and the metric sort measure)
       ramp: this.#defaults.ramp, // heatmap palette: 'blue' | 'teal' | 'purple' | 'grey'
       groupBy: this.#defaults.groupBy, // 'none' (one row per study) | a study param
-      filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set() },
+      filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set(), study: new Set() },
       hiddenMetrics: new Set(this.#defaults.metrics), // MetricIDs the user has switched off
       expanded: new Set(),
       sort: { key: null, dir: null }, // key: 'label' | 'meta' | a MetricID
@@ -344,6 +344,11 @@ export class PortfolioStore extends EventTarget {
     this.#emit();
   }
 
+  /** Return every setting the address holds to its configured default, as a fresh load with no hash would. One 'change'. */
+  reset() {
+    this.applyProgramParams(new URLSearchParams());
+  }
+
   clearFilters() {
     for (const set of Object.values(this.state.filters)) set.clear();
     this.#emit();
@@ -363,7 +368,8 @@ export class PortfolioStore extends EventTarget {
   filterOptions() {
     const out = {};
     for (const param of Object.keys(this.state.filters)) {
-      out[param] = [...new Set(this.studies.map((s) => String(s.params?.[param])).filter((v) => v !== 'undefined'))].sort();
+      const values = this.studies.map((s) => String(param === 'study' ? s.StudyID : s.params?.[param]));
+      out[param] = [...new Set(values.filter((v) => v !== 'undefined'))].sort();
     }
     return out;
   }

@@ -84,6 +84,9 @@ export function Sidebar({ store, collapsed, onCollapse }) {
     <div className="sidebar">
       <div className="sb-head">
         <span className="sb-title">Controls</span>
+        <button type="button" className="linkbtn sb-reset" data-reset="" title="Return the whole view to its defaults" onClick={() => store.reset()}>
+          Reset
+        </button>
         <button type="button" className="sb-toggle" data-collapse="" aria-label="Collapse controls" aria-expanded="true" title="Collapse controls" onClick={() => onCollapse(true)}>
           «
         </button>
@@ -198,7 +201,7 @@ export function Sidebar({ store, collapsed, onCollapse }) {
         )}
       </Section>
       <Section open={open.filter} name="filter" title="Filter" badge={active ? `${active} active` : ''} onToggle={toggle('filter')}>
-        {Object.entries(options).map(([param, values]) => (
+        {Object.entries(options).filter(([param]) => param !== 'study').map(([param, values]) => (
           <div key={param} className="ctl">
             <label>{FILTER_LABELS[param] ?? param}</label>
             <div className="chips">
@@ -210,6 +213,18 @@ export function Sidebar({ store, collapsed, onCollapse }) {
             </div>
           </div>
         ))}
+        <div className="ctl">
+          <label>{FILTER_LABELS.study}</label>
+          <div className="study-opts">
+            {store.studies.map((/** @type {any} */ st) => (
+              <label key={st.StudyID} className="study-opt">
+                <input type="checkbox" data-filter="study" data-value={st.StudyID} checked={state.filters.study.has(st.StudyID)} onChange={() => store.toggleFilter('study', st.StudyID)} />
+                <span className="mono">{st.StudyID}</span>
+                <span className="mname">{st.params?.nickname ?? ''}</span>
+              </label>
+            ))}
+          </div>
+        </div>
         {active > 0 && (
           <div className="sb-actions">
             <button type="button" className="linkbtn" data-clear="" onClick={() => store.clearFilters()}>
