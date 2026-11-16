@@ -5,16 +5,16 @@ import { nextSort } from './sort.js';
 import { STATUS_ORDER, CATEGORY_ORDER, groupByCategory } from './catalog.js';
 import { CELL_MODES, GROUP_BY_OPTIONS, HEATMAPS, RAMPS, showOptions } from '../app/portfolio-controls.js';
 import { POP_COLUMNS } from '../app/portfolio-table.js';
+import { portfolioDefaults } from './portfolio-config.js';
 
-// The portfolio's single-valued settings in its URL: [param, state field, default, the controls' choices].
+// The portfolio's single-valued settings in its URL: [param, state field, the controls' choices].
 const SCALARS = [
-  ['group', 'groupBy', 'none', GROUP_BY_OPTIONS],
-  ['cell', 'cellMode', 'defined', CELL_MODES],
-  ['heatmap', 'heatmap', 'none', HEATMAPS],
-  ['ramp', 'ramp', 'blue', RAMPS],
+  ['group', 'groupBy', GROUP_BY_OPTIONS],
+  ['cell', 'cellMode', CELL_MODES],
+  ['heatmap', 'heatmap', HEATMAPS],
+  ['ramp', 'ramp', RAMPS],
 ];
 const SHOW_PARTS = showOptions(false).map(([part]) => part);
-const DEFAULT_SHOW = ['num', 'rate'];
 
 /**
  * The known values of a set the user can empty. An emptied set is written as one empty value; a set whose values are
@@ -39,13 +39,16 @@ function chosen(params, key, options, fallback) {
 export class PortfolioStore extends EventTarget {
   #summary = null;
   #comparison = null;
+  #defaults;
 
   /**
-   * @param {{ manifest: any, snapshots: any[], summary?: any, comparison?: Array<{ SnapshotDate: string, MetricID: string, Numerator: number, Denominator: number }> }} data
+   * @param {{ manifest: any, snapshots: any[], summary?: any, comparison?: Array<{ SnapshotDate: string, MetricID: string, Numerator: number, Denominator: number }>, config?: import('./portfolio-config.js').PortfolioConfig }} data
    *   A study report passes its injected `comparison` (portfolio counts per visit date × metric) instead of the summary.
+   *   The portfolio passes its configured defaults (#16), already checked.
    */
-  constructor({ manifest, snapshots, summary, comparison }) {
+  constructor({ manifest, snapshots, summary, comparison, config }) {
     super();
+    this.#defaults = { cellMode: 'defined', ramp: 'blue', ...portfolioDefaults(config) };
     const { active, inactive } = orderMetrics(manifest.metrics.map(normalizeMetric));
     this.metrics = active;
     this.inactiveMetrics = inactive;
@@ -67,12 +70,12 @@ export class PortfolioStore extends EventTarget {
     }
 
     this.state = {
-      show: new Set(DEFAULT_SHOW), // any of num | den | rate | trend; cells stack what's on
-      heatmap: 'none', // 'none' | 'num' | 'den' | 'rate' — column-relative cell shading (and the metric sort measure)
-      ramp: 'blue', // heatmap palette: 'blue' | 'teal' | 'purple' | 'grey'
-      groupBy: 'none', // 'none' (one row per study) | a study param
+      show: new Set(this.#defaults.show), // any of num | den | rate | trend; cells stack what's on
+      heatmap: this.#defaults.heatmap, // 'none' | 'num' | 'den' | 'rate' — column-relative cell shading (and the metric sort measure)
+      ramp: this.#defaults.ramp, // heatmap palette: 'blue' | 'teal' | 'purple' | 'grey'
+      groupBy: this.#defaults.groupBy, // 'none' (one row per study) | a study param
       filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set() },
-      hiddenMetrics: new Set(), // MetricIDs the user has switched off
+      hiddenMetrics: new Set(this.#defaults.metrics), // MetricIDs the user has switched off
       expanded: new Set(),
       sort: { key: null, dir: null }, // key: 'label' | 'meta' | a MetricID
       detail: { metricId: null, tab: 'viz-bar' }, // study-page drill-in panel (W4)
@@ -80,7 +83,7 @@ export class PortfolioStore extends EventTarget {
       groupByCategory: true, // study page: lifecycle rows (meta.Category) vs one flat grid
       selectedSite: null, // GroupID highlighted across every site-level chart at once
       asOf: null, // view the portfolio as of this date; the study page's visit scrubber drives it
-      cellMode: 'defined', // 'defined' — each metric shows its glossary display rule | 'custom' — the `show` stack for every metric
+      cellMode: this.#defaults.cellMode, // 'defined' — each metric shows its glossary display rule | 'custom' — the `show` stack for every metric
       statuses: new Set(STATUS_ORDER), // glossary Status values to show (Released | New | Planned)
       // Program table zoom: folded categories show one headline value per
       // metric. All folded = Overview (the landing view), none = Details.
@@ -235,21 +238,24 @@ export class PortfolioStore extends EventTarget {
     if (zoom === 'mixed' || (zoom === 'details' && view === 'distribution')) add('open', zoom === 'details' ? ['all'] : open);
     add('dfold', cats.filter((c) => state.distCollapsed.has(c)));
     if (state.highlightStudy) params.set('study', state.highlightStudy);
-    for (const [key, field, value] of SCALARS) if (state[field] !== value) params.set(key, state[field]);
+    for (const [key, field] of SCALARS) if (state[field] !== this.#defaults[field]) params.set(key, state[field]);
     if (state.groupBy !== 'none') add('expand', this.#bucketValues().filter((v) => state.expanded.has(v)));
     if (state.sort.key && state.sort.dir) {
       params.set('sort', state.sort.key);
       params.set('dir', state.sort.dir);
     }
-    if (SHOW_PARTS.some((p) => state.show.has(p) !== DEFAULT_SHOW.includes(p))) addSet('show', SHOW_PARTS.filter((p) => state.show.has(p)));
+    if (SHOW_PARTS.some((p) => state.show.has(p) !== this.#defaults.show.includes(p))) addSet('show', SHOW_PARTS.filter((p) => state.show.has(p)));
     const options = this.filterOptions();
     for (const param of Object.keys(state.filters)) add(`filter.${param}`, options[param].filter((v) => state.filters[param].has(v)));
     if (STATUS_ORDER.some((s) => !state.statuses.has(s))) addSet('statuses', STATUS_ORDER.filter((s) => state.statuses.has(s)));
-    add('hide', this.metrics.map((m) => m.MetricID).filter((id) => state.hiddenMetrics.has(id)));
+    const hidden = this.metrics.map((m) => m.MetricID).filter((id) => state.hiddenMetrics.has(id));
+    // Written even when it equals the configured default: a study report has no configuration, and takes the hidden
+    // metrics from the link.
+    if (hidden.length || this.#defaults.metrics.length) addSet('hide', hidden);
     return params;
   }
 
-  /** Restore what programParams() wrote: an absent param is its default, and unknown values are dropped. One 'change'. */
+  /** Restore what programParams() wrote: an absent param is its configured default, and unknown values are dropped. One 'change'. */
   applyProgramParams(params) {
     const { state } = this;
     const cats = this.#allCategories();
@@ -263,15 +269,15 @@ export class PortfolioStore extends EventTarget {
     state.distCollapsed = new Set(known(params.getAll('dfold'), cats));
     const study = params.get('study');
     state.highlightStudy = this.studies.some((st) => st.StudyID === study) ? study : null;
-    for (const [key, field, value, choices] of SCALARS) {
+    for (const [key, field, choices] of SCALARS) {
       const v = params.get(key);
-      state[field] = choices.some(([choice]) => choice === v) ? v : value;
+      state[field] = choices.some(([choice]) => choice === v) ? v : this.#defaults[field];
     }
     state.expanded = new Set(state.groupBy === 'none' ? [] : known(params.getAll('expand'), this.#bucketValues()));
     const [sortKey, dir] = [params.get('sort'), params.get('dir')];
     const sortable = ['label', 'meta', ...POP_COLUMNS.map((c) => c.key), ...this.metrics.map((m) => m.MetricID)];
     state.sort = sortable.includes(sortKey) && (dir === 'asc' || dir === 'desc') ? { key: sortKey, dir } : { key: null, dir: null };
-    state.show = new Set(chosen(params, 'show', SHOW_PARTS, DEFAULT_SHOW));
+    state.show = new Set(chosen(params, 'show', SHOW_PARTS, this.#defaults.show));
     const options = this.filterOptions();
     for (const param of Object.keys(state.filters)) state.filters[param] = new Set(known(params.getAll(`filter.${param}`), options[param]));
     this.#applyMetricParams(params);
@@ -285,9 +291,8 @@ export class PortfolioStore extends EventTarget {
   }
 
   #applyMetricParams(params) {
-    const hide = params.getAll('hide');
     this.state.statuses = new Set(chosen(params, 'statuses', STATUS_ORDER, STATUS_ORDER));
-    this.state.hiddenMetrics = new Set(this.metrics.map((m) => m.MetricID).filter((id) => hide.includes(id)));
+    this.state.hiddenMetrics = new Set(chosen(params, 'hide', this.metrics.map((m) => m.MetricID), this.#defaults.metrics));
   }
 
   #bucketValues() {

@@ -2,6 +2,7 @@
 import validateStudy from 'virtual:gsm/validate-study-document';
 import validatePortfolio from 'virtual:gsm/validate-portfolio-document';
 import { indexSummary } from '../data/summary.js';
+import { configProblems } from '../data/portfolio-config.js';
 
 /**
  * @typedef {object} StudyDocument
@@ -22,6 +23,7 @@ import { indexSummary } from '../data/summary.js';
  * @property {any[]} metrics
  * @property {Array<{ StudyID: string, params: Record<string, string | number>, snapshots: string[] }>} studies
  * @property {any} summary
+ * @property {import('../data/portfolio-config.js').PortfolioConfig} [config]
  */
 
 /**
@@ -69,8 +71,9 @@ export function readStudyDocument(text) {
 }
 
 /**
- * Reads the portfolio report's data document, refusing one that isn't JSON, fails its schema, or whose summary
- * describes other studies or snapshots than the document lists.
+ * Reads the portfolio report's data document, refusing one that isn't JSON, fails its schema, whose summary
+ * describes other studies or snapshots than the document lists, or whose configuration has a value the Controls
+ * panel doesn't offer or a metric that has no portfolio column.
  * @param {string | null | undefined} text
  * @returns {{ ok: true, doc: PortfolioDocument } | { ok: false, errors: string[] }}
  */
@@ -82,5 +85,6 @@ export function readPortfolioDocument(text) {
   } catch (e) {
     return { ok: false, errors: [`/summary: ${e instanceof Error ? e.message : e}`] };
   }
-  return parsed;
+  const problems = configProblems(parsed.doc.config ?? {}, parsed.doc.metrics);
+  return problems.length ? { ok: false, errors: problems } : parsed;
 }

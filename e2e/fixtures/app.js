@@ -1,7 +1,7 @@
 // @ts-check
 import { test as base, expect } from '@playwright/test';
 /** @typedef {import('@playwright/test').Page} Page */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { parseProject, requireRunDir } from '../projects.js';
 import { buildStudyDocument } from '../../scripts/study-document.mjs';
@@ -54,6 +54,8 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
  * @typedef {object} ReportOverrides
  * @property {(doc: any) => void} [document] Changes the data document.
  * @property {string} [text] Replaces the injected text outright, for data that isn't a document at all.
+ * @property {string[]} [beside] Reports, by name, that the rewritten report's links must reach. In file mode they are
+ *   linked into its folder unchanged; under the sub-path they are served as they are.
  */
 
 /**
@@ -168,7 +170,13 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
         let url = mode === 'file' ? `file://${file}` : `${base}${encodeURIComponent(name)}.html`;
         if (overrides && mode === 'file') {
           const variant = testInfo.outputPath(`${name}.html`);
+          // Never write through a link to a report under test.
+          rmSync(variant, { force: true });
           writeFileSync(variant, rewriteReport(readFileSync(file, 'utf8'), overrides));
+          for (const other of overrides.beside ?? []) {
+            const at = testInfo.outputPath(`${other}.html`);
+            if (!existsSync(at)) symlinkSync(join(REPORTS_DIR, `${other}.html`), at);
+          }
           url = `file://${variant}`;
         } else if (overrides) {
           await page.route(url, async (r) => {

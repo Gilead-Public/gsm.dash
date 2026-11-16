@@ -2,7 +2,9 @@
 // Packages each page Astro built into a single-file template (scripts and styles inline, the data placeholder left
 // in place), then writes the reports by injecting their data documents: one per study, and the portfolio.
 // Usage: node scripts/package-reports.mjs <out dir> [data dir]   (after `astro build`)
-import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+// The data dir holds portfolio.json, summary.json and the study files, and may hold config.json: the portfolio's
+// defaults (#16).
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { init, parse } from 'es-module-lexer';
@@ -95,10 +97,10 @@ export const REPORTS = [
 ];
 
 /** @param {string} dir */
-function readData(dir) {
+export function readData(dir) {
   /** @param {string} path */
   const read = (path) => JSON.parse(readFileSync(join(dir, path), 'utf8'));
-  return { manifest: read('portfolio.json'), summary: read('summary.json'), read };
+  return { manifest: read('portfolio.json'), summary: read('summary.json'), read, config: existsSync(join(dir, 'config.json')) ? read('config.json') : undefined };
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

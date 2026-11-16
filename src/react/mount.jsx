@@ -18,7 +18,7 @@ function storeFor(doc) {
 /** @param {import('./document.js').PortfolioDocument} doc */
 function portfolioStoreFor(doc) {
   const manifest = { generated: doc.generated, reportBase: doc.reportBase, metrics: doc.metrics, studies: doc.studies };
-  return new PortfolioStore({ manifest, snapshots: [], summary: doc.summary });
+  return new PortfolioStore({ manifest, snapshots: [], summary: doc.summary, config: doc.config });
 }
 
 /**

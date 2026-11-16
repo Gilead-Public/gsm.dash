@@ -6,7 +6,7 @@ import Ajv from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import { init } from 'es-module-lexer';
 import { writeExampleData } from '../scripts/generate-example-data.mjs';
-import { assertNoImports, flatten, packagePage } from '../scripts/package-reports.mjs';
+import { assertNoImports, flatten, packagePage, readData, REPORTS } from '../scripts/package-reports.mjs';
 import { inject, PLACEHOLDER } from '../scripts/inject.mjs';
 import { buildStudyDocument } from '../scripts/study-document.mjs';
 import { buildPortfolioDocument } from '../scripts/portfolio-document.mjs';
@@ -162,6 +162,62 @@ describe('the portfolio document', () => {
       const copy = structuredClone(doc);
       change(copy);
       expect(validate(copy), what).toBe(false);
+    }
+  });
+
+  it('16.01: the portfolio document carries the configuration as given and passes its schema, and carries none when none is given (#16)', () => {
+    const config = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003'] };
+    const doc = buildPortfolioDocument({ ...data, config });
+    expect(doc.config).toEqual(config);
+    expect(portfolioValidator()(doc)).toBe(true);
+    expect(buildPortfolioDocument(data)).not.toHaveProperty('config');
+  });
+
+  it('16.02: a configuration with an unknown key, a value outside the Controls panel\'s choices, or a MetricID with no portfolio column is refused when the portfolio document is built, naming the key, the value and the allowed values (#16)', () => {
+    const { metrics } = data.manifest;
+    const eligible = metrics.filter((m) => m.Active !== false && m.GroupLevel === 'Site').map((m) => m.MetricID);
+    const inactive = metrics.find((m) => m.Active === false && m.GroupLevel === 'Site')?.MetricID;
+    const studyLevel = metrics.find((m) => m.Active !== false && m.GroupLevel === 'Study')?.MetricID;
+    expect([inactive, studyLevel].every(Boolean), 'the catalog has an inactive and a study-level metric').toBe(true);
+    const settings = ['groupBy', 'heatmap', 'show', 'metrics'];
+    const groupBy = ['none', 'therapeutic_area', 'protocol_indication', 'phase', 'status', 'product'];
+    const show = ['num', 'den', 'rate', 'trend'];
+    const refused = [
+      [{ colour: 'red' }, 'colour', 'red', settings],
+      [{ groupBy: 'site' }, 'groupBy', 'site', groupBy],
+      [{ groupBy: ['phase'] }, 'groupBy', ['phase'], groupBy],
+      [{ heatmap: 'flag' }, 'heatmap', 'flag', ['none', 'num', 'den', 'rate']],
+      [{ show: ['num', 'flag'] }, 'show', 'flag', show],
+      [{ show: 'num' }, 'show', 'num', show],
+      [{ metrics: ['Analysis_nope'] }, 'metrics', 'Analysis_nope', eligible],
+      [{ metrics: [inactive] }, 'metrics', inactive, eligible],
+      [{ metrics: [studyLevel] }, 'metrics', studyLevel, eligible],
+    ];
+    for (const [config, key, value, allowed] of refused) {
+      let message = '';
+      try {
+        buildPortfolioDocument({ ...data, config });
+      } catch (e) {
+        message = e.message;
+      }
+      const line = message.split('\n').find((l) => l.includes(`config.${key}:`));
+      expect(line, JSON.stringify(config)).toBeDefined();
+      expect(line, 'names the value').toContain(JSON.stringify(value));
+      expect(line?.split('allowed: ')[1]?.split(', ').sort(), 'names the allowed values').toEqual([...allowed].sort());
+    }
+    expect(() => buildPortfolioDocument({ ...data, config: { groupBy: 'phase', heatmap: 'rate', show, metrics: eligible } })).not.toThrow();
+  });
+
+  it('16.01: the portfolio report\'s document is written with the configuration from config.json in the data folder, and without one when there is none (#16)', () => {
+    expect(readData(dir).config).toBeUndefined();
+    const withConfig = mkdtempSync(join(tmpdir(), 'gsm-dash-config-'));
+    try {
+      for (const file of ['portfolio.json', 'summary.json']) writeFileSync(join(withConfig, file), readFileSync(join(dir, file)));
+      writeFileSync(join(withConfig, 'config.json'), JSON.stringify({ heatmap: 'rate' }));
+      const [[, doc]] = REPORTS.find((r) => r.template === 'portfolio.html').reports(readData(withConfig));
+      expect(doc.config).toEqual({ heatmap: 'rate' });
+    } finally {
+      rmSync(withConfig, { recursive: true, force: true });
     }
   });
 });

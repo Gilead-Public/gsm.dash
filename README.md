@@ -141,9 +141,16 @@ To share a build for feedback without releasing it: every CI run that passes als
 
 Each report carries its data as one injected document (`<script type="application/json"
 id="gsm-data">`), checked against its schema when it loads. The portfolio's holds the
-catalog, the studies and the counts-only summary. A study's holds the catalog, the
-study's manifest entry, all its snapshots, and the portfolio comparison per snapshot
-date, pooled from the summary.
+catalog, the studies, the counts-only summary and its configuration, if any. A study's
+holds the catalog, the study's manifest entry, all its snapshots, and the portfolio
+comparison per snapshot date, pooled from the summary.
+
+Portfolio defaults (#16): an optional `config.json` beside `portfolio.json` sets the
+portfolio's initial grouping (`groupBy`), heatmap (`heatmap`), cell values (`show`) and
+hidden metrics (`metrics`, MetricIDs); every key is optional. It travels in the portfolio
+document, so one template serves any configuration. Its values are checked against the
+Controls panel's choices and the catalog when the document is built and when the report
+loads. A setting in the address's hash overrides its configured default.
 
 Detailed-report links (#13): a catalog entry's `ReportLink` is a path to that metric's
 report, resolved against the manifest's optional `reportBase`, which itself resolves

@@ -140,6 +140,44 @@ describe('URL params', () => {
 });
 
 /** Every view setting 27.05 lists, sets as sorted arrays. */
+describe('configured defaults (#16)', () => {
+  const config = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'] };
+  const configured = () => new PortfolioStore({ ...portfolio, config });
+
+  it('opens with the configured view, and an empty hash restores it', () => {
+    const s = configured();
+    expect([s.state.groupBy, s.state.heatmap, [...s.state.show].sort(), [...s.state.hiddenMetrics].sort()]).toEqual(['phase', 'rate', ['den', 'trend'], config.metrics]);
+    const fresh = viewState(s);
+    changeEveryField(s);
+    s.applyProgramParams(new URLSearchParams());
+    expect(viewState(s)).toEqual(fresh);
+  });
+
+  it('writes a setting changed back to its built-in default, and reads it back', () => {
+    const s = configured();
+    s.set('groupBy', 'none');
+    s.set('heatmap', 'none');
+    s.toggleShow('den');
+    s.toggleShow('trend');
+    s.toggleShow('num');
+    s.toggleShow('rate');
+    s.setAllMetrics(true);
+    const other = configured();
+    other.applyProgramParams(new URLSearchParams(s.programParams().toString()));
+    expect(viewState(other)).toEqual(viewState(new PortfolioStore(portfolio)));
+  });
+
+  it('always writes the hidden metrics, so a study report, which has no configuration, hides what the portfolio hid', () => {
+    for (const change of [() => {}, (s) => s.toggleMetric('Analysis_kri0005'), (s) => s.setAllMetrics(true)]) {
+      const s = configured();
+      change(s);
+      const study = new PortfolioStore(portfolio);
+      study.applyMetricParams(new URLSearchParams(s.programParams().toString()));
+      expect(viewState(study).hiddenMetrics).toEqual(viewState(s).hiddenMetrics);
+    }
+  });
+});
+
 function viewState(s) {
   const { state } = s;
   const sorted = (set) => [...set].map(String).sort();
