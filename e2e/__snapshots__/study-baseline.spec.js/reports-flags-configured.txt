@@ -1,5 +1,5 @@
 state: flags-configured (reports)
-dom: sha256 572ba5f0bca33038d1543f25df5d7720c6c33da23353e08aaab0a4c72a3e77ec (84707 characters)
+dom: sha256 fc377fb6d0217d1ca618c28e114234531a29618e6f386eef36f4e910da6a4eb3 (78835 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -51,18 +51,18 @@ accessibility:
   - region "Screen failure reasons":
     - text: Screen failure reasons
     - list:
-      - 'listitem "Inclusion Criteria Not Met: 57, 39.6% % Screen failed"': Inclusion Criteria Not Met 57 39.6%
-      - 'listitem "Exclusion Criteria Met: 45, 31.3% % Screen failed"': Exclusion Criteria Met 45 31.3%
-      - 'listitem "Withdrawal by Participant: 21, 14.6% % Screen failed"': Withdrawal by Participant 21 14.6%
-      - 'listitem "Other: 16, 11.1% % Screen failed"': Other 16 11.1%
-      - 'listitem "Not recorded: 5, 3.5% % Screen failed"': Not recorded 5 3.5%
+      - 'listitem "Inclusion Criteria Not Met: 57 of 144"': Inclusion Criteria Not Met 57
+      - 'listitem "Exclusion Criteria Met: 45 of 144"': Exclusion Criteria Met 45
+      - 'listitem "Withdrawal by Participant: 21 of 144"': Withdrawal by Participant 21
+      - 'listitem "Other: 16 of 144"': Other 16
+      - 'listitem "Not recorded: 5 of 144"': Not recorded 5
     - paragraph: "Not recorded: the source value was blank."
   - region "Screening status":
     - text: Screening status
     - list:
-      - 'listitem "Enrolled: 879, 85.9% % Screened"': Enrolled 879 85.9%
-      - 'listitem "Screen Failure: 144, 14.1% % Screened"': Screen Failure 144 14.1%
-      - 'listitem "In Screening: 0, 0.0% % Screened"': In Screening 0 0.0%
+      - 'listitem "Enrolled: 85.9% of screened, 879 of 1,023"': Enrolled 85.9%
+      - 'listitem "Screen Failure: 14.1% of screened, 144 of 1,023"': Screen Failure 14.1%
+      - 'listitem "In Screening: 0.0% of screened, 0 of 1,023"': In Screening 0.0%
 - button "Previous view": ‹
 - text: Breakdowns 8/8
 - button "Next view": ›
@@ -75,22 +75,22 @@ accessibility:
   - region "Reasons for study discontinuation":
     - text: Reasons for study discontinuation
     - list:
-      - 'listitem "Withdrawal by Participant: 21, 34.4% % Discontinued, 2.4% % Enrolled"': Withdrawal by Participant 21 34.4% 2.4%
-      - 'listitem "Lost to Follow-Up: 16, 26.2% % Discontinued, 1.8% % Enrolled"': Lost to Follow-Up 16 26.2% 1.8%
-      - 'listitem "Study Discontinuation: Other: 13, 21.3% % Discontinued, 1.5% % Enrolled"': "Study Discontinuation: Other 13 21.3% 1.5%"
-      - 'listitem "Death: 5, 8.2% % Discontinued, 0.6% % Enrolled"': Death 5 8.2% 0.6%
-      - 'listitem "Not recorded: 6, 9.8% % Discontinued, 0.7% % Enrolled"': Not recorded 6 9.8% 0.7%
+      - 'listitem "Withdrawal by Participant: 21 of 61"': Withdrawal by Participant 21
+      - 'listitem "Lost to Follow-Up: 16 of 61"': Lost to Follow-Up 16
+      - 'listitem "Study Discontinuation: Other: 13 of 61"': "Study Discontinuation: Other 13"
+      - 'listitem "Death: 5 of 61"': Death 5
+      - 'listitem "Not recorded: 6 of 61"': Not recorded 6
     - paragraph: "Not recorded: the source value was blank."
   - region "Study disposition":
     - text: Study disposition
     - list:
-      - 'listitem "Study Completion: 469, 53.4% % Enrolled"': Study Completion 469 53.4%
-      - 'listitem "Ongoing: 349, 39.7% % Enrolled"': Ongoing 349 39.7%
-      - 'listitem "Withdrawal by Participant: 21, 2.4% % Enrolled"': Withdrawal by Participant 21 2.4%
-      - 'listitem "Lost to Follow-Up: 16, 1.8% % Enrolled"': Lost to Follow-Up 16 1.8%
-      - 'listitem "Study Discontinuation: Other: 13, 1.5% % Enrolled"': "Study Discontinuation: Other 13 1.5%"
-      - 'listitem "Death: 5, 0.6% % Enrolled"': Death 5 0.6%
-      - 'listitem "Not recorded: 6, 0.7% % Enrolled"': Not recorded 6 0.7%
+      - 'listitem "Study Completion: 53.4% of enrolled, 469 of 879"': Study Completion 53.4%
+      - 'listitem "Ongoing: 39.7% of enrolled, 349 of 879"': Ongoing 39.7%
+      - 'listitem "Withdrawal by Participant: 2.4% of enrolled, 21 of 879"': Withdrawal by Participant 2.4%
+      - 'listitem "Lost to Follow-Up: 1.8% of enrolled, 16 of 879"': Lost to Follow-Up 1.8%
+      - 'listitem "Study Discontinuation: Other: 1.5% of enrolled, 13 of 879"': "Study Discontinuation: Other 1.5%"
+      - 'listitem "Death: 0.6% of enrolled, 5 of 879"': Death 0.6%
+      - 'listitem "Not recorded: 0.7% of enrolled, 6 of 879"': Not recorded 0.7%
     - paragraph: "Not recorded: the source value was blank."
 - button "Previous view": ‹
 - text: Breakdowns 8/8
@@ -113,20 +113,20 @@ accessibility:
   - region "Reasons for treatment discontinuation":
     - text: Reasons for treatment discontinuation
     - list:
-      - 'listitem "Physician Decision: 13, 31.0% % Discontinued"': Physician Decision 13 31.0%
-      - 'listitem "Other: 13, 31.0% % Discontinued"': Other 13 31.0%
-      - 'listitem "Progressive Disease: 11, 26.2% % Discontinued"': Progressive Disease 11 26.2%
-      - 'listitem "Withdrawal by Participant: 8, 19.0% % Discontinued"': Withdrawal by Participant 8 19.0%
-      - 'listitem "Adverse Event: 5, 11.9% % Discontinued"': Adverse Event 5 11.9%
-      - 'listitem "Not recorded: 2, 4.8% % Discontinued"': Not recorded 2 4.8%
+      - 'listitem "Physician Decision: 13 of 42"': Physician Decision 13
+      - 'listitem "Other: 13 of 42"': Other 13
+      - 'listitem "Progressive Disease: 11 of 42"': Progressive Disease 11
+      - 'listitem "Withdrawal by Participant: 8 of 42"': Withdrawal by Participant 8
+      - 'listitem "Adverse Event: 5 of 42"': Adverse Event 5
+      - 'listitem "Not recorded: 2 of 42"': Not recorded 2
     - paragraph: A participant can fall in more than one category, so the counts add up to more than 42.
     - paragraph: "Not recorded: the source value was blank."
   - region "Treatment disposition":
     - text: Treatment disposition
     - list:
-      - 'listitem "Dosed – treatment complete: 480, 55.5% % Dosed"': Dosed – treatment complete 480 55.5%
-      - 'listitem "Dosed – ongoing: 343, 39.7% % Dosed"': Dosed – ongoing 343 39.7%
-      - 'listitem "Dosed – premature treatment discontinuation: 42, 4.9% % Dosed"': Dosed – premature treatment discontinuation 42 4.9%
+      - 'listitem "Dosed – treatment complete: 55.5% of dosed, 480 of 865"': Dosed – treatment complete 55.5%
+      - 'listitem "Dosed – ongoing: 39.7% of dosed, 343 of 865"': Dosed – ongoing 39.7%
+      - 'listitem "Dosed – premature treatment discontinuation: 4.9% of dosed, 42 of 865"': Dosed – premature treatment discontinuation 4.9%
 - button "Previous view": ‹
 - text: Breakdowns 8/8
 - button "Next view": ›
@@ -166,19 +166,19 @@ accessibility:
   - region "Deaths by time from randomisation":
     - text: Deaths by time from randomisation
     - list:
-      - 'listitem "Day 31–90: 13, 56.5% % Deaths, 1.5% % Enrolled"': Day 31–90 13 56.5% 1.5%
-      - 'listitem "Day 1–30: 10, 43.5% % Deaths, 1.1% % Enrolled"': Day 1–30 10 43.5% 1.1%
+      - 'listitem "Day 31–90: 13 of 23"': Day 31–90 13
+      - 'listitem "Day 1–30: 10 of 23"': Day 1–30 10
   - region "Deaths by eligibility":
     - text: Deaths by eligibility
     - list:
-      - 'listitem "Eligible: 23, 100.0% % Deaths, 2.6% % Enrolled"': Eligible 23 100.0% 2.6%
-      - 'listitem "Ineligible: 0, 0.0% % Deaths, 0.0% % Enrolled"': Ineligible 0 0.0% 0.0%
+      - 'listitem "Eligible: 23 of 23"': Eligible 23
+      - 'listitem "Ineligible: 0 of 23"': Ineligible 0
   - region "Deaths by relatedness to treatment":
     - text: Deaths by relatedness to treatment
     - list:
-      - 'listitem "Not related: 13, 56.5% % Deaths, 1.5% % Enrolled"': Not related 13 56.5% 1.5%
-      - 'listitem "Related: 8, 34.8% % Deaths, 0.9% % Enrolled"': Related 8 34.8% 0.9%
-      - 'listitem "Not recorded: 2, 8.7% % Deaths, 0.2% % Enrolled"': Not recorded 2 8.7% 0.2%
+      - 'listitem "Not related: 13 of 23"': Not related 13
+      - 'listitem "Related: 8 of 23"': Related 8
+      - 'listitem "Not recorded: 2 of 23"': Not recorded 2
     - paragraph: "Not recorded: the source value was blank."
 - button "Previous view": ‹
 - text: Breakdowns 8/9
@@ -192,12 +192,12 @@ accessibility:
   - region "IP status":
     - text: IP status
     - list:
-      - 'listitem "Dosed – treatment complete: 466, 53.0% % Enrolled"': Dosed – treatment complete 466 53.0%
-      - 'listitem "Dosed – ongoing: 276, 31.4% % Enrolled"': Dosed – ongoing 276 31.4%
-      - 'listitem "Dosed – premature treatment discontinuation: 84, 9.6% % Enrolled"': Dosed – premature treatment discontinuation 84 9.6%
-      - 'listitem "Potential Non-Starter – within window: 20, 2.3% % Enrolled"': Potential Non-Starter – within window 20 2.3%
-      - 'listitem "Potential Non-Starter – outside window: 19, 2.2% % Enrolled"': Potential Non-Starter – outside window 19 2.2%
-      - 'listitem "Confirmed Non-Starter: 14, 1.6% % Enrolled"': Confirmed Non-Starter 14 1.6%
+      - 'listitem "Dosed – treatment complete: 53.0% of enrolled, 466 of 879"': Dosed – treatment complete 53.0%
+      - 'listitem "Dosed – ongoing: 31.4% of enrolled, 276 of 879"': Dosed – ongoing 31.4%
+      - 'listitem "Dosed – premature treatment discontinuation: 9.6% of enrolled, 84 of 879"': Dosed – premature treatment discontinuation 9.6%
+      - 'listitem "Potential Non-Starter – within window: 2.3% of enrolled, 20 of 879"': Potential Non-Starter – within window 2.3%
+      - 'listitem "Potential Non-Starter – outside window: 2.2% of enrolled, 19 of 879"': Potential Non-Starter – outside window 2.2%
+      - 'listitem "Confirmed Non-Starter: 1.6% of enrolled, 14 of 879"': Confirmed Non-Starter 1.6%
 - button "Previous view": ‹
 - text: Breakdowns 8/8
 - button "Next view": ›
@@ -210,21 +210,21 @@ accessibility:
   - region "Top I/E criteria not met":
     - text: Top I/E criteria not met
     - list:
-      - 'listitem "IN01: 10, 32.3% % Ineligible, 1.1% % Enrolled"': IN01 10 32.3% 1.1%
-      - 'listitem "EX06: 8, 25.8% % Ineligible, 0.9% % Enrolled"': EX06 8 25.8% 0.9%
-      - 'listitem "EX03: 7, 22.6% % Ineligible, 0.8% % Enrolled"': EX03 7 22.6% 0.8%
-      - 'listitem "EX09: 7, 22.6% % Ineligible, 0.8% % Enrolled"': EX09 7 22.6% 0.8%
-      - 'listitem "IN07: 6, 19.4% % Ineligible, 0.7% % Enrolled"': IN07 6 19.4% 0.7%
-      - 'listitem "+ 3 more: 7, 22.6% % Ineligible, 0.8% % Enrolled"': + 3 more 7 22.6% 0.8%
-      - 'listitem "Not recorded: 1, 3.2% % Ineligible, 0.1% % Enrolled"': Not recorded 1 3.2% 0.1%
+      - 'listitem "IN01: 10 of 31"': IN01 10
+      - 'listitem "EX06: 8 of 31"': EX06 8
+      - 'listitem "EX03: 7 of 31"': EX03 7
+      - 'listitem "EX09: 7 of 31"': EX09 7
+      - 'listitem "IN07: 6 of 31"': IN07 6
+      - 'listitem "+ 3 more: 7 of 31"': + 3 more 7
+      - 'listitem "Not recorded: 1 of 31"': Not recorded 1
     - paragraph: A participant can fall in more than one category, so the counts add up to more than 31.
     - paragraph: "Not recorded: the source value was blank."
   - region "Eligibility status":
     - text: Eligibility status
     - list:
-      - 'listitem "Eligible: 848, 96.5% % Enrolled"': Eligible 848 96.5%
-      - 'listitem "Ineligible: 19, 2.2% % Enrolled"': Ineligible 19 2.2%
-      - 'listitem "Potentially Ineligible: 12, 1.4% % Enrolled"': Potentially Ineligible 12 1.4%
+      - 'listitem "Eligible: 96.5% of enrolled, 848 of 879"': Eligible 96.5%
+      - 'listitem "Ineligible: 2.2% of enrolled, 19 of 879"': Ineligible 2.2%
+      - 'listitem "Potentially Ineligible: 1.4% of enrolled, 12 of 879"': Potentially Ineligible 1.4%
 - button "Previous view": ‹
 - text: Breakdowns 8/8
 - button "Next view": ›
@@ -237,17 +237,17 @@ accessibility:
   - region "Mis-stratification by factor":
     - text: Mis-stratification by factor
     - list:
-      - 'listitem "Prior Therapy: 6, 46.2% % Mis-stratified, 0.7% % Enrolled"': Prior Therapy 6 46.2% 0.7%
-      - 'listitem "Region: 4, 30.8% % Mis-stratified, 0.5% % Enrolled"': Region 4 30.8% 0.5%
-      - 'listitem "Disease Stage: 4, 30.8% % Mis-stratified, 0.5% % Enrolled"': Disease Stage 4 30.8% 0.5%
-      - 'listitem "Age Group: 1, 7.7% % Mis-stratified, 0.1% % Enrolled"': Age Group 1 7.7% 0.1%
+      - 'listitem "Prior Therapy: 6 of 13"': Prior Therapy 6
+      - 'listitem "Region: 4 of 13"': Region 4
+      - 'listitem "Disease Stage: 4 of 13"': Disease Stage 4
+      - 'listitem "Age Group: 1 of 13"': Age Group 1
     - paragraph: A participant can fall in more than one category, so the counts add up to more than 13.
   - region "Stratification status":
     - text: Stratification status
     - list:
-      - 'listitem "Correctly Stratified: 855, 97.3% % Enrolled"': Correctly Stratified 855 97.3%
-      - 'listitem "Mis-stratified: 13, 1.5% % Enrolled"': Mis-stratified 13 1.5%
-      - 'listitem "Not recorded: 11, 1.3% % Enrolled"': Not recorded 11 1.3%
+      - 'listitem "Correctly Stratified: 97.3% of enrolled, 855 of 879"': Correctly Stratified 97.3%
+      - 'listitem "Mis-stratified: 1.5% of enrolled, 13 of 879"': Mis-stratified 1.5%
+      - 'listitem "Not recorded: 1.3% of enrolled, 11 of 879"': Not recorded 1.3%
     - paragraph: "Not recorded: the source value was blank."
 - button "Previous view": ‹
 - text: Breakdowns 8/8

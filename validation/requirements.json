@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "e621535bdcaa1f23392420cec49c8587f76eb4bee68da19449c8ef73d4daf13b",
+  "hash": "b1e4a12e627dbb5250454a32b56e3688fdba88585d488d552de08fc74a6678f3",
   "issues": [
     {
       "number": 8,
@@ -81,7 +81,7 @@
       "title": "Build a Layout A bar-chart distribution widget",
       "parent": "Gilead-BioStats/gsm.roadmap#618",
       "userTest": true,
-      "scopeSection": "**In:** a Layout A bar-chart widget following the contract in the gsm.roadmap#617 pipeline design.\n- **Header:** metric name, percent, and numerator / denominator.\n- **Scope of data:** filter to one metric and, optionally, one group. Site rows are summed to study level in one function; nothing else is derived.\n- **Sections:** one per `Source` × `Variable`, numerator first.\n- **Bars:** Σ `Count` per category, sorted by descending count, with \"Not recorded\" last. A top-N setting collapses the rest into a \"+ k more\" bar.\n- **Two percentages per category, by default:**\n  - the share of the metric's population: Σ `Count` / Σ `Total` (e.g. % of participants who discontinued);\n  - the share of enrolled participants: Σ `Count` / the metric's Denominator, where the denominator is the enrolled population.\n- **Labels:** business terms from configuration (e.g. \"% Discontinued\", \"% Enrolled\"). Never show \"Numerator\" or \"Denominator\". Tooltips may carry the longer context.\n- **No duplicate total:** no total row when the header already shows that value.\n- **Colours:** status categories take colours from a configurable status-to-colour map, and fall back to a neutral colour when no map is given. Reason categories aren't coloured.\n- **Footnotes:** shown automatically when Σ `Count` > `Total` (multi-value variables, where a participant counts in several categories) and when \"Not recorded\" is present.\n- **States:** empty (configured, but no rows) and missing (the metric has no distributions).\n- **Accessibility:** accessible labels.\n- **Replaces:** `breakdown-bar`, and removes the `details` consumer.\n\n**Out:**\n- The contents of the status-to-colour map (a separate issue).\n- Other chart types.\n- Pipeline computation.",
+      "scopeSection": "**In:** a Layout A bar-chart widget following the contract in the gsm.roadmap#617 pipeline design.\n- **Header:** metric name, percent, and numerator / denominator.\n- **Scope of data:** filter to one metric and, optionally, one group. Site rows are summed to study level in one function; nothing else is derived.\n- **Sections:** one per `Source` × `Variable`, numerator first.\n- **Bars:** Σ `Count` per category, sorted by descending count, with \"Not recorded\" last. A top-N setting collapses the rest into a \"+ k more\" bar.\n- **One value per bar:**\n  - status sections (the metric's denominator) show each category's share of that population, Σ `Count` / Σ `Total`. The section names the population, e.g. \"% of enrolled\" or \"% of dosed\";\n  - reason sections (the metric's numerator) show each category's count;\n  - no bar's visible label shows a count and a percentage together;\n  - hovering a bar shows its count out of the section's total (\"n of N\").\n- **Labels:** business terms from configuration (e.g. \"% of enrolled\", \"% of dosed\"). Never show \"Numerator\" or \"Denominator\". Tooltips may carry the longer context.\n- **No duplicate total:** no total row when the header already shows that value.\n- **Colours:** status categories take colours from a configurable status-to-colour map, and fall back to a neutral colour when no map is given. Reason categories aren't coloured.\n- **Footnotes:** shown automatically when Σ `Count` > `Total` (multi-value variables, where a participant counts in several categories) and when \"Not recorded\" is present.\n- **States:** empty (configured, but no rows) and missing (the metric has no distributions).\n- **Accessibility:** accessible labels.\n- **Replaces:** `breakdown-bar`, and removes the `details` consumer.\n\n**Out:**\n- The contents of the status-to-colour map (a separate issue).\n- Other chart types.\n- Pipeline computation.",
       "criteria": [
         {
           "id": "10.01",
@@ -92,8 +92,8 @@
         },
         {
           "id": "10.02",
-          "text": "Displayed counts and both percentages equal independently summed fixture values (test).",
-          "sha256": "884335495d383eb2244d42c3242e61676bd7bca0298f2c770f0ade3af9fc45f4",
+          "text": "Displayed percentages (status sections), counts (reason sections) and hover values (n of N) equal independently summed fixture values (test).",
+          "sha256": "b334d39000d2cb68aef95cba37c99f022c331116ed3f49aeddf7e91bf4c864c7",
           "kind": "e2e",
           "reviewed": true
         },
@@ -134,9 +134,16 @@
         },
         {
           "id": "10.08",
-          "text": "A reviewer compares the rendered widget with the Layout A design and accepts it (visual comparison).",
-          "sha256": "08e58e24ea3af4caafd63b6bba6f16850456cd7408033e3dfa1f5d87e0c4ec18",
+          "text": "A reviewer compares the rendered widget with the Layout A design, as changed by this issue's Scope, and accepts it (visual comparison).",
+          "sha256": "fb7b91e6b66085f8bc7f136ce5a1c33ecfa477d0c42f11eee3ec162e8142b6ed",
           "kind": "visual",
+          "reviewed": true
+        },
+        {
+          "id": "10.09",
+          "text": "No bar's visible label shows a count and a percentage together, and each status section names its population (test).",
+          "sha256": "42f501985d5462345f3ead927956e3a6536e576acf6e045d52604cecffeeab7b",
+          "kind": "e2e",
           "reviewed": true
         }
       ]
@@ -146,12 +153,12 @@
       "title": "Hide site-flag views on the study view by default",
       "parent": "Gilead-BioStats/gsm.roadmap#625",
       "userTest": true,
-      "scopeSection": "**In:**\n- The default study view shows no site-flag counts:\n  - the default tile has no flag bar;\n  - `flag-dist` and `bar-outliers` are not in the default views.\n- Configuration can re-enable them per study or per metric.\n\n**Out:** the portfolio view.",
+      "scopeSection": "**In:**\n- The default study view shows no site-flag counts on CTQ widgets, meaning every metric outside #32's standard-KRI groups:\n  - their default tile has no flag bar;\n  - `flag-dist` and `bar-outliers` are not in their default views.\n- Site-flag counts on standard KRIs are delivered and qualified under #32, and are outside this issue's scope.\n- Configuration can re-enable them per study or per metric.\n\n**Out:** the portfolio view.",
       "criteria": [
         {
           "id": "11.01",
-          "text": "A test asserts that the default study view renders no site-flag counts.",
-          "sha256": "827fc4cb61a0bf10f04792ac66363445989eafd509324fdeeef3f9e132171fca",
+          "text": "A test asserts that, in the default study view, no metric outside #32's standard-KRI groups renders site-flag counts or has a flag view among its default views. Until #32 is built, that is every metric.",
+          "sha256": "41517dcdb6e2d1b396f4a7b4ed1762da0991242779e2d2392e122c0819247225",
           "kind": "e2e",
           "reviewed": true
         },

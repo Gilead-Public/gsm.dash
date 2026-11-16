@@ -39,12 +39,12 @@ function withoutSiteTotals(totals) {
 
 const round = (x) => (x == null ? null : Math.round(x * 1e12) / 1e12);
 const viewOf = (sections) => sections.map((s) => ({
-  Source: s.source, Variable: s.variable, title: s.title, twoPercentages: s.enrolledLabel !== null,
-  bars: s.bars.map((b) => ({ label: b.label, kind: b.kind, count: b.count, population: round(b.population), enrolled: round(b.enrolled) })),
+  Source: s.source, Variable: s.variable, title: s.title, display: s.display,
+  bars: s.bars.map((b) => ({ label: b.label, kind: b.kind, count: b.count, percent: round(b.percent), hover: { count: b.count, of: s.total } })),
 }));
-const expectedOf = (view) => view.map(({ Source, Variable, title, twoPercentages, bars }) => ({
-  Source, Variable, title, twoPercentages,
-  bars: bars.map((b) => ({ ...b, population: round(b.population), enrolled: round(b.enrolled) })),
+const expectedOf = (view) => view.map(({ Source, Variable, title, display, bars }) => ({
+  Source, Variable, title, display,
+  bars: bars.map((b) => ({ ...b, percent: round(b.percent) })),
 }));
 
 describe('site-to-study summing', () => {
@@ -82,7 +82,7 @@ describe('site-to-study summing', () => {
 });
 
 describe('displayed values in the model', () => {
-  it('10.02: every section, bar, count and percentage, including collapsed bars, equals the independent expectation (#10)', () => {
+  it('10.02: every section, bar, percentage, count and hover value, including collapsed bars, equals the independent expectation (#10)', () => {
     let compared = 0;
     for (const snap of latest) {
       for (const m of configured) {
@@ -91,7 +91,7 @@ describe('displayed values in the model', () => {
         const config = distributionConfig(m);
         const result = buildDistributionModel({ rows, metric: m, study, config });
         expect(result.state).toBe('ok');
-        expect(viewOf(result.sections), `${snap.StudyID} ${m.ID}`).toEqual(expectedOf(expectedView(rows, config, study)));
+        expect(viewOf(result.sections), `${snap.StudyID} ${m.ID}`).toEqual(expectedOf(expectedView(rows, config)));
         compared++;
       }
     }
@@ -110,27 +110,48 @@ describe('displayed values in the model', () => {
 });
 
 describe('one group', () => {
-  const rows = [site('S1', 'x', 10, 20), site('S2', 'x', 30, 40)];
+  const status = { Source: 'Denominator', Variable: 'status' };
+  const rows = [site('S1', 'x', 10, 20, status), site('S2', 'x', 30, 40, status)];
   const siteRows = [{ GroupID: 'S1', Numerator: 20, Denominator: 100 }, { GroupID: 'S2', Numerator: 40, Denominator: 100 }];
   const study = { Numerator: 60, Denominator: 200 };
-  const config = { enrolledPercent: true };
 
-  it('10.02: for one site the header and both percentages use that site totals, not the study rollup (#10)', () => {
-    const m = buildDistributionModel({ rows, metric, study, siteRows, config, groupId: 'S1' });
+  it('10.02: for one site the header, percentages and hover use that site, not the study rollup (#10)', () => {
+    const m = buildDistributionModel({ rows, metric, study, siteRows, config: {}, groupId: 'S1' });
     expect(m.header).toMatchObject({ numerator: 20, denominator: 100, percent: 0.2 });
-    expect(m.sections[0].bars[0]).toMatchObject({ count: 10, population: 0.5, enrolled: 0.1 });
+    expect(m.sections[0]).toMatchObject({ display: 'percent', total: 20 });
+    expect(m.sections[0].bars[0]).toMatchObject({ count: 10, percent: 0.5 });
   });
 
   it('10.02: without a group the same rows use the study totals (#10)', () => {
-    const m = buildDistributionModel({ rows, metric, study, siteRows, config });
+    const m = buildDistributionModel({ rows, metric, study, siteRows, config: {} });
     expect(m.header).toMatchObject({ numerator: 60, denominator: 200 });
-    expect(m.sections[0].bars[0]).toMatchObject({ count: 40, population: 40 / 60, enrolled: 0.2 });
+    expect(m.sections[0]).toMatchObject({ display: 'percent', total: 60 });
+    expect(m.sections[0].bars[0]).toMatchObject({ count: 40, percent: 40 / 60 });
   });
 
-  it('10.02: a group with no results row shows no percentages rather than study ones (#10)', () => {
-    const m = buildDistributionModel({ rows: [site('S9', 'x', 1, 2)], metric, study, siteRows, config, groupId: 'S9' });
+  it('10.02: a group with no results row shows no header percentage rather than the study one (#10)', () => {
+    const m = buildDistributionModel({ rows: [site('S9', 'x', 1, 2, status)], metric, study, siteRows, config: {}, groupId: 'S9' });
     expect(m.header.percent).toBeNull();
-    expect(m.sections[0].bars[0].enrolled).toBeNull();
+  });
+});
+
+describe('one value per bar', () => {
+  it('10.07: top-N in a status section gives the "+ k more" bar the share of the rest (#10)', () => {
+    const status = { Source: 'Denominator', Variable: 'status' };
+    const rows = [site('S1', 'a', 5, 20, status), site('S1', 'b', 3, 20, status), site('S1', 'c', 2, 20, status)];
+    const [s] = model(rows, { sections: { 'Denominator:status': { topN: 1 } } }).sections;
+    expect(s.bars.map((b) => [b.label, b.count, b.percent])).toEqual([['a', 5, 0.25], ['+ 2 more', 5, 0.25]]);
+  });
+
+  const rows = [site('S1', 'a', 3, 10), site('S1', 'ok', 6, 30, { Source: 'Denominator', Variable: 'status' })];
+  const config = { sections: { 'Denominator:status': { percentLabel: '% of enrolled' } } };
+
+  it('10.09: a reason section shows counts with no percentage, and a status section shows percentages named by its population (#10)', () => {
+    const [reason, status] = model(rows, config).sections;
+    expect(reason).toMatchObject({ source: 'Numerator', display: 'count', valueLabel: 'n' });
+    expect(reason.bars[0]).toMatchObject({ count: 3, percent: null });
+    expect(status).toMatchObject({ source: 'Denominator', display: 'percent', valueLabel: '% of enrolled' });
+    expect(status.bars[0]).toMatchObject({ count: 6, percent: 0.2 });
   });
 });
 

@@ -70,7 +70,7 @@ export function buildDistributionModel({ rows, metric, study, siteRows, config, 
   return {
     state: 'ok',
     header: header(metric, totals),
-    sections: ordered.map((s) => section(s, { config, totals })),
+    sections: ordered.map((s) => section(s, { config })),
   };
 }
 
@@ -83,11 +83,13 @@ function header(metric, totals) {
   };
 }
 
-function section(s, { config, totals }) {
+// Status sections (the metric's denominator) show each category's share of their population; reason sections (its
+// numerator) show counts (design follow-up, 2026-11-13).
+function section(s, { config }) {
   const sc = config.sections?.[sectionKey(s.Source, s.Variable)] ?? {};
   const isStatus = (config.statusVariables ?? []).includes(s.Variable);
   const colours = config.colours ?? null;
-  const enrolled = s.Source === 'Numerator' && config.enrolledPercent === true && totals?.Denominator > 0;
+  const display = s.Source === 'Denominator' ? 'percent' : 'count';
   const { shown, rest, blank } = orderAndCollapse(s.categories, sc.topN ?? config.topN ?? Infinity);
 
   const bar = (c, label, kind) => ({
@@ -95,8 +97,7 @@ function section(s, { config, totals }) {
     category: c.Category,
     label,
     count: c.Count,
-    population: ratio(c.Count, s.Total),
-    enrolled: enrolled ? ratio(c.Count, totals.Denominator) : null,
+    percent: display === 'percent' ? ratio(c.Count, s.Total) : null,
     colour: kind === 'category' && isStatus ? (colours?.[c.Category] ?? NEUTRAL_COLOUR) : null,
   });
 
@@ -116,8 +117,8 @@ function section(s, { config, totals }) {
     source: s.Source,
     variable: s.Variable,
     title: sc.title ?? s.Variable,
-    populationLabel: sc.percentLabel ?? config.percentLabel ?? '%',
-    enrolledLabel: enrolled ? (config.enrolledLabel ?? '% Enrolled') : null,
+    display,
+    valueLabel: display === 'percent' ? (sc.percentLabel ?? config.percentLabel ?? '%') : 'n',
     total: s.Total,
     isStatus,
     bars,

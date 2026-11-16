@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { mergeBaseline } from './baseline.js';
 /** @typedef {import('./baseline.js').Baseline} Baseline */
-import { parseIssueBody, sha256 } from './criteria.js';
+import { isVisualText, parseIssueBody, sha256 } from './criteria.js';
 import { parseTitle } from './results.js';
 
 /**
@@ -38,9 +38,16 @@ describe('acceptance-section parser', () => {
     expect(errors).toMatch(/8\.02 does not belong/);
   });
 
+  it('reads visual review only from a parenthetical', () => {
+    expect(isVisualText('A user accepts it (user acceptance).')).toBe(true);
+    expect(isVisualText('Rows carry heat shading (test and visual check).')).toBe(true);
+    expect(isVisualText('Renders before user acceptance (test).')).toBe(false);
+  });
+
   it('requires a visual criterion when User Tests is ticked', () => {
     expect(parseIssueBody(10, body('- **10.01** Renders.', '- [x] User Tests (visual comparison)')).errors.join()).toMatch(/User Tests is ticked/);
     expect(parseIssueBody(10, body('- **10.01** Renders.\n- **10.02** A reviewer accepts it (visual comparison).', '- [x] User Tests')).errors).toEqual([]);
+    expect(parseIssueBody(32, body('- **32.01** Renders.\n- **32.05** A user works through its UAT issue and accepts it (user acceptance).', '- [x] User Tests (user acceptance)')).errors).toEqual([]);
   });
 
   it('reports a missing acceptance section', () => {

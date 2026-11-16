@@ -1,64 +1,57 @@
 // @ts-check
 // Distribution widget configuration per metric (keyed by gsm metric ID): business labels for each
-// Source × Variable section, which variables are statuses (coloured) rather than reasons (uncoloured), top-N
-// collapsing, and whether numerator sections also show the share of enrolled participants.
+// Source × Variable section (a denominator section's `percentLabel` names its population), which variables are
+// statuses (coloured) rather than reasons (uncoloured), and top-N collapsing.
 // Labels never say "Numerator" or "Denominator". Status colours stay empty until the colour map is agreed (#18).
 
 export const DISTRIBUTION_CONFIG = {
   kri0006: {
-    enrolledPercent: true,
     statusVariables: ['disposition'],
     sections: {
-      'Numerator:compreas': { title: 'Reasons for study discontinuation', percentLabel: '% Discontinued' },
-      'Denominator:disposition': { title: 'Study disposition', percentLabel: '% Enrolled' },
+      'Numerator:compreas': { title: 'Reasons for study discontinuation' },
+      'Denominator:disposition': { title: 'Study disposition', percentLabel: '% of enrolled' },
     },
   },
   'kri0007-2': {
-    enrolledPercent: false,
     statusVariables: ['drv_drg_completion'],
     sections: {
-      'Numerator:drv_premature_discontinuation_reason': { title: 'Reasons for treatment discontinuation', percentLabel: '% Discontinued' },
-      'Denominator:drv_drg_completion': { title: 'Treatment disposition', percentLabel: '% Dosed' },
+      'Numerator:drv_premature_discontinuation_reason': { title: 'Reasons for treatment discontinuation' },
+      'Denominator:drv_drg_completion': { title: 'Treatment disposition', percentLabel: '% of dosed' },
     },
   },
   kri0019: {
-    enrolledPercent: false,
     statusVariables: ['ipns_status'],
     sections: {
-      'Denominator:ipns_status': { title: 'IP status', percentLabel: '% Enrolled' },
+      'Denominator:ipns_status': { title: 'IP status', percentLabel: '% of enrolled' },
     },
   },
   kri0014: {
-    enrolledPercent: true,
     statusVariables: ['eligibility_status'],
     sections: {
-      'Numerator:ietestcd_concat': { title: 'Top I/E criteria not met', percentLabel: '% Ineligible', topN: 5 },
-      'Denominator:eligibility_status': { title: 'Eligibility status', percentLabel: '% Enrolled' },
+      'Numerator:ietestcd_concat': { title: 'Top I/E criteria not met', topN: 5 },
+      'Denominator:eligibility_status': { title: 'Eligibility status', percentLabel: '% of enrolled' },
     },
   },
   kri0015: {
-    enrolledPercent: true,
     statusVariables: [],
     sections: {
-      'Numerator:death_window': { title: 'Deaths by time from randomisation', percentLabel: '% Deaths' },
-      'Numerator:ineligible_flag': { title: 'Deaths by eligibility', percentLabel: '% Deaths' },
-      'Numerator:treatment_related': { title: 'Deaths by relatedness to treatment', percentLabel: '% Deaths' },
+      'Numerator:death_window': { title: 'Deaths by time from randomisation' },
+      'Numerator:ineligible_flag': { title: 'Deaths by eligibility' },
+      'Numerator:treatment_related': { title: 'Deaths by relatedness to treatment' },
     },
   },
   strat0001: {
-    enrolledPercent: true,
     statusVariables: ['strat_status'],
     sections: {
-      'Numerator:factor_names': { title: 'Mis-stratification by factor', percentLabel: '% Mis-stratified' },
-      'Denominator:strat_status': { title: 'Stratification status', percentLabel: '% Enrolled' },
+      'Numerator:factor_names': { title: 'Mis-stratification by factor' },
+      'Denominator:strat_status': { title: 'Stratification status', percentLabel: '% of enrolled' },
     },
   },
   kri0012: {
-    enrolledPercent: false,
     statusVariables: ['screening_status'],
     sections: {
-      'Numerator:sf_reason': { title: 'Screen failure reasons', percentLabel: '% Screen failed', topN: 5 },
-      'Denominator:screening_status': { title: 'Screening status', percentLabel: '% Screened' },
+      'Numerator:sf_reason': { title: 'Screen failure reasons', topN: 5 },
+      'Denominator:screening_status': { title: 'Screening status', percentLabel: '% of screened' },
     },
   },
 };

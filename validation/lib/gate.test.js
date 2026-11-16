@@ -205,6 +205,10 @@ describe('gate', () => {
     failsWith(input({ baseline: baselineOf([unit, crit('1.02', 'visual', 'The widget renders.'), visual]) }), /1\.02: kind "visual" disagrees/);
   });
 
+  it('reads "(user acceptance)" as visual review, so an e2e kind with that text fails', () => {
+    failsWith(input({ baseline: baselineOf([unit, crit('1.02', 'e2e', 'A user accepts it (user acceptance).'), visual]) }), /1\.02: kind "e2e" disagrees/);
+  });
+
   it('fails a report error such as a test file that did not load', () => {
     const i = input();
     i.reports.vitest = { rows: i.reports.vitest?.rows ?? [], errors: ['vitest: test/x.test.js failed to run'] };

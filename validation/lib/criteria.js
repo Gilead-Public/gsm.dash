@@ -21,7 +21,7 @@ export const MODES = ['file', 'subpath'];
  */
 
 const ITEM = /^- \*\*(\d+)\.(\d{2})\*\* (\S.*)$/;
-const VISUAL = /visual (check|comparison)/i;
+const VISUAL = /\([^()]*(visual (check|comparison)|user acceptance)\)/i;
 
 /**
  * @param {string | Buffer} s
@@ -83,7 +83,7 @@ export function parseIssueBody(issue, body) {
   const qc = section(body, /^## QC approach\s*$/) ?? [];
   const userTest = qc.some((l) => /^- \[x\] User Tests/i.test(l.trim()));
   if (userTest && !criteria.some((c) => isVisualText(c.text))) {
-    errors.push(`#${issue}: User Tests is ticked but no criterion is a visual check or comparison`);
+    errors.push(`#${issue}: User Tests is ticked but no criterion is a visual check, visual comparison or user acceptance`);
   }
   return { criteria, scopeSection, userTest, errors };
 }
