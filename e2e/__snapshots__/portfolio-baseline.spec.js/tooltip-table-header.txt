@@ -1,5 +1,5 @@
 state: tooltip-table-header
-canonical dom: sha256 211957b7bc9dac49f9f4c738f61cea1144ff04d3673a15c1da7a1c45ba83e4c1 (343864 characters)
+canonical dom: sha256 9723087849704a239e670654577fb31a1c882d851759642d10785d6e13bee065 (345340 characters)
 computed styles: sha256 868e6c40948c239b3d7b3ca45c7b1e1ef58b95738eb2cf6e3e6f5768ae76ec5b (1953 elements)
 tooltip: <b>Screen Failure Rate</b><br><span class="tip-muted mono">SF · Disposition</span><dl class="tip-dl"><dt>Definition</dt><dd><span class="tip-muted">not yet supplied (Q2)</span></dd><dt>Numerator</dt><dd>Number of screen failed participants</dd><dt>Denominator</dt><dd>Total screened participants</dd><dt>Displayed as</dt><dd>percent (n ÷ d)</dd><dt>Note</dt><dd>The tracker also lists a Planned "Screen Failure" divided by all enrolled (open question Q1).</dd></dl><span class="tip-muted">Click to sort by rate.</span>
 cell backgrounds: rgb(237, 240, 238) ×24 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21
@@ -267,7 +267,9 @@ accessibility:
         - cell "25 (2.5%)"
         - cell "26 (2.6%)"
         - cell "6 (0.6%)"
-        - cell "16 (1.6%)"
+        - cell "16 (1.6%)":
+          - link "16 (1.6%)":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
         - cell "15 (1.5%)"
         - cell "37 (3.7%)"
         - cell "32 (3.2%)"
@@ -295,7 +297,9 @@ accessibility:
         - cell "16 (2.5%)"
         - cell "9 (1.4%)"
         - cell "1 (0.2%)"
-        - cell "10 (1.6%)"
+        - cell "10 (1.6%)":
+          - link "10 (1.6%)":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
         - cell "15 (2.3%)"
         - cell "20 (3.1%)"
         - cell "10 (1.6%)"
@@ -323,7 +327,9 @@ accessibility:
         - cell "20 (2.8%)"
         - cell "10 (1.4%)"
         - cell "5 (0.7%)"
-        - cell "12 (1.7%)"
+        - cell "12 (1.7%)":
+          - link "12 (1.7%)":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
         - cell "11 (1.5%)"
         - cell "16 (2.2%)"
         - cell "14 (1.9%)"
@@ -351,7 +357,9 @@ accessibility:
         - cell "11 (1.9%)"
         - cell "14 (2.4%)"
         - cell "6 (1.0%)"
-        - cell "21 (3.6%)"
+        - cell "21 (3.6%)":
+          - link "21 (3.6%)":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
         - cell "13 (2.3%)"
         - cell "11 (1.9%)"
         - cell "13 (2.3%)"
@@ -379,7 +387,9 @@ accessibility:
         - cell "17 (2.0%)"
         - cell "14 (1.6%)"
         - cell "7 (0.8%)"
-        - cell "11 (1.3%)"
+        - cell "11 (1.3%)":
+          - link "11 (1.3%)":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
         - cell "17 (2.0%)"
         - cell "19 (2.2%)"
         - cell "17 (2.0%)"
@@ -407,7 +417,9 @@ accessibility:
         - cell "21 (2.4%)"
         - cell "18 (2.0%)"
         - cell "10 (1.1%)"
-        - cell "23 (2.6%)"
+        - cell "23 (2.6%)":
+          - link "23 (2.6%)":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
         - cell "14 (1.6%)"
         - cell "31 (3.5%)"
         - cell "13 (1.5%)"
@@ -435,7 +447,9 @@ accessibility:
         - cell "12 (1.6%)"
         - cell "7 (1.0%)"
         - cell "3 (0.4%)"
-        - cell "14 (1.9%)"
+        - cell "14 (1.9%)":
+          - link "14 (1.9%)":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
         - cell "16 (2.2%)"
         - cell "33 (4.5%)"
         - cell "18 (2.4%)"
@@ -463,7 +477,9 @@ accessibility:
         - cell "12 (2.4%)"
         - cell "7 (1.4%)"
         - cell "2 (0.4%)"
-        - cell "6 (1.2%)"
+        - cell "6 (1.2%)":
+          - link "6 (1.2%)":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
         - cell "8 (1.6%)"
         - cell "14 (2.8%)"
         - cell "14 (2.8%)"
@@ -491,7 +507,9 @@ accessibility:
         - cell "26 (4.4%)"
         - cell "10 (1.7%)"
         - cell "5 (0.8%)"
-        - cell "15 (2.5%)"
+        - cell "15 (2.5%)":
+          - link "15 (2.5%)":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
         - cell "10 (1.7%)"
         - cell "25 (4.2%)"
         - cell "14 (2.3%)"
@@ -519,7 +537,9 @@ accessibility:
         - cell "23 (2.7%)"
         - cell "10 (1.2%)"
         - cell "12 (1.4%)"
-        - cell "27 (3.2%)"
+        - cell "27 (3.2%)":
+          - link "27 (3.2%)":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
         - cell "18 (2.1%)"
         - cell "14 (1.6%)"
         - cell "29 (3.4%)"
@@ -547,7 +567,9 @@ accessibility:
         - cell "13 (2.2%)"
         - cell "6 (1.0%)"
         - cell "4 (0.7%)"
-        - cell "12 (2.0%)"
+        - cell "12 (2.0%)":
+          - link "12 (2.0%)":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
         - cell "9 (1.5%)"
         - cell "12 (2.0%)"
         - cell "18 (3.0%)"
@@ -575,7 +597,9 @@ accessibility:
         - cell "37 (4.1%)"
         - cell "12 (1.3%)"
         - cell "8 (0.9%)"
-        - cell "17 (1.9%)"
+        - cell "17 (1.9%)":
+          - link "17 (1.9%)":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
         - cell "13 (1.4%)"
         - cell "47 (5.2%)"
         - cell "16 (1.8%)"

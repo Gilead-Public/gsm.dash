@@ -23,7 +23,7 @@ export function resolveData(dataSpec, { store, studyId, metricId }) {
     data.siteRows = store.siteRows(studyId, date, metricId);
     data.trend = store.studyTrend(studyId, metricId);
     data.portfolio = store.portfolioComparison(studyId, metricId);
-    data.reportLink = reportLink(data.metric, store.reportBase, globalThis.location?.href ?? '');
+    data.reportLink = reportLink(data.metric, store.reportBase, globalThis.location?.href ?? '', studyId);
   } else if (dataSpec.results === 'all-site') {
     data.metrics = store.metrics;
     data.siteRowsByMetric = new Map(

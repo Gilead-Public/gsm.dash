@@ -233,6 +233,8 @@ tr.bucket .tri { display: inline-block; width: 14px; color: var(--ink-3); font-s
 tr.bucket.open .tri { transform: rotate(90deg); }
 tr.study a { color: var(--accent); text-decoration: none; }
 tr.study a:hover { text-decoration: underline; }
+table.po a.cell { color: inherit; }
+table.po a.otile { cursor: pointer; }
 .nick { margin-left: 7px; color: var(--ink-2); font-size: 12.5px; }
 .info {
   display: inline-flex; align-items: center; justify-content: center;

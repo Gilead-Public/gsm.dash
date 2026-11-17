@@ -42,6 +42,27 @@ describe('detailed-report links', () => {
     expect(problems.map(problemText)).toEqual(['Report link "javascript:alert(1)" for AE (Analysis_kri0001): its scheme "javascript:" isn\'t allowed; links must be http, https or file.']);
   });
 
+  it('25.04: `{StudyID}` gives each study its own address, URL-encoded, and a link without it is the same for every study (#25)', () => {
+    const base = 'https://reports.example.org/cod/';
+    expect(reportLink(metric('studies/{StudyID}/ae.html'), base, page, 'S1')).toBe('https://reports.example.org/cod/studies/S1/ae.html');
+    expect(reportLink(metric('studies/{StudyID}/ae.html'), base, page, 'S2')).toBe('https://reports.example.org/cod/studies/S2/ae.html');
+    expect(reportLink(metric('{StudyID}/{StudyID}.html'), base, page, 'A B/C?#&')).toBe('https://reports.example.org/cod/A%20B%2FC%3F%23%26/A%20B%2FC%3F%23%26.html');
+    expect(reportLink(metric('ae.html?study={StudyID}'), base, page, 'S1')).toBe('https://reports.example.org/cod/ae.html?study=S1');
+    for (const id of ['S1', 'S2']) expect(reportLink(metric('ae.html'), base, page, id)).toBe('https://reports.example.org/cod/ae.html');
+  });
+
+  it('25.02: a link is checked with its `{StudyID}` filled, and a StudyID can\'t change its scheme (#25)', () => {
+    const port = metric('https://reports.example.org:{StudyID}/ae.html');
+    expect(reportLink(port, null, page, '8080')).toBe('https://reports.example.org:8080/ae.html');
+    expect(reportLink(port, null, page, 'S1')).toBeNull();
+    expect(reportLink(metric('javascript:alert("{StudyID}")'), null, page, 'S1')).toBeNull();
+    expect(reportLink(metric('{StudyID}'), 'https://reports.example.org/', page, 'javascript:alert(1)')).toBe('https://reports.example.org/javascript%3Aalert(1)');
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const sources = { breakdowns: {}, studies: {}, pageWidgets: [], detailTabs: [], kriGroups: [], page };
+    expect(configProblems([port], { ...sources, studyId: '8080' })).toEqual([]);
+    expect(configProblems([port], { ...sources, studyId: 'S1' }).map(problemText)).toEqual(['Report link "https://reports.example.org:{StudyID}/ae.html" for AE (Analysis_kri0001): it can\'t be resolved against the report base "./".']);
+  });
+
   it('the manifest and the study report accept a report base and per-metric links, and refuse other types', () => {
     const schema = (name) => JSON.parse(readFileSync(new URL(`../schemas/${name}.schema.json`, import.meta.url), 'utf8'));
     const ajv = new Ajv({ strict: false });

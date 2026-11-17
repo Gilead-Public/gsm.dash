@@ -1,26 +1,28 @@
 // @ts-check
 // Detailed-report links (#13): a metric's path from the catalog, resolved against the manifest's base, which is
-// itself resolved against the page. A relative base or path therefore works wherever the reports are hosted.
+// itself resolved against the page. A relative base or path therefore works wherever the reports are hosted. A path may
+// hold `{StudyID}`, filled with the study's ID before it is resolved and its scheme checked (#25).
 import { esc } from '../util/format.js';
 
 /**
  * @param {any} metric
  * @param {string | null | undefined} base
  * @param {string} page The page's own URL.
+ * @param {string} studyId The study the link is for.
  * @returns {string | null} The link, or null when the metric has none, it can't be resolved, or its scheme isn't allowed.
  */
-export function reportLink(metric, base, page) {
-  const url = resolve(metric, base, page);
+export function reportLink(metric, base, page, studyId) {
+  const url = resolve(metric, base, page, studyId);
   return url && SCHEMES.has(url.protocol) ? url.href : null;
 }
 
 const SCHEMES = new Set(['http:', 'https:', 'file:']);
 
 /** @returns {URL | null} */
-function resolve(metric, base, page) {
+function resolve(metric, base, page, studyId) {
   if (metric?.ReportLink == null) return null;
   try {
-    return new URL(metric.ReportLink, new URL(base ?? './', page));
+    return new URL(metric.ReportLink.replaceAll('{StudyID}', encodeURIComponent(studyId)), new URL(base ?? './', page));
   } catch {
     return null;
   }
@@ -31,11 +33,12 @@ function resolve(metric, base, page) {
  * @param {any} metric
  * @param {string | null | undefined} base
  * @param {string} page
+ * @param {string} studyId
  * @returns {string | null}
  */
-export function reportLinkProblem(metric, base, page) {
+export function reportLinkProblem(metric, base, page, studyId) {
   if (metric?.ReportLink == null) return null;
-  const url = resolve(metric, base, page);
+  const url = resolve(metric, base, page, studyId);
   if (!url) return `it can't be resolved against the report base "${base ?? './'}"`;
   return SCHEMES.has(url.protocol) ? null : `its scheme "${url.protocol}" isn't allowed; links must be http, https or file`;
 }

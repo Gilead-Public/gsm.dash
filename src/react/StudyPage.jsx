@@ -173,7 +173,7 @@ export function StudyPage({ store, studyId, back }) {
       <a href={back} className="back">
         ← Program overview
       </a>
-      <ConfigNotice problems={configProblems([...store.metrics, ...store.inactiveMetrics], { reportBase: store.reportBase })} />
+      <ConfigNotice problems={configProblems([...store.metrics, ...store.inactiveMetrics], { reportBase: store.reportBase, studyId })} />
       <div className="dd-head">
         <span className="study mono">{study.StudyID}</span>
         {study.params.nickname ? <span className="study nick">{study.params.nickname}</span> : null}
@@ -334,7 +334,7 @@ function Tile({ metric, open, store, studyId, version }) {
   const view = resolveView(current, metric, config);
   const { def } = view;
   const label = viewLabel(current);
-  const link = reportLink(metric, store.reportBase, location.href);
+  const link = reportLink(metric, store.reportBase, location.href, studyId);
   const step = (/** @type {number} */ by) => store.setTileView(metric.MetricID, views[(idx + by + views.length) % views.length]);
   const toggleDetail = () => store.set('detail', { metricId: open ? null : metric.MetricID, tab: store.state.detail.tab });
   return (
@@ -376,7 +376,7 @@ function Tile({ metric, open, store, studyId, version }) {
  * @param {{ metric: any, open: boolean, store: any, studyId: string, version: number }} props
  */
 function KriTile({ metric, open, store, studyId, version }) {
-  const link = reportLink(metric, store.reportBase, location.href);
+  const link = reportLink(metric, store.reportBase, location.href, studyId);
   const toggleDetail = () => store.set('detail', { metricId: open ? null : metric.MetricID, tab: store.state.detail.tab });
   return (
     <div className="tile kri" data-metric-id={metric.MetricID}>

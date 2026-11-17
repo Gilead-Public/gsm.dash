@@ -155,4 +155,6 @@ loads. A setting in the address's hash overrides its configured default.
 Detailed-report links (#13): a catalog entry's `ReportLink` is a path to that metric's
 report, resolved against the manifest's optional `reportBase`, which itself resolves
 against the page; a relative base therefore works wherever the dashboard is hosted.
-A metric without `ReportLink` shows no link.
+A metric without `ReportLink` shows no link. A `{StudyID}` in the path is replaced by each
+study's ID, URL-encoded, so each study gets its own report (#25). On the portfolio, study
+rows' cells and tiles open their metric's report in a new tab.

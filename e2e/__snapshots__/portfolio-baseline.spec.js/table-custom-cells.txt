@@ -1,5 +1,5 @@
 state: table-custom-cells
-canonical dom: sha256 8812c6f07daf262ea9983c44fd733da506cb1a83901c8c0befb4183bd065ed08 (470131 characters)
+canonical dom: sha256 d967a450dca76812b3a3d2e692f0ca578075e6dd9f640b9ed553db3ce67a72b6 (471607 characters)
 computed styles: sha256 cf7fb16241b5c59e75ff9719aeb44d7821d5509ec9fca7701cedf3d34cca97f0 (2834 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×4 | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(237, 240, 238) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(231, 242, 240) ×2 | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(203, 227, 223) ×3 | rgb(163, 204, 197) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(231, 242, 240) ×3 | rgb(203, 227, 223) ×3 | rgb(231, 242, 240) ×3 | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(203, 227, 223) ×3 | rgb(231, 242, 240) ×3 | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(163, 204, 197) ×2 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) ×3 | rgb(203, 227, 223) | rgb(231, 242, 240) ×3 | rgb(203, 227, 223) | rgb(116, 176, 166) ×2 | rgb(163, 204, 197) | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(116, 176, 166) ×2 | rgb(231, 242, 240) | rgb(116, 176, 166) ×2 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(231, 242, 240) ×2 | rgb(163, 204, 197) | rgb(116, 176, 166) ×2 | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) | rgb(203, 227, 223) ×3 | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(203, 227, 223) ×3 | rgb(231, 242, 240) ×4 | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(116, 176, 166) ×2 | rgb(203, 227, 223) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(163, 204, 197) ×2 | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) | rgb(163, 204, 197) ×2 | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(231, 242, 240) ×3 | rgb(116, 176, 166) ×2 | rgb(203, 227, 223) | rgb(163, 204, 197) ×2 | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(203, 227, 223) ×2 | rgb(116, 176, 166) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) ×2 | rgb(203, 227, 223) ×2 | rgb(163, 204, 197) ×2 | rgb(203, 227, 223) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(116, 176, 166) | rgb(231, 242, 240) ×2 | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(116, 176, 166) ×2 | rgb(231, 242, 240) | rgb(203, 227, 223) ×2 | rgb(116, 176, 166) ×2 | rgb(163, 204, 197) | rgb(116, 176, 166) ×3 | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(231, 242, 240) ×2 | rgb(116, 176, 166) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(203, 227, 223) | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) | rgb(163, 204, 197) | rgb(116, 176, 166) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(163, 204, 197) | rgb(203, 227, 223) | rgb(231, 242, 240) | rgb(116, 176, 166) ×2 | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(203, 227, 223) ×2 | rgb(231, 242, 240) | rgb(116, 176, 166) | rgb(163, 204, 197) | rgb(231, 242, 240) | rgb(163, 204, 197) ×2 | rgb(203, 227, 223)
@@ -481,8 +481,10 @@ accessibility:
           - text: 645 0.2%
           - 'img "STUDY002 · DTH30 trend: 5 snapshots, latest 0.2%"'
         - 'cell "645 1.6% STUDY002 · DTH90 trend: 5 snapshots, latest 1.6%"':
-          - text: 645 1.6%
-          - 'img "STUDY002 · DTH90 trend: 5 snapshots, latest 1.6%"'
+          - 'link "645 1.6% STUDY002 · DTH90 trend: 5 snapshots, latest 1.6%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 645 1.6%
+            - 'img "STUDY002 · DTH90 trend: 5 snapshots, latest 1.6%"'
         - 'cell "645 2.3% STUDY002 · IPNS trend: 5 snapshots, latest 2.3%"':
           - text: 645 2.3%
           - 'img "STUDY002 · IPNS trend: 5 snapshots, latest 2.3%"'
@@ -534,8 +536,10 @@ accessibility:
           - text: 499 0.4%
           - 'img "STUDY008 · DTH30 trend: 6 snapshots, latest 0.4%"'
         - 'cell "499 1.2% STUDY008 · DTH90 trend: 6 snapshots, latest 1.2%"':
-          - text: 499 1.2%
-          - 'img "STUDY008 · DTH90 trend: 6 snapshots, latest 1.2%"'
+          - 'link "499 1.2% STUDY008 · DTH90 trend: 6 snapshots, latest 1.2%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 499 1.2%
+            - 'img "STUDY008 · DTH90 trend: 6 snapshots, latest 1.2%"'
         - 'cell "499 1.6% STUDY008 · IPNS trend: 6 snapshots, latest 1.6%"':
           - text: 499 1.6%
           - 'img "STUDY008 · IPNS trend: 6 snapshots, latest 1.6%"'
@@ -587,8 +591,10 @@ accessibility:
           - text: 735 0.4%
           - 'img "STUDY007 · DTH30 trend: 6 snapshots, latest 0.4%"'
         - 'cell "735 1.9% STUDY007 · DTH90 trend: 6 snapshots, latest 1.9%"':
-          - text: 735 1.9%
-          - 'img "STUDY007 · DTH90 trend: 6 snapshots, latest 1.9%"'
+          - 'link "735 1.9% STUDY007 · DTH90 trend: 6 snapshots, latest 1.9%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 735 1.9%
+            - 'img "STUDY007 · DTH90 trend: 6 snapshots, latest 1.9%"'
         - 'cell "735 2.2% STUDY007 · IPNS trend: 6 snapshots, latest 2.2%"':
           - text: 735 2.2%
           - 'img "STUDY007 · IPNS trend: 6 snapshots, latest 2.2%"'
@@ -640,8 +646,10 @@ accessibility:
           - text: 988 0.6%
           - 'img "STUDY001 · DTH30 trend: 5 snapshots, latest 0.6%"'
         - 'cell "988 1.6% STUDY001 · DTH90 trend: 5 snapshots, latest 1.6%"':
-          - text: 988 1.6%
-          - 'img "STUDY001 · DTH90 trend: 5 snapshots, latest 1.6%"'
+          - 'link "988 1.6% STUDY001 · DTH90 trend: 5 snapshots, latest 1.6%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 988 1.6%
+            - 'img "STUDY001 · DTH90 trend: 5 snapshots, latest 1.6%"'
         - 'cell "988 1.5% STUDY001 · IPNS trend: 5 snapshots, latest 1.5%"':
           - text: 988 1.5%
           - 'img "STUDY001 · IPNS trend: 5 snapshots, latest 1.5%"'
@@ -693,8 +701,10 @@ accessibility:
           - text: 598 0.7%
           - 'img "STUDY011 · DTH30 trend: 6 snapshots, latest 0.7%"'
         - 'cell "598 2.0% STUDY011 · DTH90 trend: 6 snapshots, latest 2.0%"':
-          - text: 598 2.0%
-          - 'img "STUDY011 · DTH90 trend: 6 snapshots, latest 2.0%"'
+          - 'link "598 2.0% STUDY011 · DTH90 trend: 6 snapshots, latest 2.0%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 598 2.0%
+            - 'img "STUDY011 · DTH90 trend: 6 snapshots, latest 2.0%"'
         - 'cell "598 1.5% STUDY011 · IPNS trend: 6 snapshots, latest 1.5%"':
           - text: 598 1.5%
           - 'img "STUDY011 · IPNS trend: 6 snapshots, latest 1.5%"'
@@ -746,8 +756,10 @@ accessibility:
           - text: 722 0.7%
           - 'img "STUDY003 · DTH30 trend: 6 snapshots, latest 0.7%"'
         - 'cell "722 1.7% STUDY003 · DTH90 trend: 6 snapshots, latest 1.7%"':
-          - text: 722 1.7%
-          - 'img "STUDY003 · DTH90 trend: 6 snapshots, latest 1.7%"'
+          - 'link "722 1.7% STUDY003 · DTH90 trend: 6 snapshots, latest 1.7%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 722 1.7%
+            - 'img "STUDY003 · DTH90 trend: 6 snapshots, latest 1.7%"'
         - 'cell "722 1.5% STUDY003 · IPNS trend: 6 snapshots, latest 1.5%"':
           - text: 722 1.5%
           - 'img "STUDY003 · IPNS trend: 6 snapshots, latest 1.5%"'
@@ -799,8 +811,10 @@ accessibility:
           - text: 871 0.8%
           - 'img "STUDY005 · DTH30 trend: 6 snapshots, latest 0.8%"'
         - 'cell "871 1.3% STUDY005 · DTH90 trend: 6 snapshots, latest 1.3%"':
-          - text: 871 1.3%
-          - 'img "STUDY005 · DTH90 trend: 6 snapshots, latest 1.3%"'
+          - 'link "871 1.3% STUDY005 · DTH90 trend: 6 snapshots, latest 1.3%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 871 1.3%
+            - 'img "STUDY005 · DTH90 trend: 6 snapshots, latest 1.3%"'
         - 'cell "871 2.0% STUDY005 · IPNS trend: 6 snapshots, latest 2.0%"':
           - text: 871 2.0%
           - 'img "STUDY005 · IPNS trend: 6 snapshots, latest 2.0%"'
@@ -852,8 +866,10 @@ accessibility:
           - text: 597 0.8%
           - 'img "STUDY009 · DTH30 trend: 6 snapshots, latest 0.8%"'
         - 'cell "597 2.5% STUDY009 · DTH90 trend: 6 snapshots, latest 2.5%"':
-          - text: 597 2.5%
-          - 'img "STUDY009 · DTH90 trend: 6 snapshots, latest 2.5%"'
+          - 'link "597 2.5% STUDY009 · DTH90 trend: 6 snapshots, latest 2.5%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 597 2.5%
+            - 'img "STUDY009 · DTH90 trend: 6 snapshots, latest 2.5%"'
         - 'cell "597 1.7% STUDY009 · IPNS trend: 6 snapshots, latest 1.7%"':
           - text: 597 1.7%
           - 'img "STUDY009 · IPNS trend: 6 snapshots, latest 1.7%"'
@@ -905,8 +921,10 @@ accessibility:
           - text: 907 0.9%
           - 'img "STUDY012 · DTH30 trend: 6 snapshots, latest 0.9%"'
         - 'cell "907 1.9% STUDY012 · DTH90 trend: 6 snapshots, latest 1.9%"':
-          - text: 907 1.9%
-          - 'img "STUDY012 · DTH90 trend: 6 snapshots, latest 1.9%"'
+          - 'link "907 1.9% STUDY012 · DTH90 trend: 6 snapshots, latest 1.9%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 907 1.9%
+            - 'img "STUDY012 · DTH90 trend: 6 snapshots, latest 1.9%"'
         - 'cell "907 1.4% STUDY012 · IPNS trend: 6 snapshots, latest 1.4%"':
           - text: 907 1.4%
           - 'img "STUDY012 · IPNS trend: 6 snapshots, latest 1.4%"'
@@ -958,8 +976,10 @@ accessibility:
           - text: 576 1.0%
           - 'img "STUDY004 · DTH30 trend: 6 snapshots, latest 1.0%"'
         - 'cell "576 3.6% STUDY004 · DTH90 trend: 6 snapshots, latest 3.6%"':
-          - text: 576 3.6%
-          - 'img "STUDY004 · DTH90 trend: 6 snapshots, latest 3.6%"'
+          - 'link "576 3.6% STUDY004 · DTH90 trend: 6 snapshots, latest 3.6%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 576 3.6%
+            - 'img "STUDY004 · DTH90 trend: 6 snapshots, latest 3.6%"'
         - 'cell "576 2.3% STUDY004 · IPNS trend: 6 snapshots, latest 2.3%"':
           - text: 576 2.3%
           - 'img "STUDY004 · IPNS trend: 6 snapshots, latest 2.3%"'
@@ -1011,8 +1031,10 @@ accessibility:
           - text: 879 1.1%
           - 'img "STUDY006 · DTH30 trend: 6 snapshots, latest 1.1%"'
         - 'cell "879 2.6% STUDY006 · DTH90 trend: 6 snapshots, latest 2.6%"':
-          - text: 879 2.6%
-          - 'img "STUDY006 · DTH90 trend: 6 snapshots, latest 2.6%"'
+          - 'link "879 2.6% STUDY006 · DTH90 trend: 6 snapshots, latest 2.6%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 879 2.6%
+            - 'img "STUDY006 · DTH90 trend: 6 snapshots, latest 2.6%"'
         - 'cell "879 1.6% STUDY006 · IPNS trend: 6 snapshots, latest 1.6%"':
           - text: 879 1.6%
           - 'img "STUDY006 · IPNS trend: 6 snapshots, latest 1.6%"'
@@ -1064,8 +1086,10 @@ accessibility:
           - text: 857 1.4%
           - 'img "STUDY010 · DTH30 trend: 6 snapshots, latest 1.4%"'
         - 'cell "857 3.2% STUDY010 · DTH90 trend: 6 snapshots, latest 3.2%"':
-          - text: 857 3.2%
-          - 'img "STUDY010 · DTH90 trend: 6 snapshots, latest 3.2%"'
+          - 'link "857 3.2% STUDY010 · DTH90 trend: 6 snapshots, latest 3.2%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 857 3.2%
+            - 'img "STUDY010 · DTH90 trend: 6 snapshots, latest 3.2%"'
         - 'cell "857 2.1% STUDY010 · IPNS trend: 6 snapshots, latest 2.1%"':
           - text: 857 2.1%
           - 'img "STUDY010 · IPNS trend: 6 snapshots, latest 2.1%"'

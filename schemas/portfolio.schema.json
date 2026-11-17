@@ -48,7 +48,7 @@
         "properties": {
           "MetricID": { "type": "string", "minLength": 1 },
           "GroupLevel": { "enum": ["Site", "Country", "Study"] },
-          "ReportLink": { "type": "string", "minLength": 1, "description": "Path to the metric's detailed report, relative to reportBase (an absolute URL also works). Without it the metric shows no report link." },
+          "ReportLink": { "type": "string", "minLength": 1, "description": "Path to the metric's detailed report, relative to reportBase (an absolute URL also works). {StudyID} in it is replaced by each study's ID, URL-encoded. Without it the metric shows no report link." },
           "Abbreviation": { "type": "string" },
           "Metric": { "type": "string" },
           "Threshold": { "type": "string", "description": "Comma-delimited, as in Reporting_Metrics" },

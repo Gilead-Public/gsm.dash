@@ -1,4 +1,5 @@
 // @ts-check
+import { reportLink } from '../app/report-links.js';
 import { metricTip } from '../app/tooltip.js';
 import { fmtInt, fmtRate, metricUnit } from '../util/format.js';
 import {
@@ -8,10 +9,13 @@ import {
 import { MetricValue, Sparkline, StatusPill, studyHref, useHoverTooltip } from './parts.jsx';
 /** @typedef {import('../app/portfolio-table.js').Row} Row */
 
+const LINK_HINT = 'Open the detailed report in a new tab';
+
 /**
  * The portfolio table: the portfolio total, then a row per study or per group-by bucket. A folded category shows one
  * headline tile per metric (Overview); an open one shows full cells (Details). Clicking a study's name opens its
- * report; clicking elsewhere on its row highlights it in every view.
+ * report, and its cells and tiles open their metric's detailed report in a new tab (#25); clicking elsewhere on its row
+ * highlights it in every view.
  * @param {{ store: any, hidden: boolean }} props
  */
 export function PortfolioTable({ store, hidden }) {
@@ -28,7 +32,7 @@ export function PortfolioTable({ store, hidden }) {
   /** One delegated handler, so a click means the same thing wherever it lands. */
   const onClick = (/** @type {import('react').MouseEvent} */ e) => {
     const target = /** @type {Element} */ (e.target);
-    if (target.closest('a[data-study]')) return;
+    if (target.closest('a[href]')) return;
     const fold = target.closest('[data-fold]');
     if (fold instanceof HTMLElement) return store.toggleGroup(fold.dataset.fold);
     const bucketCell = target.closest('tr[data-bucket] td.grp');
@@ -139,6 +143,13 @@ export function PortfolioTable({ store, hidden }) {
     </tr>
   );
 
+  /**
+   * A study row's link to the metric's detailed report for that study, or null. Totals and groups never link.
+   * @param {Row} row
+   * @param {any} metric
+   */
+  const linkFor = (row, metric) => (row.kind === 'study' ? reportLink(metric, store.reportBase, location.href, row.study.StudyID) : null);
+
   /** @param {Row} row */
   const popCells = (row) => {
     const pop = row.population();
@@ -190,9 +201,16 @@ export function PortfolioTable({ store, hidden }) {
       }
     }
     if (show.has('trend')) lines.push(<Sparkline key="trend" index={sparks++} series={store.trendSeries(metric.MetricID, row.studies)} label={`${label} trend`} />);
+    const href = linkFor(row, metric);
     return (
       <td key={metric.MetricID} className={`${first ? 'gs ' : ''}${heatClass(row, metric)} ${metric.Status === 'Planned' ? 'planned' : ''}`} data-tip={cellTip(rollup, metric, label)}>
-        <div className="cell">{lines}</div>
+        {href ? (
+          <a className="cell" href={href} target="_blank" rel="noopener" title={LINK_HINT}>
+            {lines}
+          </a>
+        ) : (
+          <div className="cell">{lines}</div>
+        )}
       </td>
     );
   };
@@ -206,8 +224,15 @@ export function PortfolioTable({ store, hidden }) {
               <span className="otiles">
                 {g.metrics.map((/** @type {any} */ m) => {
                   const rollup = row.rollup(m.MetricID);
-                  return (
-                    <span key={m.MetricID} className={`otile ${m.Status === 'Planned' ? 'pl' : ''} ${heatClass(row, m)}`} data-tip={tileTip(row.label, m, rollup)}>
+                  const className = `otile ${m.Status === 'Planned' ? 'pl' : ''} ${heatClass(row, m)}`;
+                  const tip = tileTip(row.label, m, rollup);
+                  const href = linkFor(row, m);
+                  return href ? (
+                    <a key={m.MetricID} className={className} data-tip={tip} href={href} target="_blank" rel="noopener" title={LINK_HINT}>
+                      {fmtRate(m, rollup.Rate)}
+                    </a>
+                  ) : (
+                    <span key={m.MetricID} className={className} data-tip={tip}>
                       {fmtRate(m, rollup.Rate)}
                     </span>
                   );

@@ -1,6 +1,6 @@
 state: rows-filtered
-canonical dom: sha256 24a0d434f089cabf413a1d11018f619cf712844c486d520095d4309e3ad3437a (135374 characters)
-computed styles: sha256 91848958502c1217d48637505c57322df36d29fa731e35a31279700c24cf7831 (826 elements)
+canonical dom: sha256 9ffab93a960a1f854f13cb45e51320fc865118135c929ef8b67ea30d3f943df2 (135737 characters)
+computed styles: sha256 4c39e7d3d2219677d425a6b8bd5a0d7a07127660585f2431e1d537bab7cc68d9 (826 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×4 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
@@ -216,7 +216,11 @@ accessibility:
         - cell "1,341"
         - cell "988"
         - cell "26.3% 6.6% 12.2% 8.6% 2.5% 2.6%"
-        - cell "0.6% 1.6% 1.5%"
+        - cell "0.6% 1.6% 1.5%":
+          - text: 0.6%
+          - link "1.6%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+          - text: 1.5%
         - cell "3.7% 3.2% 3.2%"
         - cell "0.86 0.14 0.41 0.05 5.0%"
         - cell "5.2% 5.5% 10.4% 2.1%"
@@ -228,7 +232,11 @@ accessibility:
         - cell "611"
         - cell "499"
         - cell "18.3% 5.2% 9.2% 8.8% 2.4% 1.4%"
-        - cell "0.4% 1.2% 1.6%"
+        - cell "0.4% 1.2% 1.6%":
+          - text: 0.4%
+          - link "1.2%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+          - text: 1.6%
         - cell "2.8% 2.8% 2.0%"
         - cell "1.24 0.09 0.24 0.02 2.2%"
         - cell "6.8% 13.4% 12.2% 3.5%"
@@ -240,7 +248,11 @@ accessibility:
         - cell "1,281"
         - cell "907"
         - cell "29.2% 7.3% 11.9% 10.5% 4.1% 1.3%"
-        - cell "0.9% 1.9% 1.4%"
+        - cell "0.9% 1.9% 1.4%":
+          - text: 0.9%
+          - link "1.9%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+          - text: 1.4%
         - cell "5.2% 1.8% 2.1%"
         - cell "0.96 0.08 0.45 0.09 4.3%"
         - cell "6.8% 9.5% 11.8% 2.8%"
