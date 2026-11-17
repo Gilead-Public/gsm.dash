@@ -1,5 +1,5 @@
 state: flags-flag-distribution (reports)
-dom: sha256 ccec99c2a0a8b2efeb94a6806df9982f0df4590ff28e0999756120dc2463b624 (55496 characters)
+dom: sha256 6d7054457db8458348b9e86fd5e95638b65099d114fecbcfb90fc7ab34f02464 (53242 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -28,7 +28,6 @@ accessibility:
 - link "← Program overview":
   - /url: ./portfolio.html
 - text: STUDY006 FALCON-2 Immunology · Respiratory · P1 · Enrolling · Product F
-- button "Play through visits": ▶
 - slider "Visit": "5"
 - text: Visit 6/6 · 2026-06-30
 - checkbox "Group by category" [checked]
@@ -42,87 +41,86 @@ accessibility:
   - option "Trend over time"
   - option "Outlier sites"
   - option "Flag distribution" [selected]
-- button "⤨ Randomize"
 - text: Disposition · 6 SF Screen Failure Rate
 - img "Screen Failure Rate definition": i
-- text: standard Sites by flag +2 1 +1 0 0 14 −1 2 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- text: Sites by flag +2 1 +1 0 0 14 −1 2 −2 0 NA 0 17 sites · flags as assigned by the pipeline
 - button "Previous view": ‹
 - text: Flag distribution 7/8
 - button "Next view": ›
 - button "Charts ▾"
 - text: SDSC Study Discontinuation Rate
 - img "Study Discontinuation Rate definition": i
-- text: standard Sites by flag +2 0 +1 0 0 14 −1 3 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- text: Sites by flag +2 0 +1 0 0 14 −1 3 −2 0 NA 0 17 sites · flags as assigned by the pipeline
 - button "Previous view": ‹
 - text: Flag distribution 7/8
 - button "Next view": ›
 - button "Charts ▾"
 - text: TDSC Treatment Discontinuation Rate
 - img "Treatment Discontinuation Rate definition": i
-- text: standard Sites by flag +2 2 +1 0 0 13 −1 2 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- text: Sites by flag +2 2 +1 0 0 13 −1 2 −2 0 NA 0 17 sites · flags as assigned by the pipeline
 - button "Previous view": ‹
 - text: Flag distribution 7/7
 - button "Next view": ›
 - button "Charts ▾"
 - text: PTDSC Premature Treatment Discontinuation Rate
 - img "Premature Treatment Discontinuation Rate definition": i
-- text: Planned standard Sites by flag +2 0 +1 0 0 14 −1 3 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- text: Planned Sites by flag +2 0 +1 0 0 14 −1 3 −2 0 NA 0 17 sites · flags as assigned by the pipeline
 - button "Previous view": ‹
 - text: Flag distribution 7/8
 - button "Next view": ›
 - button "Charts ▾"
 - text: WC Withdrawal of Consent
 - img "Withdrawal of Consent definition": i
-- text: Planned standard Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- text: Planned Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
 - button "Previous view": ‹
 - text: Flag distribution 7/7
 - button "Next view": ›
 - button "Charts ▾"
 - text: LTFU Lost to Follow Up
 - img "Lost to Follow Up definition": i
-- text: Planned standard Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- text: Planned Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
 - button "Previous view": ‹
 - text: Flag distribution 7/7
 - button "Next view": ›
 - button "Charts ▾"
 - text: Early events · 3 DTH30 Early Deaths (30 days)
 - img "Early Deaths (30 days) definition": i
-- text: Planned standard Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- text: Planned Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
 - button "Previous view": ‹
 - text: Flag distribution 7/7
 - button "Next view": ›
 - button "Charts ▾"
 - text: DTH90 Early Deaths (90 days)
 - img "Early Deaths (90 days) definition": i
-- text: Planned standard Sites by flag +2 1 +1 1 0 14 −1 1 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- text: Planned Sites by flag +2 1 +1 1 0 14 −1 1 −2 0 NA 0 17 sites · flags as assigned by the pipeline
 - button "Previous view": ‹
 - text: Flag distribution 7/9
 - button "Next view": ›
 - button "Charts ▾"
 - text: IPNS IP Non-starters
 - img "IP Non-starters definition": i
-- text: Planned standard Sites by flag +2 1 +1 0 0 16 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- text: Planned Sites by flag +2 1 +1 0 0 16 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
 - button "Previous view": ‹
 - text: Flag distribution 7/8
 - button "Next view": ›
 - button "Charts ▾"
 - text: Eligibility & integrity · 3 IE Eligibility
 - img "Eligibility definition": i
-- text: Planned standard Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- text: Planned Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
 - button "Previous view": ‹
 - text: Flag distribution 7/8
 - button "Next view": ›
 - button "Charts ▾"
 - text: STRAT Stratification
 - img "Stratification definition": i
-- text: Planned standard Sites by flag +2 0 +1 0 0 16 −1 1 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- text: Planned Sites by flag +2 0 +1 0 0 16 −1 1 −2 0 NA 0 17 sites · flags as assigned by the pipeline
 - button "Previous view": ‹
 - text: Flag distribution 7/8
 - button "Next view": ›
 - button "Charts ▾"
 - text: PFSC Premature Censoring for PFS
 - img "Premature Censoring for PFS definition": i
-- text: Planned standard Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
+- text: Planned Sites by flag +2 0 +1 0 0 17 −1 0 −2 0 NA 0 17 sites · flags as assigned by the pipeline
 - button "Previous view": ‹
 - text: Flag distribution 7/7
 - button "Next view": ›

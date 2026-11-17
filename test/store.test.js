@@ -47,7 +47,6 @@ describe('site-level input model', () => {
     expect(qtl.GroupLevel).toBe('Study');
     expect(store.supportedMetrics().map((m) => m.MetricID)).not.toContain('Analysis_qtl0001');
     expect(store.visibleMetrics().map((m) => m.MetricID)).not.toContain('Analysis_qtl0001');
-    expect(store.unsupportedMetrics().map((m) => m.MetricID)).toEqual(['Analysis_qtl0001']);
     // and there is nothing to derive from, so the study value is null rather than wrong
     const s = store.studies[0];
     expect(store.studyRollup(s.StudyID, store.latestDate(s.StudyID), 'Analysis_qtl0001')).toBeNull();
@@ -64,24 +63,6 @@ describe('study parameters', () => {
   });
 });
 
-describe('tile view state', () => {
-  it('setTileViews replaces the whole map and emits once', () => {
-    let changes = 0;
-    const onChange = () => { changes += 1; };
-    store.addEventListener('change', onChange);
-    store.setTileViews([
-      ['Analysis_kri0001', 'scatter-mini'],
-      ['Analysis_kri0002', 'flag-dist'],
-    ]);
-    store.removeEventListener('change', onChange);
-    expect(changes).toBe(1);
-    expect(store.state.tileViews.get('Analysis_kri0001')).toBe('scatter-mini');
-    expect(store.state.tileViews.get('Analysis_kri0002')).toBe('flag-dist');
-    expect(store.state.tileViews.size).toBe(2); // replaced, not merged
-    store.setAllTileViews(null); // back to per-metric defaults
-    expect(store.state.tileViews.size).toBe(0);
-  });
-});
 
 describe('cross-chart site highlight', () => {
   it('selects, re-selects to clear, and emits each time', () => {

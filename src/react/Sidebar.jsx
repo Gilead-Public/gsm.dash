@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { STATUS_ORDER } from '../data/catalog.js';
 import {
   CELL_MODES, FILTER_LABELS, GROUP_BY_OPTIONS, HEATMAPS, HIGHLIGHT_HINT, RAMPS, cellModeHint, controlStates, showLabel,
-  showOptions, studyLabel, unsupportedNote,
+  showOptions, studyLabel,
 } from '../app/portfolio-controls.js';
 import { StatusPill } from './parts.jsx';
 
@@ -73,7 +73,6 @@ export function Sidebar({ store, collapsed, onCollapse }) {
   const defined = state.cellMode === 'defined';
 
   const supported = store.supportedMetrics();
-  const note = unsupportedNote(store.unsupportedMetrics());
   const visible = store.visibleMetrics().length;
   const statusCount = (/** @type {string} */ st) => supported.filter((/** @type {any} */ m) => (m.Status ?? 'Released') === st).length;
 
@@ -194,11 +193,6 @@ export function Sidebar({ store, collapsed, onCollapse }) {
             );
           })}
         </div>
-        {note && (
-          <p className="sb-note" title={note.title}>
-            {note.text}
-          </p>
-        )}
       </Section>
       <Section open={open.filter} name="filter" title="Filter" badge={active ? `${active} active` : ''} onToggle={toggle('filter')}>
         {Object.entries(options).filter(([param]) => param !== 'study').map(([param, values]) => (

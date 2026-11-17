@@ -1,6 +1,6 @@
 state: rows-filtered
-canonical dom: sha256 9ffab93a960a1f854f13cb45e51320fc865118135c929ef8b67ea30d3f943df2 (135737 characters)
-computed styles: sha256 4c39e7d3d2219677d425a6b8bd5a0d7a07127660585f2431e1d537bab7cc68d9 (826 elements)
+canonical dom: sha256 000782cbc3aa2dca4af852f9ca099f178aa3284aaca1a4fad142772281d57dab (135565 characters)
+computed styles: sha256 04ac69e9ade4d54f366926e51ff8471151c00586de010315d10375b0b31b67ba (825 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×4 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
@@ -127,7 +127,6 @@ accessibility:
     - text: ODAT Delayed Data Entry Rate
     - checkbox "CDAT Data Change Rate" [checked]
     - text: CDAT Data Change Rate
-    - paragraph: 1 metric is not site-level (Study) — held back until a future release adds that plumbing.
   - group:
     - text: ▸ Filter 1 active Therapeutic area
     - button "Cardiology"

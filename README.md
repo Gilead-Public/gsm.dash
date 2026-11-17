@@ -142,8 +142,7 @@ To share a build for feedback without releasing it: every CI run that passes als
 Each report carries its data as one injected document (`<script type="application/json"
 id="gsm-data">`), checked against its schema when it loads. The portfolio's holds the
 catalog, the studies, the counts-only summary and its configuration, if any. A study's
-holds the catalog, the study's manifest entry, all its snapshots, and the portfolio
-comparison per snapshot date, pooled from the summary.
+holds the catalog, the study's manifest entry and all its snapshots.
 
 Portfolio defaults (#16): an optional `config.json` beside `portfolio.json` sets the
 portfolio's initial grouping (`groupBy`), heatmap (`heatmap`), cell values (`show`) and

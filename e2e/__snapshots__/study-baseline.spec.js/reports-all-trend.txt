@@ -1,5 +1,5 @@
 state: all-trend (reports)
-dom: sha256 b9b427163e806fe59ca33b266045d320c90c66bc68bd726f78358034fad5b28a (57172 characters)
+dom: sha256 9519d8bc283c90d769c6958718978664a05aaea0f05955a3bea9e44fe3fdb782 (54918 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -28,7 +28,6 @@ accessibility:
 - link "← Program overview":
   - /url: ./portfolio.html
 - text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
-- button "Play through visits": ▶
 - slider "Visit": "4"
 - text: Visit 5/5 · 2026-05-31
 - checkbox "Group by category" [checked]
@@ -40,10 +39,9 @@ accessibility:
   - option "Scatter (n vs d)"
   - option "Numerator by site"
   - option "Trend over time" [selected]
-- button "⤨ Randomize"
 - text: Disposition · 6 SF Screen Failure Rate
 - img "Screen Failure Rate definition": i
-- text: standard Study rate over time
+- text: Study rate over time
 - img "SF study rate by snapshot": 32.2% 18.4% 2026-01 2026-05
 - text: latest 26.3% · 5 snapshots · all sites pooled
 - button "Previous view": ‹
@@ -52,7 +50,7 @@ accessibility:
 - button "Charts ▾"
 - text: SDSC Study Discontinuation Rate
 - img "Study Discontinuation Rate definition": i
-- text: standard Study rate over time
+- text: Study rate over time
 - img "SDSC study rate by snapshot": 7.5% 5.9% 2026-01 2026-05
 - text: latest 6.6% · 5 snapshots · all sites pooled
 - button "Previous view": ‹
@@ -61,7 +59,7 @@ accessibility:
 - button "Charts ▾"
 - text: TDSC Treatment Discontinuation Rate
 - img "Treatment Discontinuation Rate definition": i
-- text: standard Study rate over time
+- text: Study rate over time
 - img "TDSC study rate by snapshot": 15.4% 11.4% 2026-01 2026-05
 - text: latest 12.2% · 5 snapshots · all sites pooled
 - button "Previous view": ‹
@@ -70,7 +68,7 @@ accessibility:
 - button "Charts ▾"
 - text: PTDSC Premature Treatment Discontinuation Rate
 - img "Premature Treatment Discontinuation Rate definition": i
-- text: Planned standard Study rate over time
+- text: Planned Study rate over time
 - img "PTDSC study rate by snapshot": 9.1% 5.3% 2026-01 2026-05
 - text: latest 8.6% · 5 snapshots · all sites pooled
 - button "Previous view": ‹
@@ -79,7 +77,7 @@ accessibility:
 - button "Charts ▾"
 - text: WC Withdrawal of Consent
 - img "Withdrawal of Consent definition": i
-- text: Planned standard Study rate over time
+- text: Planned Study rate over time
 - img "WC study rate by snapshot": 3.4% 2.1% 2026-01 2026-05
 - text: latest 2.5% · 5 snapshots · all sites pooled
 - button "Previous view": ‹
@@ -88,7 +86,7 @@ accessibility:
 - button "Charts ▾"
 - text: LTFU Lost to Follow Up
 - img "Lost to Follow Up definition": i
-- text: Planned standard Study rate over time
+- text: Planned Study rate over time
 - img "LTFU study rate by snapshot": 2.8% 1.2% 2026-01 2026-05
 - text: latest 2.6% · 5 snapshots · all sites pooled
 - button "Previous view": ‹
@@ -97,7 +95,7 @@ accessibility:
 - button "Charts ▾"
 - text: Early events · 3 DTH30 Early Deaths (30 days)
 - img "Early Deaths (30 days) definition": i
-- text: Planned standard Study rate over time
+- text: Planned Study rate over time
 - img "DTH30 study rate by snapshot": 1.1% 0.4% 2026-01 2026-05
 - text: latest 0.6% · 5 snapshots · all sites pooled
 - button "Previous view": ‹
@@ -106,7 +104,7 @@ accessibility:
 - button "Charts ▾"
 - text: DTH90 Early Deaths (90 days)
 - img "Early Deaths (90 days) definition": i
-- text: Planned standard Study rate over time
+- text: Planned Study rate over time
 - img "DTH90 study rate by snapshot": 2.1% 1.5% 2026-01 2026-05
 - text: latest 1.6% · 5 snapshots · all sites pooled
 - button "Previous view": ‹
@@ -115,7 +113,7 @@ accessibility:
 - button "Charts ▾"
 - text: IPNS IP Non-starters
 - img "IP Non-starters definition": i
-- text: Planned standard Study rate over time
+- text: Planned Study rate over time
 - img "IPNS study rate by snapshot": 2.2% 1.1% 2026-01 2026-05
 - text: latest 1.5% · 5 snapshots · all sites pooled
 - button "Previous view": ‹
@@ -124,7 +122,7 @@ accessibility:
 - button "Charts ▾"
 - text: Eligibility & integrity · 3 IE Eligibility
 - img "Eligibility definition": i
-- text: Planned standard Study rate over time
+- text: Planned Study rate over time
 - img "IE study rate by snapshot": 5.3% 3.5% 2026-01 2026-05
 - text: latest 3.7% · 5 snapshots · all sites pooled
 - button "Previous view": ‹
@@ -133,7 +131,7 @@ accessibility:
 - button "Charts ▾"
 - text: STRAT Stratification
 - img "Stratification definition": i
-- text: Planned standard Study rate over time
+- text: Planned Study rate over time
 - img "STRAT study rate by snapshot": 3.3% 2.8% 2026-01 2026-05
 - text: latest 3.2% · 5 snapshots · all sites pooled
 - button "Previous view": ‹
@@ -142,7 +140,7 @@ accessibility:
 - button "Charts ▾"
 - text: PFSC Premature Censoring for PFS
 - img "Premature Censoring for PFS definition": i
-- text: Planned standard Study rate over time
+- text: Planned Study rate over time
 - img "PFSC study rate by snapshot": 3.9% 2.5% 2026-01 2026-05
 - text: latest 3.2% · 5 snapshots · all sites pooled
 - button "Previous view": ‹

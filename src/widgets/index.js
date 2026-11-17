@@ -17,5 +17,5 @@ import './viz/viz-bar.js';
 import './viz/viz-scatter.js';
 import './viz/viz-timeseries.js';
 
-export { registerWidget, resolveWidget, missingLayers, listWidgets, getWidget, widgetKind } from './registry.js';
+export { registerWidget, resolveWidget, missingLayers, listWidgets, getWidget } from './registry.js';
 export { resolveData } from './resolve.js';

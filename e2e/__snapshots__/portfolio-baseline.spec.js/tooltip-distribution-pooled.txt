@@ -1,6 +1,6 @@
 state: tooltip-distribution-pooled
-canonical dom: sha256 f8de84b947b2a7302f75dfdeb0084950815e3c5282a95471f8ea4b48c9e3f0be (345993 characters)
-computed styles: sha256 d94bbad0ac77b5b59d7aab9c6f738c23f4e1a250ed41bfe194a0ae1ac79cd764 (1960 elements)
+canonical dom: sha256 b55d8f0e34ba110baf2eaa8215377f44d710c2e3473309c197bfe00702069413 (345821 characters)
+computed styles: sha256 dbf963bade99cc13d19cbd56831e1737bf4d12437eeec2615e77fe6f834717ce (1959 elements)
 tooltip: <b>Portfolio total · 12 studies</b><br><span class="tip-muted">Screen Failure Rate</span><br>23.8% <span class="tip-muted">— percent (n ÷ d)</span><br>Σn/Σd = 2,771 / 11,645
 cell backgrounds: rgb(237, 240, 238) ×24 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21
 distribution marks:
@@ -138,7 +138,6 @@ accessibility:
     - text: ODAT Delayed Data Entry Rate
     - checkbox "CDAT Data Change Rate" [checked]
     - text: CDAT Data Change Rate
-    - paragraph: 1 metric is not site-level (Study) — held back until a future release adds that plumbing.
   - group:
     - text: ▸ Filter Therapeutic area
     - button "Cardiology"

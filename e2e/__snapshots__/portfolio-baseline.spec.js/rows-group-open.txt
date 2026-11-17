@@ -1,6 +1,6 @@
 state: rows-group-open
-canonical dom: sha256 eb2acf868ebfdf26ef1dff4ca2733801fc4bcc845d0b169fd774c94b14f000c4 (240776 characters)
-computed styles: sha256 adac27df153e6e6cd14b75709fb473d40dcd43a116af880df8a62654462e46ab (1175 elements)
+canonical dom: sha256 f2a0452eb3a36dc8259b99f42a17bffbc7d6bfdd32981070da91fd4d0456be06 (240604 characters)
+computed styles: sha256 780f36aacc50b335d7e70e55fe857659a5bdff3289af93d329765087be295bfa (1174 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(246, 247, 246) ×2 | color(srgb 0.968235 0.973529 0.97) ×2 | rgb(246, 247, 246) | rgb(237, 240, 238) ×6 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×5 | rgb(246, 247, 246) | rgb(237, 240, 238) ×4 | rgb(246, 247, 246) ×2 | color(srgb 0.968235 0.973529 0.97) ×2 | rgb(246, 247, 246) | rgb(237, 240, 238) ×6 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×5 | rgb(246, 247, 246) | rgb(237, 240, 238) ×4 | rgb(246, 247, 246) ×2 | color(srgb 0.968235 0.973529 0.97) ×2 | rgb(246, 247, 246) | rgb(237, 240, 238) ×6 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×5 | rgb(246, 247, 246) | rgb(237, 240, 238) ×4 | rgb(246, 247, 246) ×2 | color(srgb 0.968235 0.973529 0.97) ×2 | rgb(246, 247, 246) | rgb(237, 240, 238) ×6 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×5 | rgb(246, 247, 246) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
@@ -136,7 +136,6 @@ accessibility:
     - text: ODAT Delayed Data Entry Rate
     - checkbox "CDAT Data Change Rate" [checked]
     - text: CDAT Data Change Rate
-    - paragraph: 1 metric is not site-level (Study) — held back until a future release adds that plumbing.
   - group:
     - text: ▸ Filter Therapeutic area
     - button "Cardiology"

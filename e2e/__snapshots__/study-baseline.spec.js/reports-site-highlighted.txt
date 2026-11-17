@@ -1,5 +1,5 @@
 state: site-highlighted (reports)
-dom: sha256 1b08a15905f0f47d027c7f9733960899f7e43c06d7d8796a070cae7661247e14 (82545 characters)
+dom: sha256 4f0ac5d56df355afcfb3339239e80f26a242d20d224b086fb33025882bee6e34 (80291 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -28,7 +28,6 @@ accessibility:
 - link "← Program overview":
   - /url: ./portfolio.html
 - text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
-- button "Play through visits": ▶
 - slider "Visit": "4"
 - text: Visit 5/5 · 2026-05-31 SITE0001
 - button "Clear site highlight": ✕
@@ -41,10 +40,9 @@ accessibility:
   - option "Scatter (n vs d)" [selected]
   - option "Numerator by site"
   - option "Trend over time"
-- button "⤨ Randomize"
 - text: Disposition · 6 SF Screen Failure Rate
 - img "Screen Failure Rate definition": i
-- text: "standard Sites: numerator vs denominator"
+- text: "Sites: numerator vs denominator"
 - img "SF numerator vs denominator by site": 0 175 113 0 Total screened participants
 - text: "y: Number of screen failed participants · 17 sites · click a point to track it"
 - button "Previous view": ‹
@@ -53,7 +51,7 @@ accessibility:
 - button "Charts ▾"
 - text: SDSC Study Discontinuation Rate
 - img "Study Discontinuation Rate definition": i
-- text: "standard Sites: numerator vs denominator"
+- text: "Sites: numerator vs denominator"
 - img "SDSC numerator vs denominator by site": 0 80 10 0 All enrolled
 - text: "y: Number of participants with premature study discontinuation · 17 sites · click a point to track it"
 - button "Previous view": ‹
@@ -62,7 +60,7 @@ accessibility:
 - button "Charts ▾"
 - text: TDSC Treatment Discontinuation Rate
 - img "Treatment Discontinuation Rate definition": i
-- text: "standard Sites: numerator vs denominator"
+- text: "Sites: numerator vs denominator"
 - img "TDSC numerator vs denominator by site": 0 79 12 0 All dosed
 - text: "y: Number of participants with premature treatment discontinuation · 17 sites · click a point to track it"
 - button "Previous view": ‹
@@ -71,7 +69,7 @@ accessibility:
 - button "Charts ▾"
 - text: PTDSC Premature Treatment Discontinuation Rate
 - img "Premature Treatment Discontinuation Rate definition": i
-- text: "Planned standard Sites: numerator vs denominator"
+- text: "Planned Sites: numerator vs denominator"
 - img "PTDSC numerator vs denominator by site": 0 79 15 0 All dosed
 - text: "y: Number of participants with premature treatment discontinuation · 17 sites · click a point to track it"
 - button "Previous view": ‹
@@ -80,7 +78,7 @@ accessibility:
 - button "Charts ▾"
 - text: WC Withdrawal of Consent
 - img "Withdrawal of Consent definition": i
-- text: "Planned standard Sites: numerator vs denominator"
+- text: "Planned Sites: numerator vs denominator"
 - img "WC numerator vs denominator by site": 0 80 2 0 All enrolled
 - text: "y: Number of participants who withdrew consent from the study · 17 sites · click a point to track it"
 - button "Previous view": ‹
@@ -89,7 +87,7 @@ accessibility:
 - button "Charts ▾"
 - text: LTFU Lost to Follow Up
 - img "Lost to Follow Up definition": i
-- text: "Planned standard Sites: numerator vs denominator"
+- text: "Planned Sites: numerator vs denominator"
 - img "LTFU numerator vs denominator by site": 0 80 4 0 All enrolled
 - text: "y: Number of participants lost to follow-up · 17 sites · click a point to track it"
 - button "Previous view": ‹
@@ -98,7 +96,7 @@ accessibility:
 - button "Charts ▾"
 - text: Early events · 3 DTH30 Early Deaths (30 days)
 - img "Early Deaths (30 days) definition": i
-- text: "Planned standard Sites: numerator vs denominator"
+- text: "Planned Sites: numerator vs denominator"
 - img "DTH30 numerator vs denominator by site": 0 80 1 0 All enrolled
 - text: "y: Number of participants who died within 30 days from randomization · 17 sites · click a point to track it"
 - button "Previous view": ‹
@@ -107,7 +105,7 @@ accessibility:
 - button "Charts ▾"
 - text: DTH90 Early Deaths (90 days)
 - img "Early Deaths (90 days) definition": i
-- text: "Planned standard Sites: numerator vs denominator"
+- text: "Planned Sites: numerator vs denominator"
 - img "DTH90 numerator vs denominator by site": 0 80 2 0 All enrolled
 - text: "y: Number of participants who died within 90 days from randomization · 17 sites · click a point to track it"
 - button "Previous view": ‹
@@ -116,7 +114,7 @@ accessibility:
 - button "Charts ▾"
 - text: IPNS IP Non-starters
 - img "IP Non-starters definition": i
-- text: "Planned standard Sites: numerator vs denominator"
+- text: "Planned Sites: numerator vs denominator"
 - img "IPNS numerator vs denominator by site": 0 80 1 0 All enrolled
 - text: "y: Number of confirmed IP non-starters · 17 sites · click a point to track it"
 - button "Previous view": ‹
@@ -125,7 +123,7 @@ accessibility:
 - button "Charts ▾"
 - text: Eligibility & integrity · 3 IE Eligibility
 - img "Eligibility definition": i
-- text: "Planned standard Sites: numerator vs denominator"
+- text: "Planned Sites: numerator vs denominator"
 - img "IE numerator vs denominator by site": 0 80 3 0 All enrolled
 - text: "y: Number of ineligible participants · 17 sites · click a point to track it"
 - button "Previous view": ‹
@@ -134,7 +132,7 @@ accessibility:
 - button "Charts ▾"
 - text: STRAT Stratification
 - img "Stratification definition": i
-- text: "Planned standard Sites: numerator vs denominator"
+- text: "Planned Sites: numerator vs denominator"
 - img "STRAT numerator vs denominator by site": 0 80 7 0 All enrolled
 - text: "y: Number of confirmed mis-stratified participants · 17 sites · click a point to track it"
 - button "Previous view": ‹
@@ -143,7 +141,7 @@ accessibility:
 - button "Charts ▾"
 - text: PFSC Premature Censoring for PFS
 - img "Premature Censoring for PFS definition": i
-- text: "Planned standard Sites: numerator vs denominator"
+- text: "Planned Sites: numerator vs denominator"
 - img "PFSC numerator vs denominator by site": 0 80 4 0 All enrolled
 - text: "y: Number of participants at very high risk for premature censoring for PFS · 17 sites · click a point to track it"
 - button "Previous view": ‹

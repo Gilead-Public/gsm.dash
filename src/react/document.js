@@ -12,7 +12,6 @@ import { configProblems } from '../data/portfolio-config.js';
  * @property {any[]} metrics
  * @property {{ StudyID: string, params: Record<string, string | number>, snapshots: string[] }} study
  * @property {any[]} snapshots
- * @property {Array<{ SnapshotDate: string, MetricID: string, Numerator: number, Denominator: number }>} comparison
  */
 
 /**
@@ -46,8 +45,8 @@ function parse(text, validate) {
 }
 
 /**
- * Reads the report's data document, refusing one that isn't JSON, fails its schema, holds snapshots that aren't the
- * study's own, or repeats a comparison row.
+ * Reads the report's data document, refusing one that isn't JSON, fails its schema, or holds snapshots that aren't
+ * the study's own.
  * @param {string | null | undefined} text
  * @returns {{ ok: true, doc: StudyDocument } | { ok: false, errors: string[] }}
  */
@@ -61,12 +60,6 @@ export function readStudyDocument(text) {
   );
   const dates = doc.snapshots.map((/** @type {any} */ s) => s.SnapshotDate).sort();
   if (dates.join() !== [...snapshots].sort().join()) errors.push(`/snapshots are not the study's snapshot dates`);
-  const seen = new Set();
-  for (const { SnapshotDate, MetricID } of doc.comparison) {
-    const key = `${SnapshotDate} ${MetricID}`;
-    if (seen.has(key)) errors.push(`/comparison has more than one row for ${key}`);
-    seen.add(key);
-  }
   return errors.length ? { ok: false, errors } : { ok: true, doc };
 }
 

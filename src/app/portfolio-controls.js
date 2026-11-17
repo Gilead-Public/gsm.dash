@@ -62,20 +62,6 @@ export function controlStates(store) {
   };
 }
 
-/**
- * The note on metrics the portfolio can't show yet: its text, and the metrics it names.
- * @param {any[]} unsupported
- */
-export function unsupportedNote(unsupported) {
-  if (!unsupported.length) return null;
-  return {
-    title: unsupported.map((m) => `${m.Abbreviation} (${m.GroupLevel}-level)`).join(', '),
-    text: `${unsupported.length} ${unsupported.length === 1 ? 'metric is' : 'metrics are'} not site-level (${[
-      ...new Set(unsupported.map((m) => m.GroupLevel)),
-    ].join('/')}) — held back until a future release adds that plumbing.`,
-  };
-}
-
 /** The table's two zoom levels, then the Distribution view. */
 export const TABLE_VIEWS = [
   ['overview', 'Overview', 'Every category folded to one headline value per metric'],

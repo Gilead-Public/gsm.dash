@@ -38,15 +38,14 @@ function chosen(params, key, options, fallback) {
  */
 export class PortfolioStore extends EventTarget {
   #summary = null;
-  #comparison = null;
   #defaults;
 
   /**
-   * @param {{ manifest: any, snapshots: any[], summary?: any, comparison?: Array<{ SnapshotDate: string, MetricID: string, Numerator: number, Denominator: number }>, config?: import('./portfolio-config.js').PortfolioConfig }} data
-   *   A study report passes its injected `comparison` (portfolio counts per visit date × metric) instead of the summary.
-   *   The portfolio passes its configured defaults (#16), already checked.
+   * @param {{ manifest: any, snapshots: any[], summary?: any, config?: import('./portfolio-config.js').PortfolioConfig }} data
+   *   The portfolio passes its summary and its configured defaults (#16), already checked; a study report passes
+   *   neither.
    */
-  constructor({ manifest, snapshots, summary, comparison, config }) {
+  constructor({ manifest, snapshots, summary, config }) {
     super();
     this.#defaults = { cellMode: 'defined', ramp: 'blue', ...portfolioDefaults(config) };
     const { active, inactive } = orderMetrics(manifest.metrics.map(normalizeMetric));
@@ -55,8 +54,7 @@ export class PortfolioStore extends EventTarget {
     this.studies = manifest.studies;
     this.generated = manifest.generated;
     this.reportBase = manifest.reportBase ?? null;
-    if (comparison) this.#comparison = new Map(comparison.map((r) => [`${r.SnapshotDate}\n${r.MetricID}`, r]));
-    else this.#summary = indexSummary(summary, manifest.studies);
+    if (summary) this.#summary = indexSummary(summary, manifest.studies);
 
     // StudyID -> SnapshotDate -> {snapshot, byMetric, groupParams}
     this.snapshotIndex = new Map();
@@ -96,20 +94,8 @@ export class PortfolioStore extends EventTarget {
   }
 
   get #index() {
-    if (!this.#summary) throw new Error('a study report carries no portfolio summary, only its comparison');
+    if (!this.#summary) throw new Error('a study report carries no portfolio summary');
     return this.#summary;
-  }
-
-  /**
-   * The portfolio a study's tiles compare with, at the visit shown. A study report looks it up in its injected
-   * comparison; otherwise it is pooled from the summary.
-   * @returns {{ Numerator: number, Denominator: number, Rate: number | null } | null}
-   */
-  portfolioComparison(studyId, metricId) {
-    if (!this.#comparison) return this.rollup(this.studies, metricId);
-    const row = this.#comparison.get(`${this.latestDate(studyId)}\n${metricId}`);
-    if (!row) return null;
-    return { Numerator: row.Numerator, Denominator: row.Denominator, Rate: row.Denominator > 0 ? row.Numerator / row.Denominator : null };
   }
 
   /**
@@ -132,16 +118,6 @@ export class PortfolioStore extends EventTarget {
     this.#emit();
   }
 
-  /**
-   * Replace the whole tile-view map in one shot — one 'change' for the batch
-   * rather than one per tile. Which views a metric actually has depends on the
-   * widget registry, so the caller supplies the [MetricID, viewName] pairs.
-   */
-  setTileViews(entries) {
-    this.state.tileViews = new Map(entries);
-    this.#emit();
-  }
-
   /** Header click: cycle the sort for a column ('label'/'meta' are text/numeric row attributes; anything else is a MetricID). */
   toggleSort(key, { numeric = true } = {}) {
     this.state.sort = nextSort(this.state.sort, key, { numeric });
@@ -157,10 +133,6 @@ export class PortfolioStore extends EventTarget {
    */
   supportedMetrics() {
     return this.metrics.filter((m) => m.GroupLevel === 'Site');
-  }
-
-  unsupportedMetrics() {
-    return this.metrics.filter((m) => m.GroupLevel !== 'Site');
   }
 
   /** Supported catalog minus user-hidden metrics — what views should render. */

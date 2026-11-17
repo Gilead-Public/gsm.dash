@@ -1,5 +1,5 @@
 state: all-overview (reports)
-dom: sha256 82aadb053a010f3e5c81fc5061afcbc8d3e4e788b917051cc5a7caf6020c8ce1 (46375 characters)
+dom: sha256 00201c10f93bcf36f53060cfdae24aa88cd7e6e27a437452d027ed9cb671d432 (44121 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -28,7 +28,6 @@ accessibility:
 - link "← Program overview":
   - /url: ./portfolio.html
 - text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
-- button "Play through visits": ▶
 - slider "Visit": "4"
 - text: Visit 5/5 · 2026-05-31
 - checkbox "Group by category" [checked]
@@ -40,10 +39,9 @@ accessibility:
   - option "Scatter (n vs d)"
   - option "Numerator by site"
   - option "Trend over time"
-- button "⤨ Randomize"
 - text: Disposition · 6 SF Screen Failure Rate
 - img "Screen Failure Rate definition": i
-- text: standard 26.3%
+- text: 26.3%
 - term: Numerator
 - definition: 353 Number of screen failed participants
 - term: Denominator
@@ -58,7 +56,7 @@ accessibility:
 - button "Charts ▾"
 - text: SDSC Study Discontinuation Rate
 - img "Study Discontinuation Rate definition": i
-- text: standard 65 (6.6%)
+- text: 65 (6.6%)
 - term: Numerator
 - definition: 65 Number of participants with premature study discontinuation
 - term: Denominator
@@ -73,7 +71,7 @@ accessibility:
 - button "Charts ▾"
 - text: TDSC Treatment Discontinuation Rate
 - img "Treatment Discontinuation Rate definition": i
-- text: standard 119 (12.2%)
+- text: 119 (12.2%)
 - term: Numerator
 - definition: 119 Number of participants with premature treatment discontinuation
 - term: Denominator
@@ -88,7 +86,7 @@ accessibility:
 - button "Charts ▾"
 - text: PTDSC Premature Treatment Discontinuation Rate
 - img "Premature Treatment Discontinuation Rate definition": i
-- text: Planned standard 84 (8.6%)
+- text: Planned 84 (8.6%)
 - term: Numerator
 - definition: 84 Number of participants with premature treatment discontinuation
 - term: Denominator
@@ -103,7 +101,7 @@ accessibility:
 - button "Charts ▾"
 - text: WC Withdrawal of Consent
 - img "Withdrawal of Consent definition": i
-- text: Planned standard 25 (2.5%)
+- text: Planned 25 (2.5%)
 - term: Numerator
 - definition: 25 Number of participants who withdrew consent from the study
 - term: Denominator
@@ -118,7 +116,7 @@ accessibility:
 - button "Charts ▾"
 - text: LTFU Lost to Follow Up
 - img "Lost to Follow Up definition": i
-- text: Planned standard 26 (2.6%)
+- text: Planned 26 (2.6%)
 - term: Numerator
 - definition: 26 Number of participants lost to follow-up
 - term: Denominator
@@ -133,7 +131,7 @@ accessibility:
 - button "Charts ▾"
 - text: Early events · 3 DTH30 Early Deaths (30 days)
 - img "Early Deaths (30 days) definition": i
-- text: Planned standard 6 (0.6%)
+- text: Planned 6 (0.6%)
 - term: Numerator
 - definition: 6 Number of participants who died within 30 days from randomization
 - term: Denominator
@@ -148,7 +146,7 @@ accessibility:
 - button "Charts ▾"
 - text: DTH90 Early Deaths (90 days)
 - img "Early Deaths (90 days) definition": i
-- text: Planned standard 16 (1.6%)
+- text: Planned 16 (1.6%)
 - term: Numerator
 - definition: 16 Number of participants who died within 90 days from randomization
 - term: Denominator
@@ -163,7 +161,7 @@ accessibility:
 - button "Charts ▾"
 - text: IPNS IP Non-starters
 - img "IP Non-starters definition": i
-- text: Planned standard 15 (1.5%)
+- text: Planned 15 (1.5%)
 - term: Numerator
 - definition: 15 Number of confirmed IP non-starters
 - term: Denominator
@@ -178,7 +176,7 @@ accessibility:
 - button "Charts ▾"
 - text: Eligibility & integrity · 3 IE Eligibility
 - img "Eligibility definition": i
-- text: Planned standard 37 (3.7%)
+- text: Planned 37 (3.7%)
 - term: Numerator
 - definition: 37 Number of ineligible participants
 - term: Denominator
@@ -193,7 +191,7 @@ accessibility:
 - button "Charts ▾"
 - text: STRAT Stratification
 - img "Stratification definition": i
-- text: Planned standard 32 (3.2%)
+- text: Planned 32 (3.2%)
 - term: Numerator
 - definition: 32 Number of confirmed mis-stratified participants
 - term: Denominator
@@ -208,7 +206,7 @@ accessibility:
 - button "Charts ▾"
 - text: PFSC Premature Censoring for PFS
 - img "Premature Censoring for PFS definition": i
-- text: Planned standard 32 (3.2%)
+- text: Planned 32 (3.2%)
 - term: Numerator
 - definition: 32 Number of participants at very high risk for premature censoring for PFS
 - term: Denominator

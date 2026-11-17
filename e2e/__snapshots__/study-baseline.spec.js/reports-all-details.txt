@@ -1,5 +1,5 @@
 state: all-details (reports)
-dom: sha256 5a3035e8a96065b0e0e42c2077d514ec2ede2682ad28c0157eb74adb8e2c6570 (48832 characters)
+dom: sha256 991aefaec95b5de80da0a43f8a76c17191eab2e2f21c2909186b61f79ec56345 (45820 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -28,7 +28,6 @@ accessibility:
 - link "← Program overview":
   - /url: ./portfolio.html
 - text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
-- button "Play through visits": ▶
 - slider "Visit": "4"
 - text: Visit 5/5 · 2026-05-31
 - checkbox "Group by category" [checked]
@@ -40,111 +39,98 @@ accessibility:
   - option "Scatter (n vs d)"
   - option "Numerator by site"
   - option "Trend over time"
-- button "⤨ Randomize"
 - text: Disposition · 6 SF Screen Failure Rate
 - img "Screen Failure Rate definition": i
-- text: standard 26.3% 353 / 1,341
+- text: 26.3% 353 / 1,341
 - 'img "SF study trend: 5 snapshots, latest 26.3%"'
-- text: portfolio 23.8% · this study +2.5 pt
 - button "Previous view": ‹
 - text: Details 2/6
 - button "Next view": ›
 - button "Charts ▾"
 - text: SDSC Study Discontinuation Rate
 - img "Study Discontinuation Rate definition": i
-- text: standard 65 (6.6%) of 988 enrolled
+- text: 65 (6.6%) of 988 enrolled
 - 'img "SDSC study trend: 5 snapshots, latest 6.6%"'
-- text: portfolio 7.9% · this study −1.4 pt
 - button "Previous view": ‹
 - text: Details 2/6
 - button "Next view": ›
 - button "Charts ▾"
 - text: TDSC Treatment Discontinuation Rate
 - img "Treatment Discontinuation Rate definition": i
-- text: standard 119 (12.2%) of 973 dosed
+- text: 119 (12.2%) of 973 dosed
 - 'img "TDSC study trend: 5 snapshots, latest 12.2%"'
-- text: portfolio 11.3% · this study +0.9 pt
 - button "Previous view": ‹
 - text: Details 2/5
 - button "Next view": ›
 - button "Charts ▾"
 - text: PTDSC Premature Treatment Discontinuation Rate
 - img "Premature Treatment Discontinuation Rate definition": i
-- text: Planned standard 84 (8.6%) of 973 dosed
+- text: Planned 84 (8.6%) of 973 dosed
 - 'img "PTDSC study trend: 5 snapshots, latest 8.6%"'
-- text: portfolio 9.0% · this study −0.4 pt
 - button "Previous view": ‹
 - text: Details 2/6
 - button "Next view": ›
 - button "Charts ▾"
 - text: WC Withdrawal of Consent
 - img "Withdrawal of Consent definition": i
-- text: Planned standard 25 (2.5%) of 988 enrolled
+- text: Planned 25 (2.5%) of 988 enrolled
 - 'img "WC study trend: 5 snapshots, latest 2.5%"'
-- text: portfolio 2.6% · this study −0.1 pt
 - button "Previous view": ‹
 - text: Details 2/5
 - button "Next view": ›
 - button "Charts ▾"
 - text: LTFU Lost to Follow Up
 - img "Lost to Follow Up definition": i
-- text: Planned standard 26 (2.6%) of 988 enrolled
+- text: Planned 26 (2.6%) of 988 enrolled
 - 'img "LTFU study trend: 5 snapshots, latest 2.6%"'
-- text: portfolio 1.6% · this study +1.0 pt
 - button "Previous view": ‹
 - text: Details 2/5
 - button "Next view": ›
 - button "Charts ▾"
 - text: Early events · 3 DTH30 Early Deaths (30 days)
 - img "Early Deaths (30 days) definition": i
-- text: Planned standard 6 (0.6%) of 988 enrolled
+- text: Planned 6 (0.6%) of 988 enrolled
 - 'img "DTH30 study trend: 5 snapshots, latest 0.6%"'
-- text: portfolio 0.8% · this study −0.2 pt
 - button "Previous view": ‹
 - text: Details 2/5
 - button "Next view": ›
 - button "Charts ▾"
 - text: DTH90 Early Deaths (90 days)
 - img "Early Deaths (90 days) definition": i
-- text: Planned standard 16 (1.6%) of 988 enrolled
+- text: Planned 16 (1.6%) of 988 enrolled
 - 'img "DTH90 study trend: 5 snapshots, latest 1.6%"'
-- text: portfolio 2.1% · this study −0.5 pt
 - button "Previous view": ‹
 - text: Details 2/7
 - button "Next view": ›
 - button "Charts ▾"
 - text: IPNS IP Non-starters
 - img "IP Non-starters definition": i
-- text: Planned standard 15 (1.5%) of 988 enrolled
+- text: Planned 15 (1.5%) of 988 enrolled
 - 'img "IPNS study trend: 5 snapshots, latest 1.5%"'
-- text: portfolio 1.8% · this study −0.3 pt
 - button "Previous view": ‹
 - text: Details 2/6
 - button "Next view": ›
 - button "Charts ▾"
 - text: Eligibility & integrity · 3 IE Eligibility
 - img "Eligibility definition": i
-- text: Planned standard 37 (3.7%) of 988 enrolled
+- text: Planned 37 (3.7%) of 988 enrolled
 - 'img "IE study trend: 5 snapshots, latest 3.7%"'
-- text: portfolio 3.1% · this study +0.6 pt
 - button "Previous view": ‹
 - text: Details 2/6
 - button "Next view": ›
 - button "Charts ▾"
 - text: STRAT Stratification
 - img "Stratification definition": i
-- text: Planned standard 32 (3.2%) of 988 enrolled
+- text: Planned 32 (3.2%) of 988 enrolled
 - 'img "STRAT study trend: 5 snapshots, latest 3.2%"'
-- text: portfolio 2.3% · this study +0.9 pt
 - button "Previous view": ‹
 - text: Details 2/6
 - button "Next view": ›
 - button "Charts ▾"
 - text: PFSC Premature Censoring for PFS
 - img "Premature Censoring for PFS definition": i
-- text: Planned standard 32 (3.2%) of 988 enrolled
+- text: Planned 32 (3.2%) of 988 enrolled
 - 'img "PFSC study trend: 5 snapshots, latest 3.2%"'
-- text: portfolio 2.5% · this study +0.7 pt
 - button "Previous view": ‹
 - text: Details 2/5
 - button "Next view": ›

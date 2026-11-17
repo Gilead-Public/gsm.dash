@@ -1,5 +1,5 @@
 state: drill-in-over-time (reports)
-dom: sha256 909c39fe2da8f10b94549e8bf91ed68b25c352dd4e21c223f4ffc5cb310850ff (72811 characters)
+dom: sha256 bea6164526f8a9c00e100d12d2d517e7daead616d3db0b0c249f9fa515f4dea5 (70069 characters)
 tooltip: none
 drill-in: TDSC · Over time · gsm.viz · timeSeries · TDSC: charts 1
   type undefined; labels: 2026-01-31 | 2026-02-28 | 2026-03-31 | 2026-04-30 | 2026-05-31
@@ -58,7 +58,6 @@ accessibility:
 - link "← Program overview":
   - /url: ./portfolio.html
 - text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
-- button "Play through visits": ▶
 - slider "Visit": "4"
 - text: Visit 5/5 · 2026-05-31
 - checkbox "Group by category" [checked]
@@ -71,10 +70,8 @@ accessibility:
   - option "Numerator by site"
   - option "Trend over time"
   - option "Mixed" [disabled] [selected]
-- button "⤨ Randomize"
 - text: Disposition · 6 SF Screen Failure Rate
 - img "Screen Failure Rate definition": i
-- text: standard
 - group "Screen Failure Rate breakdowns":
   - text: 26.3% 353 / 1,341
   - region "Screen failure reasons":
@@ -98,7 +95,6 @@ accessibility:
 - button "Charts ▾"
 - text: SDSC Study Discontinuation Rate
 - img "Study Discontinuation Rate definition": i
-- text: standard
 - group "Study Discontinuation Rate breakdowns":
   - text: 6.6% 65 / 988
   - region "Reasons for study discontinuation":
@@ -127,16 +123,15 @@ accessibility:
 - button "Charts ▾"
 - text: TDSC Treatment Discontinuation Rate
 - img "Treatment Discontinuation Rate definition": i
-- text: standard 119 (12.2%) of 973 dosed
+- text: 119 (12.2%) of 973 dosed
 - 'img "TDSC study trend: 5 snapshots, latest 12.2%"'
-- text: portfolio 11.3% · this study +0.9 pt
 - button "Previous view": ‹
 - text: Details 2/5
 - button "Next view": ›
 - button "Charts ▴" [expanded]
 - text: PTDSC Premature Treatment Discontinuation Rate
 - img "Premature Treatment Discontinuation Rate definition": i
-- text: Planned standard
+- text: Planned
 - group "Premature Treatment Discontinuation Rate breakdowns":
   - text: 8.6% 84 / 973
   - region "Reasons for treatment discontinuation":
@@ -162,25 +157,22 @@ accessibility:
 - button "Charts ▾"
 - text: WC Withdrawal of Consent
 - img "Withdrawal of Consent definition": i
-- text: Planned standard 25 (2.5%) of 988 enrolled
+- text: Planned 25 (2.5%) of 988 enrolled
 - 'img "WC study trend: 5 snapshots, latest 2.5%"'
-- text: portfolio 2.6% · this study −0.1 pt
 - button "Previous view": ‹
 - text: Details 2/5
 - button "Next view": ›
 - button "Charts ▾"
 - text: LTFU Lost to Follow Up
 - img "Lost to Follow Up definition": i
-- text: Planned standard 26 (2.6%) of 988 enrolled
+- text: Planned 26 (2.6%) of 988 enrolled
 - 'img "LTFU study trend: 5 snapshots, latest 2.6%"'
-- text: portfolio 1.6% · this study +1.0 pt
 - button "Previous view": ‹
 - text: Details 2/5
 - button "Next view": ›
 - button "Charts ▾"
 - text: TDSC Treatment Discontinuation Rate
 - img "Treatment Discontinuation Rate definition": i
-- text: standard
 - tablist:
   - tab "Bar chart"
   - tab "Scatter plot"
@@ -188,16 +180,15 @@ accessibility:
 - button "Close charts": ✕
 - text: gsm.viz · timeSeries · TDSC Early events · 3 DTH30 Early Deaths (30 days)
 - img "Early Deaths (30 days) definition": i
-- text: Planned standard 6 (0.6%) of 988 enrolled
+- text: Planned 6 (0.6%) of 988 enrolled
 - 'img "DTH30 study trend: 5 snapshots, latest 0.6%"'
-- text: portfolio 0.8% · this study −0.2 pt
 - button "Previous view": ‹
 - text: Details 2/5
 - button "Next view": ›
 - button "Charts ▾"
 - text: DTH90 Early Deaths (90 days)
 - img "Early Deaths (90 days) definition": i
-- text: Planned custom 16 (1.6%) of 988 enrolled
+- text: Planned 16 (1.6%) of 988 enrolled
 - 'img "DTH90 study trend: 5 snapshots, latest 1.6%"'
 - link "More details → mortality report":
   - /url: https://gilead-biostats.github.io/gsm.kri/
@@ -207,7 +198,7 @@ accessibility:
 - button "Charts ▾"
 - text: IPNS IP Non-starters
 - img "IP Non-starters definition": i
-- text: Planned standard
+- text: Planned
 - group "IP Non-starters breakdowns":
   - text: 1.5% 15 / 988
   - region "IP status":
@@ -225,7 +216,7 @@ accessibility:
 - button "Charts ▾"
 - text: Eligibility & integrity · 3 IE Eligibility
 - img "Eligibility definition": i
-- text: Planned standard
+- text: Planned
 - group "Eligibility breakdowns":
   - text: 3.7% 37 / 988
   - region "Top I/E criteria not met":
@@ -252,7 +243,7 @@ accessibility:
 - button "Charts ▾"
 - text: STRAT Stratification
 - img "Stratification definition": i
-- text: Planned standard
+- text: Planned
 - group "Stratification breakdowns":
   - text: 3.2% 32 / 988
   - region "Mis-stratification by factor":
@@ -276,9 +267,8 @@ accessibility:
 - button "Charts ▾"
 - text: PFSC Premature Censoring for PFS
 - img "Premature Censoring for PFS definition": i
-- text: Planned standard 32 (3.2%) of 988 enrolled
+- text: Planned 32 (3.2%) of 988 enrolled
 - 'img "PFSC study trend: 5 snapshots, latest 3.2%"'
-- text: portfolio 2.5% · this study +0.7 pt
 - button "Previous view": ‹
 - text: Details 2/5
 - button "Next view": ›

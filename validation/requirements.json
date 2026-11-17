@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "ac18236149b753c44775c52fc97dc09bdc1fe7f8a709ff942bcb592d0e1e1e09",
+  "hash": "18508fe1588ad2dea986e7ca1e885fe705daba69a096b18a267f7e119d88fe0d",
   "issues": [
     {
       "number": 8,
@@ -745,6 +745,43 @@
           "text": "Pooling a metric's site rows into the study's value sits in one tested function, so it can be qualified as dashboard logic (gsm.roadmap#625).",
           "sha256": "0aebfd223ee080c9859d59f1e6ea94f0ad35a9bd201381d35e5717d57a13b8ba",
           "kind": "unit",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 35,
+      "title": "Remove prototype features that no requirement backs",
+      "parent": null,
+      "userTest": true,
+      "scopeSection": "**In:**\n- Remove the \"Change log\" link from the portfolio header.\n- Remove the \"Metric glossary\" button and its dialog from both reports. Each metric's glossary entry stays in its hovers (#20).\n- Remove the theme switch and its stored choice. Each report follows the operating system's light or dark setting. This settles #24's theme question.\n- Remove from the study report:\n  - the Randomize button;\n  - the play/pause button (the visit slider stays);\n  - the STANDARD / CUSTOM badge, on tiles and in the Charts panel;\n  - the metadata line.\n- Remove the comparison line from study tiles, and the portfolio comparison from the study document, its schema and its builder.\n- Remove the \"not site-level\" note from the portfolio's Controls panel.\n- Tests that only exercise removed behaviour go with it. The portfolio and study baselines (11.03, 12.02) are re-recorded, and the change is recorded as a reassessment.\n\n**Out:**\n- The page tags \"Program overview\" and \"Study view\", which #24's header work decides.\n- These stay as they are:\n  - the portfolio's metric All / None controls;\n  - \"Extract: <date>\" on a single-snapshot study;\n  - the study tiles' other views, the All tiles menu, the site highlight across charts and chart-mark hovers;\n  - the Charts panel on CTQ tiles.\n- The portfolio's metadata line and logo (#24).",
+      "criteria": [
+        {
+          "id": "35.01",
+          "text": "The portfolio report has no \"Change log\" link and no \"not site-level\" note. Neither report has a \"Metric glossary\" button or dialog, or a theme control. Each follows the operating system's light or dark setting (test).",
+          "sha256": "9ecc1e9809d47e13bc4eb3e38fd9f4487970b930e0398216fe1bb8f3b94b0764",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "35.02",
+          "text": "The study report has no Randomize button, no play/pause button, no STANDARD / CUSTOM badge on any tile or in the Charts panel, no metadata line and no comparison line on any tile (test).",
+          "sha256": "2166d275b3eb500c6fa94c950183ef3514064459054657ee3f1819c5725eb7a0",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "35.03",
+          "text": "The study document carries no portfolio comparison, and the study document schema refuses a document that does (test).",
+          "sha256": "d00877ba3a5b36dea841697a38b59dde75c6a54ed40ca026a96dde02a3b47007",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "35.04",
+          "text": "A reviewer compares both reports with this issue's Scope and accepts that only the listed features are gone (visual comparison).",
+          "sha256": "06bd72fc655a610a2e2b28e1e695f5ffdd35b3d6a240d790226cf620b5d34d86",
+          "kind": "visual",
           "reviewed": true
         }
       ]

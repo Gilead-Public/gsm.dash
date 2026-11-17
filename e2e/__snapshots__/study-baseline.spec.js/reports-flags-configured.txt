@@ -1,5 +1,5 @@
 state: flags-configured (reports)
-dom: sha256 6bdf825e4131ce54870d814e41018b135365676ff66eadbfc7d1f593c4704ff4 (74676 characters)
+dom: sha256 a16af7a57e43b5ee89c4031ccf8839f3679271a6c24445e1c93761ad26e38dbc (72106 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -28,7 +28,6 @@ accessibility:
 - link "← Program overview":
   - /url: ./portfolio.html
 - text: STUDY006 FALCON-2 Immunology · Respiratory · P1 · Enrolling · Product F
-- button "Play through visits": ▶
 - slider "Visit": "5"
 - text: Visit 6/6 · 2026-06-30
 - checkbox "Group by category" [checked]
@@ -42,10 +41,8 @@ accessibility:
   - option "Trend over time"
   - option "Outlier sites"
   - option "Flag distribution"
-- button "⤨ Randomize"
 - text: Disposition · 6 SF Screen Failure Rate
 - img "Screen Failure Rate definition": i
-- text: standard
 - group "Screen Failure Rate breakdowns":
   - text: 14.1% 144 / 1,023
   - region "Screen failure reasons":
@@ -69,7 +66,6 @@ accessibility:
 - button "Charts ▾"
 - text: SDSC Study Discontinuation Rate
 - img "Study Discontinuation Rate definition": i
-- text: standard
 - group "Study Discontinuation Rate breakdowns":
   - text: 6.9% 61 / 879
   - region "Reasons for study discontinuation":
@@ -98,16 +94,15 @@ accessibility:
 - button "Charts ▾"
 - text: TDSC Treatment Discontinuation Rate
 - img "Treatment Discontinuation Rate definition": i
-- text: standard 150 (17.3%) of 865 dosed 2R·2A·13G·0NA
+- text: 150 (17.3%) of 865 dosed 2R·2A·13G·0NA
 - 'img "TDSC study trend: 6 snapshots, latest 17.3%"'
-- text: portfolio 11.3% · this study +6.1 pt
 - button "Previous view": ‹
 - text: Details 2/7
 - button "Next view": ›
 - button "Charts ▾"
 - text: PTDSC Premature Treatment Discontinuation Rate
 - img "Premature Treatment Discontinuation Rate definition": i
-- text: Planned standard
+- text: Planned
 - group "Premature Treatment Discontinuation Rate breakdowns":
   - text: 4.9% 42 / 865
   - region "Reasons for treatment discontinuation":
@@ -133,34 +128,31 @@ accessibility:
 - button "Charts ▾"
 - text: WC Withdrawal of Consent
 - img "Withdrawal of Consent definition": i
-- text: Planned standard 21 (2.4%) of 879 enrolled 0R·0A·17G·0NA
+- text: Planned 21 (2.4%) of 879 enrolled 0R·0A·17G·0NA
 - 'img "WC study trend: 6 snapshots, latest 2.4%"'
-- text: portfolio 2.6% · this study −0.2 pt
 - button "Previous view": ‹
 - text: Details 2/7
 - button "Next view": ›
 - button "Charts ▾"
 - text: LTFU Lost to Follow Up
 - img "Lost to Follow Up definition": i
-- text: Planned standard 18 (2.0%) of 879 enrolled 0R·0A·17G·0NA
+- text: Planned 18 (2.0%) of 879 enrolled 0R·0A·17G·0NA
 - 'img "LTFU study trend: 6 snapshots, latest 2.0%"'
-- text: portfolio 1.6% · this study +0.4 pt
 - button "Previous view": ‹
 - text: Details 2/7
 - button "Next view": ›
 - button "Charts ▾"
 - text: Early events · 3 DTH30 Early Deaths (30 days)
 - img "Early Deaths (30 days) definition": i
-- text: Planned standard 10 (1.1%) of 879 enrolled 0R·0A·17G·0NA
+- text: Planned 10 (1.1%) of 879 enrolled 0R·0A·17G·0NA
 - 'img "DTH30 study trend: 6 snapshots, latest 1.1%"'
-- text: portfolio 0.8% · this study +0.4 pt
 - button "Previous view": ‹
 - text: Details 2/7
 - button "Next view": ›
 - button "Charts ▾"
 - text: DTH90 Early Deaths (90 days)
 - img "Early Deaths (90 days) definition": i
-- text: Planned standard
+- text: Planned
 - group "Early Deaths (90 days) breakdowns":
   - text: 2.6% 23 / 879
   - region "Deaths by time from randomisation":
@@ -186,7 +178,7 @@ accessibility:
 - button "Charts ▾"
 - text: IPNS IP Non-starters
 - img "IP Non-starters definition": i
-- text: Planned standard
+- text: Planned
 - group "IP Non-starters breakdowns":
   - text: 1.6% 14 / 879
   - region "IP status":
@@ -204,7 +196,7 @@ accessibility:
 - button "Charts ▾"
 - text: Eligibility & integrity · 3 IE Eligibility
 - img "Eligibility definition": i
-- text: Planned standard
+- text: Planned
 - group "Eligibility breakdowns":
   - text: 3.5% 31 / 879
   - region "Top I/E criteria not met":
@@ -231,7 +223,7 @@ accessibility:
 - button "Charts ▾"
 - text: STRAT Stratification
 - img "Stratification definition": i
-- text: Planned standard
+- text: Planned
 - group "Stratification breakdowns":
   - text: 1.5% 13 / 879
   - region "Mis-stratification by factor":
@@ -255,9 +247,8 @@ accessibility:
 - button "Charts ▾"
 - text: PFSC Premature Censoring for PFS
 - img "Premature Censoring for PFS definition": i
-- text: Planned standard 18 (2.0%) of 879 enrolled 0R·0A·17G·0NA
+- text: Planned 18 (2.0%) of 879 enrolled 0R·0A·17G·0NA
 - 'img "PFSC study trend: 6 snapshots, latest 2.0%"'
-- text: portfolio 2.5% · this study −0.4 pt
 - button "Previous view": ‹
 - text: Details 2/7
 - button "Next view": ›

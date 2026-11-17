@@ -11,7 +11,6 @@ import { inject, PLACEHOLDER } from '../scripts/inject.mjs';
 import { buildStudyDocument } from '../scripts/study-document.mjs';
 import { buildPortfolioDocument } from '../scripts/portfolio-document.mjs';
 import { readPortfolioDocument, readStudyDocument } from '../src/react/document.js';
-import { pooled } from './qual/pooling.js';
 
 let dir;
 let data;
@@ -47,32 +46,6 @@ function portfolioValidator() {
 }
 
 describe('the study document', () => {
-  it("15.01: each report's portfolio comparison equals pooling every study's files, at the newest visit each at its own latest snapshot and at an earlier visit each as of that date (#15)", () => {
-    const { manifest, read } = data;
-    let compared = 0;
-    let newestSeesLaterSnapshots = false;
-    for (const study of manifest.studies) {
-      const doc = buildStudyDocument(data, study.StudyID);
-      const keys = doc.comparison.map((r) => `${r.SnapshotDate} ${r.MetricID}`);
-      expect(new Set(keys).size, `${study.StudyID}: one row per date and metric`).toBe(keys.length);
-      const got = new Map(doc.comparison.map((r, i) => [keys[i], [r.Numerator, r.Denominator]]));
-      const newest = [...study.snapshots].sort().at(-1);
-      const want = new Map();
-      for (const date of study.snapshots) {
-        for (const { MetricID } of manifest.metrics) {
-          const p = pooled(read, manifest.studies, MetricID, date === newest ? null : date);
-          if (!p.studies) continue;
-          want.set(`${date} ${MetricID}`, [p.numerator, p.denominator]);
-          if (date === newest && pooled(read, manifest.studies, MetricID, date).denominator !== p.denominator) newestSeesLaterSnapshots = true;
-        }
-      }
-      expect(got, study.StudyID).toEqual(want);
-      compared += want.size;
-    }
-    expect(newestSeesLaterSnapshots, "some study's newest visit pools other studies' later snapshots").toBe(true);
-    expect(compared).toBeGreaterThan(500);
-  });
-
   it('13.02: each study report carries the manifest\'s report base, so its links resolve against the configured base (#13)', () => {
     const validate = schemaValidator();
     const { StudyID } = data.manifest.studies[0];
@@ -94,14 +67,20 @@ describe('the study document', () => {
     }
   });
 
-  it('the schema rejects stored rates, unknown fields and bad snapshot rows', () => {
+  it('35.03: the study document carries no portfolio comparison, and the schema and the page refuse one that does (#35)', () => {
+    const validate = schemaValidator();
+    const doc = buildStudyDocument(data, data.manifest.studies[0].StudyID);
+    expect(doc).not.toHaveProperty('comparison');
+    const old = { ...doc, comparison: [{ SnapshotDate: doc.study.snapshots[0], MetricID: doc.metrics[0].MetricID, Numerator: 1, Denominator: 2 }] };
+    expect(validate(old)).toBe(false);
+    expect(readStudyDocument(JSON.stringify(old))).toMatchObject({ ok: false, errors: ['/ must NOT have additional properties'] });
+  });
+
+  it('the schema rejects unknown fields and bad snapshot rows', () => {
     const validate = schemaValidator();
     const doc = buildStudyDocument(data, data.manifest.studies[0].StudyID);
     const rejected = {
       'an unknown top-level field': (d) => (d.note = 'x'),
-      'a stored rate in the comparison': (d) => (d.comparison[0].Rate = 0.5),
-      'a comparison numerator as text': (d) => (d.comparison[0].Numerator = '5'),
-      'no comparison': (d) => delete d.comparison,
       'a manifest file list on the study': (d) => (d.study.files = {}),
       'a snapshot numerator as text': (d) => (d.snapshots[0].results[0].Numerator = '5'),
       'a metric without an ID': (d) => delete d.metrics[0].MetricID,
@@ -275,7 +254,7 @@ describe('reading the injected document in the page', () => {
 
   it('refuses what the schema rejects, as the schema does', () => {
     const validate = schemaValidator();
-    for (const change of [(d) => (d.note = 'x'), (d) => (d.comparison[0].Rate = 0.5), (d) => (d.snapshots[0].results[0].Numerator = '5')]) {
+    for (const change of [(d) => (d.note = 'x'), (d) => (d.snapshots[0].results[0].Numerator = '5')]) {
       const d = doc();
       change(d);
       expect(validate(d)).toBe(false);
@@ -285,13 +264,10 @@ describe('reading the injected document in the page', () => {
     }
   });
 
-  it("refuses another study's snapshot, a repeated comparison row, or snapshots that aren't the study's dates", () => {
+  it("refuses another study's snapshot, or snapshots that aren't the study's dates", () => {
     const other = doc();
     other.snapshots[0].StudyID = 'ELSEWHERE';
     expect(readStudyDocument(JSON.stringify(other))).toMatchObject({ ok: false, errors: [expect.stringMatching(/is for ELSEWHERE/)] });
-    const repeated = doc();
-    repeated.comparison.unshift({ ...repeated.comparison[0], Numerator: repeated.comparison[0].Numerator + 1e6 });
-    expect(readStudyDocument(JSON.stringify(repeated))).toMatchObject({ ok: false, errors: [expect.stringMatching(/more than one row for/)] });
     const missing = doc();
     missing.snapshots.pop();
     expect(readStudyDocument(JSON.stringify(missing))).toMatchObject({ ok: false, errors: [expect.stringMatching(/not the study's snapshot dates/)] });

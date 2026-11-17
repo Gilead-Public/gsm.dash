@@ -1,5 +1,5 @@
 state: all-numerator (reports)
-dom: sha256 675bfcc6a3217af8673dd237cd9af002c5290faa54ed3ec40c7709c1a2a8e643 (81354 characters)
+dom: sha256 f8b0805383156ec4df19789ea5b50d97d60fbc377ee6ed6917866e27a4437584 (79100 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -28,7 +28,6 @@ accessibility:
 - link "← Program overview":
   - /url: ./portfolio.html
 - text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
-- button "Play through visits": ▶
 - slider "Visit": "4"
 - text: Visit 5/5 · 2026-05-31
 - checkbox "Group by category" [checked]
@@ -40,10 +39,9 @@ accessibility:
   - option "Scatter (n vs d)"
   - option "Numerator by site" [selected]
   - option "Trend over time"
-- button "⤨ Randomize"
 - text: Disposition · 6 SF Screen Failure Rate
 - img "Screen Failure Rate definition": i
-- text: standard Number of screen failed participants by site
+- text: Number of screen failed participants by site
 - img "SF numerator by site": 113 0
 - text: 17 sites, sorted by numerator · click a bar to track it
 - button "Previous view": ‹
@@ -52,7 +50,7 @@ accessibility:
 - button "Charts ▾"
 - text: SDSC Study Discontinuation Rate
 - img "Study Discontinuation Rate definition": i
-- text: standard Number of participants with premature study discontinuation by site
+- text: Number of participants with premature study discontinuation by site
 - img "SDSC numerator by site": 10 0
 - text: 17 sites, sorted by numerator · click a bar to track it
 - button "Previous view": ‹
@@ -61,7 +59,7 @@ accessibility:
 - button "Charts ▾"
 - text: TDSC Treatment Discontinuation Rate
 - img "Treatment Discontinuation Rate definition": i
-- text: standard Number of participants with premature treatment discontinuation by site
+- text: Number of participants with premature treatment discontinuation by site
 - img "TDSC numerator by site": 12 0
 - text: 17 sites, sorted by numerator · click a bar to track it
 - button "Previous view": ‹
@@ -70,7 +68,7 @@ accessibility:
 - button "Charts ▾"
 - text: PTDSC Premature Treatment Discontinuation Rate
 - img "Premature Treatment Discontinuation Rate definition": i
-- text: Planned standard Number of participants with premature treatment discontinuation by site
+- text: Planned Number of participants with premature treatment discontinuation by site
 - img "PTDSC numerator by site": 15 0
 - text: 17 sites, sorted by numerator · click a bar to track it
 - button "Previous view": ‹
@@ -79,7 +77,7 @@ accessibility:
 - button "Charts ▾"
 - text: WC Withdrawal of Consent
 - img "Withdrawal of Consent definition": i
-- text: Planned standard Number of participants who withdrew consent from the study by site
+- text: Planned Number of participants who withdrew consent from the study by site
 - img "WC numerator by site": 2 0
 - text: 17 sites, sorted by numerator · click a bar to track it
 - button "Previous view": ‹
@@ -88,7 +86,7 @@ accessibility:
 - button "Charts ▾"
 - text: LTFU Lost to Follow Up
 - img "Lost to Follow Up definition": i
-- text: Planned standard Number of participants lost to follow-up by site
+- text: Planned Number of participants lost to follow-up by site
 - img "LTFU numerator by site": 4 0
 - text: 17 sites, sorted by numerator · click a bar to track it
 - button "Previous view": ‹
@@ -97,7 +95,7 @@ accessibility:
 - button "Charts ▾"
 - text: Early events · 3 DTH30 Early Deaths (30 days)
 - img "Early Deaths (30 days) definition": i
-- text: Planned standard Number of participants who died within 30 days from randomization by site
+- text: Planned Number of participants who died within 30 days from randomization by site
 - img "DTH30 numerator by site": 1 0
 - text: 17 sites, sorted by numerator · click a bar to track it
 - button "Previous view": ‹
@@ -106,7 +104,7 @@ accessibility:
 - button "Charts ▾"
 - text: DTH90 Early Deaths (90 days)
 - img "Early Deaths (90 days) definition": i
-- text: Planned standard Number of participants who died within 90 days from randomization by site
+- text: Planned Number of participants who died within 90 days from randomization by site
 - img "DTH90 numerator by site": 2 0
 - text: 17 sites, sorted by numerator · click a bar to track it
 - button "Previous view": ‹
@@ -115,7 +113,7 @@ accessibility:
 - button "Charts ▾"
 - text: IPNS IP Non-starters
 - img "IP Non-starters definition": i
-- text: Planned standard Number of confirmed IP non-starters by site
+- text: Planned Number of confirmed IP non-starters by site
 - img "IPNS numerator by site": 1 0
 - text: 17 sites, sorted by numerator · click a bar to track it
 - button "Previous view": ‹
@@ -124,7 +122,7 @@ accessibility:
 - button "Charts ▾"
 - text: Eligibility & integrity · 3 IE Eligibility
 - img "Eligibility definition": i
-- text: Planned standard Number of ineligible participants by site
+- text: Planned Number of ineligible participants by site
 - img "IE numerator by site": 3 0
 - text: 17 sites, sorted by numerator · click a bar to track it
 - button "Previous view": ‹
@@ -133,7 +131,7 @@ accessibility:
 - button "Charts ▾"
 - text: STRAT Stratification
 - img "Stratification definition": i
-- text: Planned standard Number of confirmed mis-stratified participants by site
+- text: Planned Number of confirmed mis-stratified participants by site
 - img "STRAT numerator by site": 7 0
 - text: 17 sites, sorted by numerator · click a bar to track it
 - button "Previous view": ‹
@@ -142,7 +140,7 @@ accessibility:
 - button "Charts ▾"
 - text: PFSC Premature Censoring for PFS
 - img "Premature Censoring for PFS definition": i
-- text: Planned standard Number of participants at very high risk for premature censoring for PFS by site
+- text: Planned Number of participants at very high risk for premature censoring for PFS by site
 - img "PFSC numerator by site": 4 0
 - text: 17 sites, sorted by numerator · click a bar to track it
 - button "Previous view": ‹

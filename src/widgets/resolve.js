@@ -22,7 +22,6 @@ export function resolveData(dataSpec, { store, studyId, metricId }) {
     data.study = store.studyRollup(studyId, date, metricId); // derived from site rows
     data.siteRows = store.siteRows(studyId, date, metricId);
     data.trend = store.studyTrend(studyId, metricId);
-    data.portfolio = store.portfolioComparison(studyId, metricId);
     data.reportLink = reportLink(data.metric, store.reportBase, globalThis.location?.href ?? '', studyId);
   } else if (dataSpec.results === 'all-site') {
     data.metrics = store.metrics;

@@ -1,35 +1,21 @@
 import { describe, it, expect } from 'vitest';
-import { widgetKind, getWidget, listWidgets } from '../src/widgets/registry.js';
+import { getWidget, listWidgets } from '../src/widgets/registry.js';
 import { outlierSites } from '../src/widgets/views/bar-outliers.js';
 import { flagCounts } from '../src/widgets/views/flag-dist.js';
 import { STANDARD_TILE_VIEWS } from '../src/app/study-page-spec.js';
 import '../src/widgets/index.js';
 
-describe('standard vs custom is derived from data layers', () => {
-  it('reporting-layer-only views are standard; external/listings make a view custom', () => {
-    expect(widgetKind({ dataSpec: { results: 'self' } })).toBe('standard');
-    expect(widgetKind({ dataSpec: { results: 'self', bounds: 'self', groups: 'self' } })).toBe('standard');
-    expect(widgetKind({ dataSpec: { history: 'self' } })).toBe('standard');
-    expect(widgetKind({ dataSpec: { results: 'self', distributions: 'self' } })).toBe('standard');
-    expect(widgetKind({ dataSpec: { results: 'self', external: true } })).toBe('custom');
-    expect(widgetKind({ dataSpec: { results: 'self', listings: 'self' } })).toBe('custom');
-  });
-
-  it('every standard tile view is registered, tile-format, and standard', () => {
+describe('the registered widgets', () => {
+  it('every standard tile view is registered, tile-format', () => {
     for (const name of STANDARD_TILE_VIEWS) {
       const def = getWidget(name);
       expect(def, name).not.toBeNull();
-      expect(def.kind, name).toBe('standard');
       expect(def.format, name).toBe('tile');
     }
   });
 
-  it('the shipped custom widgets classify as custom and the gsm.viz adapters as standard/wide', () => {
-    expect(getWidget('distribution-bar').kind).toBe('standard');
-    expect(getWidget('link-out').kind).toBe('custom');
-    expect(getWidget('threshold-list').kind).toBe('standard');
+  it('the gsm.viz adapters are wide', () => {
     for (const name of ['viz-bar', 'viz-scatter', 'viz-timeseries']) {
-      expect(getWidget(name).kind, name).toBe('standard');
       expect(getWidget(name).format, name).toBe('wide');
     }
     expect(listWidgets().length).toBeGreaterThanOrEqual(13);

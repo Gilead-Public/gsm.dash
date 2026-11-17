@@ -23,11 +23,6 @@ export const EXEC_ALLOW_LIST = ['results', 'distributions', 'bounds', 'groups', 
 // Site-flag views (bar-outliers, flag-dist) are not standard: a study or a metric turns them on (#11).
 export const STANDARD_TILE_VIEWS = ['overview', 'scalar-tile', 'scatter-mini', 'bar-numerator', 'trend-mini'];
 
-export const KIND_HELP = {
-  standard: 'Standard — built from the standardized reporting layer; available for every site-level metric automatically.',
-  custom: 'Custom — purpose-built for this metric from additional data (e.g. Mapped-layer breakdown counts or an external report).',
-};
-
 // Drill-in panel (W4): the standard KRI-report charts offered per metric, in
 // tab order. Each is a registered gsm.viz adapter widget.
 export const DETAIL_TABS = [

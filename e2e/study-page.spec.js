@@ -3,7 +3,7 @@
 // attributes) so the same tests run unchanged on the React page. Behaviour that spans pages (the back link, hidden
 // metrics carried from the program view) is out of scope here; it moves with the portfolio page.
 import { expect, readData, test } from './fixtures/app.js';
-import { countText, displayed, latestSnapshot, pooled, readRate, shownMetrics, siteRows, tolerance } from '../test/qual/pooling.js';
+import { countText, latestSnapshot, pooled, shownMetrics, siteRows } from '../test/qual/pooling.js';
 import { STUDY_VIEW_CONFIG } from '../src/config/study-views.js';
 import { KRI_GROUPS } from '../src/config/kri-groups.js';
 /** @typedef {import('@playwright/test').Page} Page */
@@ -101,7 +101,6 @@ function tileContent(page, metricId) {
       flagBar: shown(fbar),
       flagSegments: [...(fbar?.querySelectorAll('i') ?? [])].filter(shown).map((i) => [i.className, Number(getComputedStyle(i).flexGrow)]),
       flagCounts: seen(body.querySelector('.fcounts')),
-      cmp: text(body.querySelector('.cmp')),
       points: body.querySelectorAll('circle[data-site]').length,
       bars: body.querySelectorAll('rect[data-site]').length,
       outliers: [...body.querySelectorAll('.hbar .r[data-site]')].filter((r) => shown(r.querySelector('.mono')) && shown(r.querySelector('.v'))).length,
@@ -172,7 +171,6 @@ async function expectViewContent(page, metricId, view, { of = study, flags = fal
             ]
           : [false, [], ''],
       );
-      expect(shown.cmp, where).toMatch(/^portfolio /);
       break;
     }
     case 'Scatter (n vs d)':
@@ -336,30 +334,15 @@ test.describe('study page behaviour', () => {
     expect(await shownRows()).toEqual([[`All metrics · ${tiles.length}`, tiles.map((m) => m.MetricID)]]);
   });
 
-  test('12.02: the visit scrubber shows the chosen visit and play steps forward to the latest, then stops (#12)', async ({ page }) => {
+  test('12.02: the visit scrubber shows the chosen visit (#12)', async ({ page }) => {
     expect(dates.length).toBeGreaterThan(3);
     await expect(visitLabel(page)).toHaveText(visitText(dates.length - 1));
     await goToVisit(page, 0);
     await expect(visitLabel(page)).toHaveText(visitText(0));
     await goToVisit(page, dates.length - 3);
     await expect(visitLabel(page)).toHaveText(visitText(dates.length - 3));
-    const play = page.locator('button[data-play]');
-    await play.click();
-    await expect(play).toHaveAttribute('aria-label', 'Pause through visits');
-    await expect(visitLabel(page)).toHaveText(visitText(dates.length - 2), { timeout: 3000 });
-    await expect(visitLabel(page)).toHaveText(visitText(dates.length - 1), { timeout: 3000 });
-    await expect(play).toHaveAttribute('aria-label', 'Play through visits');
-  });
-
-  test('12.02: play from the latest visit restarts at the first, and pressing it again pauses (#12)', async ({ page }) => {
-    const play = page.locator('button[data-play]');
-    await play.click();
-    await expect(visitLabel(page)).toHaveText(visitText(0));
-    await play.click();
-    await expect(play).toHaveAttribute('aria-label', 'Play through visits');
-    const paused = await visitLabel(page).textContent();
-    await page.waitForTimeout(1500);
-    await expect(visitLabel(page)).toHaveText(/** @type {string} */ (paused));
+    await goToVisit(page, dates.length - 1);
+    await expect(visitLabel(page)).toHaveText(visitText(dates.length - 1));
   });
 
   test('12.02: selecting a site in one chart highlights it in every chart, and the chip clears it (#12)', async ({ page }) => {
@@ -405,71 +388,13 @@ test.describe('study page behaviour', () => {
     await tile(page, id).locator('button[data-detail-metric]').click();
     await expect(page.locator('.detail')).toHaveCount(0);
   });
-
-  test('12.02: the comparison line pools every study at its own snapshot as of the visit, at the latest and an earlier visit (#12)', async ({ page }) => {
-    const latestOthers = studies.filter((s) => s.snapshots.at(-1) !== dates.at(-1));
-    expect(latestOthers.length, 'other studies have a different latest snapshot').toBeGreaterThan(0);
-    const earlier = 1;
-    const asOfFor = (/** @type {number} */ i) => (i === dates.length - 1 ? null : dates[i]);
-    const ids = [...metrics.keys()];
-    const differs = (/** @type {(id: string) => [number | null, number | null]} */ pair) => ids.some((id) => {
-      const [a, b] = pair(id);
-      return a !== null && b !== null && Math.abs(a - b) > 1e-6;
-    });
-    expect(differs((id) => [pooled(readData, studies, id, null).rate, pooled(readData, [study], id, null).rate]), 'portfolio and study-only differ').toBe(true);
-    expect(differs((id) => [pooled(readData, studies, id, null).rate, pooled(readData, studies, id, dates.at(-1) ?? null).rate]), "own-latest and this study's date differ").toBe(true);
-    expect(differs((id) => [pooled(readData, studies, id, dates[earlier]).rate, pooled(readData, studies, id, null).rate]), 'as-of and latest-only differ').toBe(true);
-
-    for (const index of [dates.length - 1, earlier]) {
-      await goToVisit(page, index);
-      await expect(visitLabel(page)).toHaveText(visitText(index));
-      const asOf = asOfFor(index);
-      const shown = await page.locator('.tile[data-metric-id]').evaluateAll((tiles) =>
-        tiles.map((t) => ({ id: t.getAttribute('data-metric-id') ?? '', view: t.querySelector('.view-name')?.textContent?.trim() ?? '', cmp: t.querySelector('.cmp')?.textContent?.trim() ?? null })),
-      );
-      const details = shown.filter((t) => t.view.startsWith('Details'));
-      expect(details.length).toBeGreaterThan(3);
-      let compared = 0;
-      for (const t of details) {
-        const metric = /** @type {MetricMeta} */ (metrics.get(t.id));
-        const where = `visit ${index + 1} · ${metric.Abbreviation}`;
-        const mine = pooled(readData, [study], t.id, asOf).rate;
-        const all = pooled(readData, studies, t.id, asOf).rate;
-        if (mine === null || all === null) {
-          expect(t.cmp, where).toBeNull();
-          continue;
-        }
-        const m = /^portfolio (\S+) · this study ([+−])(\d+\.\d+) (pt|\/ 28 d)$/.exec(t.cmp ?? '');
-        expect(m, `${where}: "${t.cmp}"`).toBeTruthy();
-        if (!m) continue;
-        expect(m[4], where).toBe(metric.Display === 'per_28d' ? '/ 28 d' : 'pt');
-        expect(Math.abs(/** @type {number} */ (readRate(metric, m[1])) - displayed(metric, all)), `${where}: portfolio`).toBeLessThanOrEqual(tolerance(metric));
-        const diff = (m[2] === '−' ? -1 : 1) * Number(m[3]);
-        expect(Math.abs(diff - (displayed(metric, mine) - displayed(metric, all))), `${where}: difference`).toBeLessThanOrEqual(tolerance(metric));
-        compared++;
-      }
-      expect(compared, `visit ${index + 1}: comparison lines checked`).toBeGreaterThan(3);
-    }
-  });
 });
 
-test('the study page sits in the app shell: brand, Study view tag, export date, a working metric glossary and theme switch, inside the page margins', async ({ app, page }) => {
+test('the study page sits in the app shell: brand and Study view tag, inside the page margins', async ({ app, page }) => {
   await app.openStudy(study.StudyID);
   const header = page.locator('header.app');
   await expect(header.locator('h1')).toHaveText('gsm.dash');
   await expect(header.locator('#page-tag')).toHaveText('Study view');
-  await expect(header.locator('#meta')).toContainText(` metrics · exported ${portfolio.generated}`);
-  await header.locator('#glossaryBtn').click();
-  const glossary = page.locator('dialog#gsm-glossary');
-  await expect(glossary).toBeVisible();
-  await expect(glossary).toContainText(tiles[0].Abbreviation);
-  await page.keyboard.press('Escape');
-  await expect(glossary).toBeHidden();
-  await header.locator('button[data-theme-pref="dark"]').click();
-  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('dark');
-  await expect(header.locator('button[data-theme-pref="dark"]')).toHaveClass(/\bon\b/);
-  await header.locator('button[data-theme-pref="auto"]').click();
-  expect(await page.evaluate(() => document.documentElement.dataset.theme ?? 'auto')).toBe('auto');
   const shell = await header.boundingBox();
   const content = await page.locator('#app > .study-page').boundingBox();
   expect(shell && content, 'header and study page both laid out').toBeTruthy();
@@ -568,14 +493,6 @@ test.describe('site-flag counts on the study view', () => {
       await menu.selectOption({ label: view });
       await expect.poll(() => shownViews(page), view).toEqual(expectedViews((m) => viewText(m, view)));
       await expect(page.locator(FLAG_MARKS), view).toHaveCount(0);
-    }
-    const allowed = new Map(tiles.map((m) => [m.MetricID, viewsOf(m)]));
-    for (let deal = 0; deal < 5; deal++) {
-      await page.locator('button[data-randomize-views]').click();
-      await expect(page.locator(FLAG_MARKS)).toHaveCount(0);
-      for (const [id, text] of await shownViews(page)) {
-        expect(allowed.get(/** @type {string} */ (id)), `random deal ${deal + 1}: ${id}`).toContain(String(text).replace(/ \d+\/\d+$/, ''));
-      }
     }
   });
 
