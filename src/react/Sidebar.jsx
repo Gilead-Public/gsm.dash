@@ -182,7 +182,7 @@ export function Sidebar({ store, collapsed, onCollapse }) {
                 {g.metrics.map((/** @type {any} */ m) => {
                   const off = !state.statuses.has(m.Status ?? 'Released');
                   return (
-                    <label key={m.MetricID} className={`metric-opt ${off ? 'status-off' : ''}`} title={`${m.Metric} · ${m.MetricID}${off ? ' — hidden by the status filter' : ''}`}>
+                    <label key={m.MetricID} className={`metric-opt ${off ? 'status-off' : ''}`} title={`${m.Metric}${off ? ' — hidden by the status filter' : ''}`}>
                       <input type="checkbox" data-metric={m.MetricID} checked={!state.hiddenMetrics.has(m.MetricID)} onChange={() => store.toggleMetric(m.MetricID)} />
                       <span className="mono">{m.Abbreviation}</span>
                       <span className="mname">{m.Metric}</span>

@@ -1,8 +1,8 @@
 state: distribution-highlighted
-canonical dom: sha256 c0776008e5d6b5b817ae624ea12725e2fb98ee96339a5e64e660dc87986435cf (252622 characters)
-computed styles: sha256 2b08a188142735b28542d9b4bb45f9089aabed6d971a129b0a0272ba31da7889 (1308 elements)
+canonical dom: sha256 95c1114a93bd034b21a24bbb64a6b04969881bb4a1a9bf650e4aa083c30a6695 (259356 characters)
+computed styles: sha256 0da08ac0802c82205c57f5ac3dfc37b55fb5e3cd56a542f868e9404801508e43 (1267 elements)
 tooltip: <b>STUDY002 · BEACON-1</b><br><span class="tip-muted">Early Deaths (30 days)</span><br>1 (0.2%) <span class="tip-muted">— count (% of all enrolled)</span><br>Σn/Σd = 1 / 645<br><span class="tip-muted">Click to highlight this study</span>
-cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(224, 238, 236) ×5 | rgb(237, 240, 238) ×6 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×5 | rgb(224, 238, 236) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
+cell backgrounds: rgb(237, 240, 238) ×4 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(224, 238, 236) ×4 | rgb(237, 240, 238) ×6 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×5 | rgb(224, 238, 236) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
   pt[STUDY001]@0.4016 pt[STUDY003]@0.4579 pt[STUDY004]@0.6888 pt[STUDY005]@0.5314 pt[STUDY006]@0.7523 pt[STUDY007]@0.2699 pt[STUDY008]@0.2650 pt[STUDY009]@0.5538 pt[STUDY010]@0.9259 pt[STUDY011]@0.4423 pt[STUDY012]@0.5833 ptot@0.5142 psel[STUDY002]@0.1025 lsel@0.1025
   pt[STUDY001]@0.4113 pt[STUDY003]@0.4221 pt[STUDY004]@0.9259 pt[STUDY005]@0.3207 pt[STUDY006]@0.6645 pt[STUDY007]@0.4837 pt[STUDY008]@0.3054 pt[STUDY009]@0.6381 pt[STUDY010]@0.8001 pt[STUDY011]@0.5096 pt[STUDY012]@0.4760 ptot@0.5266 psel[STUDY002]@0.3937 lsel@0.3937
@@ -187,77 +187,47 @@ accessibility:
   - button "− Early events3 metrics Each dot = one study · scale 0 → max Portfolio · BEACON-1" [expanded]:
     - heading "− Early events3 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio · BEACON-1
-  - text: Early Deaths (30 days)DTH30
-  - img "Early Deaths (30 days) definition": i
-  - text: Planned n (% enr.)
+  - text: Early Deaths (30 days)DTH30 Planned n (% enr.)
   - 'img "Early Deaths (30 days): 12 studies"': 0 1.5% 0.16%
-  - text: 69 (0.8%) BEACON-1 1 (0.2%) Early Deaths (90 days)DTH90
-  - img "Early Deaths (90 days) definition": i
-  - text: Planned n (% enr.)
+  - text: 69 (0.8%) BEACON-1 1 (0.2%) Early Deaths (90 days)DTH90 Planned n (% enr.)
   - 'img "Early Deaths (90 days): 12 studies"': 0 3.9% 1.6%
-  - text: 184 (2.1%) BEACON-1 10 (1.6%) IP Non-startersIPNS
-  - img "IP Non-starters definition": i
-  - text: Planned n (% enr.)
+  - text: 184 (2.1%) BEACON-1 10 (1.6%) IP Non-startersIPNS Planned n (% enr.)
   - 'img "IP Non-starters: 12 studies"': 0 2.5% 2.3%
   - text: 159 (1.8%) BEACON-1 15 (2.3%)
   - button "− Eligibility & integrity3 metrics Each dot = one study · scale 0 → max Portfolio · BEACON-1" [expanded]:
     - heading "− Eligibility & integrity3 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio · BEACON-1
-  - text: EligibilityIE
-  - img "Eligibility definition": i
-  - text: Planned n (% enr.)
+  - text: EligibilityIE Planned n (% enr.)
   - 'img "Eligibility: 12 studies"': 0 5.6% 3.1%
-  - text: 279 (3.1%) BEACON-1 20 (3.1%) StratificationSTRAT
-  - img "Stratification definition": i
-  - text: Planned n (% enr.)
+  - text: 279 (3.1%) BEACON-1 20 (3.1%) StratificationSTRAT Planned n (% enr.)
   - 'img "Stratification: 12 studies"': 0 3.7% 1.6%
-  - text: 208 (2.3%) BEACON-1 10 (1.6%) Premature Censoring for PFSPFSC
-  - img "Premature Censoring for PFS definition": i
-  - text: Planned n (% enr.)
+  - text: 208 (2.3%) BEACON-1 10 (1.6%) Premature Censoring for PFSPFSC Planned n (% enr.)
   - 'img "Premature Censoring for PFS: 12 studies"': 0 3.7% 2.0%
   - text: 221 (2.5%) BEACON-1 13 (2.0%)
   - button "− Safety & deviations5 metrics Each dot = one study · scale 0 → max Portfolio · BEACON-1" [expanded]:
     - heading "− Safety & deviations5 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio · BEACON-1
-  - text: AE Reporting RateAE
-  - img "AE Reporting Rate definition": i
-  - text: New / 28 d
+  - text: AE Reporting RateAE New / 28 d
   - 'img "AE Reporting Rate: 12 studies"': 0 1.92 0.95
-  - text: 1.20 BEACON-1 0.95 SAE Reporting RateSAE
-  - img "SAE Reporting Rate definition": i
-  - text: New / 28 d
+  - text: 1.20 BEACON-1 0.95 SAE Reporting RateSAE New / 28 d
   - 'img "SAE Reporting Rate: 12 studies"': 0 0.15 0.074
-  - text: 0.10 BEACON-1 0.07 Non-Important Protocol Deviation RatePD
-  - img "Non-Important Protocol Deviation Rate definition": i
-  - text: New / 28 d
+  - text: 0.10 BEACON-1 0.07 Non-Important Protocol Deviation RatePD New / 28 d
   - 'img "Non-Important Protocol Deviation Rate: 12 studies"': 0 0.56 0.44
-  - text: 0.37 BEACON-1 0.44 Important Protocol Deviation RateIPD
-  - img "Important Protocol Deviation Rate definition": i
-  - text: New / 28 d
+  - text: 0.37 BEACON-1 0.44 Important Protocol Deviation RateIPD New / 28 d
   - 'img "Important Protocol Deviation Rate: 12 studies"': 0 0.094 0.036
-  - text: 0.06 BEACON-1 0.04 G3+ Lab Abnormality RateLB
-  - img "G3+ Lab Abnormality Rate definition": i
-  - text: n (%)
+  - text: 0.06 BEACON-1 0.04 G3+ Lab Abnormality RateLB n (%)
   - 'img "G3+ Lab Abnormality Rate: 12 studies"': 0 7.0% 5.6%
   - text: 8,320 (4.5%) BEACON-1 669 (5.6%)
   - button "− Data quality4 metrics Each dot = one study · scale 0 → max Portfolio · BEACON-1" [expanded]:
     - heading "− Data quality4 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio · BEACON-1
-  - text: Query RateQRY
-  - img "Query Rate definition": i
-  - text: "%"
+  - text: Query RateQRY %
   - 'img "Query Rate: 12 studies"': 0 12.0% 6.7%
-  - text: 6.8% BEACON-1 6.7% Delayed Query Resolution RateOQRY
-  - img "Delayed Query Resolution Rate definition": i
-  - text: "%"
+  - text: 6.8% BEACON-1 6.7% Delayed Query Resolution RateOQRY %
   - 'img "Delayed Query Resolution Rate: 12 studies"': 0 14.5% 8.8%
-  - text: 9.0% BEACON-1 8.8% Delayed Data Entry RateODAT
-  - img "Delayed Data Entry Rate definition": i
-  - text: "%"
+  - text: 9.0% BEACON-1 8.8% Delayed Data Entry RateODAT %
   - 'img "Delayed Data Entry Rate: 12 studies"': 0 16.6% 9.8%
-  - text: 11.7% BEACON-1 9.8% Data Change RateCDAT
-  - img "Data Change Rate definition": i
-  - text: "%"
+  - text: 11.7% BEACON-1 9.8% Data Change RateCDAT %
   - 'img "Data Change Rate: 12 studies"': 0 5.2% 3.4%
   - text: 3.3% BEACON-1 3.4%
   - paragraph: Dot = one study's value; the black rule is the pooled portfolio value. Click a dot to highlight that study, a category to fold it.

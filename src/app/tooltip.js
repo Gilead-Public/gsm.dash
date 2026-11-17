@@ -59,9 +59,12 @@ export function statusPill(metric) {
  * A metric's glossary entry as tooltip HTML — name, status, definition,
  * numerator / denominator, display rule, then the flagging model. Shared so
  * the program table's column headers and the study page's tile and drill-in
- * headers all say the same thing (P6).
+ * headers all say the same thing (P6). The portfolio passes `technical: false`,
+ * which leaves out the metric's ID and its flagging (score and thresholds) (#20).
+ * @param {any} metric
+ * @param {{ technical?: boolean }} [options]
  */
-export function metricTip(metric) {
+export function metricTip(metric, { technical = true } = {}) {
   const rows = [
     ['Definition', metric.Definition != null ? esc(metric.Definition) : '<span class="tip-muted">not yet supplied (Q2)</span>', true],
     ['Numerator', metric.Numerator],
@@ -69,7 +72,7 @@ export function metricTip(metric) {
     ['Displayed as', displayLabel(metric)],
     [
       'Flagging',
-      [metric.Score, metric.thresholds?.length ? `thresholds ${metric.thresholds.join(', ')}` : metric.Threshold].filter(Boolean).join(' · '),
+      technical ? [metric.Score, metric.thresholds?.length ? `thresholds ${metric.thresholds.join(', ')}` : metric.Threshold].filter(Boolean).join(' · ') : null,
     ],
     [
       'Accrual',
@@ -80,7 +83,7 @@ export function metricTip(metric) {
   ].filter(([, v]) => v != null && v !== '');
   return (
     `<b>${esc(metric.Metric)}</b>${statusPill(metric)}<br>` +
-    `<span class="tip-muted mono">${esc(metric.Abbreviation)} · ${esc(metric.ID ?? metric.MetricID)}${
+    `<span class="tip-muted mono">${esc(metric.Abbreviation)}${technical ? ` · ${esc(metric.ID ?? metric.MetricID)}` : ''}${
       metric.Category ? ` · ${esc(metric.Category)}` : ''
     }</span>` +
     `<dl class="tip-dl">${rows.map(([k, v, raw]) => `<dt>${k}</dt><dd>${raw ? v : esc(v)}</dd>`).join('')}</dl>`

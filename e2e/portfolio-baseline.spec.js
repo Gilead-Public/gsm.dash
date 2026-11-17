@@ -87,7 +87,7 @@ test.describe('the portfolio against its recorded baseline', () => {
     await page.locator('#app .otile').first().hover();
     await expectState(page, testInfo, 'tooltip-table-cell');
     await page.locator('button[data-view="details"]').click();
-    await page.locator('#app thead .info').first().hover();
+    await page.locator('#app thead th[data-sort^="Analysis_"]').first().hover();
     await expectState(page, testInfo, 'tooltip-table-header');
     await page.locator('button[data-view="distribution"]').click();
     await page.locator('.track .pt').first().hover();

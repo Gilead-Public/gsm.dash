@@ -1,8 +1,8 @@
 state: distribution-folded
-canonical dom: sha256 ef667690d856abcfa6b844669ade21a1b9f73ba0d17b53860adbe1ecffc45f8f (249775 characters)
-computed styles: sha256 f1312659defa9db7784e528578a1645c4f18437dabe9b03d17cae66b39063baa (1260 elements)
+canonical dom: sha256 3a97d907c1db9e5c77fa3d949c03c5b04a5a009c24f74a950849910fa0d3ba3e (256509 characters)
+computed styles: sha256 225fa791d85471e7c50b1b2c34ff6ce2b1d88354175fd7a63f009bd7df4c6a0e (1219 elements)
 tooltip: none
-cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
+cell backgrounds: rgb(237, 240, 238) ×4 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
   pt[STUDY001]@0.4016 pt[STUDY002]@0.1025 pt[STUDY003]@0.4579 pt[STUDY004]@0.6888 pt[STUDY005]@0.5314 pt[STUDY006]@0.7523 pt[STUDY007]@0.2699 pt[STUDY008]@0.2650 pt[STUDY009]@0.5538 pt[STUDY010]@0.9259 pt[STUDY011]@0.4423 pt[STUDY012]@0.5833 ptot@0.5142
   pt[STUDY001]@0.4113 pt[STUDY002]@0.3937 pt[STUDY003]@0.4221 pt[STUDY004]@0.9259 pt[STUDY005]@0.3207 pt[STUDY006]@0.6645 pt[STUDY007]@0.4837 pt[STUDY008]@0.3054 pt[STUDY009]@0.6381 pt[STUDY010]@0.8001 pt[STUDY011]@0.5096 pt[STUDY012]@0.4760 ptot@0.5266
@@ -185,77 +185,47 @@ accessibility:
   - button "− Early events3 metrics Each dot = one study · scale 0 → max Portfolio" [expanded]:
     - heading "− Early events3 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio
-  - text: Early Deaths (30 days)DTH30
-  - img "Early Deaths (30 days) definition": i
-  - text: Planned n (% enr.)
+  - text: Early Deaths (30 days)DTH30 Planned n (% enr.)
   - 'img "Early Deaths (30 days): 12 studies"': 0 1.5%
-  - text: 69 (0.8%) Early Deaths (90 days)DTH90
-  - img "Early Deaths (90 days) definition": i
-  - text: Planned n (% enr.)
+  - text: 69 (0.8%) Early Deaths (90 days)DTH90 Planned n (% enr.)
   - 'img "Early Deaths (90 days): 12 studies"': 0 3.9%
-  - text: 184 (2.1%) IP Non-startersIPNS
-  - img "IP Non-starters definition": i
-  - text: Planned n (% enr.)
+  - text: 184 (2.1%) IP Non-startersIPNS Planned n (% enr.)
   - 'img "IP Non-starters: 12 studies"': 0 2.5%
   - text: 159 (1.8%)
   - button "− Eligibility & integrity3 metrics Each dot = one study · scale 0 → max Portfolio" [expanded]:
     - heading "− Eligibility & integrity3 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio
-  - text: EligibilityIE
-  - img "Eligibility definition": i
-  - text: Planned n (% enr.)
+  - text: EligibilityIE Planned n (% enr.)
   - 'img "Eligibility: 12 studies"': 0 5.6%
-  - text: 279 (3.1%) StratificationSTRAT
-  - img "Stratification definition": i
-  - text: Planned n (% enr.)
+  - text: 279 (3.1%) StratificationSTRAT Planned n (% enr.)
   - 'img "Stratification: 12 studies"': 0 3.7%
-  - text: 208 (2.3%) Premature Censoring for PFSPFSC
-  - img "Premature Censoring for PFS definition": i
-  - text: Planned n (% enr.)
+  - text: 208 (2.3%) Premature Censoring for PFSPFSC Planned n (% enr.)
   - 'img "Premature Censoring for PFS: 12 studies"': 0 3.7%
   - text: 221 (2.5%)
   - button "− Safety & deviations5 metrics Each dot = one study · scale 0 → max Portfolio" [expanded]:
     - heading "− Safety & deviations5 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio
-  - text: AE Reporting RateAE
-  - img "AE Reporting Rate definition": i
-  - text: New / 28 d
+  - text: AE Reporting RateAE New / 28 d
   - 'img "AE Reporting Rate: 12 studies"': 0 1.92
-  - text: 1.20 SAE Reporting RateSAE
-  - img "SAE Reporting Rate definition": i
-  - text: New / 28 d
+  - text: 1.20 SAE Reporting RateSAE New / 28 d
   - 'img "SAE Reporting Rate: 12 studies"': 0 0.15
-  - text: 0.10 Non-Important Protocol Deviation RatePD
-  - img "Non-Important Protocol Deviation Rate definition": i
-  - text: New / 28 d
+  - text: 0.10 Non-Important Protocol Deviation RatePD New / 28 d
   - 'img "Non-Important Protocol Deviation Rate: 12 studies"': 0 0.56
-  - text: 0.37 Important Protocol Deviation RateIPD
-  - img "Important Protocol Deviation Rate definition": i
-  - text: New / 28 d
+  - text: 0.37 Important Protocol Deviation RateIPD New / 28 d
   - 'img "Important Protocol Deviation Rate: 12 studies"': 0 0.094
-  - text: 0.06 G3+ Lab Abnormality RateLB
-  - img "G3+ Lab Abnormality Rate definition": i
-  - text: n (%)
+  - text: 0.06 G3+ Lab Abnormality RateLB n (%)
   - 'img "G3+ Lab Abnormality Rate: 12 studies"': 0 7.0%
   - text: 8,320 (4.5%)
   - button "− Data quality4 metrics Each dot = one study · scale 0 → max Portfolio" [expanded]:
     - heading "− Data quality4 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio
-  - text: Query RateQRY
-  - img "Query Rate definition": i
-  - text: "%"
+  - text: Query RateQRY %
   - 'img "Query Rate: 12 studies"': 0 12.0%
-  - text: 6.8% Delayed Query Resolution RateOQRY
-  - img "Delayed Query Resolution Rate definition": i
-  - text: "%"
+  - text: 6.8% Delayed Query Resolution RateOQRY %
   - 'img "Delayed Query Resolution Rate: 12 studies"': 0 14.5%
-  - text: 9.0% Delayed Data Entry RateODAT
-  - img "Delayed Data Entry Rate definition": i
-  - text: "%"
+  - text: 9.0% Delayed Data Entry RateODAT %
   - 'img "Delayed Data Entry Rate: 12 studies"': 0 16.6%
-  - text: 11.7% Data Change RateCDAT
-  - img "Data Change Rate definition": i
-  - text: "%"
+  - text: 11.7% Data Change RateCDAT %
   - 'img "Data Change Rate: 12 studies"': 0 5.2%
   - text: 3.3%
   - paragraph: Dot = one study's value; the black rule is the pooled portfolio value. Click a dot to highlight that study, a category to fold it.

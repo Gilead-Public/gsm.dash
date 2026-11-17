@@ -17,7 +17,8 @@ const own = pooled(readData, [changed], metric.MetricID);
 const delta = Math.round(own.denominator / 4);
 
 /**
- * The portfolio total row's value for the metric, read under its visible heading, and its hover tooltip's Σn/Σd.
+ * The portfolio total row's value for the metric, read under its visible heading, and its hover tooltip's pooled
+ * numerator and denominator.
  * @param {Page} page
  * @param {string} row
  */
@@ -32,7 +33,8 @@ async function shownValue(page, row) {
   await value.hover();
   const tooltip = page.locator('#gsm-tooltip');
   await expect(tooltip.locator('b').first()).toHaveText(new RegExp(` · ${metric.Abbreviation}$`));
-  const nd = /Σn\/Σd = ([\d,]+) \/ ([\d,]+)/.exec(await tooltip.innerText());
+  const nd = /([\d,]+) \/ ([\d,]+) \(([^)]*)\)/.exec(await tooltip.innerText());
+  expect(nd?.[3], 'the denominator named by its catalog label').toBe(metric.Denominator);
   return { rate: readRate(metric, text), nd: nd?.slice(1, 3) };
 }
 

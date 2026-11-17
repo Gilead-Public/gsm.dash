@@ -1,8 +1,8 @@
 state: distribution-filtered
-canonical dom: sha256 609eaebf60ad5e1dfd2a50f04ffe5ccac76aec3e0884ead6e423e909b1ce3d5b (139132 characters)
-computed styles: sha256 354f5f32a0e92ea4030a34a8c750260db3fc94d00beb4b947a0bdd23af1771af (871 elements)
+canonical dom: sha256 b687df9a4ea5c17b37d126f89b209d6e8c41a05e6d5d0119c40bc765ca0c45c6 (138424 characters)
+computed styles: sha256 413fcd09c6ff78e369fd8ed7d59833b85df43c425d605ab6205a0faf53b11d81 (846 elements)
 tooltip: none
-cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×4 | rgb(224, 238, 236) ×5 | rgb(237, 240, 238) ×6 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×5 | rgb(224, 238, 236) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
+cell backgrounds: rgb(237, 240, 238) ×4 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×4 | rgb(224, 238, 236) ×4 | rgb(237, 240, 238) ×6 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×5 | rgb(224, 238, 236) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
   pt[STUDY006]@0.9259 pt[STUDY009]@0.6816 pt[STUDY011]@0.5444 ptot@0.5987 psel[STUDY002]@0.1262 lsel@0.1262
   pt[STUDY006]@0.9259 pt[STUDY009]@0.8891 pt[STUDY011]@0.7101 ptot@0.7809 psel[STUDY002]@0.5486 lsel@0.5486
@@ -180,77 +180,47 @@ accessibility:
   - button "− Early events3 metrics Each dot = one study · scale 0 → max Portfolio · BEACON-1" [expanded]:
     - heading "− Early events3 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio · BEACON-1
-  - text: Early Deaths (30 days)DTH30
-  - img "Early Deaths (30 days) definition": i
-  - text: Planned n (% enr.)
+  - text: Early Deaths (30 days)DTH30 Planned n (% enr.)
   - 'img "Early Deaths (30 days): 4 studies"': 0 1.2% 0.16%
-  - text: 20 (0.7%) BEACON-1 1 (0.2%) Early Deaths (90 days)DTH90
-  - img "Early Deaths (90 days) definition": i
-  - text: Planned n (% enr.)
+  - text: 20 (0.7%) BEACON-1 1 (0.2%) Early Deaths (90 days)DTH90 Planned n (% enr.)
   - 'img "Early Deaths (90 days): 4 studies"': 0 2.8% 1.6%
-  - text: 60 (2.2%) BEACON-1 10 (1.6%) IP Non-startersIPNS
-  - img "IP Non-starters definition": i
-  - text: Planned n (% enr.)
+  - text: 60 (2.2%) BEACON-1 10 (1.6%) IP Non-startersIPNS Planned n (% enr.)
   - 'img "IP Non-starters: 4 studies"': 0 2.5% 2.3%
   - text: 48 (1.8%) BEACON-1 15 (2.3%)
   - button "− Eligibility & integrity3 metrics Each dot = one study · scale 0 → max Portfolio · BEACON-1" [expanded]:
     - heading "− Eligibility & integrity3 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio · BEACON-1
-  - text: EligibilityIE
-  - img "Eligibility definition": i
-  - text: Planned n (% enr.)
+  - text: EligibilityIE Planned n (% enr.)
   - 'img "Eligibility: 4 studies"': 0 4.5% 3.1%
-  - text: 88 (3.2%) BEACON-1 20 (3.1%) StratificationSTRAT
-  - img "Stratification definition": i
-  - text: Planned n (% enr.)
+  - text: 88 (3.2%) BEACON-1 20 (3.1%) StratificationSTRAT Planned n (% enr.)
   - 'img "Stratification: 4 studies"': 0 3.3% 1.6%
-  - text: 55 (2.0%) BEACON-1 10 (1.6%) Premature Censoring for PFSPFSC
-  - img "Premature Censoring for PFS definition": i
-  - text: Planned n (% enr.)
+  - text: 55 (2.0%) BEACON-1 10 (1.6%) Premature Censoring for PFSPFSC Planned n (% enr.)
   - 'img "Premature Censoring for PFS: 4 studies"': 0 3.3% 2.0%
   - text: 61 (2.2%) BEACON-1 13 (2.0%)
   - button "− Safety & deviations5 metrics Each dot = one study · scale 0 → max Portfolio · BEACON-1" [expanded]:
     - heading "− Safety & deviations5 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio · BEACON-1
-  - text: AE Reporting RateAE
-  - img "AE Reporting Rate definition": i
-  - text: New / 28 d
+  - text: AE Reporting RateAE New / 28 d
   - 'img "AE Reporting Rate: 4 studies"': 0 1.92 0.95
-  - text: 1.31 BEACON-1 0.95 SAE Reporting RateSAE
-  - img "SAE Reporting Rate definition": i
-  - text: New / 28 d
+  - text: 1.31 BEACON-1 0.95 SAE Reporting RateSAE New / 28 d
   - 'img "SAE Reporting Rate: 4 studies"': 0 0.13 0.074
-  - text: 0.09 BEACON-1 0.07 Non-Important Protocol Deviation RatePD
-  - img "Non-Important Protocol Deviation Rate definition": i
-  - text: New / 28 d
+  - text: 0.09 BEACON-1 0.07 Non-Important Protocol Deviation RatePD New / 28 d
   - 'img "Non-Important Protocol Deviation Rate: 4 studies"': 0 0.56 0.44
-  - text: 0.38 BEACON-1 0.44 Important Protocol Deviation RateIPD
-  - img "Important Protocol Deviation Rate definition": i
-  - text: New / 28 d
+  - text: 0.38 BEACON-1 0.44 Important Protocol Deviation RateIPD New / 28 d
   - 'img "Important Protocol Deviation Rate: 4 studies"': 0 0.069 0.036
-  - text: 0.06 BEACON-1 0.04 G3+ Lab Abnormality RateLB
-  - img "G3+ Lab Abnormality Rate definition": i
-  - text: n (%)
+  - text: 0.06 BEACON-1 0.04 G3+ Lab Abnormality RateLB n (%)
   - 'img "G3+ Lab Abnormality Rate: 4 studies"': 0 6.1% 5.6%
   - text: 2,312 (4.0%) BEACON-1 669 (5.6%)
   - button "− Data quality4 metrics Each dot = one study · scale 0 → max Portfolio · BEACON-1" [expanded]:
     - heading "− Data quality4 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio · BEACON-1
-  - text: Query RateQRY
-  - img "Query Rate definition": i
-  - text: "%"
+  - text: Query RateQRY %
   - 'img "Query Rate: 4 studies"': 0 7.2% 6.7%
-  - text: 5.5% BEACON-1 6.7% Delayed Query Resolution RateOQRY
-  - img "Delayed Query Resolution Rate definition": i
-  - text: "%"
+  - text: 5.5% BEACON-1 6.7% Delayed Query Resolution RateOQRY %
   - 'img "Delayed Query Resolution Rate: 4 studies"': 0 13.5% 8.8%
-  - text: 8.9% BEACON-1 8.8% Delayed Data Entry RateODAT
-  - img "Delayed Data Entry Rate definition": i
-  - text: "%"
+  - text: 8.9% BEACON-1 8.8% Delayed Data Entry RateODAT %
   - 'img "Delayed Data Entry Rate: 4 studies"': 0 11.6% 9.8%
-  - text: 9.1% BEACON-1 9.8% Data Change RateCDAT
-  - img "Data Change Rate definition": i
-  - text: "%"
+  - text: 9.1% BEACON-1 9.8% Data Change RateCDAT %
   - 'img "Data Change Rate: 4 studies"': 0 4.8% 3.4%
   - text: 4.1% BEACON-1 3.4%
   - paragraph: Dot = one study's value; the black rule is the pooled portfolio value. Click a dot to highlight that study, a category to fold it.

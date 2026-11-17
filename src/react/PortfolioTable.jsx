@@ -5,7 +5,7 @@ import {
   POP_COLUMNS, MEASURE_LABELS, bandTitle, cellTip, heatClasses, metricHeadTip, popHeadTip, popTip, popValue, sortMeasure,
   studyTip, tableRows, tableShowing, tileTip,
 } from '../app/portfolio-table.js';
-import { InfoIcon, MetricValue, Sparkline, StatusPill, studyHref, useHoverTooltip } from './parts.jsx';
+import { MetricValue, Sparkline, StatusPill, studyHref, useHoverTooltip } from './parts.jsx';
 /** @typedef {import('../app/portfolio-table.js').Row} Row */
 
 /**
@@ -29,7 +29,6 @@ export function PortfolioTable({ store, hidden }) {
   const onClick = (/** @type {import('react').MouseEvent} */ e) => {
     const target = /** @type {Element} */ (e.target);
     if (target.closest('a[data-study]')) return;
-    if (target.closest('.info')) return;
     const fold = target.closest('[data-fold]');
     if (fold instanceof HTMLElement) return store.toggleGroup(fold.dataset.fold);
     const bucketCell = target.closest('tr[data-bucket] td.grp');
@@ -61,7 +60,7 @@ export function PortfolioTable({ store, hidden }) {
   const bandRow = (
     <tr className="band">
       {th({ k: 'label', label: flat ? 'Study' : 'Group', classes: 'grp', rowSpan: 2 })}
-      {th({ k: 'meta', label: flat ? 'Snapshot' : 'Studies', rowSpan: 2 })}
+      {!flat && th({ k: 'meta', label: 'Studies', rowSpan: 2 })}
       <th colSpan={2} className="bandh pop gs">
         Population
       </th>
@@ -92,7 +91,7 @@ export function PortfolioTable({ store, hidden }) {
             </span>
             <span className="otiles">
               {g.metrics.map((/** @type {any} */ m) => (
-                <span key={m.MetricID} className="tlab" data-abbr={m.Abbreviation} data-tip={metricTip(m)}>
+                <span key={m.MetricID} className="tlab" data-abbr={m.Abbreviation} data-tip={metricTip(m, { technical: false })}>
                   {m.Abbreviation}
                 </span>
               ))}
@@ -127,7 +126,6 @@ export function PortfolioTable({ store, hidden }) {
               label: (
                 <>
                   {m.Abbreviation}
-                  <InfoIcon metric={m} />
                   <span className="u">{metricUnit(m)}</span>
                   <StatusPill metric={m} />
                 </>
@@ -225,20 +223,22 @@ export function PortfolioTable({ store, hidden }) {
    * @param {boolean} child
    */
   const studyRow = (row, child) => {
-    const { study, meta: date } = row;
+    const { study, date = '' } = row;
     const nick = study.params?.nickname;
+    const tip = studyTip(study, date);
     return (
       <tr key={`study ${study.StudyID}`} className={`study ${child ? 'child' : ''} ${state.highlightStudy === study.StudyID ? 'sel' : ''}`} data-hl={study.StudyID} title="Click to highlight in every view">
         <td className="grp">
-          <a href={studyHref(store, study.StudyID)} data-study={study.StudyID} className="mono">
+          <a href={studyHref(store, study.StudyID)} data-study={study.StudyID} className="mono" data-tip={tip}>
             {study.StudyID}
           </a>
-          {nick && <span className="nick">{nick}</span>}
-          <span className="info" data-tip={studyTip(study, date)} role="img" aria-label="Study details">
-            i
-          </span>
+          {nick && (
+            <span className="nick" data-tip={tip}>
+              {nick}
+            </span>
+          )}
         </td>
-        <td className="nstud">{date}</td>
+        {child && <td className="nstud"></td>}
         {popCells(row)}
         {cells(row)}
       </tr>
@@ -249,7 +249,7 @@ export function PortfolioTable({ store, hidden }) {
   const body = [
     <tr key="total" className="total">
       <td className="grp">Portfolio total</td>
-      <td className="nstud">{filtered.length}</td>
+      {!flat && <td className="nstud">{filtered.length}</td>}
       {popCells(total)}
       {cells(total)}
     </tr>,

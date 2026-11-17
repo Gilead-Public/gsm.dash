@@ -3,6 +3,7 @@
 // column heading and row label and checked against the catalog and independent pooling of the per-study files, so a
 // change in data source (#15) or a study-view change (#11) that alters what the portfolio shows fails here.
 import { expect, readData, test } from './fixtures/app.js';
+import { expectSeen } from './fixtures/visible.js';
 import { countText, displayed, pooled, population, readRate, shownMetrics, snapshotAsOf, studiesBy, tolerance } from '../test/qual/pooling.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
@@ -53,21 +54,6 @@ function shownTable(page) {
 }
 
 /**
- * That a user can see the element: rendered with a size, and neither it nor an ancestor hidden or fully transparent.
- * Playwright's toBeVisible ignores opacity.
- * @param {import('@playwright/test').Locator} locator
- * @param {string} what
- */
-async function expectSeen(locator, what) {
-  const sees = () =>
-    locator.evaluate((el) => {
-      const box = el.getBoundingClientRect();
-      return el.checkVisibility({ opacityProperty: true, visibilityProperty: true }) && box.width > 0 && box.height > 0;
-    });
-  await expect.poll(sees, { message: what }).toBe(true);
-}
-
-/**
  * @param {import('@playwright/test').Locator} locator
  * @param {number} count
  * @param {string} what
@@ -111,7 +97,8 @@ async function expectRow(page, table, label, members) {
   expect(row.tiles.map((t) => t.length), `${label}: values under each category`).toEqual(bands.map((b) => b.metrics.length));
   const tr = page.locator('.portfolio-table table.po tbody tr').nth(index);
   await expectSeen(tr.locator(row.kind === 'study' ? 'td.grp a[data-study]' : 'td.grp'), `${label}: row label`);
-  await expectEachVisible(tr.locator('td.nstud, td.pop'), 3, `${label}: count and population`);
+  await expectEachVisible(tr.locator('td.pop'), 2, `${label}: population`);
+  if (row.count) await expectSeen(tr.locator('td.nstud'), `${label}: study count`);
   const cells = tr.locator('td.cat');
   const tooltip = page.locator('#gsm-tooltip');
   for (const [j, band] of bands.entries()) {
@@ -126,8 +113,8 @@ async function expectRow(page, table, label, members) {
       await tile.hover();
       await expectSeen(tooltip, `${where}: tooltip`);
       await expect(tooltip.locator('b').first(), where).toHaveText(`${label} · ${metric.Abbreviation}`);
-      const nd = /Σn\/Σd = ([\d,]+) \/ ([\d,]+)/.exec(await tooltip.innerText());
-      expect(nd?.slice(1, 3), `${where}: Σn/Σd`).toEqual([countText(want.numerator), countText(want.denominator)]);
+      const nd = /([\d,]+) \/ ([\d,]+) \(([^)]*)\)/.exec(await tooltip.innerText());
+      expect(nd?.slice(1, 4), `${where}: pooled n / d (denominator)`).toEqual([countText(want.numerator), countText(want.denominator), metric.Denominator]);
     }
   }
 }
@@ -143,10 +130,10 @@ test.describe('portfolio view numbers', () => {
     const table = await shownTable(page);
     await expectHeadings(page, table);
     expect(table.rows.map((r) => [r.kind, r.label])).toEqual([['total', 'Portfolio total'], ...studies.map((s) => ['study', s.StudyID])]);
-    expect(table.rows[0].count).toBe(String(studies.length));
     await expectRow(page, table, 'Portfolio total', studies);
     for (const study of studies) {
-      expect(table.rows.find((r) => r.label === study.StudyID)?.count, study.StudyID).toBe(snapshotAsOf(study, null));
+      await page.locator(`tr.study a[data-study="${study.StudyID}"]`).hover();
+      await expect(page.locator('#gsm-tooltip'), `${study.StudyID}: its snapshot`).toContainText(`Snapshot: ${snapshotAsOf(study, null)}`);
       await expectRow(page, table, study.StudyID, [study]);
     }
   });
@@ -180,7 +167,6 @@ test.describe('portfolio view numbers', () => {
     const table = await shownTable(page);
     await expectHeadings(page, table);
     expect(table.rows.map((r) => [r.kind, r.label])).toEqual([['total', 'Portfolio total'], ...kept.map((s) => ['study', s.StudyID])]);
-    expect(table.rows[0].count).toBe(String(kept.length));
     await expectRow(page, table, 'Portfolio total', kept);
     for (const study of kept) await expectRow(page, table, study.StudyID, [study]);
   });
@@ -202,7 +188,6 @@ test.describe('portfolio view numbers', () => {
       await expect(page.locator('.portfolio-table tr.study'), what).toHaveCount(members.length);
       let table = await shownTable(page);
       expect(table.rows.map((r) => [r.kind, r.label]), `${what}: ungrouped rows`).toEqual([['total', 'Portfolio total'], ...ids.map((id) => ['study', id])]);
-      expect(table.rows[0].count, what).toBe(String(members.length));
       await expectRow(page, table, 'Portfolio total', members);
 
       const groups = studiesBy(members, 'phase');
