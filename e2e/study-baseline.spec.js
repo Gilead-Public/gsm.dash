@@ -4,6 +4,7 @@
 // and the marks it visibly draws, the drill-in panel with the series and values its gsm.viz chart draws, and any open
 // tooltip. Chart contents are recorded from the chart's data rather than its pixels, which differ by platform.
 import { readData, test } from './fixtures/app.js';
+import { pageAllTo, tile } from './fixtures/tiles.js';
 import { domLine, expectRecorded } from './fixtures/baseline.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('@playwright/test').TestInfo} TestInfo */
@@ -17,7 +18,7 @@ const studies = portfolio.studies;
 const catalog = portfolio.metrics;
 const study = studies[0];
 const flagged = 'STUDY006';
-const STANDARD = { overview: 'overview', details: 'scalar-tile', scatter: 'scatter-mini', numerator: 'bar-numerator', trend: 'trend-mini' };
+const STANDARD = { details: 'Details', trend: 'Trend over time' };
 
 /**
  * @param {Page} page
@@ -143,23 +144,17 @@ async function goToVisit(page, index) {
   }, index);
 }
 
-/**
- * @param {Page} page
- * @param {string} metricId
- */
-const tile = (page, metricId) => page.locator(`.tile[data-metric-id="${metricId}"]`);
-
 test.describe('the study page against its recorded baseline', () => {
-  test('12.02: the study page matches its baseline at its defaults and in each view the all-tiles menu offers (#12)', async ({ app, page }, testInfo) => {
+  test('12.02: the study page matches its baseline at its defaults and with every tile on each standard view (#12)', async ({ app, page }, testInfo) => {
     await app.openStudy(study.StudyID);
     await expectState(page, testInfo, app.artifact, 'default');
-    for (const [name, value] of Object.entries(STANDARD)) {
-      await page.locator('select[data-all-views]').selectOption(value);
+    for (const [name, view] of Object.entries(STANDARD)) {
+      await pageAllTo(page, view);
       await expectState(page, testInfo, app.artifact, `all-${name}`);
     }
   });
 
-  test('12.02: the study page matches its baseline with a metric on its own extra view, the drill-in panel on each tab, a site highlighted and the categories ungrouped (#12)', async ({ app, page }, testInfo) => {
+  test('12.02: the study page matches its baseline with a metric on its own extra view, the drill-in panel on each tab and the categories ungrouped (#12)', async ({ app, page }, testInfo) => {
     await app.openStudy(study.StudyID);
     const linked = /** @type {{ MetricID: string }} */ (catalog.find((m) => m.Widgets?.includes('link-out')));
     const name = tile(page, linked.MetricID).locator('.view-name');
@@ -167,19 +162,13 @@ test.describe('the study page against its recorded baseline', () => {
       await tile(page, linked.MetricID).locator('button[data-view-step="1"]').click();
     }
     await expectState(page, testInfo, app.artifact, 'own-extra-view');
-    const plain = /** @type {{ MetricID: string }} */ (catalog.find((m) => !m.Widget && !m.Widgets));
-    await tile(page, plain.MetricID).locator('button[data-detail-metric]').click();
+    await tile(page, 'Analysis_kri0001').locator('button[data-detail-metric]').click();
     for (const tab of ['Bar chart', 'Scatter plot', 'Over time']) {
       await page.locator('.detail').getByRole('tab', { name: tab }).click();
       await page.locator('.detail .viz canvas').waitFor();
       await expectState(page, testInfo, app.artifact, `drill-in-${tab.toLowerCase().replace(/ /g, '-')}`);
     }
     await page.locator('.detail button[data-detail-close]').click();
-    await page.locator('select[data-all-views]').selectOption('scatter-mini');
-    await page.locator('.tile circle[data-site]').first().dispatchEvent('click');
-    await page.locator('.sitechip').waitFor();
-    await expectState(page, testInfo, app.artifact, 'site-highlighted');
-    await page.locator('button[data-clear-site]').click();
     await page.locator('input[data-group-cat]').uncheck();
     await expectState(page, testInfo, app.artifact, 'ungrouped');
   });
@@ -204,12 +193,11 @@ test.describe('the study page against its recorded baseline', () => {
   test('12.02: the study page matches its baseline for a study with site flags configured, in both flag views, and with a metric definition open (#12)', async ({ app, page }, testInfo) => {
     await app.openStudy(flagged);
     await expectState(page, testInfo, app.artifact, 'flags-configured');
-    const menu = page.locator('select[data-all-views]');
-    for (const [name, value] of [['outlier-sites', 'bar-outliers'], ['flag-distribution', 'flag-dist']]) {
-      await menu.selectOption(value);
+    for (const [name, view] of [['outlier-sites', 'Outlier sites'], ['flag-distribution', 'Flag distribution']]) {
+      await pageAllTo(page, view);
       await expectState(page, testInfo, app.artifact, `flags-${name}`);
     }
-    await menu.selectOption('default');
+    await app.openStudy(flagged);
     await page.locator('.tile .tile-head .info').first().hover();
     await page.locator('#gsm-tooltip').waitFor();
     await expectState(page, testInfo, app.artifact, 'tooltip-definition');

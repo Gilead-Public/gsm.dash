@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "18508fe1588ad2dea986e7ca1e885fe705daba69a096b18a267f7e119d88fe0d",
+  "hash": "f0574db2805e31ef55d793be41ca128850f5d4dbc173fae3732b58bedf851fa9",
   "issues": [
     {
       "number": 8,
@@ -754,7 +754,7 @@
       "title": "Remove prototype features that no requirement backs",
       "parent": null,
       "userTest": true,
-      "scopeSection": "**In:**\n- Remove the \"Change log\" link from the portfolio header.\n- Remove the \"Metric glossary\" button and its dialog from both reports. Each metric's glossary entry stays in its hovers (#20).\n- Remove the theme switch and its stored choice. Each report follows the operating system's light or dark setting. This settles #24's theme question.\n- Remove from the study report:\n  - the Randomize button;\n  - the play/pause button (the visit slider stays);\n  - the STANDARD / CUSTOM badge, on tiles and in the Charts panel;\n  - the metadata line.\n- Remove the comparison line from study tiles, and the portfolio comparison from the study document, its schema and its builder.\n- Remove the \"not site-level\" note from the portfolio's Controls panel.\n- Tests that only exercise removed behaviour go with it. The portfolio and study baselines (11.03, 12.02) are re-recorded, and the change is recorded as a reassessment.\n\n**Out:**\n- The page tags \"Program overview\" and \"Study view\", which #24's header work decides.\n- These stay as they are:\n  - the portfolio's metric All / None controls;\n  - \"Extract: <date>\" on a single-snapshot study;\n  - the study tiles' other views, the All tiles menu, the site highlight across charts and chart-mark hovers;\n  - the Charts panel on CTQ tiles.\n- The portfolio's metadata line and logo (#24).",
+      "scopeSection": "**In:**\n- Remove the \"Change log\" link from the portfolio header.\n- Remove the \"Metric glossary\" button and its dialog from both reports. Each metric's glossary entry stays in its hovers (#20).\n- Remove the theme switch and its stored choice. Each report follows the operating system's light or dark setting. This settles #24's theme question.\n- Remove from the study report:\n  - the Randomize button;\n  - the play/pause button (the visit slider stays);\n  - the STANDARD / CUSTOM badge, on tiles and in the Charts panel;\n  - the metadata line.\n- Remove the comparison line from study tiles, and the portfolio comparison from the study document, its schema and its builder.\n- Remove the \"not site-level\" note from the portfolio's Controls panel.\n- Second pass (17 Nov), removing what no business source backs (gsm.roadmap#618, #624, #625):\n  - the Overview, Scatter (n vs d) and Numerator by site tile views, with their chart hovers. A full study tile pages through Details, then Trend over time, then the metric's own views (Breakdowns, Report link), then, where a study configures them, the flag views (#11);\n  - the All tiles menu;\n  - the site highlight across charts and its chip, including in the flag views and the Charts panel;\n  - the Charts button and panel on CTQ tiles. The standard-KRI widgets keep theirs (#32);\n  - the portfolio's metric All / None buttons and per-category all / none toggle. Each metric's checkbox stays.\n- Keep, with these sources:\n  - the Trend over time view (gsm.roadmap#618 and #625: the study view presents CTQ trends);\n  - \"Extract: <date>\" in place of the visit slider on a study with one snapshot (gsm.roadmap#625: generated from the scheduled study snapshot).\n- Tests that only exercise removed behaviour go with it. The portfolio and study baselines (11.03, 12.02) are re-recorded, and the change is recorded as a reassessment.\n\n**Out:**\n- The page tags \"Program overview\" and \"Study view\", which #24's header work decides.\n- The other prototype features that only regression baselines cover. A later check finds each a business source, or removes it.\n- The portfolio's metadata line and logo (#24).",
       "criteria": [
         {
           "id": "35.01",
@@ -782,6 +782,41 @@
           "text": "A reviewer compares both reports with this issue's Scope and accepts that only the listed features are gone (visual comparison).",
           "sha256": "06bd72fc655a610a2e2b28e1e695f5ffdd35b3d6a240d790226cf620b5d34d86",
           "kind": "visual",
+          "reviewed": true
+        },
+        {
+          "id": "35.05",
+          "text": "Each full study tile pages through exactly Details, Trend over time, then the metric's own views and, where configured, the flag views. No tile offers Overview, Scatter (n vs d) or Numerator by site, and there is no All tiles menu (test).",
+          "sha256": "14e2a867939bc7ccdec9fd70d47d1677b0b02cb12608b820a093eafa22362bcb",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "35.06",
+          "text": "Clicking a site's mark in any chart highlights nothing: no site chip appears, and no chart, flag view or Charts panel changes (test).",
+          "sha256": "2137c60bb1f8aaf86ef9a00a6e6b94bb8ce23f6c7061926dfc131d81e52f9b80",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "35.07",
+          "text": "CTQ tiles have no Charts button or panel, and each standard-KRI widget keeps its Charts drill-in (test).",
+          "sha256": "fb018dd0aa3b7ad531e8bea82e183a45148100ae0d8bc67f174c37d3904c71ac",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "35.08",
+          "text": "The portfolio's Metrics section has no All / None buttons and no per-category all / none toggle, and each metric's checkbox still hides and shows its metric (test).",
+          "sha256": "672323c949149fa5aa4d2d972c5f4ff4d8f327a88a27797a302896bf454a80fb",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "35.09",
+          "text": "A study with one snapshot shows \"Extract: <date>\" with that snapshot's date, in place of the visit slider (test).",
+          "sha256": "2eee389e4c67b906c4bd871e17b391db8a48c5df4f9a3c9852edb5cd0a4d13ff",
+          "kind": "e2e",
           "reviewed": true
         }
       ]

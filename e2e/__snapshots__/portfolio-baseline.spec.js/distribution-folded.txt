@@ -1,6 +1,6 @@
 state: distribution-folded
-canonical dom: sha256 c3042c0780d34a1489c1ce18d4e9846b42776e0a797c03a18cf8707eb776e261 (257789 characters)
-computed styles: sha256 c099a5912e485cb592033f09b925993b21fd45d26615e223f8a4e037d75538d0 (1218 elements)
+canonical dom: sha256 058858b983b2950d4d8bcc06c1221778a4938171c084183d20ba019a65524f9e (256774 characters)
+computed styles: sha256 aab0a54886988c2dc10ea6a4a6d0a08125b461e8efbfec32057a1b28456d0d23 (1210 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×4 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
@@ -77,11 +77,7 @@ accessibility:
     - button "Released8" [pressed]
     - button "New4" [pressed]
     - button "Planned9" [pressed]
-    - button "All"
-    - button "None"
-    - text: Disposition
-    - button "none"
-    - text: 6/6
+    - text: Disposition 6/6
     - checkbox "SF Screen Failure Rate" [checked]
     - text: SF Screen Failure Rate
     - checkbox "SDSC Study Discontinuation Rate" [checked]
@@ -93,25 +89,19 @@ accessibility:
     - checkbox "WC Withdrawal of Consent Planned" [checked]
     - text: WC Withdrawal of Consent Planned
     - checkbox "LTFU Lost to Follow Up Planned" [checked]
-    - text: LTFU Lost to Follow Up Planned Early events
-    - button "none"
-    - text: 3/3
+    - text: LTFU Lost to Follow Up Planned Early events 3/3
     - checkbox "DTH30 Early Deaths (30 days) Planned" [checked]
     - text: DTH30 Early Deaths (30 days) Planned
     - checkbox "DTH90 Early Deaths (90 days) Planned" [checked]
     - text: DTH90 Early Deaths (90 days) Planned
     - checkbox "IPNS IP Non-starters Planned" [checked]
-    - text: IPNS IP Non-starters Planned Eligibility & integrity
-    - button "none"
-    - text: 3/3
+    - text: IPNS IP Non-starters Planned Eligibility & integrity 3/3
     - checkbox "IE Eligibility Planned" [checked]
     - text: IE Eligibility Planned
     - checkbox "STRAT Stratification Planned" [checked]
     - text: STRAT Stratification Planned
     - checkbox "PFSC Premature Censoring for PFS Planned" [checked]
-    - text: PFSC Premature Censoring for PFS Planned Safety & deviations
-    - button "none"
-    - text: 5/5
+    - text: PFSC Premature Censoring for PFS Planned Safety & deviations 5/5
     - checkbox "AE AE Reporting Rate New" [checked]
     - text: AE AE Reporting Rate New
     - checkbox "SAE SAE Reporting Rate New" [checked]
@@ -121,9 +111,7 @@ accessibility:
     - checkbox "IPD Important Protocol Deviation Rate New" [checked]
     - text: IPD Important Protocol Deviation Rate New
     - checkbox "LB G3+ Lab Abnormality Rate" [checked]
-    - text: LB G3+ Lab Abnormality Rate Data quality
-    - button "none"
-    - text: 4/4
+    - text: LB G3+ Lab Abnormality Rate Data quality 4/4
     - checkbox "QRY Query Rate" [checked]
     - text: QRY Query Rate
     - checkbox "OQRY Delayed Query Resolution Rate" [checked]

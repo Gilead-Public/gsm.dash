@@ -1,16 +1,16 @@
 import { registerWidget } from '../registry.js';
-import { gsmVizApi, chartConfig, clone, renderChart, selectedGroupIDs } from './adapter.js';
+import { gsmVizApi, chartConfig, clone, renderChart } from './adapter.js';
 
 // The KRI report's scatter plot: denominator (log) vs numerator per site,
 // with the Reporting_Bounds envelope when the snapshot carries bounds.
 
 export function renderVizScatter(el, data, config = {}) {
-  const { metric, siteRows, bounds, groups, selectedSite } = data;
+  const { metric, siteRows, bounds, groups } = data;
   return renderChart(el, { chartName: 'scatterPlot', title: metric.Abbreviation, height: config.height }, (container) =>
     gsmVizApi().scatterPlot(
       container,
       clone(siteRows),
-      chartConfig(metric, { selectedGroupIDs: selectedGroupIDs(selectedSite) }),
+      chartConfig(metric),
       bounds?.length ? clone(bounds) : [],
       groups?.length ? clone(groups) : null
     )

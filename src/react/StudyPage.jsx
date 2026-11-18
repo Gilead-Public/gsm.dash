@@ -6,7 +6,7 @@ import { getWidget } from '../widgets/index.js';
 import { configProblems, problemText, resolveView } from '../app/references.js';
 import { reportLink } from '../app/report-links.js';
 import { STUDY_PAGE_SPEC, DETAIL_TABS } from '../app/study-page-spec.js';
-import { currentTileView, sharedTileViews, tileConfig, tileViews, viewLabel } from '../app/tile-views.js';
+import { currentTileView, tileConfig, tileViews, viewLabel } from '../app/tile-views.js';
 import { kriLayout } from '../app/kri-groups.js';
 import { useStore } from './useStore.js';
 import { Widget } from './Widget.jsx';
@@ -104,26 +104,11 @@ export function StudyPage({ store, studyId, back }) {
   for (const [row, list] of categories) if (!list.length && !spec.pageWidgets.some((/** @type {any} */ w) => w.row === row)) categories.delete(row);
   const rowLabel = (/** @type {string} */ row) => (grouped ? `${row} · ${categories.get(row)?.length}` : `${row} · ${visible.length}`);
 
-  const chosen = visible.map((/** @type {any} */ m) => store.state.tileViews.get(m.MetricID) ?? null);
-  const allViews = chosen.every((v) => v === null) ? 'default' : chosen[0] && chosen.every((v) => v === chosen[0]) ? chosen[0] : 'mixed';
-  const viewOptions = [
-    ['default', 'Default per metric'],
-    ...sharedTileViews(studyId).map((name) => [name, getWidget(name)?.label ?? name]),
-    ...(allViews === 'mixed' ? [['mixed', 'Mixed']] : []),
-  ];
-
-
-  /** Any chart mark carrying data-site selects that site everywhere at once. */
-  const onClick = (/** @type {import('react').MouseEvent} */ e) => {
-    const mark = /** @type {Element} */ (e.target).closest?.('[data-site]');
-    if (mark instanceof HTMLElement || mark instanceof SVGElement) store.selectSite(mark.dataset.site);
-  };
-
   const shared = { store, studyId, version };
   const params = PARAMS.filter((p) => study.params[p] != null);
 
   return (
-    <div className="study-page" data-study={studyId} ref={root} onClick={onClick}>
+    <div className="study-page" data-study={studyId} ref={root}>
       <a href={back} className="back">
         ← Program overview
       </a>
@@ -140,32 +125,20 @@ export function StudyPage({ store, studyId, back }) {
           ))}
         </span>
         <VisitScrubber dates={dates} visit={visit} date={date} goToVisit={goToVisit} />
-        <SiteChip store={store} studyId={studyId} />
         <div className="dd-controls">
           <label className="toggle">
             <input type="checkbox" data-group-cat="" checked={grouped} onChange={(e) => store.set('groupByCategory', e.target.checked)} />
             {' Group by category'}
           </label>
-          <label className="all-views">
-            <span>All tiles</span>
-            <select data-all-views="" aria-label="Set every tile to a view" value={allViews} onChange={(e) => store.setAllTileViews(e.target.value === 'default' ? null : e.target.value)}>
-              {viewOptions.map(([v, label]) => (
-                <option key={v} value={v} disabled={v === 'mixed'}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </label>
         </div>
       </div>
       {[...categories].map(([row, metrics]) => {
-        const selected = metrics.find((m) => m.MetricID === detail.metricId);
         return (
           <div className="dd-row" data-row={row} key={row}>
             <div className="rowlab">{rowLabel(row)}</div>
             <div className="tiles">
               {metrics.map((metric) => (
-                <Tile key={metric.MetricID} metric={metric} open={detail.metricId === metric.MetricID} {...shared} />
+                <Tile key={metric.MetricID} metric={metric} {...shared} />
               ))}
               {spec.pageWidgets
                 .filter((/** @type {any} */ w) => w.row === row)
@@ -173,7 +146,6 @@ export function StudyPage({ store, studyId, back }) {
                   <PageWidget key={`${pw.widget}-${i}`} name={pw.widget} config={pw.config} {...shared} />
                 ))}
             </div>
-            {selected ? <DetailPanel metric={selected} {...shared} /> : null}
           </div>
         );
       })}
@@ -249,31 +221,9 @@ function VisitScrubber({ dates, visit, date, goToVisit }) {
 }
 
 /**
- * The current cross-chart site highlight, with a way out of it.
- * @param {{ store: any, studyId: string }} props
+ * @param {{ metric: any, store: any, studyId: string, version: number }} props
  */
-function SiteChip({ store, studyId }) {
-  const site = store.state.selectedSite;
-  if (!site) return null;
-  const name = store
-    .groupRows(studyId, store.latestDate(studyId))
-    .find((/** @type {any} */ r) => r.GroupID === site && r.GroupLevel === 'Site' && r.Param === 'Site')?.Value;
-  return (
-    <span className="sitechip" title="Highlighted in every chart on this page">
-      <i></i>
-      <span className="mono">{site}</span>
-      {name ? <span className="nm">{name}</span> : null}
-      <button type="button" data-clear-site="" aria-label="Clear site highlight" onClick={() => store.selectSite(null)}>
-        ✕
-      </button>
-    </span>
-  );
-}
-
-/**
- * @param {{ metric: any, open: boolean, store: any, studyId: string, version: number }} props
- */
-function Tile({ metric, open, store, studyId, version }) {
+function Tile({ metric, store, studyId, version }) {
   const views = tileViews(metric, studyId);
   const current = currentTileView(metric, store.state.tileViews.get(metric.MetricID), views);
   const idx = views.indexOf(current);
@@ -283,7 +233,6 @@ function Tile({ metric, open, store, studyId, version }) {
   const label = viewLabel(current);
   const link = reportLink(metric, store.reportBase, location.href, studyId);
   const step = (/** @type {number} */ by) => store.setTileView(metric.MetricID, views[(idx + by + views.length) % views.length]);
-  const toggleDetail = () => store.set('detail', { metricId: open ? null : metric.MetricID, tab: store.state.detail.tab });
   return (
     <div className={def?.size ? `tile ${def.size}` : 'tile'} data-metric-id={metric.MetricID}>
       <div className="tile-head">
@@ -302,9 +251,6 @@ function Tile({ metric, open, store, studyId, version }) {
         </span>
         <button type="button" className="vbtn" data-view-step="1" data-metric={metric.MetricID} aria-label="Next view" onClick={() => step(1)}>
           ›
-        </button>
-        <button type="button" className={`tile-more ${open ? 'on' : ''}`} data-detail-metric={metric.MetricID} aria-expanded={open} title="Full-size gsm.viz charts" onClick={toggleDetail}>
-          Charts {open ? '▴' : '▾'}
         </button>
         {link ? (
           <a className="report-link" href={link} target="_blank" rel="noopener">

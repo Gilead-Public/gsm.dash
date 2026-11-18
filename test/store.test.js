@@ -64,22 +64,6 @@ describe('study parameters', () => {
 });
 
 
-describe('cross-chart site highlight', () => {
-  it('selects, re-selects to clear, and emits each time', () => {
-    let changes = 0;
-    const onChange = () => { changes += 1; };
-    store.addEventListener('change', onChange);
-    store.selectSite('SITE0001');
-    expect(store.state.selectedSite).toBe('SITE0001');
-    store.selectSite('SITE0002');
-    expect(store.state.selectedSite).toBe('SITE0002');
-    store.selectSite('SITE0002'); // same site again clears it
-    expect(store.state.selectedSite).toBeNull();
-    store.removeEventListener('change', onChange);
-    expect(changes).toBe(3);
-  });
-});
-
 describe('visit scrubbing via asOf', () => {
   it('an earlier asOf resolves each study to its own snapshot at that date', () => {
     const study = store.studies.find((s) => s.snapshots.length >= 3);

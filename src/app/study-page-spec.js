@@ -17,11 +17,10 @@ export const STUDY_PAGE_SPEC = {
 // build never carries participant-level `listings`.
 export const EXEC_ALLOW_LIST = ['results', 'distributions', 'bounds', 'groups', 'history', 'external'];
 
-// Standard tile views, in paging order. Every one reads only the reporting
-// layer, so every site-level metric gets all of them for free. A metric's
-// custom views (meta.Widget) are appended after these.
-// Site-flag views (bar-outliers, flag-dist) are not standard: a study or a metric turns them on (#11).
-export const STANDARD_TILE_VIEWS = ['overview', 'scalar-tile', 'scatter-mini', 'bar-numerator', 'trend-mini'];
+// Standard tile views, in paging order: Details, then Trend over time (#35). Both read only the reporting layer, so
+// every site-level metric has them. A metric's own views (meta.Widget) come after these. Site-flag views
+// (bar-outliers, flag-dist) are not standard: a study or a metric turns them on (#11).
+export const STANDARD_TILE_VIEWS = ['scalar-tile', 'trend-mini'];
 
 // Drill-in panel (W4): the standard KRI-report charts offered per metric, in
 // tab order. Each is a registered gsm.viz adapter widget.

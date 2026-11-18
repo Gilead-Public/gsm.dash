@@ -161,14 +161,14 @@ describe('configured defaults (#16)', () => {
     s.toggleShow('trend');
     s.toggleShow('num');
     s.toggleShow('rate');
-    s.setAllMetrics(true);
+    for (const id of [...s.state.hiddenMetrics]) s.toggleMetric(id);
     const other = configured();
     other.applyProgramParams(new URLSearchParams(s.programParams().toString()));
     expect(viewState(other)).toEqual(viewState(new PortfolioStore(portfolio)));
   });
 
   it('always writes the hidden metrics, so a study report, which has no configuration, hides what the portfolio hid', () => {
-    for (const change of [() => {}, (s) => s.toggleMetric('Analysis_kri0005'), (s) => s.setAllMetrics(true)]) {
+    for (const change of [() => {}, (s) => s.toggleMetric('Analysis_kri0005'), (s) => [...s.state.hiddenMetrics].forEach((id) => s.toggleMetric(id))]) {
       const s = configured();
       change(s);
       const study = new PortfolioStore(portfolio);

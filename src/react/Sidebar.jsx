@@ -155,25 +155,13 @@ export function Sidebar({ store, collapsed, onCollapse }) {
             ))}
           </div>
         </div>
-        <div className="sb-actions">
-          <button type="button" className="linkbtn" data-metrics-all="on" onClick={() => store.setAllMetrics(true)}>
-            All
-          </button>
-          <button type="button" className="linkbtn" data-metrics-all="off" onClick={() => store.setAllMetrics(false)}>
-            None
-          </button>
-        </div>
         <div className="metric-list">
           {store.metricCategories(supported).map((/** @type {any} */ g) => {
             const on = g.metrics.filter((/** @type {any} */ m) => !state.hiddenMetrics.has(m.MetricID)).length;
-            const all = on === g.metrics.length;
             return (
               <div key={g.category} className="mgroup">
                 <div className="mgroup-head">
                   <span>{g.category}</span>
-                  <button type="button" className="linkbtn" data-group-metrics={g.category} data-on={all ? '1' : '0'} onClick={() => store.setMetricsVisible(g.metrics.map((/** @type {any} */ m) => m.MetricID), !all)}>
-                    {all ? 'none' : 'all'}
-                  </button>
                   <span className="cnt">
                     {on}/{g.metrics.length}
                   </span>

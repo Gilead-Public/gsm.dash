@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getWidget, listWidgets } from '../src/widgets/registry.js';
+import { getWidget } from '../src/widgets/registry.js';
 import { outlierSites } from '../src/widgets/views/bar-outliers.js';
 import { flagCounts } from '../src/widgets/views/flag-dist.js';
 import { STANDARD_TILE_VIEWS } from '../src/app/study-page-spec.js';
@@ -18,7 +18,10 @@ describe('the registered widgets', () => {
     for (const name of ['viz-bar', 'viz-scatter', 'viz-timeseries']) {
       expect(getWidget(name).format, name).toBe('wide');
     }
-    expect(listWidgets().length).toBeGreaterThanOrEqual(13);
+  });
+
+  it('35.05: no Overview, Scatter (n vs d) or Numerator by site tile view is registered (#35)', () => {
+    for (const name of ['overview', 'scatter-mini', 'bar-numerator']) expect(getWidget(name), name).toBeNull();
   });
 });
 

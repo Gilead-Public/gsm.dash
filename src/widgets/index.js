@@ -1,9 +1,6 @@
 // Build-time registry: importing this module registers the shipped widget set.
 // Standard tile views (reporting layer only — free for every site-level metric):
-import './views/overview.js';
 import './scalar-tile.js'; // "Details"
-import './views/scatter-mini.js';
-import './views/bar-numerator.js';
 import './views/bar-outliers.js';
 import './views/flag-dist.js';
 import './views/trend-mini.js';

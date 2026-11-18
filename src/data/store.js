@@ -79,7 +79,6 @@ export class PortfolioStore extends EventTarget {
       detail: { metricId: null, tab: 'viz-bar' }, // study-page drill-in panel (W4)
       tileViews: new Map(), // MetricID -> the view currently shown in its tile
       groupByCategory: true, // study page: lifecycle rows (meta.Category) vs one flat grid
-      selectedSite: null, // GroupID highlighted across every site-level chart at once
       asOf: null, // view the portfolio as of this date; the study page's visit scrubber drives it
       cellMode: this.#defaults.cellMode, // 'defined' — each metric shows its glossary display rule | 'custom' — the `show` stack for every metric
       statuses: new Set(STATUS_ORDER), // glossary Status values to show (Released | New | Planned)
@@ -98,23 +97,8 @@ export class PortfolioStore extends EventTarget {
     return this.#summary;
   }
 
-  /**
-   * Highlight one site everywhere. Selecting the already-selected site clears
-   * it, so clicking the same point twice is the way back to the default view.
-   */
-  selectSite(groupId) {
-    this.state.selectedSite = this.state.selectedSite === groupId ? null : groupId;
-    this.#emit();
-  }
-
   setTileView(metricId, viewName) {
     this.state.tileViews.set(metricId, viewName);
-    this.#emit();
-  }
-
-  /** Page every tile to one view; null returns each metric to its default view. */
-  setAllTileViews(viewName) {
-    this.state.tileViews = viewName ? new Map(this.metrics.map((m) => [m.MetricID, viewName])) : new Map();
     this.#emit();
   }
 
@@ -278,20 +262,9 @@ export class PortfolioStore extends EventTarget {
     this.#emit();
   }
 
-  /** Show or hide a batch of metrics in one change (sidebar category toggles). */
-  setMetricsVisible(metricIds, visible) {
-    for (const id of metricIds) visible ? this.state.hiddenMetrics.delete(id) : this.state.hiddenMetrics.add(id);
-    this.#emit();
-  }
-
   toggleMetric(metricId) {
     const set = this.state.hiddenMetrics;
     set.has(metricId) ? set.delete(metricId) : set.add(metricId);
-    this.#emit();
-  }
-
-  setAllMetrics(visible) {
-    this.state.hiddenMetrics = visible ? new Set() : new Set(this.metrics.map((m) => m.MetricID));
     this.#emit();
   }
 
