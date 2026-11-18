@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "f0574db2805e31ef55d793be41ca128850f5d4dbc173fae3732b58bedf851fa9",
+  "hash": "b3b678aa97531061098cf28bb8a090f02b770d7cdefa4079596ba4f48aeeb7d1",
   "issues": [
     {
       "number": 8,
@@ -243,28 +243,42 @@
       "title": "Reject portfolio inputs from mixed snapshot cycles",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": false,
-      "scopeSection": "**In:**\n- The portfolio input declares its cycle: a snapshot date or cycle ID in the manifest.\n- Studies whose latest snapshot doesn't match the cycle are excluded from the current-cycle table and totals, and named in a visible notice.\n- Missing studies are named too.\n- Trend history is unaffected.\n\n**Out:** how the pipeline signals that a cycle is complete (gsm.roadmap#624, open question 4).",
+      "scopeSection": "**In:**\n- The portfolio summary declares its cycle: the cycle's snapshot date, and the studies taking part.\n- A summary holding a study the cycle doesn't list is refused.\n- Studies whose latest snapshot isn't on the cycle's date are left out of the current-cycle table, totals and Distribution, and named in a visible notice with their latest snapshot date.\n- Participating studies with no data are named as missing in the same notice.\n- Trend history is unaffected.\n\n**Out:** how the pipeline signals that a cycle is complete (gsm.roadmap#624, open question 4).",
       "criteria": [
         {
           "id": "14.01",
-          "text": "With a fixture that has one study off-cycle, that study is excluded and named.",
-          "sha256": "e5d7ac2082dd34d7ecd024ba7a67ae2762692a99b0112ec1c5d8b884399546d0",
-          "kind": "unit",
-          "reviewed": false
+          "text": "With a fixture that has one study off-cycle, that study is excluded and named (test).",
+          "sha256": "aa73eb56a658bbd25105acae2131ddc31608fea52ab7693d56f46efeb2cf9171",
+          "kind": "e2e",
+          "reviewed": true
         },
         {
           "id": "14.02",
-          "text": "With a fixture that has one study off-cycle, totals equal the sum over the in-cycle studies.",
-          "sha256": "0842c56f57a1e7ccc3bbc6caef7b901b37d4c97402ff2fca368af51a45f1b6f6",
+          "text": "With a fixture that has one study off-cycle, totals equal the sum over the in-cycle studies (test).",
+          "sha256": "d685fd1b82ce526c51c1cb73cde460051706ef1b91c571706128aafd85ad187f",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "14.03",
-          "text": "With a fixture where every study is in cycle, the portfolio renders as before.",
-          "sha256": "c766990a8882f34b9fde499e329cf193d6260a0273a1e07476e3a255a86cc422",
+          "text": "With a fixture where every study is in cycle, the portfolio renders as before (test).",
+          "sha256": "d32e852d1b64ccae589fab17f80542ba4062430a18f2abf1812f19dc5a76fc04",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
+        },
+        {
+          "id": "14.04",
+          "text": "With a fixture whose cycle lists a study that has no data, that study is named as missing (test).",
+          "sha256": "92e15e68f0f672501e2b3685e717adb190a20a8ba0ddad20b663c635d17073db",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "14.05",
+          "text": "A summary holding a study its cycle doesn't list is refused, and the report says which study (test).",
+          "sha256": "1634a150a8fa0fd80fecc6a97f34b4d60d585f6866df52cc730db48777ac47bb",
+          "kind": "e2e",
+          "reviewed": true
         }
       ]
     },

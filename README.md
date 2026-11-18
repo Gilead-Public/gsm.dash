@@ -151,6 +151,13 @@ document, so one template serves any configuration. Its values are checked again
 Controls panel's choices and the catalog when the document is built and when the report
 loads. A setting in the address's hash overrides its configured default.
 
+Snapshot cycle (#14): the summary's `cycle` names one snapshot date and every study taking
+part. A study whose latest snapshot is on another date is left out of the table, the totals
+and Distribution, and a notice names it with its latest snapshot; a listed study with no
+data is named as missing. Trends keep every study's history before the cycle date; their
+point on the cycle date, like the totals, leaves off-cycle studies out, and they end there. A
+summary holding a study its cycle doesn't list is refused.
+
 Detailed-report links (#13): a catalog entry's `ReportLink` is a path to that metric's
 report, resolved against the manifest's optional `reportBase`, which itself resolves
 against the page; a relative base therefore works wherever the dashboard is hosted.

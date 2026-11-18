@@ -2,15 +2,16 @@
 // repository produces the same document.
 import { FLAG_KEYS, POPULATIONS } from '../src/data/summary.js';
 
-export const SUMMARY_SCHEMA_VERSION = '1.0.0';
+export const SUMMARY_SCHEMA_VERSION = '2.0.0';
 
 /**
  * Sums each study snapshot's site rows per metric, and takes each study's population counts from its latest snapshot.
  * Only counts are kept; rates and shares are left to the reader.
  * @param {{ generated: string, studies: Array<{ StudyID: string, snapshots: string[] }> }} manifest
  * @param {Array<{ StudyID: string, SnapshotDate: string, results: any[], groups: any[] }>} snapshots
+ * @param {{ SnapshotDate: string, studies: string[] }} cycle The snapshot cycle and the studies taking part (#14).
  */
-export function buildSummary(manifest, snapshots) {
+export function buildSummary(manifest, snapshots, cycle) {
   const counts = [];
   for (const snap of snapshots) {
     const byMetric = new Map();
@@ -43,6 +44,7 @@ export function buildSummary(manifest, snapshots) {
   return {
     schemaVersion: SUMMARY_SCHEMA_VERSION,
     generated: manifest.generated,
+    cycle: { SnapshotDate: cycle.SnapshotDate, studies: [...cycle.studies] },
     studies: manifest.studies.map(({ StudyID, snapshots: dates }) => ({
       StudyID,
       snapshots: dates,

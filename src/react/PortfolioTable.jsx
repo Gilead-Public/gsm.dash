@@ -200,7 +200,7 @@ export function PortfolioTable({ store, hidden }) {
         );
       }
     }
-    if (show.has('trend')) lines.push(<Sparkline key="trend" index={sparks++} series={store.trendSeries(metric.MetricID, row.studies)} label={`${label} trend`} />);
+    if (show.has('trend')) lines.push(<Sparkline key="trend" index={sparks++} series={row.trend(metric.MetricID)} label={`${label} trend`} />);
     const href = linkFor(row, metric);
     return (
       <td key={metric.MetricID} className={`${first ? 'gs ' : ''}${heatClass(row, metric)} ${metric.Status === 'Planned' ? 'planned' : ''}`} data-tip={cellTip(rollup, metric, label)}>

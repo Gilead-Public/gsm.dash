@@ -15,6 +15,8 @@ import { metricTip } from './tooltip.js';
  * @property {string} [date] A study row's snapshot date.
  * @property {(metricId: string) => any} rollup
  * @property {() => any} population
+ * @property {(metricId: string) => Array<{ date: string, rate: number | null, nStudies: number }>} trend The row's trend, from
+ *   its studies' history, off-cycle studies included (#14).
  * @property {any} [study]
  * @property {boolean} [open]
  * @property {Row[]} [children]
@@ -60,7 +62,7 @@ export function tableRows(store) {
    * @param {any} meta
    * @returns {Row}
    */
-  const makeRow = (kind, studies, label, meta, extra = {}) => {
+  const makeRow = (kind, studies, label, meta, extra = {}, history = studies) => {
     const cache = new Map();
     let popCache;
     return {
@@ -70,6 +72,7 @@ export function tableRows(store) {
         return cache.get(metricId);
       },
       population: () => (popCache ??= store.population(studies)),
+      trend: (metricId) => store.trendSeries(metricId, history),
     };
   };
   const studyRow = (/** @type {any} */ s) => makeRow('study', [s], s.StudyID, null, { study: s, date: latest.get(s.StudyID) });
@@ -82,7 +85,8 @@ export function tableRows(store) {
     return heatValue(measure, row.rollup(sort.key));
   };
   const sorted = (/** @type {Row[]} */ rows) => sortRows(rows, sort, sortValue);
-  const total = makeRow('total', filtered, 'Portfolio total', filtered.length);
+  const total = makeRow('total', filtered, 'Portfolio total', filtered.length, {}, store.filteredHistory());
+  const history = flat ? null : store.historyBuckets();
   const reported = (/** @type {any[]} */ studies) => studies.filter((s) => latest.has(s.StudyID));
   const primary = flat
     ? sorted(reported(filtered).map(studyRow))
@@ -91,7 +95,7 @@ export function tableRows(store) {
           makeRow('bucket', b.studies, String(b.value), b.studies.length, {
             open: state.expanded.has(String(b.value)),
             children: sorted(reported(b.studies).map(studyRow)),
-          }),
+          }, history?.get(String(b.value))),
         ),
       );
   return { filtered, latest, flat, total, primary };

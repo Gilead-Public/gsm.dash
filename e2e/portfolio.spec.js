@@ -124,7 +124,6 @@ test.describe('portfolio view numbers', () => {
   test.describe.configure({ timeout: 60_000 });
 
   test('11.03: the overview shows the pooled total and every study at its own latest snapshot (#11)', async ({ app, page }) => {
-    expect(new Set(studies.map((s) => snapshotAsOf(s, null))).size, 'the fixture has studies on different latest snapshots').toBeGreaterThan(1);
     expect(bands.flatMap((b) => b.metrics), 'the catalog keeps each category together').toEqual(catalog);
     await app.open();
     const table = await shownTable(page);

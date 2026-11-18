@@ -15,9 +15,9 @@ const portfolio = readData('portfolio.json');
 const studies = portfolio.studies;
 /** @type {Map<string, MetricMeta>} */
 const metrics = new Map(portfolio.metrics.map((/** @type {MetricMeta} */ m) => [m.MetricID, m]));
-// The study whose latest snapshot is older than most others', so "each study at its own latest" is observable.
-const newest = studies.map(latestSnapshot).sort().reverse()[0];
-const study = /** @type {StudyEntry} */ (studies.find((s) => latestSnapshot(s) < newest));
+// A study that started later than most, so its visits are its own rather than the portfolio's dates.
+const most = Math.max(...studies.map((s) => s.snapshots.length));
+const study = /** @type {StudyEntry} */ (studies.find((s) => s.snapshots.length < most));
 const dates = study.snapshots;
 
 const STANDARD_VIEWS = ['Details', 'Trend over time'];

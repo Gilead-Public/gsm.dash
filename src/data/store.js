@@ -39,6 +39,8 @@ function chosen(params, key, options, fallback) {
 export class PortfolioStore extends EventTarget {
   #summary = null;
   #defaults;
+  /** @type {Set<string>} */
+  #offCycle = new Set();
 
   /**
    * @param {{ manifest: any, snapshots: any[], summary?: any, config?: import('./portfolio-config.js').PortfolioConfig }} data
@@ -52,9 +54,16 @@ export class PortfolioStore extends EventTarget {
     this.metrics = active;
     this.inactiveMetrics = inactive;
     this.studies = manifest.studies;
+    // Trends draw on every study's history, off-cycle ones included (#14).
+    this.historyStudies = manifest.studies;
     this.generated = manifest.generated;
     this.reportBase = manifest.reportBase ?? null;
-    if (summary) this.#summary = indexSummary(summary, manifest.studies);
+    if (summary) {
+      this.#summary = indexSummary(summary, manifest.studies);
+      // Off-cycle studies are left out of every current figure; the cycle notice names them (#14).
+      this.#offCycle = new Set(this.#summary.cycle.offCycle.map((s) => s.StudyID));
+      this.studies = manifest.studies.filter((s) => !this.#offCycle.has(s.StudyID));
+    }
 
     // StudyID -> SnapshotDate -> {snapshot, byMetric, groupParams}
     this.snapshotIndex = new Map();
@@ -95,6 +104,11 @@ export class PortfolioStore extends EventTarget {
   get #index() {
     if (!this.#summary) throw new Error('a study report carries no portfolio summary');
     return this.#summary;
+  }
+
+  /** The portfolio's snapshot cycle and the studies left out of it (#14); null in a study report. */
+  get cycle() {
+    return this.#summary?.cycle ?? null;
   }
 
   setTileView(metricId, viewName) {
@@ -431,14 +445,27 @@ export class PortfolioStore extends EventTarget {
     return bucketStudies(this.filteredStudies(), this.state.groupBy);
   }
 
+  /** The filtered studies whose history the trends draw on, off-cycle ones included (#14). */
+  filteredHistory() {
+    return filterStudies(this.historyStudies, this.state.filters);
+  }
+
+  /** Each group's history studies, off-cycle ones included, by group value. */
+  historyBuckets() {
+    return new Map(bucketStudies(this.filteredHistory(), this.state.groupBy).map((b) => [String(b.value), b.studies]));
+  }
+
   /**
    * Portfolio pooled rate per snapshot grid date (D5). Each study contributes
    * its latest snapshot as of the grid date; studies with none yet are absent.
    */
-  trendSeries(metricId, studies = this.filteredStudies()) {
-    const gridDates = [...new Set(studies.flatMap((s) => s.snapshots))].sort();
+  trendSeries(metricId, studies = this.filteredHistory()) {
+    const cycle = this.cycle?.SnapshotDate;
+    const gridDates = [...new Set(studies.flatMap((s) => s.snapshots))].filter((d) => !cycle || d <= cycle).sort();
     return gridDates.map((date) => {
-      const { Rate, NumStudies } = poolSummary(this.#index, selectLatestSnapshots(studies, date), metricId);
+      // The cycle's own point is a current figure, so like the totals it leaves off-cycle studies out (#14).
+      const counted = date === cycle ? studies.filter((s) => !this.#offCycle.has(s.StudyID)) : studies;
+      const { Rate, NumStudies } = poolSummary(this.#index, selectLatestSnapshots(counted, date), metricId);
       return { date, rate: Rate, nStudies: NumStudies };
     });
   }
