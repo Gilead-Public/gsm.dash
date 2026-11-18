@@ -1,6 +1,6 @@
 state: tooltip-table-header
-canonical dom: sha256 c283e486166a518219fda71004c1186f3c38ca2856c98f73c855d59f78215d07 (344153 characters)
-computed styles: sha256 cb72e8212fd3ea92223e272acc5c10ac599cf5d3a07fbcfb61886f5ea22a5391 (1944 elements)
+canonical dom: sha256 8de817d4b0d88c9a263b624217fbaef5897072aae5858c75a6736f6d60e42a39 (343485 characters)
+computed styles: sha256 79a8eef37bfc207c4badaa7afdb7b5860b1e055e86d2f9ebf58ee0e0860f074c (1937 elements)
 tooltip: <b>Screen Failure Rate</b><br><span class="tip-muted mono">SF · Disposition</span><dl class="tip-dl"><dt>Definition</dt><dd><span class="tip-muted">not yet supplied (Q2)</span></dd><dt>Numerator</dt><dd>Number of screen failed participants</dd><dt>Denominator</dt><dd>Total screened participants</dd><dt>Displayed as</dt><dd>percent (n ÷ d)</dd><dt>Note</dt><dd>The tracker also lists a Planned "Screen Failure" divided by all enrolled (open question Q1).</dd></dl><span class="tip-muted">Click to sort by rate.</span>
 cell backgrounds: rgb(237, 240, 238) ×24 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21
 distribution marks:
@@ -62,12 +62,6 @@ accessibility:
       - option "Numerator"
       - option "Denominator"
       - option "Rate"
-    - text: Heatmap color
-    - group [disabled]:
-      - button "Blue" [disabled]
-      - button "Teal" [disabled]
-      - button "Purple" [disabled]
-      - button "Grey" [disabled]
     - text: Group rows by
     - combobox:
       - option "None — one row per study" [selected]

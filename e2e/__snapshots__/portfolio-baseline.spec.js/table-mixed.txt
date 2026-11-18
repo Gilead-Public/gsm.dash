@@ -1,6 +1,6 @@
 state: table-mixed
-canonical dom: sha256 dcf7c06fda1488655e1b0065155a48230ebaa642b9cffb20c917bde42b6a00b2 (326401 characters)
-computed styles: sha256 50928e245bb0c1fd4bd365ee85540cce96b08aaffacc33c44f13f36788c7645d (1742 elements)
+canonical dom: sha256 f5b0e8d4b83128beaed0edcd326a8cd5a7840f79052581a93250bc3da0990f99 (325733 characters)
+computed styles: sha256 a6df84543727ca184ada5942ffabafca90bbc286ab61929ea1376fe2d6c30dc8 (1735 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×4 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15
 distribution marks:
@@ -62,12 +62,6 @@ accessibility:
       - option "Numerator"
       - option "Denominator"
       - option "Rate"
-    - text: Heatmap color
-    - group [disabled]:
-      - button "Blue" [disabled]
-      - button "Teal" [disabled]
-      - button "Purple" [disabled]
-      - button "Grey" [disabled]
     - text: Group rows by
     - combobox:
       - option "None — one row per study" [selected]

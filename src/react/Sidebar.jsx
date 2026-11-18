@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { STATUS_ORDER } from '../data/catalog.js';
 import {
-  CELL_MODES, FILTER_LABELS, GROUP_BY_OPTIONS, HEATMAPS, HIGHLIGHT_HINT, RAMPS, cellModeHint, controlStates, showLabel,
+  CELL_MODES, FILTER_LABELS, GROUP_BY_OPTIONS, HEATMAPS, HIGHLIGHT_HINT, cellModeHint, controlStates, showLabel,
   showOptions, studyLabel,
 } from '../app/portfolio-controls.js';
 import { StatusPill } from './parts.jsx';
@@ -127,10 +127,6 @@ export function Sidebar({ store, collapsed, onCollapse }) {
               </option>
             ))}
           </select>
-        </Control>
-        <Control na={na.ramp}>
-          <label>Heatmap color</label>
-          {seg('ramp', RAMPS)}
         </Control>
         <Control na={na.groupBy}>
           <label>Group rows by</label>

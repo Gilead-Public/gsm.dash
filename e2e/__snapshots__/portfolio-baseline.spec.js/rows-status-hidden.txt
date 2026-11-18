@@ -1,6 +1,6 @@
 state: rows-status-hidden
-canonical dom: sha256 85142ab7b7f4ff89bcd6b00fad9a0507e9ccff548a905004464904243bf01d66 (116477 characters)
-computed styles: sha256 f58c43ff6298acae930cc9095a8c5589f3f4722859447a677ea6a8599359d74e (737 elements)
+canonical dom: sha256 31b511ecb10fe375f77384bf5441ff2f68423e14e06a57027e237600264b9666 (115809 characters)
+computed styles: sha256 cb78dfa69fed87bea9b4987d5e92abdb2749b8d82a1b0b2b36b13bf49c2f6371 (730 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×4 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
@@ -49,12 +49,6 @@ accessibility:
       - option "Numerator"
       - option "Denominator"
       - option "Rate"
-    - text: Heatmap color
-    - group [disabled]:
-      - button "Blue" [disabled]
-      - button "Teal" [disabled]
-      - button "Purple" [disabled]
-      - button "Grey" [disabled]
     - text: Group rows by
     - combobox:
       - option "None — one row per study" [selected]

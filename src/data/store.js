@@ -3,7 +3,7 @@ import { selectLatestSnapshots, poolResults, bucketStudies, filterStudies } from
 import { indexSummary, poolSummary, POPULATIONS } from './summary.js';
 import { nextSort } from './sort.js';
 import { STATUS_ORDER, CATEGORY_ORDER, groupByCategory } from './catalog.js';
-import { CELL_MODES, GROUP_BY_OPTIONS, HEATMAPS, RAMPS, showOptions } from '../app/portfolio-controls.js';
+import { CELL_MODES, GROUP_BY_OPTIONS, HEATMAPS, showOptions } from '../app/portfolio-controls.js';
 import { POP_COLUMNS } from '../app/portfolio-table.js';
 import { portfolioDefaults } from './portfolio-config.js';
 
@@ -12,7 +12,6 @@ const SCALARS = [
   ['group', 'groupBy', GROUP_BY_OPTIONS],
   ['cell', 'cellMode', CELL_MODES],
   ['heatmap', 'heatmap', HEATMAPS],
-  ['ramp', 'ramp', RAMPS],
 ];
 const SHOW_PARTS = showOptions(false).map(([part]) => part);
 
@@ -49,7 +48,7 @@ export class PortfolioStore extends EventTarget {
    */
   constructor({ manifest, snapshots, summary, config }) {
     super();
-    this.#defaults = { cellMode: 'defined', ramp: 'blue', ...portfolioDefaults(config) };
+    this.#defaults = { cellMode: 'defined', ...portfolioDefaults(config) };
     const { active, inactive } = orderMetrics(manifest.metrics.map(normalizeMetric));
     this.metrics = active;
     this.inactiveMetrics = inactive;
@@ -79,7 +78,6 @@ export class PortfolioStore extends EventTarget {
     this.state = {
       show: new Set(this.#defaults.show), // any of num | den | rate | trend; cells stack what's on
       heatmap: this.#defaults.heatmap, // 'none' | 'num' | 'den' | 'rate' — column-relative cell shading (and the metric sort measure)
-      ramp: this.#defaults.ramp, // heatmap palette: 'blue' | 'teal' | 'purple' | 'grey'
       groupBy: this.#defaults.groupBy, // 'none' (one row per study) | a study param
       filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set(), study: new Set() },
       hiddenMetrics: new Set(this.#defaults.metrics), // MetricIDs the user has switched off

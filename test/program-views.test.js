@@ -228,7 +228,6 @@ function viewState(s) {
     cellMode: state.cellMode,
     show: sorted(state.show),
     heatmap: state.heatmap,
-    ramp: state.ramp,
     filters: Object.fromEntries(Object.entries(state.filters).map(([k, v]) => [k, sorted(v)])),
     statuses: sorted(state.statuses),
     hiddenMetrics: sorted(state.hiddenMetrics),
@@ -249,7 +248,6 @@ function changeEveryField(s) {
   s.toggleShow('den');
   s.toggleShow('num');
   s.set('heatmap', 'rate');
-  s.set('ramp', 'teal');
   s.toggleFilter('phase', 'P2');
   s.toggleFilter('status', 'Active');
   s.toggleFilter('therapeutic_area', 'Oncology');

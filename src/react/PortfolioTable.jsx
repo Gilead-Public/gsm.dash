@@ -302,7 +302,7 @@ export function PortfolioTable({ store, hidden }) {
 
   const showing = tableShowing(store, filtered, metrics, store.tableZoom(groups.map((/** @type {any} */ g) => g.category)));
   return (
-    <div className="portfolio-table" data-ramp={state.ramp} hidden={hidden} ref={ref} onClick={onClick}>
+    <div className="portfolio-table" hidden={hidden} ref={ref} onClick={onClick}>
       <div className="showing">
         {showing.lead}
         {showing.highlight && (

@@ -1,6 +1,6 @@
 state: distribution-filtered
-canonical dom: sha256 f9e3e466503bac8c58c0216d68005bad830ec0d54234ab70d802b17e086b9ddd (137721 characters)
-computed styles: sha256 e950def1d8b440d3a62e01ec4066d0695f66e2f4c1ed688820761b4bf465ca48 (837 elements)
+canonical dom: sha256 95fabef1b8a39b798677f96f20e4579bbd8b02441b88b5df2e54c68b54a6648f (137053 characters)
+computed styles: sha256 e70b1738045c3b96acc3c72e577f2cc808d92769b75f8e54c5a7ef684fb80703 (830 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×4 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×4 | rgb(224, 238, 236) ×4 | rgb(237, 240, 238) ×6 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×5 | rgb(224, 238, 236) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
@@ -49,12 +49,6 @@ accessibility:
       - option "Denominator" [disabled]
       - option "Rate" [disabled]
     - paragraph: "Table only: the distribution plots every study on each metric’s line."
-    - text: Heatmap color
-    - group [disabled]:
-      - button "Blue" [disabled]
-      - button "Teal" [disabled]
-      - button "Purple" [disabled]
-      - button "Grey" [disabled]
     - text: Group rows by
     - combobox [disabled]:
       - option "None — one row per study" [disabled] [selected]

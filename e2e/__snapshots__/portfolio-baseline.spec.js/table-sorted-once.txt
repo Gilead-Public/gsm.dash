@@ -1,6 +1,6 @@
 state: table-sorted-once
-canonical dom: sha256 82be98cf2ee342f97b6676c6e63835e7480b5da54e9a40d9182e967b6dd91080 (326538 characters)
-computed styles: sha256 b0f17970863c2615d88cae8af656c36600f16f0cca9f2b37a30a01b6e1885368 (1743 elements)
+canonical dom: sha256 00c70c0e820b5c991ea7ce65be01b5b227fe2179d67c3008b9b192c6e483bb55 (325870 characters)
+computed styles: sha256 0c40bd2740d9820867e796d60ac843f6d13fd5f90952142598e22a7ea93f866c (1736 elements)
 tooltip: <b>Early Deaths (30 days)</b><span class="pill planned">Planned</span><br><span class="tip-muted mono">DTH30 · Early events</span><dl class="tip-dl"><dt>Definition</dt><dd><span class="tip-muted">not yet supplied (Q2)</span></dd><dt>Numerator</dt><dd>Number of participants who died within 30 days from randomization</dd><dt>Denominator</dt><dd>All enrolled</dd><dt>Displayed as</dt><dd>count (% of all enrolled)</dd><dt>Requirement</dt><dd>gsm.roadmap#121</dd></dl><span class="tip-muted">Click to sort by rate.</span>
 cell backgrounds: rgb(237, 240, 238) ×4 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) ×15
 distribution marks:
@@ -62,12 +62,6 @@ accessibility:
       - option "Numerator"
       - option "Denominator"
       - option "Rate"
-    - text: Heatmap color
-    - group [disabled]:
-      - button "Blue" [disabled]
-      - button "Teal" [disabled]
-      - button "Purple" [disabled]
-      - button "Grey" [disabled]
     - text: Group rows by
     - combobox:
       - option "None — one row per study" [selected]

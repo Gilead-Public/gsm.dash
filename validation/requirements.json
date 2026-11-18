@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "b3b678aa97531061098cf28bb8a090f02b770d7cdefa4079596ba4f48aeeb7d1",
+  "hash": "8ef412dda4888facbf38c07a5818acc7cbbc05568f70c1e21a4e8a947f391582",
   "issues": [
     {
       "number": 8,
@@ -698,8 +698,8 @@
         },
         {
           "id": "27.05",
-          "text": "The portfolio view state carries over to a study report and back: the selected view, folded categories in the table and distribution views, grouping and open groups, sorting, cell display, heatmap and palette, study filters, metric-status filters, hidden metrics and the highlighted study. The study report applies the metric-status filters and hidden metrics.",
-          "sha256": "74c00c0cbf32083a40068aed8baef97b502964042d595575f87e6f40efe8399d",
+          "text": "The portfolio view state carries over to a study report and back: the selected view, folded categories in the table and distribution views, grouping and open groups, sorting, cell display, heatmap, study filters, metric-status filters, hidden metrics and the highlighted study. The study report applies the metric-status filters and hidden metrics.",
+          "sha256": "ad9603f5ab2aa06ea5730606a8d9476968c7ae3869e6ed5d93ebeeff30f0502b",
           "kind": "e2e",
           "reviewed": true
         }

@@ -102,25 +102,29 @@ export function tableRows(store) {
 }
 
 /**
- * Column-relative heat bins over the primary rows; folded tiles shade the same way. The total row is a sum, so it is
- * shaded only by rate.
+ * Column-relative heat bins; folded tiles shade the same way. A study row is binned among every study row the
+ * ungrouped table shows, open groups or not, so its shade doesn't depend on the grouping (#23). Group rows and the
+ * total are binned among the top-level rows; the total is a sum, so it is shaded only by rate.
  * @param {string} heatmap
  * @param {any[]} metrics
  * @param {Row[]} primary
  * @returns {(row: Row, metric: any) => string}
  */
 export function heatClasses(heatmap, metrics, primary) {
-  const domains = new Map();
-  if (RELATIVE_MEASURES.has(heatmap)) {
-    for (const m of metrics) {
-      const values = primary.map((r) => heatValue(heatmap, r.rollup(m.MetricID))).filter((v) => v != null);
-      domains.set(m.MetricID, { min: Math.min(...values), max: Math.max(...values) });
-    }
-  }
+  if (!RELATIVE_MEASURES.has(heatmap)) return () => '';
+  /** @param {Row[]} rows @returns {Map<string, any>} */
+  const domains = (rows) =>
+    new Map(
+      metrics.map((m) => {
+        const values = rows.map((r) => heatValue(heatmap, r.rollup(m.MetricID))).filter((v) => v != null);
+        return [m.MetricID, { min: Math.min(...values), max: Math.max(...values) }];
+      }),
+    );
+  const top = domains(primary);
+  const study = domains(primary.flatMap((r) => (r.kind === 'study' ? [r] : r.children ?? [])));
   return (row, metric) => {
-    if (!RELATIVE_MEASURES.has(heatmap)) return '';
     if (row.kind === 'total' && heatmap !== 'rate') return '';
-    return relativeBin(heatValue(heatmap, row.rollup(metric.MetricID)), domains.get(metric.MetricID));
+    return relativeBin(heatValue(heatmap, row.rollup(metric.MetricID)), (row.kind === 'study' ? study : top).get(metric.MetricID));
   };
 }
 

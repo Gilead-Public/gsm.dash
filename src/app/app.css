@@ -23,13 +23,6 @@
   --ramp4: #86a9d8;
   color-scheme: light;
 }
-/* Heatmap palettes (D3 flag-share bins): single-hue sequential ramps, light
-   theme. Blue is the default so the heatmap never competes with the red
-   *flag* meaning. Dark-theme steps are defined in the dark blocks below. */
-[data-ramp="blue"]   { --ramp1: #eef4fb; --ramp2: #d6e4f5; --ramp3: #b3cbe9; --ramp4: #86a9d8; }
-[data-ramp="teal"]   { --ramp1: #e7f2f0; --ramp2: #cbe3df; --ramp3: #a3ccc5; --ramp4: #74b0a6; }
-[data-ramp="purple"] { --ramp1: #f1eef8; --ramp2: #ded6ef; --ramp3: #c3b4e0; --ramp4: #a38ccd; }
-[data-ramp="grey"]   { --ramp1: #f0f1f1; --ramp2: #dee1e0; --ramp3: #c4c9c7; --ramp4: #a6adaa; }
 /* Dark follows the OS setting. */
 @media (prefers-color-scheme: dark) {
   :root {
@@ -53,10 +46,6 @@
     --ramp4: #3b5c8c;
     color-scheme: dark;
   }
-  :root [data-ramp="blue"]   { --ramp1: #1a2230; --ramp2: #22304a; --ramp3: #2d4468; --ramp4: #3b5c8c; }
-  :root [data-ramp="teal"]   { --ramp1: #172622; --ramp2: #1e3530; --ramp3: #244a43; --ramp4: #2f6459; }
-  :root [data-ramp="purple"] { --ramp1: #221d30; --ramp2: #302747; --ramp3: #453766; --ramp4: #5e4c8c; }
-  :root [data-ramp="grey"]   { --ramp1: #1f2423; --ramp2: #2b3230; --ramp3: #3b4441; --ramp4: #4f5a56; }
 }
 * { box-sizing: border-box; }
 body {
@@ -220,10 +209,10 @@ table.po a.otile { cursor: pointer; }
 tr.study.child td { color: var(--ink-2); font-size: 12px; background: var(--bg); }
 tr.study.child td.grp { padding-left: 32px; background: var(--bg); }
 td .spark { display: inline-block; line-height: 0; vertical-align: middle; }
-td.hot1 { background: var(--ramp1); }
-td.hot2 { background: var(--ramp2); }
-td.hot3 { background: var(--ramp3); }
-td.hot4 { background: var(--ramp4); }
+table.po td.hot1 { background: var(--ramp1); }
+table.po td.hot2 { background: var(--ramp2); }
+table.po td.hot3 { background: var(--ramp3); }
+table.po td.hot4 { background: var(--ramp4); }
 .nstud { color: var(--ink-3); font-size: 12px; }
 table.po td.enroll, table.po th.enroll { font-variant-numeric: tabular-nums; border-right: 1px solid var(--line-2); }
 table.po th .info { cursor: help; }

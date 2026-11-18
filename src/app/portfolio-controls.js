@@ -12,7 +12,6 @@ export const GROUP_BY_OPTIONS = [
 ];
 /** @type {Record<string, string>} */
 export const FILTER_LABELS = { therapeutic_area: 'Therapeutic area', phase: 'Phase', status: 'Status', study: 'Study' };
-export const RAMPS = [['blue', 'Blue'], ['teal', 'Teal'], ['purple', 'Purple'], ['grey', 'Grey']];
 export const HEATMAPS = [['none', 'None'], ['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate']];
 export const CELL_MODES = [['defined', 'As defined'], ['custom', 'Custom']];
 
@@ -57,7 +56,6 @@ export function controlStates(store) {
     cellMode: cells,
     show: cells ? ' ' : '',
     heatmap: tableOnly,
-    ramp: dist || state.heatmap === 'none' ? ' ' : '',
     groupBy: tableOnly,
   };
 }
