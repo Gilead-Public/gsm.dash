@@ -5,3 +5,4 @@ examples/data/
 validation-runs/
 test-results/
 playwright-report/
+.astro/

@@ -1,51 +1,122 @@
 // @ts-check
 import { test as base, expect } from '@playwright/test';
 /** @typedef {import('@playwright/test').Page} Page */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { parseProject, requireRunDir } from '../projects.js';
 
-const RUN_DIR = resolve(process.env.VALIDATION_RUN_DIR ?? 'validation-runs/dev');
+const RUN_DIR = resolve(requireRunDir());
 const RUN_ID = process.env.VALIDATION_RUN_ID ?? 'dev';
 const COMMIT = process.env.VALIDATION_COMMIT ?? 'uncommitted';
 
-/** @typedef {'file' | 'subpath'} Mode */
+/** @typedef {import('../projects.js').Artifact} Artifact */
+/** @typedef {import('../../validation/lib/criteria.js').Mode} Mode */
 
-/** The example data both builds under test were made from. */
-export const DATA_DIR = join(RUN_DIR, 'build/subpath/examples/data');
+/**
+ * @param {import('@playwright/test').TestInfo} testInfo
+ */
+function projectOf(testInfo) {
+  const project = parseProject(testInfo.project.name);
+  if (!project) throw new Error(`unknown Playwright project "${testInfo.project.name}"`);
+  return project;
+}
+
+/** The example data the reports under test were built from, as the run kept it. */
+export const DATA_DIR = join(RUN_DIR, 'build/data');
+/** One report per study, each a single file. */
+export const REPORTS_DIR = join(RUN_DIR, 'build/reports');
 /**
  * @param {string} path
  */
 export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 'utf8'));
 
 /**
- * Test-only data changes, applied in place. The code under test is unchanged: in file mode the embedded JSON blocks
- * of the built file are rewritten into a copy; in sub-path mode the data requests are intercepted.
- */
-/**
+ * Test-only data changes, applied in place to the report's injected document. The code under test is unchanged: in
+ * file mode the report is rewritten into a copy; in sub-path mode its request is intercepted.
  * @typedef {object} DataOverrides
  * @property {(manifest: any) => void} [portfolio]
+ * @property {(summary: any) => void} [summary]
  * @property {(snapshot: any) => void} [snapshot]
  */
 
 /**
  * @typedef {object} App
+ * @property {Artifact} artifact
  * @property {Mode} mode
- * @property {(route?: string, overrides?: DataOverrides) => Promise<void>} open Opens the build under test at a route such as `#/study/AA-AA-000-0000` and waits for the page to render.
+ * @property {(hash?: string, overrides?: DataOverrides) => Promise<void>} open Opens `portfolio.html`, at an optional `#` hash, and waits for it to render.
+ * @property {(studyId: string, overrides?: DataOverrides, hash?: string) => Promise<void>} openStudy Opens one study's report, at an optional `#` hash, and waits for its tiles.
+ * @property {(name: string, overrides?: ReportOverrides, hash?: string) => Promise<string>} openReport Opens one report, `portfolio` or a StudyID, at an optional `#` hash, and waits for it to show its data or its error state. Returns the URL opened, without the hash.
  */
 
-const BLOCK = /<script type="application\/json" data-gsm="(portfolio|snapshot)">([\s\S]*?)<\/script>/g;
+/**
+ * Test-only changes to a report's injected data, applied as for DataOverrides.
+ * @typedef {object} ReportOverrides
+ * @property {(doc: any) => void} [document] Changes the data document.
+ * @property {string} [text] Replaces the injected text outright, for data that isn't a document at all.
+ * @property {string[]} [beside] Reports, by name, that the rewritten report's links must reach. In file mode they are
+ *   linked into its folder unchanged; under the sub-path they are served as they are.
+ */
+
+/**
+ * The same data changes for a study report's document: `portfolio` sees the report base, the catalog and the study's
+ * entry as a one-study manifest, and `snapshot` sees each of the study's snapshots.
+ * @param {DataOverrides} overrides
+ * @returns {ReportOverrides}
+ */
+function asReportOverrides(overrides) {
+  if (overrides.summary) throw new Error('a study report carries no portfolio summary; summary overrides need the portfolio report');
+  return {
+    document(doc) {
+      if (overrides.portfolio) {
+        const manifest = { generated: doc.generated, reportBase: doc.reportBase, metrics: doc.metrics, studies: [doc.study] };
+        overrides.portfolio(manifest);
+        doc.metrics = manifest.metrics;
+        [doc.study] = manifest.studies;
+        if (manifest.reportBase === undefined) delete doc.reportBase;
+        else doc.reportBase = manifest.reportBase;
+      }
+      if (overrides.snapshot) for (const snapshot of doc.snapshots) overrides.snapshot(snapshot);
+    },
+  };
+}
+
+/**
+ * The same data changes for the portfolio report's document: `portfolio` sees the report base, the catalog and the
+ * studies as a manifest, and `summary` sees the summary. The portfolio report carries no study files.
+ * @param {DataOverrides} overrides
+ * @returns {ReportOverrides}
+ */
+function asPortfolioOverrides(overrides) {
+  if (overrides.snapshot) throw new Error('the portfolio report carries no study files; snapshot overrides need a study report');
+  return {
+    document(doc) {
+      if (overrides.portfolio) {
+        const manifest = { generated: doc.generated, reportBase: doc.reportBase, metrics: doc.metrics, studies: doc.studies };
+        overrides.portfolio(manifest);
+        doc.metrics = manifest.metrics;
+        doc.studies = manifest.studies;
+        if (manifest.reportBase === undefined) delete doc.reportBase;
+        else doc.reportBase = manifest.reportBase;
+      }
+      overrides.summary?.(doc.summary);
+    },
+  };
+}
+
+const DATA_BLOCK = /(<script type="application\/json" id="gsm-data">)([\s\S]*?)(<\/script>)/;
 
 /**
  * @param {string} html
- * @param {DataOverrides} overrides
+ * @param {ReportOverrides} overrides
  * @returns {string}
  */
-function rewriteEmbedded(html, overrides) {
-  return html.replace(BLOCK, (_, kind, text) => {
-    const data = JSON.parse(text);
-    if (kind === 'portfolio') overrides.portfolio?.(data);
-    else overrides.snapshot?.(data);
-    return `<script type="application/json" data-gsm="${kind}">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
+function rewriteReport(html, overrides) {
+  if (!DATA_BLOCK.test(html)) throw new Error('the report has no #gsm-data block');
+  return html.replace(DATA_BLOCK, (_, open, text, close) => {
+    if (overrides.text !== undefined) return `${open}${overrides.text}${close}`;
+    const doc = JSON.parse(text);
+    overrides.document?.(doc);
+    return `${open}${JSON.stringify(doc).replace(/</g, '\\u003c')}${close}`;
   });
 }
 
@@ -73,40 +144,52 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
 
   app: async ({ page, context, pageErrors }, use, testInfo) => {
     void pageErrors;
-    const mode = /** @type {Mode} */ (testInfo.project.name);
+    const { artifact, mode } = projectOf(testInfo);
     if (mode === 'file') await context.route(/^https?:/, (route) => route.abort());
-    const base = mode === 'file'
-      ? `file://${join(RUN_DIR, 'build/file/gsm-dash-standalone.html')}`
-      : (testInfo.project.use.baseURL);
+    const base = testInfo.project.use.baseURL;
     await use({
+      artifact,
       mode,
-      async open(route = '', overrides) {
-        let url = `${base}${route}`;
+      async open(hash = '', overrides) {
+        await this.openReport('portfolio', overrides && asPortfolioOverrides(overrides), hash);
+        await page.locator('#app > .layout').waitFor();
+      },
+      async openStudy(studyId, overrides, hash = '') {
+        await this.openReport(studyId, overrides && asReportOverrides(overrides), hash);
+        await page.locator('#app .tile').first().waitFor();
+      },
+      async openReport(name, overrides, hash = '') {
+        const file = join(REPORTS_DIR, `${name}.html`);
+        let url = mode === 'file' ? `file://${file}` : `${base}${encodeURIComponent(name)}.html`;
         if (overrides && mode === 'file') {
-          const variant = testInfo.outputPath('variant.html');
-          writeFileSync(variant, rewriteEmbedded(readFileSync(join(RUN_DIR, 'build/file/gsm-dash-standalone.html'), 'utf8'), overrides));
-          url = `file://${variant}${route}`;
+          const variant = testInfo.outputPath(`${name}.html`);
+          // Never write through a link to a report under test.
+          rmSync(variant, { force: true });
+          writeFileSync(variant, rewriteReport(readFileSync(file, 'utf8'), overrides));
+          for (const other of overrides.beside ?? []) {
+            const at = testInfo.outputPath(`${other}.html`);
+            if (!existsSync(at)) symlinkSync(join(REPORTS_DIR, `${other}.html`), at);
+          }
+          url = `file://${variant}`;
         } else if (overrides) {
-          await page.route('**/examples/data/**', async (r) => {
+          await page.route(url, async (r) => {
             const response = await r.fetch();
-            const json = await response.json();
-            if (r.request().url().endsWith('/portfolio.json')) overrides.portfolio?.(json);
-            else overrides.snapshot?.(json);
-            await r.fulfill({ response, json });
+            await r.fulfill({ response, body: rewriteReport(await response.text(), overrides) });
           });
         }
-        await page.goto(url);
-        await page.locator('#app > .layout, #app > gsm-study-page').first().waitFor();
+        await page.goto(`${url}${hash}`);
+        await page.locator('#app > [data-study], #app > .layout, #app > [role=alert]').first().waitFor();
+        return url;
       },
     });
   },
 
   evidence: async ({}, use, testInfo) => {
-    const mode = testInfo.project.name;
+    const { artifact, mode } = projectOf(testInfo);
     await use({
       async shot(page, label) {
         const id = /^(\d+\.\d{2}):/.exec(testInfo.title)?.[1] ?? 'untraced';
-        const stamp = `${new Date().toISOString()} · run ${RUN_ID} · ${COMMIT.slice(0, 12)} · ${id} · ${mode}`;
+        const stamp = `${new Date().toISOString()} · run ${RUN_ID} · ${COMMIT.slice(0, 12)} · ${id} · ${artifact}/${mode}`;
         await page.evaluate((text) => {
           const d = document.createElement('div');
           d.id = '__evidence_banner';

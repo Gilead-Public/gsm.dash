@@ -10,6 +10,7 @@ import { expect, readData, test } from './fixtures/app.js';
  * @property {string} MetricID
  * @property {string} ID
  * @property {string} Metric
+ * @property {string} [Population]
  */
 /**
  * @typedef {object} Row
@@ -30,8 +31,8 @@ import { expect, readData, test } from './fixtures/app.js';
  * @property {string} label
  * @property {string} kind
  * @property {number} count
- * @property {number | null} population
- * @property {number | null} enrolled
+ * @property {number | null} percent
+ * @property {{ count: number, of: number }} hover
  */
 /**
  * @typedef {object} Section
@@ -39,7 +40,7 @@ import { expect, readData, test } from './fixtures/app.js';
  * @property {string} Variable
  * @property {string} title
  * @property {number} Total
- * @property {boolean} twoPercentages
+ * @property {'percent' | 'count'} display
  * @property {Bar[]} bars
  * @property {{ multi: boolean, notRecorded: boolean }} notes
  */
@@ -47,10 +48,9 @@ import { expect, readData, test } from './fixtures/app.js';
 const portfolio = readData('portfolio.json');
 const study = portfolio.studies[0];
 const snapshot = readData(study.files[study.snapshots.at(-1)]);
-const CONFIG = /** @type {Record<string, { enrolledPercent?: boolean; statusVariables?: string[]; percentLabel?: string; enrolledLabel?: string; sections: Record<string, { title?: string; topN?: number; percentLabel?: string }> }>} */ (DISTRIBUTION_CONFIG);
+const CONFIG = /** @type {Record<string, { statusVariables?: string[]; percentLabel?: string; sections: Record<string, { title?: string; topN?: number; percentLabel?: string }> }>} */ (DISTRIBUTION_CONFIG);
 /** @type {Metric[]} */
 const configured = portfolio.metrics.filter((m) => CONFIG[m.ID]);
-const route = `#/study/${encodeURIComponent(study.StudyID)}`;
 
 /**
  * @param {number | null} x
@@ -88,26 +88,24 @@ function expectedFor(m) {
   const config = CONFIG[m.ID];
   /** @type {Row[]} */
   const rows = snapshot.distributions.filter((d) => d.MetricID === m.MetricID);
-  const sections = /** @type {Section[]} */ (expectedView(rows, config, totals));
+  const sections = /** @type {Section[]} */ (expectedView(rows, config));
   return {
     header: { pct: pct(totals.Numerator / totals.Denominator), nd: `${int(totals.Numerator)} / ${int(totals.Denominator)}` },
     sections: sections.map((s) => {
-      // Column headings are the configured business labels; each value is expected under its heading.
-      const populationLabel = config.sections?.[`${s.Source}:${s.Variable}`]?.percentLabel ?? config.percentLabel ?? '%';
-      const enrolledLabel = s.twoPercentages ? (config.enrolledLabel ?? '% Enrolled') : null;
+      // The one column heading is the population's business label for a status section, or "n" for a reason section.
+      const heading = s.display === 'percent' ? (config.sections?.[`${s.Source}:${s.Variable}`]?.percentLabel ?? config.percentLabel ?? '%') : 'n';
       return {
         title: s.title,
         variable: s.Variable,
+        source: s.Source,
+        display: s.display,
         isStatus: (config.statusVariables ?? []).includes(s.Variable),
-        headings: ['n', populationLabel, ...(enrolledLabel ? [enrolledLabel] : [])],
+        headings: [heading],
         rows: s.bars.map((bar) => ({
           label: bar.label,
           kind: bar.kind,
-          values: {
-            n: int(bar.count),
-            [populationLabel]: pct(bar.population),
-            ...(enrolledLabel ? { [enrolledLabel]: pct(bar.enrolled) } : {}),
-          },
+          values: { [heading]: s.display === 'percent' ? pct(bar.percent) : int(bar.count) },
+          hover: `${bar.label}: ${int(bar.hover.count)} of ${int(bar.hover.of)}`,
         })),
         notes: [
           ...(s.notes.multi ? [`A participant can fall in more than one category, so the counts add up to more than ${int(s.Total)}.`] : []),
@@ -158,7 +156,7 @@ async function renderedFor(page, m) {
           const heading = headings.find((h) => middle >= h.left - 0.5 && middle <= h.right + 0.5);
           values[heading ? String(heading.text) : `no heading at x=${Math.round(middle)}`] = visible(cell, `section ${i} row ${j} value`);
         }
-        return { label: visible(r.querySelector('.lbl'), `section ${i} row ${j} label`), values };
+        return { label: visible(r.querySelector('.lbl'), `section ${i} row ${j} label`), values, hover: r.getAttribute('title'), text: /** @type {HTMLElement} */ (r).innerText.replace(/\s+/g, ' ').trim() };
       });
       return {
         title: visible(s.querySelector('.sub-h'), `section ${i} title`),
@@ -189,11 +187,11 @@ async function renderedFor(page, m) {
 const exactly = (value) => new RegExp(`^\\s*${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`);
 
 /**
- * @param {{ open(route?: string): Promise<void> }} app
+ * @param {{ openStudy(studyId: string): Promise<void> }} app
  * @param {Page} page
  */
 async function openStudy(app, page) {
-  await app.open(route);
+  await app.openStudy(study.StudyID);
   await expect(body(page, configured[0]).locator('.dist')).toBeVisible();
 }
 
@@ -210,7 +208,7 @@ test.describe('Layout A distribution widget', () => {
     }
   });
 
-  test('10.02: every displayed label, count and percentage, collapsed bars and header included, equals the independent expectation (#10)', async ({ app, page }) => {
+  test('10.02: every displayed label, percentage, count and hover value, collapsed bars and header included, equals the independent expectation (#10)', async ({ app, page }) => {
     await openStudy(app, page);
     for (const m of configured) {
       const seen = await renderedFor(page, m);
@@ -218,12 +216,40 @@ test.describe('Layout A distribution widget', () => {
       expect(seen.hidden, m.ID).toEqual([]);
       expect(seen.header, m.ID).toEqual(want.header);
       expect(
-        seen.sections.map(({ title, headings, rows }) => ({ title, headings, rows })),
+        seen.sections.map(({ title, headings, rows }) => ({ title, headings, rows: rows.map(({ label, values, hover }) => ({ label, values, hover })) })),
         m.ID,
-      ).toEqual(want.sections.map(({ title, headings, rows }) => ({ title, headings, rows: rows.map(({ label, values }) => ({ label, values })) })));
+      ).toEqual(want.sections.map(({ title, headings, rows }) => ({ title, headings, rows: rows.map(({ label, values, hover }) => ({ label, values, hover })) })));
     }
     expect(configured.some((m) => expectedFor(m).sections.some((s) => s.rows.some((r) => r.label.startsWith('+ ')))), 'the fixture exercises a collapsed bar').toBe(true);
-    expect(configured.some((m) => expectedFor(m).sections.some((s) => s.headings.length === 3)), 'the fixture exercises the second percentage').toBe(true);
+    for (const display of ['percent', 'count']) {
+      expect(configured.some((m) => expectedFor(m).sections.some((s) => s.display === display)), `the fixture exercises ${display} sections`).toBe(true);
+    }
+  });
+
+  test('10.09: no bar shows a count and a percentage together, and each status section names its population (#10)', async ({ app, page }) => {
+    await openStudy(app, page);
+    const checked = { Denominator: 0, Numerator: 0 };
+    for (const m of configured) {
+      const seen = await renderedFor(page, m);
+      const want = expectedFor(m);
+      expect(seen.hidden, m.ID).toEqual([]);
+      expect(seen.sections, m.ID).toHaveLength(want.sections.length);
+      seen.sections.forEach((s, i) => {
+        const { source, title } = want.sections[i];
+        const where = `${m.ID} ${title}`;
+        // The population comes from the fixture's metric, not from the widget configuration.
+        expect(s.headings, where).toEqual([source === 'Denominator' ? `% of ${String(m.Population).toLowerCase()}` : 'n']);
+        for (const row of s.rows) {
+          const shown = Object.values(row.values);
+          expect(shown, `${where} ${row.label}: one value`).toHaveLength(1);
+          expect(shown[0], `${where} ${row.label}`).toMatch(source === 'Denominator' ? /^(\d+\.\d%|—)$/ : /^\d[\d,]*$/);
+          expect(row.text, `${where}: the row shows only its label and one value`).toBe(`${row.label} ${shown[0]}`);
+        }
+        checked[/** @type {'Denominator' | 'Numerator'} */ (source)] += 1;
+      });
+    }
+    expect(checked.Denominator, 'status sections checked').toBeGreaterThan(0);
+    expect(checked.Numerator, 'reason sections checked').toBeGreaterThan(0);
   });
 
   test('10.04: no user-facing text says Numerator or Denominator (#10)', async ({ app, page }) => {
@@ -284,7 +310,7 @@ test.describe('Layout A distribution widget', () => {
 
   test('10.06: configured status colours render, unmapped statuses fall back to neutral, reasons stay uncoloured (#10)', async ({ app, page }) => {
     const m = metricById('kri0006');
-    await app.open(route, {
+    await app.openStudy(study.StudyID, {
       portfolio: (p) => {
         const meta = p.metrics.find((x) => x.ID === 'kri0006');
         meta.WidgetConfigs = { ...meta.WidgetConfigs, 'distribution-bar': { colours: { 'Study Completion': 'rgb(21, 101, 192)', Ongoing: 'rgb(46, 125, 50)' } } };
@@ -323,7 +349,7 @@ test.describe('Layout A distribution widget', () => {
 
   test('10.07: a configured metric with no rows in the snapshot shows the empty state (#10)', async ({ app, page }) => {
     const m = metricById('kri0006');
-    await app.open(route, {
+    await app.openStudy(study.StudyID, {
       snapshot: (snap) => {
         if (snap.distributions) snap.distributions = snap.distributions.filter((d) => d.MetricID !== m.MetricID);
       },
@@ -348,15 +374,19 @@ test.describe('Layout A distribution widget', () => {
   });
 
   test('10.07: a metric without a breakdown configuration shows the missing state (#10)', async ({ app, page }) => {
-    await app.open(route, {
+    await app.openStudy(study.StudyID, {
       portfolio: (p) => {
-        p.metrics.find((x) => x.ID === 'kri0001').Widget = 'distribution-bar';
+        p.metrics.find((x) => x.ID === 'kri0007').Widget = 'distribution-bar';
       },
     });
-    const ae = page.locator('.tile[data-metric-id="Analysis_kri0001"] .tile-body');
-    await expect(ae).toHaveAttribute('data-state', 'missing');
-    const message = ae.getByText('No breakdowns are configured for this metric.');
-    await expect(message).toBeVisible();
+    // Since #12, a breakdown widget on a metric without a breakdown configuration is an inapplicable reference: the
+    // missing state is the placeholder naming the widget, the metric and the reason.
+    const tdsc = page.locator('.tile[data-metric-id="Analysis_kri0007"] .tile-body');
+    await expect(tdsc.locator('.ref-problem')).toBeVisible();
+    await expect(tdsc.locator('.ref-problem')).toHaveText(
+      `Can't show this view. Widget "distribution-bar" for TDSC (Analysis_kri0007): it has no breakdown configuration.`,
+    );
+    await expect(tdsc.locator('.dist')).toHaveCount(0);
   });
 
   test('10.08: the rendered widgets are captured for comparison with the Layout A design (visual comparison) (#10)', async ({ app, page, evidence }) => {

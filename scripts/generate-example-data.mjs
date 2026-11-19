@@ -6,6 +6,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DISTRIBUTION_SPECS, distributionRows, seedOf, simulateRecords } from './example-distributions.mjs';
 import { DISTRIBUTION_CONFIG } from '../src/config/distributions.js';
+import { buildSummary } from './portfolio-summary.mjs';
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', 'examples', 'data');
 const SCHEMA_VERSION = '1.0.0';
@@ -94,7 +95,8 @@ export const METRICS = GLOSSARY.map((g, i) => ({
   ...(DISTRIBUTION_CONFIG[g.id] && { Widget: 'distribution-bar' }),
   ...(g.abbr === 'DTH90' && {
     Widgets: ['link-out'],
-    WidgetConfigs: { 'link-out': { href: 'https://gilead-biostats.github.io/gsm.kri/', label: 'mortality report' } },
+    ReportLink: 'https://gilead-biostats.github.io/gsm.kri/',
+    WidgetConfigs: { 'link-out': { label: 'mortality report' } },
   }),
   // generator-only; stripped before writing
   base: g.base,
@@ -117,7 +119,7 @@ function pick(arr) {
 export function generateStudies(n = 12) {
   return Array.from({ length: n }, (_, i) => {
     const StudyID = `STUDY${String(i + 1).padStart(3, '0')}`;
-    // A few studies lag a month — snapshot cadences are independent by design.
+    // A few studies start a month later. Every study reports the latest cycle (#14).
     const nSnaps = R() < 0.25 ? SNAPSHOT_DATES.length - 1 : SNAPSHOT_DATES.length;
     const nSites = 8 + Math.floor(R() * 12);
     const sites = Array.from({ length: nSites }, (_, s) => `SITE${String(i * 100 + s + 1).padStart(4, '0')}`);
@@ -131,7 +133,7 @@ export function generateStudies(n = 12) {
         status: pick(STATUSES),
         product: `Product ${'ABCDEFGHIJKL'[i]}`,
       },
-      snapshots: SNAPSHOT_DATES.slice(0, nSnaps),
+      snapshots: SNAPSHOT_DATES.slice(SNAPSHOT_DATES.length - nSnaps),
       sites,
       // Final enrolment per site; earlier snapshots see a growing share of it.
       siteSize: sites.map(() => 10 + Math.floor(R() * 80)),
@@ -363,15 +365,18 @@ export function generatePortfolio() {
     })),
     metrics: METRICS.map(({ base, denKey, derived, ...m }) => m),
   };
-  return { manifest, snapshots: byStudy.flat(), records };
+  const snapshots = byStudy.flat();
+  const cycle = { SnapshotDate: SNAPSHOT_DATES.at(-1), studies: studies.map((s) => s.StudyID) };
+  return { manifest, snapshots, summary: buildSummary(manifest, snapshots, cycle), records };
 }
 
-/** Writes the example data (manifest plus one file per study snapshot) into `outDir`, replacing what was there. */
+/** Writes the example data (manifest, portfolio summary and one file per study snapshot) into `outDir`, replacing what was there. */
 export function writeExampleData(outDir = OUT) {
-  const { manifest, snapshots } = generatePortfolio();
+  const { manifest, snapshots, summary } = generatePortfolio();
   rmSync(outDir, { recursive: true, force: true });
   mkdirSync(outDir, { recursive: true });
   writeFileSync(join(outDir, 'portfolio.json'), JSON.stringify(manifest, null, 1));
+  writeFileSync(join(outDir, 'summary.json'), JSON.stringify(summary));
   for (const snap of snapshots) {
     const dir = join(outDir, 'studies', snap.StudyID);
     mkdirSync(dir, { recursive: true });

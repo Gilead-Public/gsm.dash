@@ -5,6 +5,7 @@ import { hashIssues } from './baseline.js';
 /** @typedef {import('./baseline.js').Criterion} Criterion */
 import { sha256 } from './criteria.js';
 import { evaluate } from './gate.js';
+import { SHIPPED } from '../../e2e/projects.js';
 import { groupFailures } from './matrix.js';
 /** @typedef {import('./gate.js').GateInput} GateInput */
 /** @typedef {import('./results.js').ResultRow} ResultRow */
@@ -39,7 +40,7 @@ const visual = crit('1.03', 'visual', 'A reviewer accepts it (visual comparison)
  * @returns {ResultRow}
  */
 const row = (title, over = {}) =>
-  ({ source: 'vitest', file: 'test/a.test.js', titlePath: [title], mode: null, outcome: 'passed', attachments: [], ...over });
+  ({ source: 'vitest', file: 'test/a.test.js', titlePath: [title], artifact: null, mode: null, outcome: 'passed', attachments: [], ...over });
 /**
  * @param {string} title
  * @param {'file' | 'subpath'} mode
@@ -47,7 +48,7 @@ const row = (title, over = {}) =>
  * @returns {ResultRow}
  */
 const pw = (title, mode, over = {}) =>
-  row(title, { source: 'playwright', file: 'e2e/a.spec.js', mode, ...over });
+  row(title, { source: 'playwright', file: 'e2e/a.spec.js', artifact: SHIPPED, mode, ...over });
 /**
  * @param {string} mode
  */
@@ -70,7 +71,7 @@ function cleanRows() {
  * @param {ResultRow[]} rows
  * @returns {TestRow[]}
  */
-const inventoryOf = (rows) => rows.map(({ source, file, titlePath, mode }) => ({ source, file, titlePath, mode }));
+const inventoryOf = (rows) => rows.map(({ source, file, titlePath, artifact, mode }) => ({ source, file, titlePath, artifact, mode }));
 
 /**
  * @param {Partial<GateInput>} [over={}]
@@ -83,6 +84,7 @@ function input(over = {}, rows = cleanRows()) {
     baseline: baselineOf([unit, e2e, visual]),
     scope: new Set([1]),
     modes: ['file', 'subpath'],
+    artifacts: { 'e2e/a.spec.js': [SHIPPED] },
     reports: { vitest: { rows: vitest, errors: [] }, playwright: { rows: playwright, errors: [] } },
     inventory: inventoryOf(rows),
     evidence: new Map([['/run/file.png', 'a'.repeat(64)], ['/run/subpath.png', 'b'.repeat(64)], ['/run/file-e2e.png', 'c'.repeat(64)], ['/run/subpath-e2e.png', 'd'.repeat(64)]]),
@@ -132,12 +134,12 @@ describe('gate', () => {
 
   it('fails a passed visual criterion with no screenshot', () => {
     const rows = cleanRows().map((r) => (r.mode === 'subpath' && r.titlePath[0].startsWith('1.03') ? { ...r, attachments: [] } : r));
-    failsWith(input({}, rows), /1\.03: no screenshot in mode "subpath"/);
+    failsWith(input({}, rows), new RegExp(`1\\.03: no screenshot in ${SHIPPED}/subpath`));
   });
 
   it('fails a passed e2e criterion with no screenshot in a mode', () => {
     const rows = cleanRows().map((r) => (r.mode === 'file' && r.titlePath[0].startsWith('1.02') ? { ...r, attachments: [] } : r));
-    failsWith(input({}, rows), /1\.02: no screenshot in mode "file"/);
+    failsWith(input({}, rows), new RegExp(`1\\.02: no screenshot in ${SHIPPED}/file`));
   });
 
   it('does not let one passing test mask a failing one', () => {
@@ -151,13 +153,13 @@ describe('gate', () => {
   });
 
   it('fails an e2e criterion that passed in only one delivery mode', () => {
-    failsWith(input({}, cleanRows().filter((r) => !(r.titlePath[0].startsWith('1.02') && r.mode === 'subpath'))), /1\.02: no passing result in mode "subpath"/);
+    failsWith(input({}, cleanRows().filter((r) => !(r.titlePath[0].startsWith('1.02') && r.mode === 'subpath'))), new RegExp(`1\\.02: no passing result in ${SHIPPED}/subpath`));
   });
 
   it('fails and marks incomplete when a delivery mode produced no results at all', () => {
     const result = evaluate(input({}, cleanRows().filter((r) => r.mode !== 'subpath')));
     expect(result.incomplete).toBe(true);
-    expect(result.failures.join('\n')).toMatch(/mode "subpath" produced no results/);
+    expect(result.failures.join('\n')).toMatch(new RegExp(`${SHIPPED}/subpath produced no results`));
   });
 
   it('fails and marks incomplete when a report is missing', () => {
@@ -168,7 +170,7 @@ describe('gate', () => {
 
   it('fails a listed test that produced no result', () => {
     const i = input();
-    i.inventory = [...(i.inventory ?? []), { source: 'vitest', file: 'test/a.test.js', titlePath: ['never ran'], mode: null }];
+    i.inventory = [...(i.inventory ?? []), { source: 'vitest', file: 'test/a.test.js', titlePath: ['never ran'], artifact: null, mode: null }];
     failsWith(i, /no result for listed test/);
   });
 
@@ -203,6 +205,10 @@ describe('gate', () => {
     failsWith(input({ baseline: baselineOf([unit, crit('1.02', 'visual', 'The widget renders.'), visual]) }), /1\.02: kind "visual" disagrees/);
   });
 
+  it('reads "(user acceptance)" as visual review, so an e2e kind with that text fails', () => {
+    failsWith(input({ baseline: baselineOf([unit, crit('1.02', 'e2e', 'A user accepts it (user acceptance).'), visual]) }), /1\.02: kind "e2e" disagrees/);
+  });
+
   it('fails a report error such as a test file that did not load', () => {
     const i = input();
     i.reports.vitest = { rows: i.reports.vitest?.rows ?? [], errors: ['vitest: test/x.test.js failed to run'] };
@@ -223,6 +229,58 @@ describe('gate', () => {
     expect(evaluate({ ...base, acceptance: [record] }).criteria.find((c) => c.id === '1.03')?.acceptance, 'file mode only').toBe('awaiting');
     expect(evaluate({ ...base, acceptance: [{ ...record, runId: 'r0' }] }).criteria.find((c) => c.id === '1.03')?.acceptance).toBe('awaiting');
     expect(evaluate({ ...base, acceptance: [{ ...record, screenshotSha256: 'c'.repeat(64) }] }).criteria.find((c) => c.id === '1.03')?.acceptance).toBe('awaiting');
+  });
+});
+
+describe('artifacts', () => {
+  // An artifact that doesn't ship, run alongside the one that does.
+  const other = /** @type {import('../../e2e/projects.js').Artifact} */ (/** @type {unknown} */ ('other'));
+  const both = { 'e2e/a.spec.js': [SHIPPED, other] };
+  /** @returns {ResultRow[]} */
+  const otherRows = () =>
+    cleanRows()
+      .filter((r) => r.source === 'playwright')
+      .map((r) => ({ ...r, artifact: other, attachments: r.attachments.map((a) => ({ ...a, path: a.path.replace('/run/', '/run/other-') })) }));
+  /**
+   * @param {ResultRow[]} rows
+   */
+  const withOtherShots = (rows) => {
+    const i = input({ artifacts: both }, rows);
+    for (const [path, hash] of [...i.evidence]) i.evidence.set(path.replace('/run/', '/run/other-'), hash.replace(/./g, 'e'));
+    return i;
+  };
+
+  it('passes when every targeted artifact passes in every mode with a screenshot', () => {
+    expect(evaluate(withOtherShots([...cleanRows(), ...otherRows()])).failures).toEqual([]);
+  });
+
+  it('fails a criterion whose spec targets an artifact that did not pass in one mode', () => {
+    const rows = [...cleanRows(), ...otherRows().filter((r) => !(r.titlePath[0].startsWith('1.02') && r.mode === 'subpath'))];
+    failsWith(withOtherShots(rows), new RegExp(`1\\.02: no passing result in ${other}/subpath`));
+  });
+
+  it('fails a targeted artifact with no screenshot in a mode', () => {
+    const rows = [...cleanRows(), ...otherRows().map((r) => (r.mode === 'file' && r.titlePath[0].startsWith('1.02') ? { ...r, attachments: [] } : r))];
+    failsWith(withOtherShots(rows), new RegExp(`1\\.02: no screenshot in ${other}/file`));
+  });
+
+  it('fails and marks incomplete when a declared artifact produced no results at all', () => {
+    const result = evaluate(input({ artifacts: both }));
+    expect(result.incomplete).toBe(true);
+    expect(result.failures.join('\n')).toMatch(new RegExp(`${other}/file produced no results`));
+  });
+
+  it('fails a browser test from a spec that declares no artifacts', () => {
+    failsWith(input({}, [...cleanRows(), pw('an untraced check', 'file', { file: 'e2e/b.spec.js' })]), /e2e\/b\.spec\.js declares no artifacts/);
+  });
+
+  it('never accepts a visual criterion on screenshots of an artifact that does not ship', () => {
+    const i = withOtherShots([...cleanRows(), ...otherRows()]);
+    const record = { runId: 'r1', criterion: '1.03', baselineHash: i.baseline.hash };
+    const unshipped = [{ ...record, screenshotSha256: 'e'.repeat(64) }];
+    const shipped = [{ ...record, screenshotSha256: 'a'.repeat(64) }, { ...record, screenshotSha256: 'b'.repeat(64) }];
+    expect(evaluate({ ...i, acceptance: unshipped }).criteria.find((c) => c.id === '1.03')?.acceptance).toBe('awaiting');
+    expect(evaluate({ ...i, acceptance: shipped }).criteria.find((c) => c.id === '1.03')?.acceptance).toBe('accepted');
   });
 });
 

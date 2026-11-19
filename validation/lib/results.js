@@ -1,6 +1,8 @@
 // @ts-check
 import { relative } from 'node:path';
 /** @typedef {import('./criteria.js').Mode} Mode */
+/** @typedef {import('../../e2e/projects.js').Artifact} Artifact */
+import { parseProject } from '../../e2e/projects.js';
 
 /** @typedef {'vitest' | 'playwright'} Source */
 /** @typedef {'passed' | 'failed' | 'skipped'} Outcome */
@@ -10,6 +12,7 @@ import { relative } from 'node:path';
  * @property {Source} source
  * @property {string} file
  * @property {string[]} titlePath
+ * @property {Artifact | null} artifact
  * @property {Mode | null} mode
  */
 
@@ -31,7 +34,7 @@ import { relative } from 'node:path';
  * @param {TestRow} r
  * @returns {string}
  */
-export const testKey = (r) => [r.source, r.file, r.titlePath.join(' > '), r.mode ?? ''].join('|');
+export const testKey = (r) => [r.source, r.file, r.titlePath.join(' > '), r.artifact ?? '', r.mode ?? ''].join('|');
 /**
  * @param {TestRow} r
  * @returns {string}
@@ -65,9 +68,9 @@ export function parseTitle(title) {
 const rel = (cwd, file) => relative(cwd, file).split('\\').join('/');
 /**
  * @param {string} project
- * @returns {Mode | null}
+ * @returns {{ artifact: Artifact | null; mode: Mode | null }}
  */
-const asMode = (project) => (project === 'file' || project === 'subpath' ? project : null);
+const fromProject = (project) => parseProject(project) ?? { artifact: null, mode: null };
 
 /**
  * @typedef {object} VitestAssertion
@@ -99,7 +102,7 @@ export function parseVitestResults(json, cwd) {
     for (const a of f.assertionResults) {
       /** @type {Outcome} */
       const outcome = a.status === 'passed' ? 'passed' : a.status === 'failed' ? 'failed' : 'skipped';
-      rows.push({ source: 'vitest', file, titlePath: [...a.ancestorTitles, a.title], mode: null, outcome, attachments: [] });
+      rows.push({ source: 'vitest', file, titlePath: [...a.ancestorTitles, a.title], artifact: null, mode: null, outcome, attachments: [] });
     }
   }
   return { rows, errors };
@@ -111,7 +114,7 @@ export function parseVitestResults(json, cwd) {
  * @returns {TestRow[]}
  */
 export function parseVitestList(json, cwd) {
-  return json.map((t) => ({ source: 'vitest', file: rel(cwd, t.file), titlePath: t.name.split(' > '), mode: null }));
+  return json.map((t) => ({ source: 'vitest', file: rel(cwd, t.file), titlePath: t.name.split(' > '), artifact: null, mode: null }));
 }
 
 /**
@@ -185,7 +188,7 @@ export function parsePlaywrightResults(report, cwd) {
       /** @type {Outcome} */
       const outcome = passed ? 'passed' : t.status === 'skipped' ? 'skipped' : 'failed';
       const attachments = t.results.flatMap((r) => (r.attachments ?? []).filter((a) => a.path).map((a) => ({ name: a.name, path: /** @type {string} */ (a.path) })));
-      rows.push({ source: 'playwright', file: pwFile(report, spec, cwd), titlePath: [...titles, spec.title], mode: asMode(t.projectName), outcome, attachments });
+      rows.push({ source: 'playwright', file: pwFile(report, spec, cwd), titlePath: [...titles, spec.title], ...fromProject(t.projectName), outcome, attachments });
     }
   }, true);
   return { rows, errors };
@@ -200,7 +203,7 @@ export function parsePlaywrightList(report, cwd) {
   /** @type {TestRow[]} */
   const rows = [];
   walk(report.suites, [], (spec, titles) => {
-    for (const t of spec.tests) rows.push({ source: 'playwright', file: pwFile(report, spec, cwd), titlePath: [...titles, spec.title], mode: asMode(t.projectName) });
+    for (const t of spec.tests) rows.push({ source: 'playwright', file: pwFile(report, spec, cwd), titlePath: [...titles, spec.title], ...fromProject(t.projectName) });
   }, true);
   return rows;
 }

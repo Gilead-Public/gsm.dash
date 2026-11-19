@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { mergeBaseline } from './baseline.js';
 /** @typedef {import('./baseline.js').Baseline} Baseline */
-import { parseIssueBody, sha256 } from './criteria.js';
+import { isVisualText, parseIssueBody, sha256 } from './criteria.js';
 import { parseTitle } from './results.js';
 
 /**
@@ -12,6 +12,12 @@ const body = (acceptance, qc = '- [] User Tests') =>
   `## Summary\n\nText.\n\n## Acceptance criteria\n\n${acceptance}\n\n## QC approach\n\n${qc}\n`;
 
 describe('acceptance-section parser', () => {
+  it('returns the Scope section, which decides how the criteria read, or an empty one', () => {
+    const scoped = `## Scope\n\n**In:** the default tile has no flag bar.  \n\n**Out:** the portfolio.\n\n${body('- **11.01** No flag counts.')}`;
+    expect(parseIssueBody(11, scoped).scopeSection).toBe('**In:** the default tile has no flag bar.\n\n**Out:** the portfolio.');
+    expect(parseIssueBody(11, body('- **11.01** No flag counts.')).scopeSection).toBe('');
+  });
+
   it('reads numbered criteria', () => {
     const parsed = parseIssueBody(14, body('- **14.01** With one study off-cycle, it is excluded.\n- **14.02** Totals add up.'));
     expect(parsed.errors).toEqual([]);
@@ -32,9 +38,16 @@ describe('acceptance-section parser', () => {
     expect(errors).toMatch(/8\.02 does not belong/);
   });
 
+  it('reads visual review only from a parenthetical', () => {
+    expect(isVisualText('A user accepts it (user acceptance).')).toBe(true);
+    expect(isVisualText('Rows carry heat shading (test and visual check).')).toBe(true);
+    expect(isVisualText('Renders before user acceptance (test).')).toBe(false);
+  });
+
   it('requires a visual criterion when User Tests is ticked', () => {
     expect(parseIssueBody(10, body('- **10.01** Renders.', '- [x] User Tests (visual comparison)')).errors.join()).toMatch(/User Tests is ticked/);
     expect(parseIssueBody(10, body('- **10.01** Renders.\n- **10.02** A reviewer accepts it (visual comparison).', '- [x] User Tests')).errors).toEqual([]);
+    expect(parseIssueBody(32, body('- **32.01** Renders.\n- **32.05** A user works through its UAT issue and accepts it (user acceptance).', '- [x] User Tests (user acceptance)')).errors).toEqual([]);
   });
 
   it('reports a missing acceptance section', () => {
@@ -54,7 +67,7 @@ describe('baseline merge', () => {
   };
   const merged = mergeBaseline(previous, [{
     number: 1, title: 't', parent: null,
-    parsed: { userTest: false, errors: [], criteria: [{ id: '1.01', text: 'Same.' }, { id: '1.02', text: 'New.' }, { id: '1.03', text: 'Added.' }] },
+    parsed: { userTest: false, errors: [], scopeSection: '', criteria: [{ id: '1.01', text: 'Same.' }, { id: '1.02', text: 'New.' }, { id: '1.03', text: 'Added.' }] },
   }])[0].criteria;
 
   it('keeps reviewed metadata when the text is unchanged', () => {

@@ -22,6 +22,7 @@ import { compareIds, isVisualText, MODES, sha256 } from './criteria.js';
  * @property {string} title
  * @property {string | null} parent
  * @property {boolean} userTest
+ * @property {string} [scopeSection] The issue's Scope as reviewed; absent in baselines written before it was recorded.
  * @property {Criterion[]} criteria
  */
 
@@ -104,24 +105,38 @@ export function writeBaseline(baseline, path = BASELINE_PATH) {
 export function mergeBaseline(previous, sources) {
   const old = new Map();
   for (const issue of previous?.issues ?? []) for (const c of issue.criteria) old.set(c.id, c);
+  const oldIssues = new Map((previous?.issues ?? []).map((i) => [i.number, i]));
 
-  return sources.map(({ number, title, parent, parsed }) => ({
-    number,
-    title,
-    parent,
-    userTest: parsed.userTest,
-    criteria: parsed.criteria
+  return sources.map(({ number, title, parent, parsed }) => {
+    // A Scope edit changes how every criterion of the issue reads, so it reopens all of their reviews. A baseline
+    // written before Scope was recorded keeps its reviews on the first sync.
+    const recorded = oldIssues.get(number)?.scopeSection;
+    const scopeChanged = recorded !== undefined && recorded !== parsed.scopeSection;
+    const criteria = parsed.criteria
       .map(({ id, text }) => {
         const hash = sha256(text);
         const prev = old.get(id);
         /** @type {Criterion} */
-        const c = { id, text, sha256: hash, kind: prev?.kind ?? null, reviewed: prev ? prev.reviewed && prev.sha256 === hash : false };
+        const c = { id, text, sha256: hash, kind: prev?.kind ?? null, reviewed: prev ? prev.reviewed && prev.sha256 === hash && !scopeChanged : false };
         if (prev?.modes) c.modes = prev.modes;
         if (prev?.reason) c.reason = prev.reason;
         return c;
       })
-      .sort((a, b) => compareIds(a.id, b.id)),
-  }));
+      .sort((a, b) => compareIds(a.id, b.id));
+    return { number, title, parent, userTest: parsed.userTest, scopeSection: parsed.scopeSection, criteria };
+  });
+}
+
+/**
+ * Whether an issue on GitHub no longer matches its baseline entry: a criterion added, removed or reworded, or the
+ * Scope edited.
+ * @param {BaselineIssue} issue
+ * @param {ParsedIssue} parsed
+ */
+export function differsFromLive(issue, parsed) {
+  const live = parsed.criteria.map((c) => `${c.id}:${sha256(c.text)}`).join(',');
+  const recorded = issue.criteria.map((c) => `${c.id}:${c.sha256}`).join(',');
+  return live !== recorded || parsed.scopeSection !== (issue.scopeSection ?? '') || parsed.errors.length > 0;
 }
 
 /**

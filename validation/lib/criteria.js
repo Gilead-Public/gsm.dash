@@ -15,12 +15,13 @@ export const MODES = ['file', 'subpath'];
 /**
  * @typedef {object} ParsedIssue
  * @property {ParsedCriterion[]} criteria
+ * @property {string} scopeSection The `## Scope` section, which decides how the criteria are read; empty when absent.
  * @property {boolean} userTest
  * @property {string[]} errors
  */
 
 const ITEM = /^- \*\*(\d+)\.(\d{2})\*\* (\S.*)$/;
-const VISUAL = /visual (check|comparison)/i;
+const VISUAL = /\([^()]*(visual (check|comparison)|user acceptance)\)/i;
 
 /**
  * @param {string | Buffer} s
@@ -57,8 +58,9 @@ function section(body, heading) {
 export function parseIssueBody(issue, body) {
   /** @type {string[]} */
   const errors = [];
+  const scopeSection = (section(body, /^## Scope\s*$/) ?? []).map((l) => l.trimEnd()).join('\n').trim();
   const lines = section(body, /^## Acceptance criteria\s*$/);
-  if (!lines) return { criteria: [], userTest: false, errors: [`#${issue}: no "## Acceptance criteria" section`] };
+  if (!lines) return { criteria: [], scopeSection, userTest: false, errors: [`#${issue}: no "## Acceptance criteria" section`] };
 
   /** @type {ParsedCriterion[]} */
   const criteria = [];
@@ -81,9 +83,9 @@ export function parseIssueBody(issue, body) {
   const qc = section(body, /^## QC approach\s*$/) ?? [];
   const userTest = qc.some((l) => /^- \[x\] User Tests/i.test(l.trim()));
   if (userTest && !criteria.some((c) => isVisualText(c.text))) {
-    errors.push(`#${issue}: User Tests is ticked but no criterion is a visual check or comparison`);
+    errors.push(`#${issue}: User Tests is ticked but no criterion is a visual check, visual comparison or user acceptance`);
   }
-  return { criteria, userTest, errors };
+  return { criteria, scopeSection, userTest, errors };
 }
 
 /**

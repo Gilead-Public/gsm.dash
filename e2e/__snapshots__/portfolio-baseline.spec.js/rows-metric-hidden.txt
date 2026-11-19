@@ -1,0 +1,237 @@
+state: rows-metric-hidden
+canonical dom: sha256 ba591564ac26b01e96fad14f599011b4ac8df34f34135633edff1fa4cbaa849d (110450 characters)
+computed styles: sha256 bd2222ecf1e6a0a9df89ea025e1016918df5264fc1268c34db5bb3f640312bc5 (716 elements)
+tooltip: none
+cell backgrounds: rgb(237, 240, 238) ×3 | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
+distribution marks:
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
+sparklines:
+  none
+accessibility:
+- main:
+  - text: Controls
+  - button "Reset"
+  - button "Collapse controls" [expanded]: «
+  - group:
+    - text: ▸ Config Highlight study
+    - combobox:
+      - option "None" [selected]
+      - option "STUDY001 · ATLAS-1"
+      - option "STUDY008 · HARBOR-2"
+      - option "STUDY012 · LUMEN-1"
+    - paragraph: Marks the study in every view. Click a row or a dot to pick one.
+    - text: Cell display
+    - group [disabled]:
+      - button "As defined" [disabled]
+      - button "Custom" [disabled]
+    - paragraph: Overview tiles show one headline value per metric. Open a category or switch to Details.
+    - text: Also show
+    - button "Trend" [disabled]
+    - text: Heatmap (also drives column sort)
+    - combobox:
+      - option "None" [selected]
+      - option "Numerator"
+      - option "Denominator"
+      - option "Rate"
+    - text: Columns
+    - button "Study name" [pressed]
+    - button "Enrolled"
+    - button "Status"
+    - text: Row density
+    - group:
+      - button "Roomy"
+      - button "Condensed"
+    - text: Group rows by
+    - combobox:
+      - option "None — one row per study" [selected]
+      - option "Therapeutic area"
+      - option "Indication"
+      - option "Phase"
+      - option "Status"
+      - option "Product"
+  - group:
+    - text: ▸ Metrics 16/21 Status
+    - button "Released8" [pressed]
+    - button "New4"
+    - button "Planned9" [pressed]
+    - text: Disposition 5/6
+    - checkbox "SF Screen Failure Rate"
+    - text: SF Screen Failure Rate
+    - checkbox "SDSC Study Discontinuation Rate" [checked]
+    - text: SDSC Study Discontinuation Rate
+    - checkbox "TDSC Treatment Discontinuation Rate" [checked]
+    - text: TDSC Treatment Discontinuation Rate
+    - checkbox "PTDSC Premature Treatment Discontinuation Rate Planned" [checked]
+    - text: PTDSC Premature Treatment Discontinuation Rate Planned
+    - checkbox "WC Withdrawal of Consent Planned" [checked]
+    - text: WC Withdrawal of Consent Planned
+    - checkbox "LTFU Lost to Follow Up Planned" [checked]
+    - text: LTFU Lost to Follow Up Planned Early events 3/3
+    - checkbox "DTH30 Early Deaths (30 days) Planned" [checked]
+    - text: DTH30 Early Deaths (30 days) Planned
+    - checkbox "DTH90 Early Deaths (90 days) Planned" [checked]
+    - text: DTH90 Early Deaths (90 days) Planned
+    - checkbox "IPNS IP Non-starters Planned" [checked]
+    - text: IPNS IP Non-starters Planned Eligibility & integrity 3/3
+    - checkbox "IE Eligibility Planned" [checked]
+    - text: IE Eligibility Planned
+    - checkbox "STRAT Stratification Planned" [checked]
+    - text: STRAT Stratification Planned
+    - checkbox "PFSC Premature Censoring for PFS Planned" [checked]
+    - text: PFSC Premature Censoring for PFS Planned Safety & deviations 5/5
+    - checkbox "AE AE Reporting Rate New" [checked]
+    - text: AE AE Reporting Rate New
+    - checkbox "SAE SAE Reporting Rate New" [checked]
+    - text: SAE SAE Reporting Rate New
+    - checkbox "PD Non-Important Protocol Deviation Rate New" [checked]
+    - text: PD Non-Important Protocol Deviation Rate New
+    - checkbox "IPD Important Protocol Deviation Rate New" [checked]
+    - text: IPD Important Protocol Deviation Rate New
+    - checkbox "LB G3+ Lab Abnormality Rate" [checked]
+    - text: LB G3+ Lab Abnormality Rate Data quality 4/4
+    - checkbox "QRY Query Rate" [checked]
+    - text: QRY Query Rate
+    - checkbox "OQRY Delayed Query Resolution Rate" [checked]
+    - text: OQRY Delayed Query Resolution Rate
+    - checkbox "ODAT Delayed Data Entry Rate" [checked]
+    - text: ODAT Delayed Data Entry Rate
+    - checkbox "CDAT Data Change Rate" [checked]
+    - text: CDAT Data Change Rate
+  - group:
+    - text: ▸ Filter 1 active Therapeutic area
+    - button "Cardiology"
+    - button "Immunology"
+    - button "Neurology"
+    - button "Oncology"
+    - button "Virology"
+    - text: Phase
+    - button "P1"
+    - button "P2"
+    - button "P3"
+    - text: Status
+    - button "Active"
+    - button "Completed"
+    - button "Enrolling"
+    - text: Study
+    - checkbox "STUDY001 ATLAS-1"
+    - text: STUDY001 ATLAS-1
+    - checkbox "STUDY002 BEACON-1"
+    - text: STUDY002 BEACON-1
+    - checkbox "STUDY003 COBALT-1"
+    - text: STUDY003 COBALT-1
+    - checkbox "STUDY004 DELTA-1"
+    - text: STUDY004 DELTA-1
+    - checkbox "STUDY005 EMBER-1"
+    - text: STUDY005 EMBER-1
+    - checkbox "STUDY006 FALCON-2"
+    - text: STUDY006 FALCON-2
+    - checkbox "STUDY007 GRANITE-3"
+    - text: STUDY007 GRANITE-3
+    - checkbox "STUDY008 HARBOR-2"
+    - text: STUDY008 HARBOR-2
+    - checkbox "STUDY009 IRIS-1"
+    - text: STUDY009 IRIS-1
+    - checkbox "STUDY010 JUNIPER-2"
+    - text: STUDY010 JUNIPER-2
+    - checkbox "STUDY011 KESTREL-3"
+    - text: STUDY011 KESTREL-3
+    - checkbox "STUDY012 LUMEN-1"
+    - text: STUDY012 LUMEN-1
+    - button "Clear filters"
+  - tablist "Program view":
+    - text: Table
+    - tab "Overview" [selected]
+    - tab "Details"
+    - tab "Distribution"
+  - text: Every category folded to headline values · click a band to open it Showing 3 / 12 studies · 16 / 21 site-level metrics (7 released · 9 planned) · one headline value per metric · each study at its own latest snapshot
+  - table:
+    - rowgroup:
+      - row "Study Population Open Disposition Disposition 5 metrics SDSC TDSC PTDSC WC LTFU Open Early events Early events 3 metrics Planned DTH30 DTH90 IPNS Open Eligibility & integrity Eligibility & integrity 3 metrics Planned IE STRAT PFSC Open Safety & deviations Safety & deviations 1 metric LB Open Data quality Data quality 4 metrics QRY OQRY ODAT CDAT":
+        - columnheader "Study"
+        - columnheader "Population"
+        - columnheader "Open Disposition Disposition 5 metrics SDSC TDSC PTDSC WC LTFU":
+          - button "Open Disposition": +
+          - text: Disposition 5 metrics SDSC TDSC PTDSC WC LTFU
+        - columnheader "Open Early events Early events 3 metrics Planned DTH30 DTH90 IPNS":
+          - button "Open Early events": +
+          - text: Early events 3 metrics Planned DTH30 DTH90 IPNS
+        - columnheader "Open Eligibility & integrity Eligibility & integrity 3 metrics Planned IE STRAT PFSC":
+          - button "Open Eligibility & integrity": +
+          - text: Eligibility & integrity 3 metrics Planned IE STRAT PFSC
+        - columnheader "Open Safety & deviations Safety & deviations 1 metric LB":
+          - button "Open Safety & deviations": +
+          - text: Safety & deviations 1 metric LB
+        - columnheader "Open Data quality Data quality 4 metrics QRY OQRY ODAT CDAT":
+          - button "Open Data quality": +
+          - text: Data quality 4 metrics QRY OQRY ODAT CDAT
+      - row "Scr. n":
+        - columnheader "Scr. n"
+    - rowgroup:
+      - row "Portfolio total 3,233 6.6% 11.5% 9.4% 3.1% 1.9% 0.7% 1.6% 1.5% 4.1% 2.6% 2.5% 4.1% 6.2% 9.2% 11.4% 2.7%":
+        - cell "Portfolio total"
+        - cell "3,233"
+        - cell "6.6% 11.5% 9.4% 3.1% 1.9%"
+        - cell "0.7% 1.6% 1.5%"
+        - cell "4.1% 2.6% 2.5%"
+        - cell "4.1%"
+        - cell "6.2% 9.2% 11.4% 2.7%"
+      - row "STUDY001ATLAS-1 1,341 6.6% 12.2% 8.6% 2.5% 2.6% 0.6% 1.6% 1.5% 3.7% 3.2% 3.2% 5.0% 5.2% 5.5% 10.4% 2.1%":
+        - cell "STUDY001ATLAS-1":
+          - link "STUDY001":
+            - /url: study:STUDY001
+          - text: ATLAS-1
+        - cell "1,341"
+        - cell "6.6% 12.2% 8.6% 2.5% 2.6%"
+        - cell "0.6% 1.6% 1.5%":
+          - text: 0.6%
+          - link "1.6%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+          - text: 1.5%
+        - cell "3.7% 3.2% 3.2%"
+        - cell "5.0%"
+        - cell "5.2% 5.5% 10.4% 2.1%"
+      - row "STUDY008HARBOR-2 611 5.2% 9.2% 8.8% 2.4% 1.4% 0.4% 1.2% 1.6% 2.8% 2.8% 2.0% 2.2% 6.8% 13.4% 12.2% 3.5%":
+        - cell "STUDY008HARBOR-2":
+          - link "STUDY008":
+            - /url: study:STUDY008
+          - text: HARBOR-2
+        - cell "611"
+        - cell "5.2% 9.2% 8.8% 2.4% 1.4%"
+        - cell "0.4% 1.2% 1.6%":
+          - text: 0.4%
+          - link "1.2%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+          - text: 1.6%
+        - cell "2.8% 2.8% 2.0%"
+        - cell "2.2%"
+        - cell "6.8% 13.4% 12.2% 3.5%"
+      - row "STUDY012LUMEN-1 1,281 7.3% 11.9% 10.5% 4.1% 1.3% 0.9% 1.9% 1.4% 5.2% 1.8% 2.1% 4.3% 6.8% 9.5% 11.8% 2.8%":
+        - cell "STUDY012LUMEN-1":
+          - link "STUDY012":
+            - /url: study:STUDY012
+          - text: LUMEN-1
+        - cell "1,281"
+        - cell "7.3% 11.9% 10.5% 4.1% 1.3%"
+        - cell "0.9% 1.9% 1.4%":
+          - text: 0.9%
+          - link "1.9%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+          - text: 1.4%
+        - cell "5.2% 1.8% 2.1%"
+        - cell "4.3%"
+        - cell "6.8% 9.5% 11.8% 2.8%"

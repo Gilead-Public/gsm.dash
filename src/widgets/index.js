@@ -1,13 +1,11 @@
 // Build-time registry: importing this module registers the shipped widget set.
 // Standard tile views (reporting layer only — free for every site-level metric):
-import './views/overview.js';
 import './scalar-tile.js'; // "Details"
-import './views/scatter-mini.js';
-import './views/bar-numerator.js';
 import './views/bar-outliers.js';
 import './views/flag-dist.js';
 import './views/trend-mini.js';
 import './distribution-bar.js';
+import './kri-summary.js';
 // Custom / page-level widgets:
 import './link-out.js';
 import './threshold-list.js';
@@ -16,5 +14,5 @@ import './viz/viz-bar.js';
 import './viz/viz-scatter.js';
 import './viz/viz-timeseries.js';
 
-export { registerWidget, resolveWidget, missingLayers, listWidgets, getWidget, widgetKind } from './registry.js';
+export { registerWidget, resolveWidget, missingLayers, listWidgets, getWidget } from './registry.js';
 export { resolveData } from './resolve.js';

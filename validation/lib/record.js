@@ -1,5 +1,5 @@
 // @ts-check
-export const REQUIRED_STEPS = /** @type {const} */ (['environment', 'scope', 'generate-data', 'build-file', 'build-subpath', 'inventory', 'vitest', 'playwright', 'report']);
+export const REQUIRED_STEPS = /** @type {const} */ (['environment', 'scope', 'generate-data', 'build-reports', 'inventory', 'vitest', 'playwright', 'report']);
 
 /**
  * @typedef {object} StepRecord
@@ -21,6 +21,7 @@ export const REQUIRED_STEPS = /** @type {const} */ (['environment', 'scope', 'ge
  * @property {string} npm
  * @property {Record<string, string>} packages
  * @property {{ name: string; version: string }} browser
+ * @property {string | null} [r] The R version, or null when none is installed; absent from runs before the R injector.
  * @property {string} lockfileSha256
  */
 
@@ -32,7 +33,7 @@ export const REQUIRED_STEPS = /** @type {const} */ (['environment', 'scope', 'ge
  * @property {string} startedAt
  * @property {string} [finishedAt]
  * @property {string} baselineHash
- * @property {{ issues: number[]; completed: number[]; pr: number | null; prCloses: number[]; cli: number[] }} scope
+ * @property {{ issues: number[]; completed: number[]; pr: number | null; prCloses: number[]; stack: import('./scope.js').StackEntry[]; cli: number[] }} scope
  * @property {Record<string, { state: string; stateReason: string | null; fetchedAt: string }>} issueStates
  * @property {Environment | null} environment
  * @property {string | null} dataSha256
@@ -50,5 +51,6 @@ export const REQUIRED_STEPS = /** @type {const} */ (['environment', 'scope', 'ge
  * @property {'build' | 'evidence' | 'trace' | 'attachment' | 'record'} kind
  * @property {string} [criterion]
  * @property {string} [test]
+ * @property {string | null} [artifact]
  * @property {string | null} [mode]
  */
