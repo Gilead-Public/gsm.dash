@@ -44,8 +44,6 @@ test.describe('the portfolio against its recorded baseline', () => {
     await expectState(page, testInfo, 'table-sorted-twice');
     await sidebar(page).locator('select[data-heatmap]').selectOption('rate');
     await expectState(page, testInfo, 'table-heatmap-rate');
-    await sidebar(page).locator('button[data-seg="ramp"][data-value="teal"]').click();
-    await expectState(page, testInfo, 'table-heatmap-teal');
     await sidebar(page).locator('button[data-seg="cellMode"][data-value="custom"]').click();
     for (const show of ['num', 'den', 'trend']) await sidebar(page).locator(`button[data-show="${show}"]`).click();
     await expectState(page, testInfo, 'table-custom-cells');

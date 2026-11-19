@@ -10,6 +10,10 @@ reviewed pull request.
   is in and out.
 - A change implements the full Scope of the issues it closes, and nothing beyond it. Behaviour no criterion covers is
   removed, or raised on the issue as a requirements question before it is built.
+- Each issue names its business source in a `## Business source` section, by reference only: feedback IDs (FB-…),
+  roadmap issues, business-requirement sections or dated decisions. Issues written before 17 November 2026 may rely on their
+  parent roadmap issue. Behaviour without a business source is removed, or raised with the business owner before it is
+  built. Tooling and QC issues cite the decision or policy that asks for them.
 - A pull request closes only the issues it completes. An issue whose criteria or Scope changed after it was built
   stays open (`Refs #n`) until the pull request that implements the change closes it.
 - Tests claimed as acceptance-criterion evidence must be named `<id>: … (#<issue>)`. Other regression and harness tests

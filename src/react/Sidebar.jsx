@@ -2,8 +2,8 @@
 import { useState } from 'react';
 import { STATUS_ORDER } from '../data/catalog.js';
 import {
-  CELL_MODES, FILTER_LABELS, GROUP_BY_OPTIONS, HEATMAPS, HIGHLIGHT_HINT, RAMPS, cellModeHint, controlStates, showLabel,
-  showOptions, studyLabel, unsupportedNote,
+  CELL_MODES, COLUMN_OPTIONS, DENSITIES, FILTER_LABELS, GROUP_BY_OPTIONS, HEATMAPS, HIGHLIGHT_HINT, cellModeHint, controlStates,
+  showLabel, showOptions, studyLabel,
 } from '../app/portfolio-controls.js';
 import { StatusPill } from './parts.jsx';
 
@@ -58,11 +58,12 @@ export function Sidebar({ store, collapsed, onCollapse }) {
   /**
    * @param {string} key
    * @param {string[][]} options
+   * @param {boolean} [disabled]
    */
-  const seg = (key, options) => (
+  const seg = (key, options, disabled = false) => (
     <div className="seg" role="group">
       {options.map(([value, label]) => (
-        <button key={value} type="button" data-seg={key} data-value={value} className={value === state[key] ? 'on' : ''} onClick={() => store.set(key, value)}>
+        <button key={value} type="button" data-seg={key} data-value={value} className={value === state[key] ? 'on' : ''} disabled={disabled} onClick={() => store.set(key, value)}>
           {label}
         </button>
       ))}
@@ -73,7 +74,6 @@ export function Sidebar({ store, collapsed, onCollapse }) {
   const defined = state.cellMode === 'defined';
 
   const supported = store.supportedMetrics();
-  const note = unsupportedNote(store.unsupportedMetrics());
   const visible = store.visibleMetrics().length;
   const statusCount = (/** @type {string} */ st) => supported.filter((/** @type {any} */ m) => (m.Status ?? 'Released') === st).length;
 
@@ -129,9 +129,19 @@ export function Sidebar({ store, collapsed, onCollapse }) {
             ))}
           </select>
         </Control>
-        <Control na={na.ramp}>
-          <label>Heatmap color</label>
-          {seg('ramp', RAMPS)}
+        <Control na={na.columns}>
+          <label>Columns</label>
+          <div className="chips">
+            {COLUMN_OPTIONS.map(([k, label]) => (
+              <button key={k} type="button" className={`chip ${state.columns.has(k) ? 'on' : ''}`} data-column={k} aria-pressed={state.columns.has(k)} disabled={dist} onClick={() => store.toggleColumn(k)}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </Control>
+        <Control na={na.density}>
+          <label>Row density</label>
+          {seg('density', DENSITIES, dist)}
         </Control>
         <Control na={na.groupBy}>
           <label>Group rows by</label>
@@ -156,25 +166,13 @@ export function Sidebar({ store, collapsed, onCollapse }) {
             ))}
           </div>
         </div>
-        <div className="sb-actions">
-          <button type="button" className="linkbtn" data-metrics-all="on" onClick={() => store.setAllMetrics(true)}>
-            All
-          </button>
-          <button type="button" className="linkbtn" data-metrics-all="off" onClick={() => store.setAllMetrics(false)}>
-            None
-          </button>
-        </div>
         <div className="metric-list">
           {store.metricCategories(supported).map((/** @type {any} */ g) => {
             const on = g.metrics.filter((/** @type {any} */ m) => !state.hiddenMetrics.has(m.MetricID)).length;
-            const all = on === g.metrics.length;
             return (
               <div key={g.category} className="mgroup">
                 <div className="mgroup-head">
                   <span>{g.category}</span>
-                  <button type="button" className="linkbtn" data-group-metrics={g.category} data-on={all ? '1' : '0'} onClick={() => store.setMetricsVisible(g.metrics.map((/** @type {any} */ m) => m.MetricID), !all)}>
-                    {all ? 'none' : 'all'}
-                  </button>
                   <span className="cnt">
                     {on}/{g.metrics.length}
                   </span>
@@ -194,11 +192,6 @@ export function Sidebar({ store, collapsed, onCollapse }) {
             );
           })}
         </div>
-        {note && (
-          <p className="sb-note" title={note.title}>
-            {note.text}
-          </p>
-        )}
       </Section>
       <Section open={open.filter} name="filter" title="Filter" badge={active ? `${active} active` : ''} onToggle={toggle('filter')}>
         {Object.entries(options).filter(([param]) => param !== 'study').map(([param, values]) => (

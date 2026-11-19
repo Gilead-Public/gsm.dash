@@ -8,9 +8,9 @@ import { countText, displayed, latestSnapshot, pooled, readRate, shownMetrics, t
 const portfolio = readData('portfolio.json');
 /** @type {StudyEntry[]} */
 const studies = portfolio.studies;
-// A percentage metric whose tile opens on Details, the view with the comparison line.
+// A percentage metric whose tile opens on Details.
 const metric = /** @type {MetricMeta} */ (shownMetrics(portfolio.metrics).find((m) => m.Display !== 'per_28d' && !m.Widget));
-const [changed, other] = studies;
+const [changed] = studies;
 const changedDate = latestSnapshot(changed);
 const before = pooled(readData, studies, metric.MetricID);
 const own = pooled(readData, [changed], metric.MetricID);
@@ -39,18 +39,6 @@ async function shownValue(page, row) {
 }
 
 /**
- * The comparison line on a study page's tile for the metric: the portfolio rate and this study's difference.
- * @param {Page} page
- */
-async function comparison(page) {
-  const text = (await page.locator(`.tile[data-metric-id="${metric.MetricID}"] .cmp`).textContent())?.trim() ?? '';
-  const m = /^portfolio (\S+) · this study ([+−])(\d+\.\d+) pt$/.exec(text);
-  expect(m, `comparison line "${text}"`).toBeTruthy();
-  const match = /** @type {RegExpExecArray} */ (m);
-  return { portfolio: readRate(metric, match[1]), diff: (match[2] === '−' ? -1 : 1) * Number(match[3]) };
-}
-
-/**
  * @param {number | null} shown
  * @param {number | null} rate
  */
@@ -64,7 +52,7 @@ test.describe('the portfolio reads the counts-only summary', () => {
     expect(Math.abs(displayed(metric, after) - displayed(metric, /** @type {number} */ (before.rate))), 'the change is visible at display precision').toBeGreaterThan(10 * tolerance(metric));
   });
 
-  test('15.01: a count changed in the summary changes the portfolio and the comparison on other studies\' pages (#15)', async ({ app, page }) => {
+  test('15.01: a count changed in the summary changes the portfolio total and the study\'s row (#15)', async ({ app, page }) => {
     const overrides = {
       /** @param {any} summary */
       summary: (summary) => {
@@ -79,9 +67,6 @@ test.describe('the portfolio reads the counts-only summary', () => {
     expect(shownTotal.nd).toEqual([countText(before.numerator + delta), countText(before.denominator)]);
     const shownStudy = await shownValue(page, `[data-hl="${changed.StudyID}"]`);
     expect(near(shownStudy.rate, (own.numerator + delta) / own.denominator), `${changed.StudyID} ${shownStudy.rate}`).toBe(true);
-
-    await app.openStudy(other.StudyID, overrides);
-    expect(near((await comparison(page)).portfolio, total), `comparison on ${other.StudyID}`).toBe(true);
   });
 
   test('15.01: site rows changed in a study\'s file change that study\'s own value but no portfolio number (#15)', async ({ app, page }) => {
@@ -127,9 +112,9 @@ test.describe('the portfolio reads the counts-only summary', () => {
 
     await app.openStudy(changed.StudyID, overrides);
     expect(edited, "the study's file was edited before its report read it").toBeGreaterThan(0);
-    const line = await comparison(page);
-    expect(near(line.portfolio, before.rate), 'the comparison keeps the summary\'s portfolio rate').toBe(true);
-    const diff = displayed(metric, /** @type {number} */ (editedOwn.rate)) - displayed(metric, /** @type {number} */ (before.rate));
-    expect(Math.abs(line.diff - diff), 'the difference uses the study\'s edited file').toBeLessThanOrEqual(tolerance(metric));
+    const big = (await page.locator(`.tile[data-metric-id="${metric.MetricID}"] .big`).textContent())?.trim() ?? '';
+    const pct = /\((\d+\.\d)%\)$/.exec(big);
+    expect(pct, `the tile's value "${big}"`).toBeTruthy();
+    expect(near(Number(pct?.[1]), editedOwn.rate), "the study's tile uses its edited file").toBe(true);
   });
 });
