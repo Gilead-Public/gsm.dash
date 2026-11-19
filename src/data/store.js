@@ -3,7 +3,7 @@ import { selectLatestSnapshots, poolResults, bucketStudies, filterStudies } from
 import { indexSummary, poolSummary, POPULATIONS } from './summary.js';
 import { nextSort } from './sort.js';
 import { STATUS_ORDER, CATEGORY_ORDER, groupByCategory } from './catalog.js';
-import { CELL_MODES, GROUP_BY_OPTIONS, HEATMAPS, showOptions } from '../app/portfolio-controls.js';
+import { CELL_MODES, COLUMN_OPTIONS, DENSITIES, GROUP_BY_OPTIONS, HEATMAPS, showOptions } from '../app/portfolio-controls.js';
 import { POP_COLUMNS } from '../app/portfolio-table.js';
 import { portfolioDefaults } from './portfolio-config.js';
 
@@ -11,9 +11,11 @@ import { portfolioDefaults } from './portfolio-config.js';
 const SCALARS = [
   ['group', 'groupBy', GROUP_BY_OPTIONS],
   ['cell', 'cellMode', CELL_MODES],
+  ['density', 'density', DENSITIES],
   ['heatmap', 'heatmap', HEATMAPS],
 ];
 const SHOW_PARTS = showOptions(false).map(([part]) => part);
+const COLUMN_PARTS = COLUMN_OPTIONS.map(([part]) => part);
 
 /**
  * The known values of a set the user can empty. An emptied set is written as one empty value; a set whose values are
@@ -77,6 +79,8 @@ export class PortfolioStore extends EventTarget {
 
     this.state = {
       show: new Set(this.#defaults.show), // any of num | den | rate | trend; cells stack what's on
+      columns: new Set(this.#defaults.columns), // the table's optional columns shown: name | enroll | status (#21)
+      density: this.#defaults.density, // 'roomy' | 'condensed' (#21)
       heatmap: this.#defaults.heatmap, // 'none' | 'num' | 'den' | 'rate' — column-relative cell shading (and the metric sort measure)
       groupBy: this.#defaults.groupBy, // 'none' (one row per study) | a study param
       filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set(), study: new Set() },
@@ -213,6 +217,7 @@ export class PortfolioStore extends EventTarget {
       params.set('dir', state.sort.dir);
     }
     if (SHOW_PARTS.some((p) => state.show.has(p) !== this.#defaults.show.includes(p))) addSet('show', SHOW_PARTS.filter((p) => state.show.has(p)));
+    if (COLUMN_PARTS.some((p) => state.columns.has(p) !== this.#defaults.columns.includes(p))) addSet('cols', COLUMN_PARTS.filter((p) => state.columns.has(p)));
     const options = this.filterOptions();
     for (const param of Object.keys(state.filters)) add(`filter.${param}`, options[param].filter((v) => state.filters[param].has(v)));
     if (STATUS_ORDER.some((s) => !state.statuses.has(s))) addSet('statuses', STATUS_ORDER.filter((s) => state.statuses.has(s)));
@@ -246,6 +251,7 @@ export class PortfolioStore extends EventTarget {
     const sortable = ['label', 'meta', ...POP_COLUMNS.map((c) => c.key), ...this.metrics.map((m) => m.MetricID)];
     state.sort = sortable.includes(sortKey) && (dir === 'asc' || dir === 'desc') ? { key: sortKey, dir } : { key: null, dir: null };
     state.show = new Set(chosen(params, 'show', SHOW_PARTS, this.#defaults.show));
+    state.columns = new Set(chosen(params, 'cols', COLUMN_PARTS, this.#defaults.columns));
     const options = this.filterOptions();
     for (const param of Object.keys(state.filters)) state.filters[param] = new Set(known(params.getAll(`filter.${param}`), options[param]));
     this.#applyMetricParams(params);
@@ -297,6 +303,12 @@ export class PortfolioStore extends EventTarget {
 
   toggleShow(part) {
     const set = this.state.show;
+    set.has(part) ? set.delete(part) : set.add(part);
+    this.#emit();
+  }
+
+  toggleColumn(part) {
+    const set = this.state.columns;
     set.has(part) ? set.delete(part) : set.add(part);
     this.#emit();
   }

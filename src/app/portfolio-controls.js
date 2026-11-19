@@ -14,6 +14,9 @@ export const GROUP_BY_OPTIONS = [
 export const FILTER_LABELS = { therapeutic_area: 'Therapeutic area', phase: 'Phase', status: 'Status', study: 'Study' };
 export const HEATMAPS = [['none', 'None'], ['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate']];
 export const CELL_MODES = [['defined', 'As defined'], ['custom', 'Custom']];
+/** The table's optional columns (#21). */
+export const COLUMN_OPTIONS = [['name', 'Study name'], ['enroll', 'Enrolled'], ['status', 'Status']];
+export const DENSITIES = [['roomy', 'Roomy'], ['condensed', 'Condensed']];
 
 /**
  * What each cell can also show: in "defined" mode only the trend, in "custom" mode the counts and rate too.
@@ -57,6 +60,8 @@ export function controlStates(store) {
     show: cells ? ' ' : '',
     heatmap: tableOnly,
     groupBy: tableOnly,
+    columns: tableOnly,
+    density: tableOnly,
   };
 }
 

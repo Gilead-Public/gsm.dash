@@ -34,6 +34,18 @@ export const POP_COLUMNS = [
 export const popValue = (pop, key) => pop[key === 'enroll' ? 'enrolled' : key.slice(4)];
 
 /**
+ * A study's enrollment target, `ParticipantTarget` among its Reporting_Groups parameters (#21), or null when it has none
+ * above zero. Reporting_Groups values are text, so `"400"` counts.
+ * @param {any} study
+ * @returns {number | null}
+ */
+export function enrollTarget(study) {
+  const raw = study?.params?.ParticipantTarget;
+  const n = typeof raw === 'string' && raw.trim() === '' ? NaN : Number(raw);
+  return raw != null && Number.isFinite(n) && n > 0 ? n : null;
+}
+
+/**
  * Metric columns sort by whatever measure drives the heatmap, so shading and order tell the same story; with the
  * heatmap off, by rate. The 28-day display rescale is a constant factor, so it never changes the order.
  * @param {string} heatmap

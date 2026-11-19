@@ -2,8 +2,8 @@
 import { useState } from 'react';
 import { STATUS_ORDER } from '../data/catalog.js';
 import {
-  CELL_MODES, FILTER_LABELS, GROUP_BY_OPTIONS, HEATMAPS, HIGHLIGHT_HINT, cellModeHint, controlStates, showLabel,
-  showOptions, studyLabel,
+  CELL_MODES, COLUMN_OPTIONS, DENSITIES, FILTER_LABELS, GROUP_BY_OPTIONS, HEATMAPS, HIGHLIGHT_HINT, cellModeHint, controlStates,
+  showLabel, showOptions, studyLabel,
 } from '../app/portfolio-controls.js';
 import { StatusPill } from './parts.jsx';
 
@@ -58,11 +58,12 @@ export function Sidebar({ store, collapsed, onCollapse }) {
   /**
    * @param {string} key
    * @param {string[][]} options
+   * @param {boolean} [disabled]
    */
-  const seg = (key, options) => (
+  const seg = (key, options, disabled = false) => (
     <div className="seg" role="group">
       {options.map(([value, label]) => (
-        <button key={value} type="button" data-seg={key} data-value={value} className={value === state[key] ? 'on' : ''} onClick={() => store.set(key, value)}>
+        <button key={value} type="button" data-seg={key} data-value={value} className={value === state[key] ? 'on' : ''} disabled={disabled} onClick={() => store.set(key, value)}>
           {label}
         </button>
       ))}
@@ -127,6 +128,20 @@ export function Sidebar({ store, collapsed, onCollapse }) {
               </option>
             ))}
           </select>
+        </Control>
+        <Control na={na.columns}>
+          <label>Columns</label>
+          <div className="chips">
+            {COLUMN_OPTIONS.map(([k, label]) => (
+              <button key={k} type="button" className={`chip ${state.columns.has(k) ? 'on' : ''}`} data-column={k} aria-pressed={state.columns.has(k)} disabled={dist} onClick={() => store.toggleColumn(k)}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </Control>
+        <Control na={na.density}>
+          <label>Row density</label>
+          {seg('density', DENSITIES, dist)}
         </Control>
         <Control na={na.groupBy}>
           <label>Group rows by</label>
