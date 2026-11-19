@@ -1,8 +1,8 @@
 state: tooltip-distribution-pooled
-canonical dom: sha256 6b9b708992034fe8b40eb8f23cf8770f5dc42694f09c74a90fac116fd7b92466 (344806 characters)
-computed styles: sha256 f5da8f8c33eff65b233f147493b968ea40e4b30a3ed6643f5fd750039c7031ef (1951 elements)
+canonical dom: sha256 41ee3722a77c9a75de6f82ba8e7d4655b85e37ceb7c62518854613544fc3bd5b (339847 characters)
+computed styles: sha256 7b3163f61d6571f705ffb99ecad03e7b24becebf195c3418f1e62854ebda8283 (1942 elements)
 tooltip: <b>Portfolio total · 12 studies</b><br><span class="tip-muted">Screen Failure Rate</span><br>23.8% <span class="tip-muted">— percent (n ÷ d)</span><br>Σn/Σd = 2,771 / 11,645
-cell backgrounds: rgb(237, 240, 238) ×24 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) ×21
+cell backgrounds: rgb(237, 240, 238) ×23 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21
 distribution marks:
   pt[STUDY001]@0.7676 pt[STUDY002]@0.4702 pt[STUDY003]@0.8335 pt[STUDY004]@0.9259 pt[STUDY005]@0.7415 pt[STUDY006]@0.4105 pt[STUDY007]@0.6881 pt[STUDY008]@0.5345 pt[STUDY009]@0.4572 pt[STUDY010]@0.7373 pt[STUDY011]@0.6804 pt[STUDY012]@0.8513 ptot@0.6939
   pt[STUDY001]@0.4496 pt[STUDY002]@0.4662 pt[STUDY003]@0.6342 pt[STUDY004]@0.4153 pt[STUDY005]@0.9259 pt[STUDY006]@0.4743 pt[STUDY007]@0.7160 pt[STUDY008]@0.3561 pt[STUDY009]@0.4121 pt[STUDY010]@0.5104 pt[STUDY011]@0.5143 pt[STUDY012]@0.4973 ptot@0.5422
@@ -63,12 +63,16 @@ accessibility:
       - option "Denominator" [disabled]
       - option "Rate" [disabled]
     - paragraph: "Table only: the distribution plots every study on each metric’s line."
-    - text: Heatmap color
+    - text: Columns
+    - button "Study name" [disabled] [pressed]
+    - button "Enrolled" [disabled]
+    - button "Status" [disabled]
+    - paragraph: "Table only: the distribution plots every study on each metric’s line."
+    - text: Row density
     - group [disabled]:
-      - button "Blue" [disabled]
-      - button "Teal" [disabled]
-      - button "Purple" [disabled]
-      - button "Grey" [disabled]
+      - button "Roomy" [disabled]
+      - button "Condensed" [disabled]
+    - paragraph: "Table only: the distribution plots every study on each metric’s line."
     - text: Group rows by
     - combobox [disabled]:
       - option "None — one row per study" [disabled] [selected]

@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "b3b678aa97531061098cf28bb8a090f02b770d7cdefa4079596ba4f48aeeb7d1",
+  "hash": "d90f856ef80716d9322733bf39f567c40a93289b7b8042941219930c0959cdd9",
   "issues": [
     {
       "number": 8,
@@ -502,21 +502,21 @@
           "text": "Each column toggles, and the defaults apply (tests).",
           "sha256": "f69e2b283f676fcef4edde8d8605f85163cf8f5d6f0ce8739e0c87caf3c426ce",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "21.02",
           "text": "n / expected renders when a target exists, and the count alone renders when it doesn't (tests).",
           "sha256": "e19d529f91500f761b81a972d99f4e107c1f746c6d9eda4e3701a691d73924f4",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "21.03",
           "text": "The density toggle changes row spacing (visual check).",
           "sha256": "20d1c3b0626e30f18c88a7aaed5a56865fa001a92aefc272b7bf1ed021c9b271",
           "kind": "visual",
-          "reviewed": false
+          "reviewed": true
         }
       ]
     },
@@ -698,8 +698,8 @@
         },
         {
           "id": "27.05",
-          "text": "The portfolio view state carries over to a study report and back: the selected view, folded categories in the table and distribution views, grouping and open groups, sorting, cell display, heatmap and palette, study filters, metric-status filters, hidden metrics and the highlighted study. The study report applies the metric-status filters and hidden metrics.",
-          "sha256": "74c00c0cbf32083a40068aed8baef97b502964042d595575f87e6f40efe8399d",
+          "text": "The portfolio view state carries over to a study report and back: the selected view, folded categories in the table and distribution views, grouping and open groups, sorting, cell display, heatmap, study filters, metric-status filters, hidden metrics and the highlighted study. The study report applies the metric-status filters and hidden metrics.",
+          "sha256": "ad9603f5ab2aa06ea5730606a8d9476968c7ae3869e6ed5d93ebeeff30f0502b",
           "kind": "e2e",
           "reviewed": true
         }
