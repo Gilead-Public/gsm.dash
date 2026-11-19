@@ -1,7 +1,8 @@
 // @ts-check
 import { metricUnit } from '../util/format.js';
 import { distRow, distShowing, distStudies } from '../app/portfolio-dist.js';
-import { InfoIcon, StatusPill, studyHref, useHoverTooltip } from './parts.jsx';
+import { metricTip } from '../app/tooltip.js';
+import { StatusPill, studyHref, useHoverTooltip } from './parts.jsx';
 
 /**
  * The Distribution view: one strip per metric, a dot per study at its latest snapshot, the pooled portfolio value as a
@@ -17,7 +18,6 @@ export function PortfolioDist({ store, hidden }) {
 
   const onClick = (/** @type {import('react').MouseEvent} */ e) => {
     const target = /** @type {Element} */ (e.target);
-    if (target.closest('.info')) return;
     const cat = target.closest('[data-dfold]');
     if (cat instanceof HTMLElement) return store.toggleDistGroup(cat.dataset.dfold);
     const pt = target.closest('[data-pick]');
@@ -29,12 +29,11 @@ export function PortfolioDist({ store, hidden }) {
     const row = distRow(store, m, plotted);
     return (
       <div key={m.MetricID} className={`dcols mrow ${m.Status === 'Planned' ? 'plan' : ''}`} data-metric={m.MetricID}>
-        <div className="mn">
+        <div className="mn" data-tip={metricTip(m, { technical: false })}>
           <b>{m.Metric}</b>
           <span className="ab" data-abbr={m.Abbreviation}>
             {m.Abbreviation}
           </span>
-          <InfoIcon metric={m} />
           <StatusPill metric={m} />
           <span className="u">{metricUnit(m)}</span>
         </div>

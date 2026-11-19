@@ -1,8 +1,8 @@
 state: distribution-folded
-canonical dom: sha256 b4833e473de359bd20ad454922b7f04fad313b45022f36d4f1cd595a8c644b22 (245330 characters)
-computed styles: sha256 6b61e1a8eb4991cc96d1a1b3786dddfba979f1e887415cc0c058e852dfed48d2 (1208 elements)
+canonical dom: sha256 e3795c6a3552f7a57d7a8ab38911c8d2b2962009528b7dc7c0f6a51be83fe11b (251815 characters)
+computed styles: sha256 40510d27b0eec0fde379a22875c61ed371dd5aac90322eac4e2d6c77b63d7911 (1201 elements)
 tooltip: none
-cell backgrounds: rgb(237, 240, 238) ×5 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
+cell backgrounds: rgb(237, 240, 238) ×3 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
   pt[STUDY001]@0.4016 pt[STUDY002]@0.1025 pt[STUDY003]@0.4579 pt[STUDY004]@0.6888 pt[STUDY005]@0.5314 pt[STUDY006]@0.7523 pt[STUDY007]@0.2699 pt[STUDY008]@0.2650 pt[STUDY009]@0.5538 pt[STUDY010]@0.9259 pt[STUDY011]@0.4423 pt[STUDY012]@0.5833 ptot@0.5142
   pt[STUDY001]@0.4113 pt[STUDY002]@0.3937 pt[STUDY003]@0.4221 pt[STUDY004]@0.9259 pt[STUDY005]@0.3207 pt[STUDY006]@0.6645 pt[STUDY007]@0.4837 pt[STUDY008]@0.3054 pt[STUDY009]@0.6381 pt[STUDY010]@0.8001 pt[STUDY011]@0.5096 pt[STUDY012]@0.4760 ptot@0.5266
@@ -24,6 +24,7 @@ sparklines:
 accessibility:
 - main:
   - text: Controls
+  - button "Reset"
   - button "Collapse controls" [expanded]: «
   - group:
     - text: ▸ Config Highlight study
@@ -56,12 +57,16 @@ accessibility:
       - option "Denominator" [disabled]
       - option "Rate" [disabled]
     - paragraph: "Table only: the distribution plots every study on each metric’s line."
-    - text: Heatmap color
+    - text: Columns
+    - button "Study name" [disabled] [pressed]
+    - button "Enrolled" [disabled]
+    - button "Status" [disabled]
+    - paragraph: "Table only: the distribution plots every study on each metric’s line."
+    - text: Row density
     - group [disabled]:
-      - button "Blue" [disabled]
-      - button "Teal" [disabled]
-      - button "Purple" [disabled]
-      - button "Grey" [disabled]
+      - button "Roomy" [disabled]
+      - button "Condensed" [disabled]
+    - paragraph: "Table only: the distribution plots every study on each metric’s line."
     - text: Group rows by
     - combobox [disabled]:
       - option "None — one row per study" [disabled] [selected]
@@ -76,11 +81,7 @@ accessibility:
     - button "Released8" [pressed]
     - button "New4" [pressed]
     - button "Planned9" [pressed]
-    - button "All"
-    - button "None"
-    - text: Disposition
-    - button "none"
-    - text: 6/6
+    - text: Disposition 6/6
     - checkbox "SF Screen Failure Rate" [checked]
     - text: SF Screen Failure Rate
     - checkbox "SDSC Study Discontinuation Rate" [checked]
@@ -92,25 +93,19 @@ accessibility:
     - checkbox "WC Withdrawal of Consent Planned" [checked]
     - text: WC Withdrawal of Consent Planned
     - checkbox "LTFU Lost to Follow Up Planned" [checked]
-    - text: LTFU Lost to Follow Up Planned Early events
-    - button "none"
-    - text: 3/3
+    - text: LTFU Lost to Follow Up Planned Early events 3/3
     - checkbox "DTH30 Early Deaths (30 days) Planned" [checked]
     - text: DTH30 Early Deaths (30 days) Planned
     - checkbox "DTH90 Early Deaths (90 days) Planned" [checked]
     - text: DTH90 Early Deaths (90 days) Planned
     - checkbox "IPNS IP Non-starters Planned" [checked]
-    - text: IPNS IP Non-starters Planned Eligibility & integrity
-    - button "none"
-    - text: 3/3
+    - text: IPNS IP Non-starters Planned Eligibility & integrity 3/3
     - checkbox "IE Eligibility Planned" [checked]
     - text: IE Eligibility Planned
     - checkbox "STRAT Stratification Planned" [checked]
     - text: STRAT Stratification Planned
     - checkbox "PFSC Premature Censoring for PFS Planned" [checked]
-    - text: PFSC Premature Censoring for PFS Planned Safety & deviations
-    - button "none"
-    - text: 5/5
+    - text: PFSC Premature Censoring for PFS Planned Safety & deviations 5/5
     - checkbox "AE AE Reporting Rate New" [checked]
     - text: AE AE Reporting Rate New
     - checkbox "SAE SAE Reporting Rate New" [checked]
@@ -120,9 +115,7 @@ accessibility:
     - checkbox "IPD Important Protocol Deviation Rate New" [checked]
     - text: IPD Important Protocol Deviation Rate New
     - checkbox "LB G3+ Lab Abnormality Rate" [checked]
-    - text: LB G3+ Lab Abnormality Rate Data quality
-    - button "none"
-    - text: 4/4
+    - text: LB G3+ Lab Abnormality Rate Data quality 4/4
     - checkbox "QRY Query Rate" [checked]
     - text: QRY Query Rate
     - checkbox "OQRY Delayed Query Resolution Rate" [checked]
@@ -131,7 +124,6 @@ accessibility:
     - text: ODAT Delayed Data Entry Rate
     - checkbox "CDAT Data Change Rate" [checked]
     - text: CDAT Data Change Rate
-    - paragraph: 1 metric is not site-level (Study) — held back until a future release adds that plumbing.
   - group:
     - text: ▸ Filter Therapeutic area
     - button "Cardiology"
@@ -147,6 +139,31 @@ accessibility:
     - button "Active"
     - button "Completed"
     - button "Enrolling"
+    - text: Study
+    - checkbox "STUDY001 ATLAS-1"
+    - text: STUDY001 ATLAS-1
+    - checkbox "STUDY002 BEACON-1"
+    - text: STUDY002 BEACON-1
+    - checkbox "STUDY003 COBALT-1"
+    - text: STUDY003 COBALT-1
+    - checkbox "STUDY004 DELTA-1"
+    - text: STUDY004 DELTA-1
+    - checkbox "STUDY005 EMBER-1"
+    - text: STUDY005 EMBER-1
+    - checkbox "STUDY006 FALCON-2"
+    - text: STUDY006 FALCON-2
+    - checkbox "STUDY007 GRANITE-3"
+    - text: STUDY007 GRANITE-3
+    - checkbox "STUDY008 HARBOR-2"
+    - text: STUDY008 HARBOR-2
+    - checkbox "STUDY009 IRIS-1"
+    - text: STUDY009 IRIS-1
+    - checkbox "STUDY010 JUNIPER-2"
+    - text: STUDY010 JUNIPER-2
+    - checkbox "STUDY011 KESTREL-3"
+    - text: STUDY011 KESTREL-3
+    - checkbox "STUDY012 LUMEN-1"
+    - text: STUDY012 LUMEN-1
   - tablist "Program view":
     - text: Table
     - tab "Overview"
@@ -159,77 +176,47 @@ accessibility:
   - button "− Early events3 metrics Each dot = one study · scale 0 → max Portfolio" [expanded]:
     - heading "− Early events3 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio
-  - text: Early Deaths (30 days)DTH30
-  - img "Early Deaths (30 days) definition": i
-  - text: Planned n (% enr.)
+  - text: Early Deaths (30 days)DTH30 Planned n (% enr.)
   - 'img "Early Deaths (30 days): 12 studies"': 0 1.5%
-  - text: 69 (0.8%) Early Deaths (90 days)DTH90
-  - img "Early Deaths (90 days) definition": i
-  - text: Planned n (% enr.)
+  - text: 69 (0.8%) Early Deaths (90 days)DTH90 Planned n (% enr.)
   - 'img "Early Deaths (90 days): 12 studies"': 0 3.9%
-  - text: 184 (2.1%) IP Non-startersIPNS
-  - img "IP Non-starters definition": i
-  - text: Planned n (% enr.)
+  - text: 184 (2.1%) IP Non-startersIPNS Planned n (% enr.)
   - 'img "IP Non-starters: 12 studies"': 0 2.5%
   - text: 159 (1.8%)
   - button "− Eligibility & integrity3 metrics Each dot = one study · scale 0 → max Portfolio" [expanded]:
     - heading "− Eligibility & integrity3 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio
-  - text: EligibilityIE
-  - img "Eligibility definition": i
-  - text: Planned n (% enr.)
+  - text: EligibilityIE Planned n (% enr.)
   - 'img "Eligibility: 12 studies"': 0 5.6%
-  - text: 279 (3.1%) StratificationSTRAT
-  - img "Stratification definition": i
-  - text: Planned n (% enr.)
+  - text: 279 (3.1%) StratificationSTRAT Planned n (% enr.)
   - 'img "Stratification: 12 studies"': 0 3.7%
-  - text: 208 (2.3%) Premature Censoring for PFSPFSC
-  - img "Premature Censoring for PFS definition": i
-  - text: Planned n (% enr.)
+  - text: 208 (2.3%) Premature Censoring for PFSPFSC Planned n (% enr.)
   - 'img "Premature Censoring for PFS: 12 studies"': 0 3.7%
   - text: 221 (2.5%)
   - button "− Safety & deviations5 metrics Each dot = one study · scale 0 → max Portfolio" [expanded]:
     - heading "− Safety & deviations5 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio
-  - text: AE Reporting RateAE
-  - img "AE Reporting Rate definition": i
-  - text: New / 28 d
+  - text: AE Reporting RateAE New / 28 d
   - 'img "AE Reporting Rate: 12 studies"': 0 1.92
-  - text: 1.20 SAE Reporting RateSAE
-  - img "SAE Reporting Rate definition": i
-  - text: New / 28 d
+  - text: 1.20 SAE Reporting RateSAE New / 28 d
   - 'img "SAE Reporting Rate: 12 studies"': 0 0.15
-  - text: 0.10 Non-Important Protocol Deviation RatePD
-  - img "Non-Important Protocol Deviation Rate definition": i
-  - text: New / 28 d
+  - text: 0.10 Non-Important Protocol Deviation RatePD New / 28 d
   - 'img "Non-Important Protocol Deviation Rate: 12 studies"': 0 0.56
-  - text: 0.37 Important Protocol Deviation RateIPD
-  - img "Important Protocol Deviation Rate definition": i
-  - text: New / 28 d
+  - text: 0.37 Important Protocol Deviation RateIPD New / 28 d
   - 'img "Important Protocol Deviation Rate: 12 studies"': 0 0.094
-  - text: 0.06 G3+ Lab Abnormality RateLB
-  - img "G3+ Lab Abnormality Rate definition": i
-  - text: n (%)
+  - text: 0.06 G3+ Lab Abnormality RateLB n (%)
   - 'img "G3+ Lab Abnormality Rate: 12 studies"': 0 7.0%
   - text: 8,320 (4.5%)
   - button "− Data quality4 metrics Each dot = one study · scale 0 → max Portfolio" [expanded]:
     - heading "− Data quality4 metrics" [level=4]
     - text: Each dot = one study · scale 0 → max Portfolio
-  - text: Query RateQRY
-  - img "Query Rate definition": i
-  - text: "%"
+  - text: Query RateQRY %
   - 'img "Query Rate: 12 studies"': 0 12.0%
-  - text: 6.8% Delayed Query Resolution RateOQRY
-  - img "Delayed Query Resolution Rate definition": i
-  - text: "%"
+  - text: 6.8% Delayed Query Resolution RateOQRY %
   - 'img "Delayed Query Resolution Rate: 12 studies"': 0 14.5%
-  - text: 9.0% Delayed Data Entry RateODAT
-  - img "Delayed Data Entry Rate definition": i
-  - text: "%"
+  - text: 9.0% Delayed Data Entry RateODAT %
   - 'img "Delayed Data Entry Rate: 12 studies"': 0 16.6%
-  - text: 11.7% Data Change RateCDAT
-  - img "Data Change Rate definition": i
-  - text: "%"
+  - text: 11.7% Data Change RateCDAT %
   - 'img "Data Change Rate: 12 studies"': 0 5.2%
   - text: 3.3%
   - paragraph: Dot = one study's value; the black rule is the pooled portfolio value. Click a dot to highlight that study, a category to fold it.

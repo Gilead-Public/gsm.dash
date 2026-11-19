@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import { fmtInt, fmtRate, fmtMetric, fmtRateDiff, metricUnit, ndLine, displayRate } from '../src/util/format.js';
+import { fmtInt, fmtRate, fmtMetric, metricUnit, ndLine, displayRate } from '../src/util/format.js';
 import { groupByCategory, CATEGORY_ORDER, OTHER_CATEGORY, STATUS_ORDER } from '../src/data/catalog.js';
 import { normalizeMetric } from '../src/data/normalize.js';
 import { PortfolioStore } from '../src/data/store.js';
@@ -30,13 +30,7 @@ describe('metric display rules', () => {
     expect(fmtInt(null)).toBe('—');
     expect(fmtRate(per28, null)).toBe('—');
     expect(fmtMetric(countPct, { Numerator: 0, Denominator: 0 }).text).toBe('—');
-    expect(fmtRateDiff(pct, null, 0.1)).toBe('');
     expect(ndLine(countPct, null)).toBe('no data');
-  });
-
-  it('reports differences in the display unit', () => {
-    expect(fmtRateDiff(pct, 0.15, 0.1)).toBe('+5.0 pt');
-    expect(fmtRateDiff(per28, 0.01, 0.02)).toBe('−0.28 / 28 d');
   });
 
   it('labels units and the n/d line from the population', () => {

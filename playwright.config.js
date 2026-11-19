@@ -32,7 +32,7 @@ export default defineConfig({
   retries: 0,
   forbidOnly: !!process.env.CI,
   workers: process.env.CI ? 2 : undefined,
-  use: { trace: 'on' },
+  use: { trace: 'retain-on-failure' },
   projects: projects.map(({ artifact, mode }) => ({
     name: projectName(artifact, mode),
     testMatch: specsFor(artifact),

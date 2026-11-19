@@ -48,7 +48,7 @@ export function resolveView(name, metric, config) {
  * tabs are code, not runtime configuration, so they are checked here too: a misspelt one fails the shipped-
  * configuration unit test before it can ship.
  * @param {any[]} catalog Every catalog metric, shown or not.
- * @param {{ breakdowns?: Record<string, unknown>, studies?: Record<string, { configs?: Record<string, unknown> }>, pageWidgets?: Array<{ widget: string }>, detailTabs?: Array<{ widget: string }>, kriGroups?: Array<{ id: string, label: string, metrics: string[] }>, reportBase?: string | null, page?: string }} [sources]
+ * @param {{ breakdowns?: Record<string, unknown>, studies?: Record<string, { configs?: Record<string, unknown> }>, pageWidgets?: Array<{ widget: string }>, detailTabs?: Array<{ widget: string }>, kriGroups?: Array<{ id: string, label: string, metrics: string[] }>, reportBase?: string | null, page?: string, studyId?: string }} [sources] `studyId` fills the `{StudyID}` in report links.
  * @returns {Problem[]}
  */
 export function configProblems(
@@ -61,6 +61,7 @@ export function configProblems(
     kriGroups = KRI_GROUPS,
     reportBase = null,
     page = globalThis.location?.href ?? '',
+    studyId = '',
   } = {},
 ) {
   const ids = new Set(catalog.flatMap((m) => [m.ID, m.MetricID]));
@@ -80,7 +81,7 @@ export function configProblems(
     }
   }
   for (const m of catalog) {
-    const reason = reportLinkProblem(m, reportBase, page);
+    const reason = reportLinkProblem(m, reportBase, page, studyId);
     if (reason) problems.push({ reference: `Report link "${m.ReportLink}" for ${m.Abbreviation} (${m.MetricID})`, reason });
   }
   for (const g of kriGroups) {

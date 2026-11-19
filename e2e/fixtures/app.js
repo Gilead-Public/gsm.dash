@@ -1,10 +1,9 @@
 // @ts-check
 import { test as base, expect } from '@playwright/test';
 /** @typedef {import('@playwright/test').Page} Page */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { parseProject, requireRunDir } from '../projects.js';
-import { buildStudyDocument } from '../../scripts/study-document.mjs';
 
 const RUN_DIR = resolve(requireRunDir());
 const RUN_ID = process.env.VALIDATION_RUN_ID ?? 'dev';
@@ -54,24 +53,20 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
  * @typedef {object} ReportOverrides
  * @property {(doc: any) => void} [document] Changes the data document.
  * @property {string} [text] Replaces the injected text outright, for data that isn't a document at all.
+ * @property {string[]} [beside] Reports, by name, that the rewritten report's links must reach. In file mode they are
+ *   linked into its folder unchanged; under the sub-path they are served as they are.
  */
 
 /**
  * The same data changes for a study report's document: `portfolio` sees the report base, the catalog and the study's
- * entry as a one-study manifest, and `snapshot` sees each of the study's snapshots. A study report carries its
- * portfolio comparison rather than the summary, so a `summary` change rebuilds that comparison from the changed
- * summary, as the build would.
+ * entry as a one-study manifest, and `snapshot` sees each of the study's snapshots.
  * @param {DataOverrides} overrides
  * @returns {ReportOverrides}
  */
 function asReportOverrides(overrides) {
+  if (overrides.summary) throw new Error('a study report carries no portfolio summary; summary overrides need the portfolio report');
   return {
     document(doc) {
-      if (overrides.summary) {
-        const summary = structuredClone(readData('summary.json'));
-        overrides.summary(summary);
-        doc.comparison = buildStudyDocument({ manifest: readData('portfolio.json'), summary, read: readData }, doc.study.StudyID).comparison;
-      }
       if (overrides.portfolio) {
         const manifest = { generated: doc.generated, reportBase: doc.reportBase, metrics: doc.metrics, studies: [doc.study] };
         overrides.portfolio(manifest);
@@ -168,7 +163,13 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
         let url = mode === 'file' ? `file://${file}` : `${base}${encodeURIComponent(name)}.html`;
         if (overrides && mode === 'file') {
           const variant = testInfo.outputPath(`${name}.html`);
+          // Never write through a link to a report under test.
+          rmSync(variant, { force: true });
           writeFileSync(variant, rewriteReport(readFileSync(file, 'utf8'), overrides));
+          for (const other of overrides.beside ?? []) {
+            const at = testInfo.outputPath(`${other}.html`);
+            if (!existsSync(at)) symlinkSync(join(REPORTS_DIR, `${other}.html`), at);
+          }
           url = `file://${variant}`;
         } else if (overrides) {
           await page.route(url, async (r) => {

@@ -11,10 +11,12 @@ export const GROUP_BY_OPTIONS = [
   ['product', 'Product'],
 ];
 /** @type {Record<string, string>} */
-export const FILTER_LABELS = { therapeutic_area: 'Therapeutic area', phase: 'Phase', status: 'Status' };
-export const RAMPS = [['blue', 'Blue'], ['teal', 'Teal'], ['purple', 'Purple'], ['grey', 'Grey']];
+export const FILTER_LABELS = { therapeutic_area: 'Therapeutic area', phase: 'Phase', status: 'Status', study: 'Study' };
 export const HEATMAPS = [['none', 'None'], ['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate']];
 export const CELL_MODES = [['defined', 'As defined'], ['custom', 'Custom']];
+/** The table's optional columns (#21). */
+export const COLUMN_OPTIONS = [['name', 'Study name'], ['enroll', 'Enrolled'], ['status', 'Status']];
+export const DENSITIES = [['roomy', 'Roomy'], ['condensed', 'Condensed']];
 
 /**
  * What each cell can also show: in "defined" mode only the trend, in "custom" mode the counts and rate too.
@@ -57,22 +59,9 @@ export function controlStates(store) {
     cellMode: cells,
     show: cells ? ' ' : '',
     heatmap: tableOnly,
-    ramp: dist || state.heatmap === 'none' ? ' ' : '',
     groupBy: tableOnly,
-  };
-}
-
-/**
- * The note on metrics the portfolio can't show yet: its text, and the metrics it names.
- * @param {any[]} unsupported
- */
-export function unsupportedNote(unsupported) {
-  if (!unsupported.length) return null;
-  return {
-    title: unsupported.map((m) => `${m.Abbreviation} (${m.GroupLevel}-level)`).join(', '),
-    text: `${unsupported.length} ${unsupported.length === 1 ? 'metric is' : 'metrics are'} not site-level (${[
-      ...new Set(unsupported.map((m) => m.GroupLevel)),
-    ].join('/')}) — held back until a future release adds that plumbing.`,
+    columns: tableOnly,
+    density: tableOnly,
   };
 }
 

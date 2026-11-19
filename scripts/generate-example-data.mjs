@@ -119,7 +119,7 @@ function pick(arr) {
 export function generateStudies(n = 12) {
   return Array.from({ length: n }, (_, i) => {
     const StudyID = `STUDY${String(i + 1).padStart(3, '0')}`;
-    // A few studies lag a month — snapshot cadences are independent by design.
+    // A few studies start a month later. Every study reports the latest cycle (#14).
     const nSnaps = R() < 0.25 ? SNAPSHOT_DATES.length - 1 : SNAPSHOT_DATES.length;
     const nSites = 8 + Math.floor(R() * 12);
     const sites = Array.from({ length: nSites }, (_, s) => `SITE${String(i * 100 + s + 1).padStart(4, '0')}`);
@@ -133,7 +133,7 @@ export function generateStudies(n = 12) {
         status: pick(STATUSES),
         product: `Product ${'ABCDEFGHIJKL'[i]}`,
       },
-      snapshots: SNAPSHOT_DATES.slice(0, nSnaps),
+      snapshots: SNAPSHOT_DATES.slice(SNAPSHOT_DATES.length - nSnaps),
       sites,
       // Final enrolment per site; earlier snapshots see a growing share of it.
       siteSize: sites.map(() => 10 + Math.floor(R() * 80)),
@@ -366,7 +366,8 @@ export function generatePortfolio() {
     metrics: METRICS.map(({ base, denKey, derived, ...m }) => m),
   };
   const snapshots = byStudy.flat();
-  return { manifest, snapshots, summary: buildSummary(manifest, snapshots), records };
+  const cycle = { SnapshotDate: SNAPSHOT_DATES.at(-1), studies: studies.map((s) => s.StudyID) };
+  return { manifest, snapshots, summary: buildSummary(manifest, snapshots, cycle), records };
 }
 
 /** Writes the example data (manifest, portfolio summary and one file per study snapshot) into `outDir`, replacing what was there. */

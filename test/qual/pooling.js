@@ -21,6 +21,7 @@
  * @property {number} [Priority]
  * @property {string} [Category]
  * @property {string} [Numerator]
+ * @property {string} [Denominator]
  * @property {string} [Widget]
  * @property {string[]} [Widgets]
  */

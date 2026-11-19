@@ -5,7 +5,7 @@ import { studyViews } from '../config/study-views.js';
 import { getWidget } from '../widgets/registry.js';
 
 /**
- * Paging order: the standard views, then the study's added views, then the metric's own. A name that isn't a
+ * Paging order: the standard views, then the metric's own, then the study's added views (#35). A name that isn't a
  * registered widget stays in, so its tile shows why it can't render (#12); that includes an explicitly empty name.
  * Only an omitted name means "none".
  * @param {any} metric
@@ -14,7 +14,7 @@ import { getWidget } from '../widgets/registry.js';
  */
 export function tileViews(metric, studyId) {
   const own = [metric?.Widget, ...(metric?.Widgets ?? [])].filter((n) => n != null);
-  return [...new Set([...STANDARD_TILE_VIEWS, ...studyViews(studyId).views, ...own])];
+  return [...new Set([...STANDARD_TILE_VIEWS, ...own, ...studyViews(studyId).views])];
 }
 
 /**
@@ -35,12 +35,6 @@ export function currentTileView(metric, chosen, views) {
  * @param {string} name
  */
 export const viewLabel = (name) => getWidget(name)?.label ?? JSON.stringify(name);
-
-/**
- * The views the "All tiles" menu offers: those every tile in the study has.
- * @param {string} studyId
- */
-export const sharedTileViews = (studyId) => [...new Set([...STANDARD_TILE_VIEWS, ...studyViews(studyId).views])];
 
 /**
  * A view's options for a metric in a study: the study's, overridden by the metric's own.

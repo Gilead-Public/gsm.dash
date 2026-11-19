@@ -141,11 +141,29 @@ To share a build for feedback without releasing it: every CI run that passes als
 
 Each report carries its data as one injected document (`<script type="application/json"
 id="gsm-data">`), checked against its schema when it loads. The portfolio's holds the
-catalog, the studies and the counts-only summary. A study's holds the catalog, the
-study's manifest entry, all its snapshots, and the portfolio comparison per snapshot
-date, pooled from the summary.
+catalog, the studies, the counts-only summary and its configuration, if any. A study's
+holds the catalog, the study's manifest entry and all its snapshots.
+
+Portfolio defaults (#16): an optional `config.json` beside `portfolio.json` sets the
+portfolio's initial grouping (`groupBy`), heatmap (`heatmap`), cell values (`show`),
+hidden metrics (`metrics`, MetricIDs), optional table columns (`columns`: `name`, `enroll`,
+`status`; #21) and row density (`density`: `roomy` or `condensed`); every key is optional.
+The Enrolled column shows a study's count against its `ParticipantTarget` parameter when
+the study has one. It travels in the portfolio
+document, so one template serves any configuration. Its values are checked against the
+Controls panel's choices and the catalog when the document is built and when the report
+loads. A setting in the address's hash overrides its configured default.
+
+Snapshot cycle (#14): the summary's `cycle` names one snapshot date and every study taking
+part. A study whose latest snapshot is on another date is left out of the table, the totals
+and Distribution, and a notice names it with its latest snapshot; a listed study with no
+data is named as missing. Trends keep every study's history before the cycle date; their
+point on the cycle date, like the totals, leaves off-cycle studies out, and they end there. A
+summary holding a study its cycle doesn't list is refused.
 
 Detailed-report links (#13): a catalog entry's `ReportLink` is a path to that metric's
 report, resolved against the manifest's optional `reportBase`, which itself resolves
 against the page; a relative base therefore works wherever the dashboard is hosted.
-A metric without `ReportLink` shows no link.
+A metric without `ReportLink` shows no link. A `{StudyID}` in the path is replaced by each
+study's ID, URL-encoded, so each study gets its own report (#25). On the portfolio, study
+rows' cells and tiles open their metric's report in a new tab.
