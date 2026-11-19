@@ -15,6 +15,8 @@ import { metricTip } from './tooltip.js';
  * @property {string} [date] A study row's snapshot date.
  * @property {(metricId: string) => any} rollup
  * @property {() => any} population
+ * @property {(metricId: string) => Array<{ date: string, rate: number | null, nStudies: number }>} trend The row's trend, from
+ *   its studies' history, off-cycle studies included (#14).
  * @property {any} [study]
  * @property {boolean} [open]
  * @property {Row[]} [children]
@@ -30,6 +32,18 @@ export const POP_COLUMNS = [
  * @param {string} key
  */
 export const popValue = (pop, key) => pop[key === 'enroll' ? 'enrolled' : key.slice(4)];
+
+/**
+ * A study's enrollment target, `ParticipantTarget` among its Reporting_Groups parameters (#21), or null when it has none
+ * above zero. Reporting_Groups values are text, so `"400"` counts.
+ * @param {any} study
+ * @returns {number | null}
+ */
+export function enrollTarget(study) {
+  const raw = study?.params?.ParticipantTarget;
+  const n = typeof raw === 'string' && raw.trim() === '' ? NaN : Number(raw);
+  return raw != null && Number.isFinite(n) && n > 0 ? n : null;
+}
 
 /**
  * Metric columns sort by whatever measure drives the heatmap, so shading and order tell the same story; with the
@@ -60,7 +74,7 @@ export function tableRows(store) {
    * @param {any} meta
    * @returns {Row}
    */
-  const makeRow = (kind, studies, label, meta, extra = {}) => {
+  const makeRow = (kind, studies, label, meta, extra = {}, history = studies) => {
     const cache = new Map();
     let popCache;
     return {
@@ -70,6 +84,7 @@ export function tableRows(store) {
         return cache.get(metricId);
       },
       population: () => (popCache ??= store.population(studies)),
+      trend: (metricId) => store.trendSeries(metricId, history),
     };
   };
   const studyRow = (/** @type {any} */ s) => makeRow('study', [s], s.StudyID, null, { study: s, date: latest.get(s.StudyID) });
@@ -82,7 +97,8 @@ export function tableRows(store) {
     return heatValue(measure, row.rollup(sort.key));
   };
   const sorted = (/** @type {Row[]} */ rows) => sortRows(rows, sort, sortValue);
-  const total = makeRow('total', filtered, 'Portfolio total', filtered.length);
+  const total = makeRow('total', filtered, 'Portfolio total', filtered.length, {}, store.filteredHistory());
+  const history = flat ? null : store.historyBuckets();
   const reported = (/** @type {any[]} */ studies) => studies.filter((s) => latest.has(s.StudyID));
   const primary = flat
     ? sorted(reported(filtered).map(studyRow))
@@ -91,32 +107,36 @@ export function tableRows(store) {
           makeRow('bucket', b.studies, String(b.value), b.studies.length, {
             open: state.expanded.has(String(b.value)),
             children: sorted(reported(b.studies).map(studyRow)),
-          }),
+          }, history?.get(String(b.value))),
         ),
       );
   return { filtered, latest, flat, total, primary };
 }
 
 /**
- * Column-relative heat bins over the primary rows; folded tiles shade the same way. The total row is a sum, so it is
- * shaded only by rate.
+ * Column-relative heat bins; folded tiles shade the same way. A study row is binned among every study row the
+ * ungrouped table shows, open groups or not, so its shade doesn't depend on the grouping (#23). Group rows and the
+ * total are binned among the top-level rows; the total is a sum, so it is shaded only by rate.
  * @param {string} heatmap
  * @param {any[]} metrics
  * @param {Row[]} primary
  * @returns {(row: Row, metric: any) => string}
  */
 export function heatClasses(heatmap, metrics, primary) {
-  const domains = new Map();
-  if (RELATIVE_MEASURES.has(heatmap)) {
-    for (const m of metrics) {
-      const values = primary.map((r) => heatValue(heatmap, r.rollup(m.MetricID))).filter((v) => v != null);
-      domains.set(m.MetricID, { min: Math.min(...values), max: Math.max(...values) });
-    }
-  }
+  if (!RELATIVE_MEASURES.has(heatmap)) return () => '';
+  /** @param {Row[]} rows @returns {Map<string, any>} */
+  const domains = (rows) =>
+    new Map(
+      metrics.map((m) => {
+        const values = rows.map((r) => heatValue(heatmap, r.rollup(m.MetricID))).filter((v) => v != null);
+        return [m.MetricID, { min: Math.min(...values), max: Math.max(...values) }];
+      }),
+    );
+  const top = domains(primary);
+  const study = domains(primary.flatMap((r) => (r.kind === 'study' ? [r] : r.children ?? [])));
   return (row, metric) => {
-    if (!RELATIVE_MEASURES.has(heatmap)) return '';
     if (row.kind === 'total' && heatmap !== 'rate') return '';
-    return relativeBin(heatValue(heatmap, row.rollup(metric.MetricID)), domains.get(metric.MetricID));
+    return relativeBin(heatValue(heatmap, row.rollup(metric.MetricID)), (row.kind === 'study' ? study : top).get(metric.MetricID));
   };
 }
 

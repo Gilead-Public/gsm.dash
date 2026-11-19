@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { PortfolioStore } from '../src/data/store.js';
+import { enrollTarget } from '../src/app/portfolio-table.js';
 import { generatePortfolio } from '../scripts/generate-example-data.mjs';
 
 // Unified program views (design iteration 2): Overview and Details are two
@@ -161,14 +162,14 @@ describe('configured defaults (#16)', () => {
     s.toggleShow('trend');
     s.toggleShow('num');
     s.toggleShow('rate');
-    s.setAllMetrics(true);
+    for (const id of [...s.state.hiddenMetrics]) s.toggleMetric(id);
     const other = configured();
     other.applyProgramParams(new URLSearchParams(s.programParams().toString()));
     expect(viewState(other)).toEqual(viewState(new PortfolioStore(portfolio)));
   });
 
   it('always writes the hidden metrics, so a study report, which has no configuration, hides what the portfolio hid', () => {
-    for (const change of [() => {}, (s) => s.toggleMetric('Analysis_kri0005'), (s) => s.setAllMetrics(true)]) {
+    for (const change of [() => {}, (s) => s.toggleMetric('Analysis_kri0005'), (s) => [...s.state.hiddenMetrics].forEach((id) => s.toggleMetric(id))]) {
       const s = configured();
       change(s);
       const study = new PortfolioStore(portfolio);
@@ -215,6 +216,43 @@ describe('the study filter and Reset (#22)', () => {
   });
 });
 
+describe('table columns and density (#21)', () => {
+  it('21.01: by default the table shows the study name, without Enrolled or Status, at roomy density; a configuration sets both (#21)', () => {
+    expect([[...store.state.columns], store.state.density]).toEqual([['name'], 'roomy']);
+    expect(store.programParams().toString()).toBe('');
+    const s = new PortfolioStore({ ...portfolio, config: { columns: ['enroll', 'status'], density: 'condensed' } });
+    expect([[...s.state.columns].sort(), s.state.density]).toEqual([['enroll', 'status'], 'condensed']);
+    expect(s.programParams().toString()).toBe('');
+  });
+
+  it('21.01: the columns and density travel in the address, an emptied choice included, and unknown values are dropped (#21)', () => {
+    store.toggleColumn('enroll');
+    store.toggleColumn('status');
+    store.set('density', 'condensed');
+    const params = store.programParams();
+    expect(params.getAll('cols')).toEqual(['name', 'enroll', 'status']);
+    expect(params.get('density')).toBe('condensed');
+    const other = new PortfolioStore(portfolio);
+    other.applyProgramParams(new URLSearchParams(params.toString()));
+    expect([[...other.state.columns].sort(), other.state.density]).toEqual([['enroll', 'name', 'status'], 'condensed']);
+    other.toggleColumn('name');
+    other.toggleColumn('enroll');
+    other.toggleColumn('status');
+    const empty = new PortfolioStore(portfolio);
+    empty.applyProgramParams(new URLSearchParams(other.programParams().toString()));
+    expect([...empty.state.columns]).toEqual([]);
+    empty.applyProgramParams(new URLSearchParams('cols=site&density=tight'));
+    expect([[...empty.state.columns], empty.state.density]).toEqual([['name'], 'roomy']);
+  });
+
+  it('21.02: a study\'s enrollment target is its ParticipantTarget above zero, as a number or as text, and none otherwise (#21)', () => {
+    const study = (target) => ({ params: target === undefined ? {} : { ParticipantTarget: target } });
+    expect([400, '400', ' 12 ', 0.5].map((t) => enrollTarget(study(t)))).toEqual([400, 400, 12, 0.5]);
+    expect([undefined, null, '', '  ', 0, '0', -3, 'n/a', NaN, Infinity].map((t) => enrollTarget(study(t)))).toEqual(Array(10).fill(null));
+    expect(enrollTarget(undefined)).toBeNull();
+  });
+});
+
 function viewState(s) {
   const { state } = s;
   const sorted = (set) => [...set].map(String).sort();
@@ -228,11 +266,12 @@ function viewState(s) {
     cellMode: state.cellMode,
     show: sorted(state.show),
     heatmap: state.heatmap,
-    ramp: state.ramp,
     filters: Object.fromEntries(Object.entries(state.filters).map(([k, v]) => [k, sorted(v)])),
     statuses: sorted(state.statuses),
     hiddenMetrics: sorted(state.hiddenMetrics),
     highlightStudy: state.highlightStudy,
+    columns: sorted(state.columns),
+    density: state.density,
   };
 }
 
@@ -249,7 +288,6 @@ function changeEveryField(s) {
   s.toggleShow('den');
   s.toggleShow('num');
   s.set('heatmap', 'rate');
-  s.set('ramp', 'teal');
   s.toggleFilter('phase', 'P2');
   s.toggleFilter('status', 'Active');
   s.toggleFilter('therapeutic_area', 'Oncology');
@@ -257,4 +295,7 @@ function changeEveryField(s) {
   s.toggleStatus('Planned');
   s.toggleMetric(s.supportedMetrics()[1].MetricID);
   s.highlight(s.studies[1].StudyID);
+  s.toggleColumn('name');
+  s.toggleColumn('status');
+  s.set('density', 'condensed');
 }

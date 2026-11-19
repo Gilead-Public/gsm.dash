@@ -1,17 +1,11 @@
 import { registerWidget } from './registry.js';
-import { fmtMetric, fmtRate, fmtRateDiff, ndLine } from '../util/format.js';
+import { fmtMetric, ndLine } from '../util/format.js';
 import { flagDistribution } from '../data/rollup.js';
 import { SEVERITY_ORDER } from '../scales/flags.js';
 import { sparkline } from '../charts/sparkline.js';
 
-// The default metric tile: headline rate, study trend sparkline, neutral portfolio comparison. With `flags` set, it
-// also shows the site flag distribution (counts always labeled; colour is never the only encoding), which is hidden
-// by default (#11).
-
-function comparisonLine(metric, study, portfolio) {
-  if (study?.Metric == null || portfolio?.Rate == null) return '';
-  return `<div class="cmp">portfolio ${fmtRate(metric, portfolio.Rate)} · this study ${fmtRateDiff(metric, study.Metric, portfolio.Rate)}</div>`;
-}
+// The default metric tile: headline rate and study trend sparkline. With `flags` set, it also shows the site flag
+// distribution (counts always labeled; colour is never the only encoding), which is hidden by default (#11).
 
 function flagLine(siteRows) {
   const f = flagDistribution(siteRows);
@@ -23,13 +17,12 @@ function flagLine(siteRows) {
 }
 
 export function renderScalarTile(el, data, config = {}) {
-  const { metric, study, siteRows, trend, portfolio } = data;
+  const { metric, study, siteRows, trend } = data;
   el.innerHTML = `
     <div><span class="big">${study ? fmtMetric(metric, { ...study, Rate: study.Metric }).html : '—'}</span>
       <span class="nd">${ndLine(metric, study)}</span></div>
     ${config.flags ? flagLine(siteRows) : ''}
-    <div class="spark-slot"></div>
-    ${comparisonLine(metric, study, portfolio)}`;
+    <div class="spark-slot"></div>`;
   sparkline(el.querySelector('.spark-slot'), trend, { width: 180, height: 26, label: `${metric.Abbreviation} study trend` });
 }
 

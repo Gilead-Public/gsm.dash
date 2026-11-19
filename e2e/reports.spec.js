@@ -50,10 +50,8 @@ test('27.01: every report, one per study and the portfolio, is one HTML file wit
 const INVALID = {
   'a numerator given as text': (doc) => (doc.snapshots[0].results[0].Numerator = String(doc.snapshots[0].results[0].Numerator)),
   'an unknown field': (doc) => (doc.note = 'x'),
-  'a stored rate in the portfolio comparison': (doc) => (doc.comparison[0].Rate = 0.5),
-  'no portfolio comparison': (doc) => delete doc.comparison,
   "another study's snapshot": (doc) => (doc.snapshots[0].StudyID = studies[1].StudyID),
-  'a repeated portfolio comparison row': (doc) => doc.comparison.unshift({ ...doc.comparison[0], Numerator: doc.comparison[0].Numerator + 1e6 }),
+  'a portfolio comparison, which the study document no longer carries': (doc) => (doc.comparison = [{ SnapshotDate: doc.study.snapshots[0], MetricID: doc.metrics[0].MetricID, Numerator: 1, Denominator: 2 }]),
 };
 
 const study = studies[0];

@@ -13,7 +13,7 @@ const catalog = portfolio.metrics;
 // A metric with no view of its own and no breakdown configuration.
 const plain = /** @type {Meta} */ (catalog.find((m) => !m.Widget && !m.Widgets && !(m.ID in DISTRIBUTION_CONFIG) && m.GroupLevel === 'Site'));
 const configured = /** @type {Meta} */ (catalog.find((m) => m.ID in DISTRIBUTION_CONFIG));
-const STANDARD_VIEWS = 5;
+const STANDARD_VIEWS = 2;
 
 /**
  * Opens the study with one change to the plain metric's catalog entry, collecting the page's warnings.

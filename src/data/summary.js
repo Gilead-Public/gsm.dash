@@ -18,8 +18,9 @@ export const POPULATIONS = { screened: 'ScreenedCount', enrolled: 'ParticipantCo
  */
 
 /**
- * Indexes the summary, refusing one that describes different studies or snapshots than the manifest.
- * @param {{ studies: Array<{ StudyID: string, snapshots: string[] } & Record<string, any>>, counts: SummaryRow[] } | null | undefined} summary
+ * Indexes the summary, refusing one that describes different studies or snapshots than the manifest, or a study its
+ * cycle doesn't list (#14).
+ * @param {{ cycle: { SnapshotDate: string, studies: string[] }, studies: Array<{ StudyID: string, snapshots: string[] } & Record<string, any>>, counts: SummaryRow[] } | null | undefined} summary
  * @param {Array<{ StudyID: string, snapshots: string[] }>} studies The manifest's studies.
  */
 export function indexSummary(summary, studies) {
@@ -34,6 +35,11 @@ export function indexSummary(summary, studies) {
     if (!same(entry.snapshots, study.snapshots)) throw new Error(`the portfolio summary lists different snapshots for ${study.StudyID}`);
   }
   if (entries.size !== studies.length) throw new Error('the portfolio summary has studies the manifest does not list');
+  const { cycle } = summary;
+  const listed = new Set(cycle.studies);
+  for (const id of entries.keys()) {
+    if (!listed.has(id)) throw new Error(`the portfolio summary has ${id}, which its ${cycle.SnapshotDate} cycle does not list`);
+  }
 
   const rows = new Map();
   const key = (studyId, date, metricId) => `${studyId}\n${date}\n${metricId}`;
@@ -46,6 +52,17 @@ export function indexSummary(summary, studies) {
     rows.set(k, row);
   }
   return {
+    /**
+     * The cycle, with the studies whose latest snapshot is on another date and the listed studies with no entry.
+     * @type {{ SnapshotDate: string, offCycle: Array<{ StudyID: string, latest: string }>, missing: string[] }}
+     */
+    cycle: {
+      SnapshotDate: cycle.SnapshotDate,
+      offCycle: summary.studies
+        .map((s) => ({ StudyID: s.StudyID, latest: [...s.snapshots].sort().at(-1) ?? '' }))
+        .filter((s) => s.latest !== cycle.SnapshotDate),
+      missing: cycle.studies.filter((id) => !entries.has(id)),
+    },
     /** @returns {SummaryRow | null} */
     row: (studyId, date, metricId) => rows.get(key(studyId, date, metricId)) ?? null,
     /**

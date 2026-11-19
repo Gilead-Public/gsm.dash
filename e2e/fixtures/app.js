@@ -4,7 +4,6 @@ import { test as base, expect } from '@playwright/test';
 import { existsSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { parseProject, requireRunDir } from '../projects.js';
-import { buildStudyDocument } from '../../scripts/study-document.mjs';
 
 const RUN_DIR = resolve(requireRunDir());
 const RUN_ID = process.env.VALIDATION_RUN_ID ?? 'dev';
@@ -60,20 +59,14 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
 
 /**
  * The same data changes for a study report's document: `portfolio` sees the report base, the catalog and the study's
- * entry as a one-study manifest, and `snapshot` sees each of the study's snapshots. A study report carries its
- * portfolio comparison rather than the summary, so a `summary` change rebuilds that comparison from the changed
- * summary, as the build would.
+ * entry as a one-study manifest, and `snapshot` sees each of the study's snapshots.
  * @param {DataOverrides} overrides
  * @returns {ReportOverrides}
  */
 function asReportOverrides(overrides) {
+  if (overrides.summary) throw new Error('a study report carries no portfolio summary; summary overrides need the portfolio report');
   return {
     document(doc) {
-      if (overrides.summary) {
-        const summary = structuredClone(readData('summary.json'));
-        overrides.summary(summary);
-        doc.comparison = buildStudyDocument({ manifest: readData('portfolio.json'), summary, read: readData }, doc.study.StudyID).comparison;
-      }
       if (overrides.portfolio) {
         const manifest = { generated: doc.generated, reportBase: doc.reportBase, metrics: doc.metrics, studies: [doc.study] };
         overrides.portfolio(manifest);

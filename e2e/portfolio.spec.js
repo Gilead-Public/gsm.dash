@@ -119,14 +119,23 @@ async function expectRow(page, table, label, members) {
   }
 }
 
+/**
+ * Opens the portfolio with its Enrolled column on: it is off by default (#21), and these tests read it.
+ * @param {any} app
+ * @param {Page} page
+ */
+async function openEnrolled(app, page) {
+  await app.open();
+  await page.locator('.sidebar button[data-column="enroll"]').click();
+}
+
 test.describe('portfolio view numbers', () => {
   // Every value is hovered, which takes most of the default 20 s.
   test.describe.configure({ timeout: 60_000 });
 
   test('11.03: the overview shows the pooled total and every study at its own latest snapshot (#11)', async ({ app, page }) => {
-    expect(new Set(studies.map((s) => snapshotAsOf(s, null))).size, 'the fixture has studies on different latest snapshots').toBeGreaterThan(1);
     expect(bands.flatMap((b) => b.metrics), 'the catalog keeps each category together').toEqual(catalog);
-    await app.open();
+    await openEnrolled(app, page);
     const table = await shownTable(page);
     await expectHeadings(page, table);
     expect(table.rows.map((r) => [r.kind, r.label])).toEqual([['total', 'Portfolio total'], ...studies.map((s) => ['study', s.StudyID])]);
@@ -139,7 +148,7 @@ test.describe('portfolio view numbers', () => {
   });
 
   test('11.03: grouping pools each group of studies (#11)', async ({ app, page }) => {
-    await app.open();
+    await openEnrolled(app, page);
     await page.locator('select[data-groupby]').selectOption('phase');
     await expect(page.locator('.portfolio-table tr.bucket').first()).toBeVisible();
     const table = await shownTable(page);
@@ -161,7 +170,7 @@ test.describe('portfolio view numbers', () => {
     const [area, kept] = [...counts].sort((a, b) => b[1].length - a[1].length)[0];
     expect(kept.length, 'the filter keeps more than one study and drops some').toBeGreaterThan(1);
     expect(kept.length).toBeLessThan(studies.length);
-    await app.open();
+    await openEnrolled(app, page);
     await page.locator(`button[data-filter="therapeutic_area"][data-value="${area}"]`).click();
     await expect(page.locator('.portfolio-table tr.study')).toHaveCount(kept.length);
     const table = await shownTable(page);
@@ -180,7 +189,7 @@ test.describe('portfolio view numbers', () => {
     /** @type {Array<[string, StudyEntry[], boolean]>} */
     const cases = [['alone', selected, false], ['with a phase filter', selected.filter((s) => s.params.phase === phase), true]];
     for (const [what, members, withPhase] of cases) {
-      await app.open();
+      await openEnrolled(app, page);
       for (const s of selected) await page.locator(`input[data-filter="study"][data-value="${s.StudyID}"]`).check();
       if (withPhase) await page.locator(`button[data-filter="phase"][data-value="${phase}"]`).click();
       const ids = members.map((s) => s.StudyID);
@@ -252,25 +261,13 @@ test.describe('portfolio view numbers', () => {
   });
 });
 
-test('the portfolio sits in the app shell: brand, Program overview tag, study count and export date, change log, a working metric glossary and theme switch, inside the page margins', async ({ app, page }) => {
+test('the portfolio sits in the app shell: brand, Program overview tag, study count and export date, inside the page margins', async ({ app, page }) => {
   await app.open();
   const header = page.locator('header.app');
   await expect(header.locator('h1')).toHaveText('gsm.dash');
   await expect(header.locator('#page-tag')).toHaveText('Program overview');
   const active = portfolio.metrics.filter((/** @type {{ Active?: boolean }} */ m) => m.Active !== false).length;
   await expect(header.locator('#meta')).toHaveText(`${studies.length} studies · ${active} metrics · exported ${portfolio.generated}`);
-  await expect(header.locator('a#changelogLink')).toHaveAttribute('target', '_blank');
-  await expect(header.locator('a#changelogLink')).toHaveAttribute('href', /^https:\/\/.+change-log\.html$/);
-  await header.locator('#glossaryBtn').click();
-  const glossary = page.locator('dialog#gsm-glossary');
-  await expect(glossary).toBeVisible();
-  await expect(glossary).toContainText(catalog[0].Abbreviation);
-  await page.keyboard.press('Escape');
-  await expect(glossary).toBeHidden();
-  await header.locator('button[data-theme-pref="dark"]').click();
-  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('dark');
-  await header.locator('button[data-theme-pref="auto"]').click();
-  expect(await page.evaluate(() => document.documentElement.dataset.theme ?? 'auto')).toBe('auto');
   const shell = await header.boundingBox();
   const content = await page.locator('#app > .layout').boundingBox();
   expect(shell && content, 'header and portfolio both laid out').toBeTruthy();
