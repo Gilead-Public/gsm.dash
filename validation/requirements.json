@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "8ef412dda4888facbf38c07a5818acc7cbbc05568f70c1e21a4e8a947f391582",
+  "hash": "d90f856ef80716d9322733bf39f567c40a93289b7b8042941219930c0959cdd9",
   "issues": [
     {
       "number": 8,
@@ -502,21 +502,21 @@
           "text": "Each column toggles, and the defaults apply (tests).",
           "sha256": "f69e2b283f676fcef4edde8d8605f85163cf8f5d6f0ce8739e0c87caf3c426ce",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "21.02",
           "text": "n / expected renders when a target exists, and the count alone renders when it doesn't (tests).",
           "sha256": "e19d529f91500f761b81a972d99f4e107c1f746c6d9eda4e3701a691d73924f4",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "21.03",
           "text": "The density toggle changes row spacing (visual check).",
           "sha256": "20d1c3b0626e30f18c88a7aaed5a56865fa001a92aefc272b7bf1ed021c9b271",
           "kind": "visual",
-          "reviewed": false
+          "reviewed": true
         }
       ]
     },

@@ -31,6 +31,7 @@ export const SPEC_ARTIFACTS = {
   'e2e/portfolio.spec.js': ['reports'],
   'e2e/prototype-removal.spec.js': ['reports'],
   'e2e/snapshot-cycle.spec.js': ['reports'],
+  'e2e/table-columns.spec.js': ['reports'],
   'e2e/portfolio-baseline.spec.js': ['reports'],
   'e2e/study-baseline.spec.js': ['reports'],
   'e2e/references.spec.js': ['reports'],

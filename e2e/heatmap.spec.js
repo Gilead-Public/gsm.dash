@@ -154,7 +154,7 @@ test('23.03: the Controls panel offers no heatmap colour choice (#23)', async ({
     await openAt(page, app, tableHash({ heatmap }));
     const box = sidebar(page);
     const labels = await box.locator('[data-sec="config"] .ctl > label').allTextContents();
-    expect(labels, `heatmap ${heatmap}: the Config controls`).toEqual(['Highlight study', 'Cell display', 'Also show', 'Heatmap (also drives column sort)', 'Group rows by']);
+    expect(labels, `heatmap ${heatmap}: the Config controls`).toEqual(['Highlight study', 'Cell display', 'Also show', 'Heatmap (also drives column sort)', 'Columns', 'Row density', 'Group rows by']);
     expect(await box.innerText(), `heatmap ${heatmap}: the panel's text`).not.toMatch(/colou?r|palette|\b(blue|teal|purple|gr[ae]y)\b/i);
     await expect(box.locator('[data-seg="ramp"], [data-ramp]'), `heatmap ${heatmap}: old markup`).toHaveCount(0);
     await expect(page.locator('[data-ramp]'), `heatmap ${heatmap}: no palette on the page`).toHaveCount(0);
