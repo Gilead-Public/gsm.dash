@@ -278,8 +278,8 @@ record.validation = offline || skipped || gate === null || /** @type {GateResult
 record.finishedAt = now();
 
 if (gate) {
-  writeFileSync(at('traceability-matrix.md'), matrixMarkdown(record, gate));
-  writeFileSync(at('traceability-matrix.html'), matrixHtml(record, gate));
+  writeFileSync(at('traceability-matrix.md'), matrixMarkdown(record, gate, baseline.issues));
+  writeFileSync(at('traceability-matrix.html'), matrixHtml(record, gate, baseline.issues));
 }
 for (const name of ['requirements.json', 'results.jsonl', 'matrix.json', 'traceability-matrix.md', 'traceability-matrix.html']) {
   if (existsSync(at(name))) manifest.push({ path: name, sha256: sha256File(at(name)), kind: 'record' });

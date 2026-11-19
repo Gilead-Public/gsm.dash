@@ -12,9 +12,11 @@ export const GROUP_BY_OPTIONS = [
 ];
 /** @type {Record<string, string>} */
 export const FILTER_LABELS = { therapeutic_area: 'Therapeutic area', phase: 'Phase', status: 'Status', study: 'Study' };
-export const RAMPS = [['blue', 'Blue'], ['teal', 'Teal'], ['purple', 'Purple'], ['grey', 'Grey']];
 export const HEATMAPS = [['none', 'None'], ['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate']];
 export const CELL_MODES = [['defined', 'As defined'], ['custom', 'Custom']];
+/** The table's optional columns (#21). */
+export const COLUMN_OPTIONS = [['name', 'Study name'], ['enroll', 'Enrolled'], ['status', 'Status']];
+export const DENSITIES = [['roomy', 'Roomy'], ['condensed', 'Condensed']];
 
 /**
  * What each cell can also show: in "defined" mode only the trend, in "custom" mode the counts and rate too.
@@ -57,8 +59,9 @@ export function controlStates(store) {
     cellMode: cells,
     show: cells ? ' ' : '',
     heatmap: tableOnly,
-    ramp: dist || state.heatmap === 'none' ? ' ' : '',
     groupBy: tableOnly,
+    columns: tableOnly,
+    density: tableOnly,
   };
 }
 

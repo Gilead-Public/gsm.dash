@@ -1,8 +1,8 @@
 state: distribution-filtered
-canonical dom: sha256 88f0bf064b3ddf4a3d5cb5924055e55c59d6d9c93f2c0d7811dacbd40c2e5621 (137721 characters)
-computed styles: sha256 e950def1d8b440d3a62e01ec4066d0695f66e2f4c1ed688820761b4bf465ca48 (837 elements)
+canonical dom: sha256 3d813ff797e9dc4abd64f6665735cbbff1625235fb5d4cdde89ff1d11f6d7068 (135998 characters)
+computed styles: sha256 cff9cd8a122c62e171dd73deb2372eda11fed63af30c9ce07306e477ad9cee91 (836 elements)
 tooltip: none
-cell backgrounds: rgb(237, 240, 238) ×4 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×4 | rgb(224, 238, 236) ×4 | rgb(237, 240, 238) ×6 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×5 | rgb(224, 238, 236) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) ×2 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
+cell backgrounds: rgb(237, 240, 238) ×3 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×4 | rgb(224, 238, 236) ×3 | rgb(237, 240, 238) ×6 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×5 | rgb(224, 238, 236) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 distribution marks:
   pt[STUDY006]@0.9259 pt[STUDY009]@0.6816 pt[STUDY011]@0.5444 ptot@0.5987 psel[STUDY002]@0.1262 lsel@0.1262
   pt[STUDY006]@0.9259 pt[STUDY009]@0.8891 pt[STUDY011]@0.7101 ptot@0.7809 psel[STUDY002]@0.5486 lsel@0.5486
@@ -49,12 +49,16 @@ accessibility:
       - option "Denominator" [disabled]
       - option "Rate" [disabled]
     - paragraph: "Table only: the distribution plots every study on each metric’s line."
-    - text: Heatmap color
+    - text: Columns
+    - button "Study name" [disabled] [pressed]
+    - button "Enrolled" [disabled]
+    - button "Status" [disabled]
+    - paragraph: "Table only: the distribution plots every study on each metric’s line."
+    - text: Row density
     - group [disabled]:
-      - button "Blue" [disabled]
-      - button "Teal" [disabled]
-      - button "Purple" [disabled]
-      - button "Grey" [disabled]
+      - button "Roomy" [disabled]
+      - button "Condensed" [disabled]
+    - paragraph: "Table only: the distribution plots every study on each metric’s line."
     - text: Group rows by
     - combobox [disabled]:
       - option "None — one row per study" [disabled] [selected]

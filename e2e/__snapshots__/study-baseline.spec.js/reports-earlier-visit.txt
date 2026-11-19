@@ -1,5 +1,5 @@
 state: earlier-visit (reports)
-dom: sha256 78a3141b43b722ec569a7ef803768d437c56ce20de8731f7383d68906bcdd216 (42193 characters)
+dom: sha256 d3b19f6a80c5784601e9306992fd523c584af51a65a6d1a9865e3151af9964ea (42193 characters)
 tooltip: none
 drill-in: closed
 tiles:
@@ -29,7 +29,7 @@ accessibility:
   - /url: ./portfolio.html
 - text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
 - slider "Visit": "0"
-- text: Visit 1/5 · 2026-01-31
+- text: Visit 1/5 · 2026-02-28
 - checkbox "Group by category" [checked]
 - text: Group by category Disposition · 6 SF Screen Failure Rate
 - img "Screen Failure Rate definition": i

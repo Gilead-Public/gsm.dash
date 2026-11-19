@@ -145,11 +145,21 @@ catalog, the studies, the counts-only summary and its configuration, if any. A s
 holds the catalog, the study's manifest entry and all its snapshots.
 
 Portfolio defaults (#16): an optional `config.json` beside `portfolio.json` sets the
-portfolio's initial grouping (`groupBy`), heatmap (`heatmap`), cell values (`show`) and
-hidden metrics (`metrics`, MetricIDs); every key is optional. It travels in the portfolio
+portfolio's initial grouping (`groupBy`), heatmap (`heatmap`), cell values (`show`),
+hidden metrics (`metrics`, MetricIDs), optional table columns (`columns`: `name`, `enroll`,
+`status`; #21) and row density (`density`: `roomy` or `condensed`); every key is optional.
+The Enrolled column shows a study's count against its `ParticipantTarget` parameter when
+the study has one. It travels in the portfolio
 document, so one template serves any configuration. Its values are checked against the
 Controls panel's choices and the catalog when the document is built and when the report
 loads. A setting in the address's hash overrides its configured default.
+
+Snapshot cycle (#14): the summary's `cycle` names one snapshot date and every study taking
+part. A study whose latest snapshot is on another date is left out of the table, the totals
+and Distribution, and a notice names it with its latest snapshot; a listed study with no
+data is named as missing. Trends keep every study's history before the cycle date; their
+point on the cycle date, like the totals, leaves off-cycle studies out, and they end there. A
+summary holding a study its cycle doesn't list is refused.
 
 Detailed-report links (#13): a catalog entry's `ReportLink` is a path to that metric's
 report, resolved against the manifest's optional `reportBase`, which itself resolves

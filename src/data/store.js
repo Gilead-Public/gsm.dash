@@ -3,7 +3,7 @@ import { selectLatestSnapshots, poolResults, bucketStudies, filterStudies } from
 import { indexSummary, poolSummary, POPULATIONS } from './summary.js';
 import { nextSort } from './sort.js';
 import { STATUS_ORDER, CATEGORY_ORDER, groupByCategory } from './catalog.js';
-import { CELL_MODES, GROUP_BY_OPTIONS, HEATMAPS, RAMPS, showOptions } from '../app/portfolio-controls.js';
+import { CELL_MODES, COLUMN_OPTIONS, DENSITIES, GROUP_BY_OPTIONS, HEATMAPS, showOptions } from '../app/portfolio-controls.js';
 import { POP_COLUMNS } from '../app/portfolio-table.js';
 import { portfolioDefaults } from './portfolio-config.js';
 
@@ -11,10 +11,11 @@ import { portfolioDefaults } from './portfolio-config.js';
 const SCALARS = [
   ['group', 'groupBy', GROUP_BY_OPTIONS],
   ['cell', 'cellMode', CELL_MODES],
+  ['density', 'density', DENSITIES],
   ['heatmap', 'heatmap', HEATMAPS],
-  ['ramp', 'ramp', RAMPS],
 ];
 const SHOW_PARTS = showOptions(false).map(([part]) => part);
+const COLUMN_PARTS = COLUMN_OPTIONS.map(([part]) => part);
 
 /**
  * The known values of a set the user can empty. An emptied set is written as one empty value; a set whose values are
@@ -39,6 +40,8 @@ function chosen(params, key, options, fallback) {
 export class PortfolioStore extends EventTarget {
   #summary = null;
   #defaults;
+  /** @type {Set<string>} */
+  #offCycle = new Set();
 
   /**
    * @param {{ manifest: any, snapshots: any[], summary?: any, config?: import('./portfolio-config.js').PortfolioConfig }} data
@@ -47,14 +50,21 @@ export class PortfolioStore extends EventTarget {
    */
   constructor({ manifest, snapshots, summary, config }) {
     super();
-    this.#defaults = { cellMode: 'defined', ramp: 'blue', ...portfolioDefaults(config) };
+    this.#defaults = { cellMode: 'defined', ...portfolioDefaults(config) };
     const { active, inactive } = orderMetrics(manifest.metrics.map(normalizeMetric));
     this.metrics = active;
     this.inactiveMetrics = inactive;
     this.studies = manifest.studies;
+    // Trends draw on every study's history, off-cycle ones included (#14).
+    this.historyStudies = manifest.studies;
     this.generated = manifest.generated;
     this.reportBase = manifest.reportBase ?? null;
-    if (summary) this.#summary = indexSummary(summary, manifest.studies);
+    if (summary) {
+      this.#summary = indexSummary(summary, manifest.studies);
+      // Off-cycle studies are left out of every current figure; the cycle notice names them (#14).
+      this.#offCycle = new Set(this.#summary.cycle.offCycle.map((s) => s.StudyID));
+      this.studies = manifest.studies.filter((s) => !this.#offCycle.has(s.StudyID));
+    }
 
     // StudyID -> SnapshotDate -> {snapshot, byMetric, groupParams}
     this.snapshotIndex = new Map();
@@ -69,8 +79,9 @@ export class PortfolioStore extends EventTarget {
 
     this.state = {
       show: new Set(this.#defaults.show), // any of num | den | rate | trend; cells stack what's on
+      columns: new Set(this.#defaults.columns), // the table's optional columns shown: name | enroll | status (#21)
+      density: this.#defaults.density, // 'roomy' | 'condensed' (#21)
       heatmap: this.#defaults.heatmap, // 'none' | 'num' | 'den' | 'rate' — column-relative cell shading (and the metric sort measure)
-      ramp: this.#defaults.ramp, // heatmap palette: 'blue' | 'teal' | 'purple' | 'grey'
       groupBy: this.#defaults.groupBy, // 'none' (one row per study) | a study param
       filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set(), study: new Set() },
       hiddenMetrics: new Set(this.#defaults.metrics), // MetricIDs the user has switched off
@@ -95,6 +106,11 @@ export class PortfolioStore extends EventTarget {
   get #index() {
     if (!this.#summary) throw new Error('a study report carries no portfolio summary');
     return this.#summary;
+  }
+
+  /** The portfolio's snapshot cycle and the studies left out of it (#14); null in a study report. */
+  get cycle() {
+    return this.#summary?.cycle ?? null;
   }
 
   setTileView(metricId, viewName) {
@@ -201,6 +217,7 @@ export class PortfolioStore extends EventTarget {
       params.set('dir', state.sort.dir);
     }
     if (SHOW_PARTS.some((p) => state.show.has(p) !== this.#defaults.show.includes(p))) addSet('show', SHOW_PARTS.filter((p) => state.show.has(p)));
+    if (COLUMN_PARTS.some((p) => state.columns.has(p) !== this.#defaults.columns.includes(p))) addSet('cols', COLUMN_PARTS.filter((p) => state.columns.has(p)));
     const options = this.filterOptions();
     for (const param of Object.keys(state.filters)) add(`filter.${param}`, options[param].filter((v) => state.filters[param].has(v)));
     if (STATUS_ORDER.some((s) => !state.statuses.has(s))) addSet('statuses', STATUS_ORDER.filter((s) => state.statuses.has(s)));
@@ -234,6 +251,7 @@ export class PortfolioStore extends EventTarget {
     const sortable = ['label', 'meta', ...POP_COLUMNS.map((c) => c.key), ...this.metrics.map((m) => m.MetricID)];
     state.sort = sortable.includes(sortKey) && (dir === 'asc' || dir === 'desc') ? { key: sortKey, dir } : { key: null, dir: null };
     state.show = new Set(chosen(params, 'show', SHOW_PARTS, this.#defaults.show));
+    state.columns = new Set(chosen(params, 'cols', COLUMN_PARTS, this.#defaults.columns));
     const options = this.filterOptions();
     for (const param of Object.keys(state.filters)) state.filters[param] = new Set(known(params.getAll(`filter.${param}`), options[param]));
     this.#applyMetricParams(params);
@@ -285,6 +303,12 @@ export class PortfolioStore extends EventTarget {
 
   toggleShow(part) {
     const set = this.state.show;
+    set.has(part) ? set.delete(part) : set.add(part);
+    this.#emit();
+  }
+
+  toggleColumn(part) {
+    const set = this.state.columns;
     set.has(part) ? set.delete(part) : set.add(part);
     this.#emit();
   }
@@ -431,14 +455,27 @@ export class PortfolioStore extends EventTarget {
     return bucketStudies(this.filteredStudies(), this.state.groupBy);
   }
 
+  /** The filtered studies whose history the trends draw on, off-cycle ones included (#14). */
+  filteredHistory() {
+    return filterStudies(this.historyStudies, this.state.filters);
+  }
+
+  /** Each group's history studies, off-cycle ones included, by group value. */
+  historyBuckets() {
+    return new Map(bucketStudies(this.filteredHistory(), this.state.groupBy).map((b) => [String(b.value), b.studies]));
+  }
+
   /**
    * Portfolio pooled rate per snapshot grid date (D5). Each study contributes
    * its latest snapshot as of the grid date; studies with none yet are absent.
    */
-  trendSeries(metricId, studies = this.filteredStudies()) {
-    const gridDates = [...new Set(studies.flatMap((s) => s.snapshots))].sort();
+  trendSeries(metricId, studies = this.filteredHistory()) {
+    const cycle = this.cycle?.SnapshotDate;
+    const gridDates = [...new Set(studies.flatMap((s) => s.snapshots))].filter((d) => !cycle || d <= cycle).sort();
     return gridDates.map((date) => {
-      const { Rate, NumStudies } = poolSummary(this.#index, selectLatestSnapshots(studies, date), metricId);
+      // The cycle's own point is a current figure, so like the totals it leaves off-cycle studies out (#14).
+      const counted = date === cycle ? studies.filter((s) => !this.#offCycle.has(s.StudyID)) : studies;
+      const { Rate, NumStudies } = poolSummary(this.#index, selectLatestSnapshots(counted, date), metricId);
       return { date, rate: Rate, nStudies: NumStudies };
     });
   }
