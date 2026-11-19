@@ -13,17 +13,14 @@ import { reportLink } from '../app/report-links.js';
  */
 export function resolveData(dataSpec, { store, studyId, metricId }) {
   const date = store.latestDate(studyId);
-  // View state, not a data layer: every site-level view needs to know which
-  // site is highlighted, and no widget should reach into the store for it.
-  const data = { studyId, date, selectedSite: store.state.selectedSite };
+  const data = { studyId, date };
 
   if (dataSpec.results === 'self' && metricId) {
     data.metric = store.metrics.find((m) => m.MetricID === metricId) ?? null;
     data.study = store.studyRollup(studyId, date, metricId); // derived from site rows
     data.siteRows = store.siteRows(studyId, date, metricId);
     data.trend = store.studyTrend(studyId, metricId);
-    data.portfolio = store.portfolioComparison(studyId, metricId);
-    data.reportLink = reportLink(data.metric, store.reportBase, globalThis.location?.href ?? '');
+    data.reportLink = reportLink(data.metric, store.reportBase, globalThis.location?.href ?? '', studyId);
   } else if (dataSpec.results === 'all-site') {
     data.metrics = store.metrics;
     data.siteRowsByMetric = new Map(

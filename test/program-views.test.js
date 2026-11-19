@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { PortfolioStore } from '../src/data/store.js';
+import { enrollTarget } from '../src/app/portfolio-table.js';
 import { generatePortfolio } from '../scripts/generate-example-data.mjs';
 
 // Unified program views (design iteration 2): Overview and Details are two
@@ -140,6 +141,118 @@ describe('URL params', () => {
 });
 
 /** Every view setting 27.05 lists, sets as sorted arrays. */
+describe('configured defaults (#16)', () => {
+  const config = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'] };
+  const configured = () => new PortfolioStore({ ...portfolio, config });
+
+  it('opens with the configured view, and an empty hash restores it', () => {
+    const s = configured();
+    expect([s.state.groupBy, s.state.heatmap, [...s.state.show].sort(), [...s.state.hiddenMetrics].sort()]).toEqual(['phase', 'rate', ['den', 'trend'], config.metrics]);
+    const fresh = viewState(s);
+    changeEveryField(s);
+    s.applyProgramParams(new URLSearchParams());
+    expect(viewState(s)).toEqual(fresh);
+  });
+
+  it('writes a setting changed back to its built-in default, and reads it back', () => {
+    const s = configured();
+    s.set('groupBy', 'none');
+    s.set('heatmap', 'none');
+    s.toggleShow('den');
+    s.toggleShow('trend');
+    s.toggleShow('num');
+    s.toggleShow('rate');
+    for (const id of [...s.state.hiddenMetrics]) s.toggleMetric(id);
+    const other = configured();
+    other.applyProgramParams(new URLSearchParams(s.programParams().toString()));
+    expect(viewState(other)).toEqual(viewState(new PortfolioStore(portfolio)));
+  });
+
+  it('always writes the hidden metrics, so a study report, which has no configuration, hides what the portfolio hid', () => {
+    for (const change of [() => {}, (s) => s.toggleMetric('Analysis_kri0005'), (s) => [...s.state.hiddenMetrics].forEach((id) => s.toggleMetric(id))]) {
+      const s = configured();
+      change(s);
+      const study = new PortfolioStore(portfolio);
+      study.applyMetricParams(new URLSearchParams(s.programParams().toString()));
+      expect(viewState(study).hiddenMetrics).toEqual(viewState(s).hiddenMetrics);
+    }
+  });
+});
+
+describe('the study filter and Reset (#22)', () => {
+  it('limits the studies to those selected, combined with the other filters, and counts as an active filter', () => {
+    const [a, , c] = store.studies;
+    store.toggleFilter('study', a.StudyID);
+    store.toggleFilter('study', c.StudyID);
+    expect(store.filteredStudies().map((s) => s.StudyID)).toEqual([a.StudyID, c.StudyID]);
+    expect(store.activeFilterCount()).toBe(2);
+    store.toggleFilter('phase', a.params.phase);
+    expect(store.filteredStudies().map((s) => s.StudyID)).toEqual([a, c].filter((s) => s.params.phase === a.params.phase).map((s) => s.StudyID));
+    expect(store.filterOptions().study).toEqual(store.studies.map((s) => s.StudyID).sort());
+    store.clearFilters();
+    expect(store.filteredStudies()).toHaveLength(store.studies.length);
+  });
+
+  it('carries the study filter in the address', () => {
+    store.toggleFilter('study', store.studies[1].StudyID);
+    const params = store.programParams();
+    expect(params.getAll('filter.study')).toEqual([store.studies[1].StudyID]);
+    const other = new PortfolioStore(portfolio);
+    other.applyProgramParams(new URLSearchParams(params.toString()));
+    expect([...other.state.filters.study]).toEqual([store.studies[1].StudyID]);
+  });
+
+  it('Reset returns every setting the address holds to a fresh load, under the default and a configured view', () => {
+    const config = { groupBy: 'phase', heatmap: 'rate', show: ['den'], metrics: ['Analysis_kri0003'] };
+    for (const data of [portfolio, { ...portfolio, config }]) {
+      const s = new PortfolioStore(data);
+      const fresh = new PortfolioStore(data);
+      fresh.applyProgramParams(new URLSearchParams());
+      changeEveryField(s);
+      s.reset();
+      expect(viewState(s)).toEqual(viewState(fresh));
+      expect(s.programParams().toString()).toBe(fresh.programParams().toString());
+    }
+  });
+});
+
+describe('table columns and density (#21)', () => {
+  it('21.01: by default the table shows the study name, without Enrolled or Status, at roomy density; a configuration sets both (#21)', () => {
+    expect([[...store.state.columns], store.state.density]).toEqual([['name'], 'roomy']);
+    expect(store.programParams().toString()).toBe('');
+    const s = new PortfolioStore({ ...portfolio, config: { columns: ['enroll', 'status'], density: 'condensed' } });
+    expect([[...s.state.columns].sort(), s.state.density]).toEqual([['enroll', 'status'], 'condensed']);
+    expect(s.programParams().toString()).toBe('');
+  });
+
+  it('21.01: the columns and density travel in the address, an emptied choice included, and unknown values are dropped (#21)', () => {
+    store.toggleColumn('enroll');
+    store.toggleColumn('status');
+    store.set('density', 'condensed');
+    const params = store.programParams();
+    expect(params.getAll('cols')).toEqual(['name', 'enroll', 'status']);
+    expect(params.get('density')).toBe('condensed');
+    const other = new PortfolioStore(portfolio);
+    other.applyProgramParams(new URLSearchParams(params.toString()));
+    expect([[...other.state.columns].sort(), other.state.density]).toEqual([['enroll', 'name', 'status'], 'condensed']);
+    other.toggleColumn('name');
+    other.toggleColumn('enroll');
+    other.toggleColumn('status');
+    const empty = new PortfolioStore(portfolio);
+    empty.applyProgramParams(new URLSearchParams(other.programParams().toString()));
+    expect([...empty.state.columns]).toEqual([]);
+    empty.applyProgramParams(new URLSearchParams('cols=site&density=tight'));
+    expect([[...empty.state.columns], empty.state.density]).toEqual([['name'], 'roomy']);
+  });
+
+  it('21.02: a study\'s enrollment target is its ParticipantTarget above zero, as a number or as text, and none otherwise (#21)', () => {
+    const study = (target) => ({ params: target === undefined ? {} : { ParticipantTarget: target } });
+    expect([400, '400', ' 12 ', 0.5].map((t) => enrollTarget(study(t)))).toEqual([400, 400, 12, 0.5]);
+    expect([undefined, null, '', '  ', 0, '0', -3, 'n/a', NaN, Infinity].map((t) => enrollTarget(study(t)))).toEqual(Array(10).fill(null));
+    expect(enrollTarget(undefined)).toBeNull();
+  });
+});
+
 function viewState(s) {
   const { state } = s;
   const sorted = (set) => [...set].map(String).sort();
@@ -153,11 +266,12 @@ function viewState(s) {
     cellMode: state.cellMode,
     show: sorted(state.show),
     heatmap: state.heatmap,
-    ramp: state.ramp,
     filters: Object.fromEntries(Object.entries(state.filters).map(([k, v]) => [k, sorted(v)])),
     statuses: sorted(state.statuses),
     hiddenMetrics: sorted(state.hiddenMetrics),
     highlightStudy: state.highlightStudy,
+    columns: sorted(state.columns),
+    density: state.density,
   };
 }
 
@@ -174,11 +288,14 @@ function changeEveryField(s) {
   s.toggleShow('den');
   s.toggleShow('num');
   s.set('heatmap', 'rate');
-  s.set('ramp', 'teal');
   s.toggleFilter('phase', 'P2');
   s.toggleFilter('status', 'Active');
   s.toggleFilter('therapeutic_area', 'Oncology');
+  s.toggleFilter('study', s.studies[2].StudyID);
   s.toggleStatus('Planned');
   s.toggleMetric(s.supportedMetrics()[1].MetricID);
   s.highlight(s.studies[1].StudyID);
+  s.toggleColumn('name');
+  s.toggleColumn('status');
+  s.set('density', 'condensed');
 }

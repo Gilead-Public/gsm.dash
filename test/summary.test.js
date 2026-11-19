@@ -7,8 +7,9 @@ import addFormats from 'ajv-formats';
 import { writeExampleData } from '../scripts/generate-example-data.mjs';
 import { buildSummary } from '../scripts/portfolio-summary.mjs';
 import { PortfolioStore } from '../src/data/store.js';
+import { tableRows } from '../src/app/portfolio-table.js';
 import { indexSummary } from '../src/data/summary.js';
-import { pooled, pooledTrend, population, shownMetrics, snapshotAsOf, studiesBy } from './qual/pooling.js';
+import { latestSnapshot, pooled, pooledTrend, population, shownMetrics, snapshotAsOf, studiesBy } from './qual/pooling.js';
 
 let dir;
 let files;
@@ -107,7 +108,7 @@ describe('portfolio numbers from the counts-only summary', () => {
     const { manifest } = files;
     const studies = manifest.studies;
     const dates = [...new Set(studies.flatMap((s) => s.snapshots))].sort();
-    expect(new Set(studies.map((s) => s.snapshots.at(-1))).size, 'studies end on different snapshots').toBeGreaterThan(1);
+    expect(new Set(studies.map((s) => s.snapshots[0])).size, 'studies start on different snapshots').toBeGreaterThan(1);
     expect(dates.length).toBeGreaterThan(3);
     const before = dayBeforeData(studies);
     expect(population(files.read, studies, 'ParticipantCount', before), 'no study has data yet').toBeNull();
@@ -148,7 +149,7 @@ describe('portfolio numbers from the counts-only summary', () => {
       write('portfolio.json', manifest);
 
       const snapshots = manifest.studies.flatMap((s) => Object.values(s.files).map(read));
-      write('summary.json', buildSummary(manifest, snapshots));
+      write('summary.json', buildSummary(manifest, snapshots, read('summary.json').cycle));
       const data = readDir(edge);
 
       expect(expected(data.read, [zeroed], m1.MetricID, null).rate, 'a study whose denominator is zero').toBeNull();
@@ -215,9 +216,116 @@ describe('portfolio numbers from the counts-only summary', () => {
   });
 });
 
+describe('the snapshot cycle', () => {
+  let edge;
+  let data;
+  let off;
+  let inCycle;
+  let cycleDate;
+
+  // The example data with one study's latest snapshot dropped, so its latest is a cycle behind.
+  beforeAll(() => {
+    edge = mkdtempSync(join(tmpdir(), 'gsm-dash-summary-cycle-'));
+    writeExampleData(edge);
+    const { read, manifest } = readDir(edge);
+    off = manifest.studies[2];
+    const dropped = off.snapshots.at(-1);
+    off.snapshots = off.snapshots.slice(0, -1);
+    delete off.files[dropped];
+    writeFileSync(join(edge, 'portfolio.json'), JSON.stringify(manifest));
+    const snapshots = manifest.studies.flatMap((s) => Object.values(s.files).map(read));
+    writeFileSync(join(edge, 'summary.json'), JSON.stringify(buildSummary(manifest, snapshots, read('summary.json').cycle)));
+    data = readDir(edge);
+    cycleDate = data.summary.cycle.SnapshotDate;
+    inCycle = data.manifest.studies.filter((s) => latestSnapshot(s) === cycleDate);
+  });
+
+  afterAll(() => rmSync(edge, { recursive: true, force: true }));
+
+  it('14.02: with one study off cycle, the portfolio totals equal pooling the in-cycle studies\' files (#14)', () => {
+    expect(inCycle.map((s) => s.StudyID)).not.toContain(off.StudyID);
+    expect(inCycle.length).toBe(data.manifest.studies.length - 1);
+    const store = new PortfolioStore(data);
+    const total = store.filteredStudies();
+    expect(total.map((s) => s.StudyID)).toEqual(inCycle.map((s) => s.StudyID));
+
+    let differs = 0;
+    for (const m of shownMetrics(data.manifest.metrics)) {
+      const want = expected(data.read, inCycle, m.MetricID, null);
+      expect(fromStore(store.rollup(total, m.MetricID)), m.Abbreviation).toEqual(want);
+      if (want.numerator !== expected(data.read, data.manifest.studies, m.MetricID, null).numerator) differs++;
+    }
+    expect(differs, 'leaving the off-cycle study out changes the totals').toBeGreaterThan(0);
+    const pop = store.population(total);
+    expect([pop.screened, pop.enrolled, pop.dosed]).toEqual(['ScreenedCount', 'ParticipantCount', 'DosedCount'].map((p) => population(data.read, inCycle, p)));
+  });
+
+  it('14.02: with one study off cycle, the total\'s and its group\'s trends keep that study\'s history before the cycle date, and end on the in-cycle totals (#14)', () => {
+    const store = new PortfolioStore(data);
+    /** The trend an independent reader expects: every study as of each earlier date, then the in-cycle studies. */
+    const wanted = (studies, metricId) => [
+      ...pooledTrend(data.read, studies, metricId).filter((p) => p.date < cycleDate),
+      { date: cycleDate, ...(({ rate, studies: n }) => ({ rate, studies: n }))(pooled(data.read, studies.filter((s) => inCycle.includes(s)), metricId)) },
+    ];
+    const shown = (trend) => trend.map((p) => ({ date: p.date, rate: p.rate, studies: p.nStudies }));
+    const phase = off.params.phase;
+    const sameStudies = data.manifest.studies.filter((s) => s.params.phase === phase);
+    expect(sameStudies.length, 'the off-cycle study shares its phase with another').toBeGreaterThan(1);
+
+    let kept = 0;
+    for (const m of shownMetrics(data.manifest.metrics)) {
+      const { total } = tableRows(store);
+      const want = wanted(data.manifest.studies, m.MetricID);
+      expect(shown(total.trend(m.MetricID)), `${m.Abbreviation} total`).toEqual(want);
+      const before = want.filter((p) => p.date < cycleDate);
+      if (before.some((p, i) => p.rate !== pooledTrend(data.read, inCycle, m.MetricID)[i].rate)) kept++;
+    }
+    expect(kept, 'the off-cycle study\'s history changes the earlier points').toBeGreaterThan(0);
+
+    store.set('groupBy', 'phase');
+    const group = tableRows(store).primary.find((r) => r.label === phase);
+    for (const m of shownMetrics(data.manifest.metrics)) {
+      expect(shown(group.trend(m.MetricID)), `${m.Abbreviation} ${phase}`).toEqual(wanted(sameStudies, m.MetricID));
+    }
+  });
+});
+
+describe('a study ahead of the cycle', () => {
+  it('is off cycle, and the trends still end on the cycle date', () => {
+    const edge = mkdtempSync(join(tmpdir(), 'gsm-dash-summary-ahead-'));
+    try {
+      writeExampleData(edge);
+      const { read, manifest } = readDir(edge);
+      const ahead = manifest.studies[3];
+      const later = '2026-07-31';
+      const snap = { ...read(ahead.files[ahead.snapshots.at(-1)]), SnapshotDate: later };
+      writeFileSync(join(edge, 'ahead.json'), JSON.stringify(snap));
+      ahead.snapshots = [...ahead.snapshots, later];
+      ahead.files[later] = 'ahead.json';
+      writeFileSync(join(edge, 'portfolio.json'), JSON.stringify(manifest));
+      const snapshots = manifest.studies.flatMap((s) => Object.values(s.files).map(read));
+      const summary = buildSummary(manifest, snapshots, read('summary.json').cycle);
+      writeFileSync(join(edge, 'summary.json'), JSON.stringify(summary));
+      const data = readDir(edge);
+      const store = new PortfolioStore(data);
+      expect(store.cycle?.offCycle).toEqual([{ StudyID: ahead.StudyID, latest: later }]);
+      const [m] = shownMetrics(data.manifest.metrics);
+      const trend = tableRows(store).total.trend(m.MetricID);
+      expect(trend.at(-1)?.date).toBe(summary.cycle.SnapshotDate);
+      expect(trend.at(-1)?.nStudies).toBe(data.manifest.studies.length - 1);
+    } finally {
+      rmSync(edge, { recursive: true, force: true });
+    }
+  });
+});
+
 describe('reading the summary', () => {
   const studies = [{ StudyID: 'A', snapshots: ['2026-01-31', '2026-02-28'] }];
-  const doc = (counts = [], entries = [{ StudyID: 'A', snapshots: ['2026-01-31', '2026-02-28'] }]) => ({ studies: entries, counts });
+  const doc = (counts = [], entries = [{ StudyID: 'A', snapshots: ['2026-01-31', '2026-02-28'] }], cycle = { SnapshotDate: '2026-02-28', studies: entries.map((e) => e.StudyID) }) => ({
+    cycle,
+    studies: entries,
+    counts,
+  });
   const row = (date, metric = 'M') => ({ StudyID: 'A', SnapshotDate: date, MetricID: metric, Numerator: 1, Denominator: 2, SiteCount: 1, FlagCounts: {} });
 
   it('refuses a missing summary', () => {
@@ -228,6 +336,11 @@ describe('reading the summary', () => {
     expect(() => indexSummary(doc([], []), studies)).toThrow(/no entry for A/);
     expect(() => indexSummary(doc([], [{ StudyID: 'A', snapshots: ['2026-01-31'] }]), studies)).toThrow(/different snapshots for A/);
     expect(() => indexSummary(doc([], [...doc().studies, { StudyID: 'B', snapshots: ['2026-01-31'] }]), studies)).toThrow(/studies the manifest does not list/);
+  });
+
+  it('refuses a manifest or a summary that lists a study twice', () => {
+    expect(() => indexSummary(doc([], [...doc().studies, ...doc().studies]), studies)).toThrow(/summary lists a study more than once/);
+    expect(() => indexSummary(doc(), [...studies, ...studies])).toThrow(/manifest lists a study more than once/);
   });
 
   it('refuses counts for an unknown snapshot, or two rows for one study, snapshot and metric', () => {
@@ -242,6 +355,19 @@ describe('reading the summary', () => {
 
   it('the generator refuses a population that is not a count', () => {
     const snap = { StudyID: 'A', SnapshotDate: '2026-01-31', results: [], groups: [{ GroupID: 'A', GroupLevel: 'Study', Param: 'ParticipantCount', Value: '0.25' }] };
-    expect(() => buildSummary({ generated: '', studies: [{ StudyID: 'A', snapshots: ['2026-01-31'] }] }, [snap])).toThrow(/ParticipantCount 0.25 is not a count/);
+    expect(() => buildSummary({ generated: '', studies: [{ StudyID: 'A', snapshots: ['2026-01-31'] }] }, [snap], { SnapshotDate: '2026-01-31', studies: ['A'] })).toThrow(
+      /ParticipantCount 0.25 is not a count/,
+    );
+  });
+
+  it('refuses a summary holding a study its cycle does not list', () => {
+    expect(() => indexSummary(doc([], undefined, { SnapshotDate: '2026-02-28', studies: ['B'] }), studies)).toThrow(/has A, which its 2026-02-28 cycle does not list/);
+  });
+
+  it('names the studies off cycle, with their latest snapshot, and the listed studies with no entry', () => {
+    const two = [...studies, { StudyID: 'C', snapshots: ['2026-01-31'] }];
+    const index = indexSummary(doc([], two, { SnapshotDate: '2026-02-28', studies: ['A', 'B', 'C'] }), two);
+    expect(index.cycle).toEqual({ SnapshotDate: '2026-02-28', offCycle: [{ StudyID: 'C', latest: '2026-01-31' }], missing: ['B'] });
+    expect(indexSummary(doc(), studies).cycle).toEqual({ SnapshotDate: '2026-02-28', offCycle: [], missing: [] });
   });
 });

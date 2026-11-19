@@ -3,6 +3,7 @@
 // relative paths resolve against the base, and a metric without a link shows none. Links are read as the browser
 // resolved them (the anchor's href property) and compared with expected URLs written out here.
 import { expect, readData, test } from './fixtures/app.js';
+import { pageAllTo } from './fixtures/tiles.js';
 import { shownMetrics } from '../test/qual/pooling.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('./fixtures/app.js').App} App */
@@ -15,7 +16,7 @@ const tiles = shownMetrics(portfolio.metrics);
 const example = /** @type {Meta} */ (tiles.find((m) => m.ReportLink));
 const [first, second, third] = tiles.filter((m) => !m.Widget && !m.Widgets && !m.ReportLink);
 const BASE = 'https://reports.example.org/cod/study-reports/';
-const VIEWS = ['default', 'overview', 'scalar-tile', 'scatter-mini', 'bar-numerator', 'trend-mini'];
+const VIEWS = ['Details', 'Trend over time'];
 
 /**
  * Opens the study with a report base and paths for three metrics, as configuration would set them.
@@ -59,13 +60,14 @@ const links = (page) =>
 const expected = (hrefs) => Object.fromEntries(tiles.map((m) => [m.MetricID, m.MetricID in hrefs ? [`${hrefs[m.MetricID]} | Detailed report ↗ | _blank`] : []]));
 
 /**
- * Checks the links in every view the all-tiles menu offers, and the default.
+ * Checks the links with every tile on its default view, then on each standard view.
  * @param {Page} page
  * @param {Record<string, string>} hrefs
  */
 async function expectLinksInEveryView(page, hrefs) {
+  await expect.poll(() => links(page), 'default').toEqual(expected(hrefs));
   for (const view of VIEWS) {
-    await page.locator('select[data-all-views]').selectOption(view);
+    await pageAllTo(page, view);
     await expect.poll(() => links(page), view).toEqual(expected(hrefs));
   }
 }

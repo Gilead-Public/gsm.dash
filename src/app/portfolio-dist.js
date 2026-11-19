@@ -1,7 +1,7 @@
 // @ts-check
 // The portfolio's Distribution view: one strip per metric with a dot per study at its latest snapshot, the pooled
-// portfolio value as a rule, and the highlighted study as a labelled diamond. Shared by both portfolio hosts; tooltip
-// text is HTML for the shared hover tooltip, and every other string is plain text.
+// portfolio value as a rule, and the highlighted study as a labelled diamond. Tooltip text is HTML for the shared hover
+// tooltip, and every other string is plain text.
 import { esc, fmtInt, fmtMetric, displayRate, displayLabel } from '../util/format.js';
 import { stripScale, axisLabel } from '../scales/strip.js';
 import { studyLabel } from './portfolio-controls.js';

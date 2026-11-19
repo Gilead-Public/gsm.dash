@@ -16,30 +16,26 @@ const FOOTNOTES = {
   'not-recorded': () => 'Not recorded: the source value was blank.',
 };
 
+const value = (bar, s) => (s.display === 'percent' ? fmtPct(bar.percent) : fmtInt(bar.count));
+
 function rowHtml(bar, s, max) {
   const width = max > 0 ? ((bar.count / max) * 100).toFixed(1) : '0';
   const style = bar.colour ? ` style="width:${width}%;background:${esc(bar.colour)}"` : ` style="width:${width}%"`;
-  const parts = [`${bar.label}: ${fmtInt(bar.count)}`, `${fmtPct(bar.population)} ${s.populationLabel}`];
-  if (s.enrolledLabel) parts.push(`${fmtPct(bar.enrolled)} ${s.enrolledLabel}`);
-  return `<div class="dist-row ${bar.kind}" role="listitem" aria-label="${esc(parts.join(', '))}" data-category="${esc(bar.category ?? '')}" data-kind="${bar.kind}">
-    <span class="lbl" title="${esc(bar.label)}">${esc(bar.label)}</span>
+  const nOfN = `${fmtInt(bar.count)} of ${fmtInt(s.total)}`;
+  const aria = s.display === 'percent' ? `${bar.label}: ${value(bar, s)}${s.valueLabel.replace(/^%/, '')}, ${nOfN}` : `${bar.label}: ${nOfN}`;
+  return `<div class="dist-row ${bar.kind}" role="listitem" title="${esc(`${bar.label}: ${nOfN}`)}" aria-label="${esc(aria)}" data-category="${esc(bar.category ?? '')}" data-kind="${bar.kind}">
+    <span class="lbl">${esc(bar.label)}</span>
     <div class="btrack" aria-hidden="true"><div class="b${bar.colour ? ' status' : ''}"${style}></div></div>
-    <span class="v">${fmtInt(bar.count)}</span>
-    <span class="p" data-pct="population">${fmtPct(bar.population)}</span>
-    ${s.enrolledLabel ? `<span class="p" data-pct="enrolled">${fmtPct(bar.enrolled)}</span>` : ''}
+    <span class="v">${value(bar, s)}</span>
   </div>`;
 }
 
 function sectionHtml(s) {
   const max = Math.max(0, ...s.bars.map((b) => b.count));
-  const cols = s.enrolledLabel ? 'dist-sec two' : 'dist-sec';
   const notes = s.footnotes.map((f) => `<p class="dist-note">${esc(FOOTNOTES[f](s))}</p>`).join('');
-  return `<section class="${cols}" data-source="${esc(s.source)}" data-variable="${esc(s.variable)}" aria-label="${esc(s.title)}">
+  return `<section class="dist-sec" data-source="${esc(s.source)}" data-variable="${esc(s.variable)}" data-display="${s.display}" aria-label="${esc(s.title)}">
     <div class="sub-h">${esc(s.title)}</div>
-    <div class="dist-cols" aria-hidden="true"><span></span><span>n</span>
-      <span title="${esc(`${s.populationLabel}: count out of ${fmtInt(s.total)}`)}">${esc(s.populationLabel)}</span>
-      ${s.enrolledLabel ? `<span title="${esc(`${s.enrolledLabel}: count out of all enrolled participants`)}">${esc(s.enrolledLabel)}</span>` : ''}
-    </div>
+    <div class="dist-cols" aria-hidden="true"><span></span><span>${esc(s.valueLabel)}</span></div>
     <div class="dist-bars" role="list">${s.bars.map((b) => rowHtml(b, s, max)).join('')}</div>
     ${notes}
   </section>`;

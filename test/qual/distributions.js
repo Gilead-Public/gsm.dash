@@ -50,6 +50,7 @@ export const rowKey = (row) => key(row.Source, row.Variable, row.Category);
 export function studyTotals(rows, groupId = null) {
   const out = {};
   for (const r of rows) {
+    if (r.GroupLevel !== 'Site') continue;
     if (groupId !== null && r.GroupID !== groupId) continue;
     out[r.Source] ??= {};
     const v = (out[r.Source][r.Variable] ??= { siteTotals: {}, categories: {} });
@@ -70,13 +71,14 @@ export const categoryName = (category) => (category === null ? '\u0001' : catego
 /**
  * Independent expectation of the Layout A view for one metric, written from the issue #10 rules rather than from
  * src/: numerator sections first (otherwise first appearance), bars by descending count with ties in first-appearance
- * order, the top N then one "+ k more" bar holding the rest, "Not recorded" last and only when non-zero, the share of
- * the section total and, where configured, of the metric's denominator.
- * @param {{ Source: string, Variable: string, Category: string | null, GroupID: string, Count: number, Participants: number, Total: number }[]} rows one metric's site rows
- * @param {{ sections?: Record<string, { title?: string, topN?: number }>, topN?: number, enrolledPercent?: boolean }} config keyed by 'Source:Variable'
- * @param {{ Numerator: number, Denominator: number }} totals for the same scope as `rows`
+ * order, the top N then one "+ k more" bar holding the rest, "Not recorded" last and only when non-zero. A
+ * denominator (status) section shows each bar's share of the section total; a numerator (reason) section shows its
+ * count. Every bar's hover is its count out of the section total.
+ * @param {{ Source: string, Variable: string, Category: string | null, GroupID: string, GroupLevel?: string, Count: number, Participants: number, Total: number }[]} allRows one metric's rows; only site rows count
+ * @param {{ sections?: Record<string, { title?: string, topN?: number }>, topN?: number }} config keyed by 'Source:Variable'
  */
-export function expectedView(rows, config, totals) {
+export function expectedView(allRows, config) {
+  const rows = allRows.filter((r) => r.GroupLevel === 'Site');
   const sums = studyTotals(rows);
   const seen = [];
   for (const r of rows) if (!seen.includes(`${r.Source}|${r.Variable}`)) seen.push(`${r.Source}|${r.Variable}`);
@@ -91,17 +93,17 @@ export function expectedView(rows, config, totals) {
       if (r.Source === Source && r.Variable === Variable && r.Category !== null && !categories.includes(r.Category)) categories.push(r.Category);
     }
     const ranked = categories.map((c, i) => ({ c, i, n: t.categories[c].Count })).sort((a, b) => b.n - a.n || a.i - b.i);
-    const twoPercentages = Source === 'Numerator' && config.enrolledPercent === true && totals?.Denominator > 0;
+    const display = Source === 'Denominator' ? 'percent' : 'count';
     const bar = (label, kind, count) => ({
       label, kind, count,
-      population: t.Total > 0 ? count / t.Total : null,
-      enrolled: twoPercentages ? count / totals.Denominator : null,
+      percent: display === 'percent' && t.Total > 0 ? count / t.Total : null,
+      hover: { count, of: t.Total },
     });
     const bars = ranked.slice(0, limit).map((x) => bar(x.c, 'category', x.n));
     if (ranked.length > limit) bars.push(bar(`+ ${ranked.length - limit} more`, 'more', ranked.slice(limit).reduce((a, x) => a + x.n, 0)));
     const blank = t.categories[categoryName(null)]?.Count ?? 0;
     if (blank > 0) bars.push(bar('Not recorded', 'not-recorded', blank));
     const counted = Object.values(t.categories).reduce((a, c) => a + c.Count, 0);
-    return { Source, Variable, title: sc.title ?? Variable, Total: t.Total, twoPercentages, bars, notes: { multi: counted > t.Total, notRecorded: blank > 0 } };
+    return { Source, Variable, title: sc.title ?? Variable, Total: t.Total, display, bars, notes: { multi: counted > t.Total, notRecorded: blank > 0 } };
   });
 }

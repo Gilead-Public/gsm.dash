@@ -1,6 +1,6 @@
 // @ts-check
 // #12: an unknown or inapplicable reference in configuration shows a placeholder naming it and the reason, and logs
-// a warning; nothing is substituted. Every case is supplied through real configuration (the catalog), on both hosts.
+// a warning; nothing is substituted. Every case is supplied through real configuration (the catalog).
 import { expect, readData, test } from './fixtures/app.js';
 import { DISTRIBUTION_CONFIG } from '../src/config/distributions.js';
 /** @typedef {import('@playwright/test').Page} Page */
@@ -13,7 +13,7 @@ const catalog = portfolio.metrics;
 // A metric with no view of its own and no breakdown configuration.
 const plain = /** @type {Meta} */ (catalog.find((m) => !m.Widget && !m.Widgets && !(m.ID in DISTRIBUTION_CONFIG) && m.GroupLevel === 'Site'));
 const configured = /** @type {Meta} */ (catalog.find((m) => m.ID in DISTRIBUTION_CONFIG));
-const STANDARD_VIEWS = 5;
+const STANDARD_VIEWS = 2;
 
 /**
  * Opens the study with one change to the plain metric's catalog entry, collecting the page's warnings.

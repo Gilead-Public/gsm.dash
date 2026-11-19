@@ -1,10 +1,9 @@
 // @ts-check
 import { test as base, expect } from '@playwright/test';
 /** @typedef {import('@playwright/test').Page} Page */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { parseProject, requireRunDir } from '../projects.js';
-import { buildStudyDocument } from '../../scripts/study-document.mjs';
 
 const RUN_DIR = resolve(requireRunDir());
 const RUN_ID = process.env.VALIDATION_RUN_ID ?? 'dev';
@@ -22,8 +21,8 @@ function projectOf(testInfo) {
   return project;
 }
 
-/** The example data every build under test was made from. */
-export const DATA_DIR = join(RUN_DIR, 'build/subpath/examples/data');
+/** The example data the reports under test were built from, as the run kept it. */
+export const DATA_DIR = join(RUN_DIR, 'build/data');
 /** One report per study, each a single file. */
 export const REPORTS_DIR = join(RUN_DIR, 'build/reports');
 /**
@@ -32,10 +31,8 @@ export const REPORTS_DIR = join(RUN_DIR, 'build/reports');
 export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 'utf8'));
 
 /**
- * Test-only data changes, applied in place. The code under test is unchanged: in file mode the embedded JSON blocks
- * of the built file are rewritten into a copy; in sub-path mode the data requests are intercepted.
- */
-/**
+ * Test-only data changes, applied in place to the report's injected document. The code under test is unchanged: in
+ * file mode the report is rewritten into a copy; in sub-path mode its request is intercepted.
  * @typedef {object} DataOverrides
  * @property {(manifest: any) => void} [portfolio]
  * @property {(summary: any) => void} [summary]
@@ -46,8 +43,8 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
  * @typedef {object} App
  * @property {Artifact} artifact
  * @property {Mode} mode
- * @property {(route?: string, overrides?: DataOverrides) => Promise<void>} open Opens the portfolio: on the spa at a route such as `#/program?view=details`, on the reports `portfolio.html` with the route as its hash. Waits for the page to render.
- * @property {(studyId: string, overrides?: DataOverrides) => Promise<void>} openStudy Opens one study's page in the artifact under test.
+ * @property {(hash?: string, overrides?: DataOverrides) => Promise<void>} open Opens `portfolio.html`, at an optional `#` hash, and waits for it to render.
+ * @property {(studyId: string, overrides?: DataOverrides, hash?: string) => Promise<void>} openStudy Opens one study's report, at an optional `#` hash, and waits for its tiles.
  * @property {(name: string, overrides?: ReportOverrides, hash?: string) => Promise<string>} openReport Opens one report, `portfolio` or a StudyID, at an optional `#` hash, and waits for it to show its data or its error state. Returns the URL opened, without the hash.
  */
 
@@ -56,24 +53,20 @@ export const readData = (path) => JSON.parse(readFileSync(join(DATA_DIR, path), 
  * @typedef {object} ReportOverrides
  * @property {(doc: any) => void} [document] Changes the data document.
  * @property {string} [text] Replaces the injected text outright, for data that isn't a document at all.
+ * @property {string[]} [beside] Reports, by name, that the rewritten report's links must reach. In file mode they are
+ *   linked into its folder unchanged; under the sub-path they are served as they are.
  */
 
 /**
  * The same data changes for a study report's document: `portfolio` sees the report base, the catalog and the study's
- * entry as a one-study manifest, and `snapshot` sees each of the study's snapshots. A study report carries its
- * portfolio comparison rather than the summary, so a `summary` change rebuilds that comparison from the changed
- * summary, as the build would.
+ * entry as a one-study manifest, and `snapshot` sees each of the study's snapshots.
  * @param {DataOverrides} overrides
  * @returns {ReportOverrides}
  */
 function asReportOverrides(overrides) {
+  if (overrides.summary) throw new Error('a study report carries no portfolio summary; summary overrides need the portfolio report');
   return {
     document(doc) {
-      if (overrides.summary) {
-        const summary = structuredClone(readData('summary.json'));
-        overrides.summary(summary);
-        doc.comparison = buildStudyDocument({ manifest: readData('portfolio.json'), summary, read: readData }, doc.study.StudyID).comparison;
-      }
       if (overrides.portfolio) {
         const manifest = { generated: doc.generated, reportBase: doc.reportBase, metrics: doc.metrics, studies: [doc.study] };
         overrides.portfolio(manifest);
@@ -127,23 +120,6 @@ function rewriteReport(html, overrides) {
   });
 }
 
-const BLOCK = /<script type="application\/json" data-gsm="(portfolio|summary|snapshot)">([\s\S]*?)<\/script>/g;
-
-/**
- * @param {string} html
- * @param {DataOverrides} overrides
- * @returns {string}
- */
-function rewriteEmbedded(html, overrides) {
-  return html.replace(BLOCK, (_, kind, text) => {
-    const data = JSON.parse(text);
-    if (kind === 'portfolio') overrides.portfolio?.(data);
-    else if (kind === 'summary') overrides.summary?.(data);
-    else overrides.snapshot?.(data);
-    return `<script type="application/json" data-gsm="${kind}">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
-  });
-}
-
 /**
  * @typedef {object} Evidence
  * @property {(page: Page, label: string) => Promise<string>} shot A stamped full-page screenshot, attached to the test as evidence. Returns its path.
@@ -170,53 +146,30 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
     void pageErrors;
     const { artifact, mode } = projectOf(testInfo);
     if (mode === 'file') await context.route(/^https?:/, (route) => route.abort());
-    const base = mode === 'file'
-      ? `file://${join(RUN_DIR, 'build/file/gsm-dash-standalone.html')}`
-      : (testInfo.project.use.baseURL);
+    const base = testInfo.project.use.baseURL;
     await use({
       artifact,
       mode,
-      async open(route = '', overrides) {
-        if (artifact === 'reports') {
-          await this.openReport('portfolio', overrides && asPortfolioOverrides(overrides), route);
-          await page.locator('#app > .layout').waitFor();
-          return;
-        }
-        let url = `${base}${route}`;
-        if (overrides && mode === 'file') {
-          const variant = testInfo.outputPath('variant.html');
-          writeFileSync(variant, rewriteEmbedded(readFileSync(join(RUN_DIR, 'build/file/gsm-dash-standalone.html'), 'utf8'), overrides));
-          url = `file://${variant}${route}`;
-        } else if (overrides) {
-          await page.route('**/examples/data/**', async (r) => {
-            const response = await r.fetch();
-            const json = await response.json();
-            const url = r.request().url();
-            if (url.endsWith('/portfolio.json')) overrides.portfolio?.(json);
-            else if (url.endsWith('/summary.json')) overrides.summary?.(json);
-            else overrides.snapshot?.(json);
-            await r.fulfill({ response, json });
-          });
-        }
-        await page.goto(url);
-        await page.locator('#app > .layout, #app > gsm-study-page').first().waitFor();
+      async open(hash = '', overrides) {
+        await this.openReport('portfolio', overrides && asPortfolioOverrides(overrides), hash);
+        await page.locator('#app > .layout').waitFor();
       },
-      async openStudy(studyId, overrides) {
-        if (artifact === 'reports') {
-          await this.openReport(studyId, overrides && asReportOverrides(overrides));
-          await page.locator('#app .tile').first().waitFor();
-          return;
-        }
-        await this.open(`#/study/${encodeURIComponent(studyId)}`, overrides);
-        await page.locator('gsm-study-page .tile').first().waitFor();
+      async openStudy(studyId, overrides, hash = '') {
+        await this.openReport(studyId, overrides && asReportOverrides(overrides), hash);
+        await page.locator('#app .tile').first().waitFor();
       },
       async openReport(name, overrides, hash = '') {
-        if (artifact !== 'reports') throw new Error(`openReport needs the reports artifact, not ${artifact}`);
         const file = join(REPORTS_DIR, `${name}.html`);
         let url = mode === 'file' ? `file://${file}` : `${base}${encodeURIComponent(name)}.html`;
         if (overrides && mode === 'file') {
           const variant = testInfo.outputPath(`${name}.html`);
+          // Never write through a link to a report under test.
+          rmSync(variant, { force: true });
           writeFileSync(variant, rewriteReport(readFileSync(file, 'utf8'), overrides));
+          for (const other of overrides.beside ?? []) {
+            const at = testInfo.outputPath(`${other}.html`);
+            if (!existsSync(at)) symlinkSync(join(REPORTS_DIR, `${other}.html`), at);
+          }
           url = `file://${variant}`;
         } else if (overrides) {
           await page.route(url, async (r) => {

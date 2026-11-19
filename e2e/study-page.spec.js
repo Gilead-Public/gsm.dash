@@ -3,8 +3,9 @@
 // attributes) so the same tests run unchanged on the React page. Behaviour that spans pages (the back link, hidden
 // metrics carried from the program view) is out of scope here; it moves with the portfolio page.
 import { expect, readData, test } from './fixtures/app.js';
-import { countText, displayed, latestSnapshot, pooled, readRate, shownMetrics, siteRows, tolerance } from '../test/qual/pooling.js';
+import { latestSnapshot, shownMetrics, siteRows } from '../test/qual/pooling.js';
 import { STUDY_VIEW_CONFIG } from '../src/config/study-views.js';
+import { KRI_GROUPS } from '../src/config/kri-groups.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
 /** @typedef {import('../test/qual/pooling.js').MetricMeta} MetricMeta */
@@ -14,28 +15,30 @@ const portfolio = readData('portfolio.json');
 const studies = portfolio.studies;
 /** @type {Map<string, MetricMeta>} */
 const metrics = new Map(portfolio.metrics.map((/** @type {MetricMeta} */ m) => [m.MetricID, m]));
-// The study whose latest snapshot is older than most others', so "each study at its own latest" is observable.
-const newest = studies.map(latestSnapshot).sort().reverse()[0];
-const study = /** @type {StudyEntry} */ (studies.find((s) => latestSnapshot(s) < newest));
+// A study that started later than most, so its visits are its own rather than the portfolio's dates.
+const most = Math.max(...studies.map((s) => s.snapshots.length));
+const study = /** @type {StudyEntry} */ (studies.find((s) => s.snapshots.length < most));
 const dates = study.snapshots;
 
-const STANDARD_VIEWS = ['Overview', 'Details', 'Scatter (n vs d)', 'Numerator by site', 'Trend over time'];
+const STANDARD_VIEWS = ['Details', 'Trend over time'];
 /** The site-flag views, which a study's or a metric's configuration turns on (#11). */
 /** @type {Record<string, string>} */
 const FLAG_VIEWS = { 'bar-outliers': 'Outlier sites', 'flag-dist': 'Flag distribution' };
 /** @type {Record<string, string>} */
 const CUSTOM_VIEWS = { 'distribution-bar': 'Breakdowns', 'link-out': 'Report link', ...FLAG_VIEWS };
-const tiles = shownMetrics(portfolio.metrics);
+/** Standard KRIs in a group are compact widgets (#32); every other shown metric is a full tile. */
+const KRIS = new Set(KRI_GROUPS.flatMap((g) => g.metrics));
+const tiles = shownMetrics(portfolio.metrics).filter((m) => !KRIS.has(/** @type {any} */ (m).ID));
 
 /**
- * A metric's tile views in paging order: the standard views, then those its study's configuration adds, then its own.
+ * A metric's tile views in paging order: the standard views, then its own, then those its study's configuration adds.
  * @param {MetricMeta} metric
  * @param {StudyEntry} [of]
  */
 function viewsOf(metric, of = study) {
   const added = STUDY_VIEW_CONFIG[of.StudyID]?.views ?? [];
   const own = [metric.Widget, ...(metric.Widgets ?? [])].filter((w) => w !== undefined);
-  const names = [...new Set([...added, ...own])];
+  const names = [...new Set([...own, ...added])];
   for (const w of names) if (!(w in CUSTOM_VIEWS)) throw new Error(`no expected label for the view ${w}`);
   return [...STANDARD_VIEWS, ...names.map((w) => CUSTOM_VIEWS[w])];
 }
@@ -62,7 +65,7 @@ const defaultView = (metric, of = study) => viewText(metric, metric.Widget ? CUS
  * @param {Page} page
  */
 const shownViews = (page) =>
-  page.locator('.tile[data-metric-id]').evaluateAll((els) =>
+  page.locator('.tile:not(.kri)[data-metric-id]').evaluateAll((els) =>
     els.map((t) => [t.getAttribute('data-metric-id'), (t.querySelector('.view-name')?.textContent ?? '').replace(/\s+/g, ' ').trim()]),
   );
 
@@ -98,7 +101,6 @@ function tileContent(page, metricId) {
       flagBar: shown(fbar),
       flagSegments: [...(fbar?.querySelectorAll('i') ?? [])].filter(shown).map((i) => [i.className, Number(getComputedStyle(i).flexGrow)]),
       flagCounts: seen(body.querySelector('.fcounts')),
-      cmp: text(body.querySelector('.cmp')),
       points: body.querySelectorAll('circle[data-site]').length,
       bars: body.querySelectorAll('rect[data-site]').length,
       outliers: [...body.querySelectorAll('.hbar .r[data-site]')].filter((r) => shown(r.querySelector('.mono')) && shown(r.querySelector('.v'))).length,
@@ -144,14 +146,6 @@ async function expectViewContent(page, metricId, view, { of = study, flags = fal
   const bins = flagBins(rows);
   const flagged = rows.filter((r) => r.Flag != null && Math.abs(r.Flag) >= 1).length;
   switch (view) {
-    case 'Overview': {
-      const total = pooled(readData, [of], metricId);
-      expect(shown.terms, where).toEqual(['Numerator', 'Denominator', 'Shown as', 'Sites']);
-      expect(shown.values[0], where).toMatch(new RegExp(`^${countText(total.numerator)}( |$)`));
-      expect(shown.values[1], where).toMatch(new RegExp(`^${countText(total.denominator)}( |$)`));
-      expect(shown.values[3], where).toBe(String(rows.length));
-      break;
-    }
     case 'Details': {
       expect(shown.big, where).not.toBe('');
       const bySeverity = {
@@ -169,17 +163,8 @@ async function expectViewContent(page, metricId, view, { of = study, flags = fal
             ]
           : [false, [], ''],
       );
-      expect(shown.cmp, where).toMatch(/^portfolio /);
       break;
     }
-    case 'Scatter (n vs d)':
-      expect(shown.heading, where).toBe('Sites: numerator vs denominator');
-      expect(shown.points, where).toBe(rows.length);
-      break;
-    case 'Numerator by site':
-      expect(shown.heading, where).toBe(`${metric.Numerator} by site`);
-      expect(shown.bars, where).toBe(rows.length);
-      break;
     case 'Outlier sites':
       expect(shown.heading, where).toBe('Outlier sites — rate');
       expect(shown.outliers, where).toBe(Math.min(8, flagged));
@@ -275,14 +260,13 @@ test.describe('study page behaviour', () => {
     const name = tile(page, id).locator('.view-name');
     const n = STANDARD_VIEWS.length;
     for (let step = 0; step <= n; step++) {
-      const i = (1 + step) % n;
+      const i = step % n;
       await expect(name).toHaveText(`${STANDARD_VIEWS[i]} ${i + 1}/${n}`);
       await expectViewContent(page, id, STANDARD_VIEWS[i]);
       if (step < n) await tile(page, id).locator('button[data-view-step="1"]').click();
     }
     await tile(page, id).locator('button[data-view-step="-1"]').click();
-    await tile(page, id).locator('button[data-view-step="-1"]').click();
-    await expect(name).toHaveText(`Trend over time ${STANDARD_VIEWS.length}/${STANDARD_VIEWS.length}`);
+    await expect(name).toHaveText(`Trend over time ${n}/${n}`);
   });
 
   test('12.02: a metric with its own view opens on it, after the standard views (#12)', async ({ page }) => {
@@ -294,29 +278,14 @@ test.describe('study page behaviour', () => {
 
   test('12.02: every metric in the catalog has a tile, opening on its own view or Details (#12)', async ({ page }) => {
     expect(tiles.length).toBeGreaterThan(10);
+    await expect(page.locator('.tile.kri[data-metric-id]'), 'the standard KRIs are compact widgets (#32)').toHaveCount(KRIS.size);
     expect(tiles.some((m) => m.Widget) && tiles.some((m) => !m.Widget), 'the catalog has metrics with and without their own view').toBe(true);
-    expect(await shownViews(page)).toEqual(expectedViews(defaultView));
-  });
-
-  test('12.02: the all-tiles menu sets every tile to one view, shows Mixed once a tile differs, and restores the defaults (#12)', async ({ page }) => {
-    const menu = page.locator('select[data-all-views]');
-    await expect(menu).toHaveValue('default');
-    await menu.selectOption('trend-mini');
-    await expect.poll(() => shownViews(page)).toEqual(expectedViews((m) => viewText(m, 'Trend over time')));
-    for (const m of tiles) await expectViewContent(page, m.MetricID, 'Trend over time');
-    const [first] = tiles;
-    await tile(page, first.MetricID).locator('button[data-view-step="1"]').click();
-    const next = viewsOf(first)[(STANDARD_VIEWS.indexOf('Trend over time') + 1) % viewsOf(first).length];
-    await expect(menu).toHaveValue('mixed');
-    expect(await shownViews(page)).toEqual(expectedViews((m) => viewText(m, m === first ? next : 'Trend over time')));
-    await menu.selectOption('default');
-    await expect(menu).toHaveValue('default');
     expect(await shownViews(page)).toEqual(expectedViews(defaultView));
   });
 
   test('12.02: grouping by category splits the tiles into category rows; turning it off shows one flat grid (#12)', async ({ page }) => {
     const shownRows = () =>
-      page.locator('.dd-row').evaluateAll((rows) =>
+      page.locator('.dd-row:not(.kri-group)').evaluateAll((rows) =>
         rows.map((r) => [(r.querySelector('.rowlab')?.textContent ?? '').trim(), [...r.querySelectorAll('.tile[data-metric-id]')].map((t) => t.getAttribute('data-metric-id'))]),
       );
     const categories = [...new Set(tiles.map((m) => m.Category))];
@@ -328,56 +297,23 @@ test.describe('study page behaviour', () => {
       }),
     );
     await page.locator('input[data-group-cat]').uncheck();
-    await expect(page.locator('.dd-row')).toHaveCount(1);
+    await expect(page.locator('.dd-row:not(.kri-group)')).toHaveCount(1);
     expect(await shownRows()).toEqual([[`All metrics · ${tiles.length}`, tiles.map((m) => m.MetricID)]]);
   });
 
-  test('12.02: the visit scrubber shows the chosen visit and play steps forward to the latest, then stops (#12)', async ({ page }) => {
+  test('12.02: the visit scrubber shows the chosen visit (#12)', async ({ page }) => {
     expect(dates.length).toBeGreaterThan(3);
     await expect(visitLabel(page)).toHaveText(visitText(dates.length - 1));
     await goToVisit(page, 0);
     await expect(visitLabel(page)).toHaveText(visitText(0));
     await goToVisit(page, dates.length - 3);
     await expect(visitLabel(page)).toHaveText(visitText(dates.length - 3));
-    const play = page.locator('button[data-play]');
-    await play.click();
-    await expect(play).toHaveAttribute('aria-label', 'Pause through visits');
-    await expect(visitLabel(page)).toHaveText(visitText(dates.length - 2), { timeout: 3000 });
-    await expect(visitLabel(page)).toHaveText(visitText(dates.length - 1), { timeout: 3000 });
-    await expect(play).toHaveAttribute('aria-label', 'Play through visits');
+    await goToVisit(page, dates.length - 1);
+    await expect(visitLabel(page)).toHaveText(visitText(dates.length - 1));
   });
 
-  test('12.02: play from the latest visit restarts at the first, and pressing it again pauses (#12)', async ({ page }) => {
-    const play = page.locator('button[data-play]');
-    await play.click();
-    await expect(visitLabel(page)).toHaveText(visitText(0));
-    await play.click();
-    await expect(play).toHaveAttribute('aria-label', 'Play through visits');
-    const paused = await visitLabel(page).textContent();
-    await page.waitForTimeout(1500);
-    await expect(visitLabel(page)).toHaveText(/** @type {string} */ (paused));
-  });
-
-  test('12.02: selecting a site in one chart highlights it in every chart, and the chip clears it (#12)', async ({ page }) => {
-    await page.locator('select[data-all-views]').selectOption('scatter-mini');
-    const first = page.locator('.tile circle[data-site]').first();
-    const site = /** @type {string} */ (await first.getAttribute('data-site'));
-    await first.dispatchEvent('click');
-    const chip = page.locator('.sitechip');
-    await expect(chip.locator('.mono')).toHaveText(site);
-    const latest = readData(study.files[dates.at(-1) ?? '']);
-    const name = latest.groups?.find((/** @type {{ GroupID: string; GroupLevel: string; Param: string }} */ g) => g.GroupID === site && g.GroupLevel === 'Site' && g.Param === 'Site')?.Value;
-    if (name) await expect(chip.locator('.nm')).toHaveText(String(name));
-    const marks = await page.locator('.tile circle[data-site]').evaluateAll((els, s) => els.map((e) => [e.getAttribute('data-site') === s, e.classList.contains('is-sel'), e.classList.contains('is-dim')]), site);
-    expect(marks.length).toBeGreaterThan(10);
-    for (const [isSite, sel, dim] of marks) expect([sel, dim]).toEqual([isSite, !isSite]);
-    await chip.locator('button[data-clear-site]').click();
-    await expect(chip).toHaveCount(0);
-    await expect(page.locator('.tile circle.is-sel, .tile circle.is-dim')).toHaveCount(0);
-  });
-
-  test('12.02: the chart panel opens under its tile, switches tabs, and closes (#12)', async ({ page }) => {
-    const id = await plainMetric(page);
+  test('12.02: the chart panel opens under its standard-KRI widget, switches tabs, and closes (#12)', async ({ page }) => {
+    const id = 'Analysis_kri0001';
     const more = tile(page, id).locator('button[data-detail-metric]');
     await expect(page.locator('.detail')).toHaveCount(0);
     await more.click();
@@ -401,73 +337,15 @@ test.describe('study page behaviour', () => {
     await tile(page, id).locator('button[data-detail-metric]').click();
     await expect(page.locator('.detail')).toHaveCount(0);
   });
-
-  test('12.02: the comparison line pools every study at its own snapshot as of the visit, at the latest and an earlier visit (#12)', async ({ page }) => {
-    const latestOthers = studies.filter((s) => s.snapshots.at(-1) !== dates.at(-1));
-    expect(latestOthers.length, 'other studies have a different latest snapshot').toBeGreaterThan(0);
-    const earlier = 1;
-    const asOfFor = (/** @type {number} */ i) => (i === dates.length - 1 ? null : dates[i]);
-    const ids = [...metrics.keys()];
-    const differs = (/** @type {(id: string) => [number | null, number | null]} */ pair) => ids.some((id) => {
-      const [a, b] = pair(id);
-      return a !== null && b !== null && Math.abs(a - b) > 1e-6;
-    });
-    expect(differs((id) => [pooled(readData, studies, id, null).rate, pooled(readData, [study], id, null).rate]), 'portfolio and study-only differ').toBe(true);
-    expect(differs((id) => [pooled(readData, studies, id, null).rate, pooled(readData, studies, id, dates.at(-1) ?? null).rate]), "own-latest and this study's date differ").toBe(true);
-    expect(differs((id) => [pooled(readData, studies, id, dates[earlier]).rate, pooled(readData, studies, id, null).rate]), 'as-of and latest-only differ').toBe(true);
-
-    for (const index of [dates.length - 1, earlier]) {
-      await goToVisit(page, index);
-      await expect(visitLabel(page)).toHaveText(visitText(index));
-      const asOf = asOfFor(index);
-      const shown = await page.locator('.tile[data-metric-id]').evaluateAll((tiles) =>
-        tiles.map((t) => ({ id: t.getAttribute('data-metric-id') ?? '', view: t.querySelector('.view-name')?.textContent?.trim() ?? '', cmp: t.querySelector('.cmp')?.textContent?.trim() ?? null })),
-      );
-      const details = shown.filter((t) => t.view.startsWith('Details'));
-      expect(details.length).toBeGreaterThan(5);
-      let compared = 0;
-      for (const t of details) {
-        const metric = /** @type {MetricMeta} */ (metrics.get(t.id));
-        const where = `visit ${index + 1} · ${metric.Abbreviation}`;
-        const mine = pooled(readData, [study], t.id, asOf).rate;
-        const all = pooled(readData, studies, t.id, asOf).rate;
-        if (mine === null || all === null) {
-          expect(t.cmp, where).toBeNull();
-          continue;
-        }
-        const m = /^portfolio (\S+) · this study ([+−])(\d+\.\d+) (pt|\/ 28 d)$/.exec(t.cmp ?? '');
-        expect(m, `${where}: "${t.cmp}"`).toBeTruthy();
-        if (!m) continue;
-        expect(m[4], where).toBe(metric.Display === 'per_28d' ? '/ 28 d' : 'pt');
-        expect(Math.abs(/** @type {number} */ (readRate(metric, m[1])) - displayed(metric, all)), `${where}: portfolio`).toBeLessThanOrEqual(tolerance(metric));
-        const diff = (m[2] === '−' ? -1 : 1) * Number(m[3]);
-        expect(Math.abs(diff - (displayed(metric, mine) - displayed(metric, all))), `${where}: difference`).toBeLessThanOrEqual(tolerance(metric));
-        compared++;
-      }
-      expect(compared, `visit ${index + 1}: comparison lines checked`).toBeGreaterThan(5);
-    }
-  });
 });
 
-test('the study page sits in the app shell: brand, Study view tag, export date, a working metric glossary and theme switch, inside the page margins', async ({ app, page }) => {
+test('the study page sits in the app shell: brand and Study view tag, inside the page margins', async ({ app, page }) => {
   await app.openStudy(study.StudyID);
   const header = page.locator('header.app');
   await expect(header.locator('h1')).toHaveText('gsm.dash');
   await expect(header.locator('#page-tag')).toHaveText('Study view');
-  await expect(header.locator('#meta')).toContainText(` metrics · exported ${portfolio.generated}`);
-  await header.locator('#glossaryBtn').click();
-  const glossary = page.locator('dialog#gsm-glossary');
-  await expect(glossary).toBeVisible();
-  await expect(glossary).toContainText(tiles[0].Abbreviation);
-  await page.keyboard.press('Escape');
-  await expect(glossary).toBeHidden();
-  await header.locator('button[data-theme-pref="dark"]').click();
-  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('dark');
-  await expect(header.locator('button[data-theme-pref="dark"]')).toHaveClass(/\bon\b/);
-  await header.locator('button[data-theme-pref="auto"]').click();
-  expect(await page.evaluate(() => document.documentElement.dataset.theme ?? 'auto')).toBe('auto');
   const shell = await header.boundingBox();
-  const content = await page.locator('#app > gsm-study-page, #app > .study-page').boundingBox();
+  const content = await page.locator('#app > .study-page').boundingBox();
   expect(shell && content, 'header and study page both laid out').toBeTruthy();
   expect(Math.round(content?.x ?? 0), 'the study page lines up with the header').toBe(Math.round(shell?.x ?? -1));
   expect(content?.x ?? 0, 'inside the page margins').toBeGreaterThanOrEqual(20);
@@ -525,6 +403,7 @@ test('12.02: stepping through visits and switching chart tabs and tile views lea
 });
 
 /** Everything that shows site-flag counts: the Details tile's flag bar and counts, and both flag views' rows. */
+/** The full tiles' flag marks. The grouped standard KRIs (#32) show their flag counts in `.kri-flags`, which this doesn't match. */
 const FLAG_MARKS = '.flags, .fbar, .fcounts, .hbar';
 
 /**
@@ -549,26 +428,18 @@ async function pageTo(page, metricId, view) {
 }
 
 test.describe('site-flag counts on the study view', () => {
-  test('11.01: the default study view shows no site-flag counts: no flag bar on any tile, and no flag view in any tile, the all-tiles menu or a random deal (#11)', async ({ app, page }) => {
+  test('11.01: in the default study view, no metric outside the standard-KRI groups shows site-flag counts: no flag bar on any of their tiles, and no flag view in any tile\'s pager (#11)', async ({ app, page }) => {
     expect(STUDY_VIEW_CONFIG[study.StudyID], `${study.StudyID} keeps the default`).toBeUndefined();
     expect(flaggedSites(study), 'the study has flagged sites that could be counted').toBeGreaterThan(0);
     await app.openStudy(study.StudyID);
-    await expect(page.locator('.tile[data-metric-id]')).toHaveCount(tiles.length);
+    await expect(page.locator('.tile:not(.kri)[data-metric-id]')).toHaveCount(tiles.length);
+    await expect(page.locator('.tile.kri[data-metric-id]'), 'only the grouped standard KRIs are compact widgets').toHaveCount(KRIS.size);
     await expect(page.locator(FLAG_MARKS)).toHaveCount(0);
     expect(await shownViews(page), 'every tile offers only the standard views and its own').toEqual(expectedViews(defaultView));
-    const menu = page.locator('select[data-all-views]');
-    expect(await menu.locator('option').allTextContents()).toEqual(['Default per metric', ...STANDARD_VIEWS]);
-    for (const view of STANDARD_VIEWS) {
-      await menu.selectOption({ label: view });
-      await expect.poll(() => shownViews(page), view).toEqual(expectedViews((m) => viewText(m, view)));
-      await expect(page.locator(FLAG_MARKS), view).toHaveCount(0);
-    }
-    const allowed = new Map(tiles.map((m) => [m.MetricID, viewsOf(m)]));
-    for (let deal = 0; deal < 5; deal++) {
-      await page.locator('button[data-randomize-views]').click();
-      await expect(page.locator(FLAG_MARKS)).toHaveCount(0);
-      for (const [id, text] of await shownViews(page)) {
-        expect(allowed.get(/** @type {string} */ (id)), `random deal ${deal + 1}: ${id}`).toContain(String(text).replace(/ \d+\/\d+$/, ''));
+    for (const m of tiles) {
+      for (let step = 0; step < viewsOf(m).length; step++) {
+        await tile(page, m.MetricID).locator('button[data-view-step="1"]').click();
+        await expect(page.locator(FLAG_MARKS), `${m.Abbreviation}, view ${step + 1}`).toHaveCount(0);
       }
     }
   });
@@ -579,15 +450,15 @@ test.describe('site-flag counts on the study view', () => {
     expect(of, 'the example configuration turns site flags on for a study').toBeTruthy();
     await app.openStudy(of.StudyID);
     expect(await shownViews(page)).toEqual(tiles.map((m) => [m.MetricID, defaultView(m, of)]));
-    const menu = page.locator('select[data-all-views]');
-    expect(await menu.locator('option').allTextContents()).toEqual(['Default per metric', ...STANDARD_VIEWS, 'Outlier sites', 'Flag distribution']);
     for (const view of ['Details', 'Outlier sites', 'Flag distribution']) {
-      await menu.selectOption({ label: view });
-      await expect.poll(() => shownViews(page), view).toEqual(tiles.map((m) => [m.MetricID, viewText(m, view, of)]));
-      for (const m of tiles) await expectViewContent(page, m.MetricID, view, { of, flags: true });
+      for (const m of tiles) {
+        await pageTo(page, m.MetricID, view);
+        await expect(tile(page, m.MetricID).locator('.view-name'), view).toHaveText(viewText(m, view, of));
+        await expectViewContent(page, m.MetricID, view, { of, flags: true });
+      }
     }
     await app.openStudy(study.StudyID);
-    await expect(page.locator('.tile[data-metric-id]')).toHaveCount(tiles.length);
+    await expect(page.locator('.tile:not(.kri)[data-metric-id]')).toHaveCount(tiles.length);
     await expect(page.locator(FLAG_MARKS), `${study.StudyID} keeps the default`).toHaveCount(0);
     expect(await shownViews(page)).toEqual(expectedViews(defaultView));
   });
@@ -611,13 +482,13 @@ test.describe('site-flag counts on the study view', () => {
       await expectViewContent(page, metric.MetricID, view);
     }
     const others = tiles.filter((m) => m.MetricID !== metric.MetricID);
-    await expect(page.locator(`.tile[data-metric-id]:not([data-metric-id="${metric.MetricID}"]) :is(${FLAG_MARKS})`)).toHaveCount(0);
+    await expect(page.locator(`.tile:not(.kri)[data-metric-id]:not([data-metric-id="${metric.MetricID}"]) :is(${FLAG_MARKS})`)).toHaveCount(0);
     expect((await shownViews(page)).filter(([id]) => id !== metric.MetricID)).toEqual(others.map((m) => [m.MetricID, defaultView(m)]));
   });
 
   test('11.04: the default study view, for visual comparison with the default its Scope describes (#11)', async ({ app, page }) => {
     await app.openStudy(study.StudyID);
-    await expect(page.locator('.tile[data-metric-id]')).toHaveCount(tiles.length);
+    await expect(page.locator('.tile:not(.kri)[data-metric-id]')).toHaveCount(tiles.length);
     await expect(page.locator(FLAG_MARKS)).toHaveCount(0);
   });
 });

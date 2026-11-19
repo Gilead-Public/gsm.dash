@@ -4,7 +4,8 @@
 import { DISTRIBUTION_CONFIG } from '../config/distributions.js';
 import { STUDY_VIEW_CONFIG } from '../config/study-views.js';
 import { esc } from '../util/format.js';
-import { reportLink } from './report-links.js';
+import { reportLinkProblem } from './report-links.js';
+import { KRI_GROUPS } from '../config/kri-groups.js';
 import { getWidget, resolveWidget } from '../widgets/registry.js';
 import { DETAIL_TABS, EXEC_ALLOW_LIST, STUDY_PAGE_SPEC } from './study-page-spec.js';
 
@@ -47,7 +48,7 @@ export function resolveView(name, metric, config) {
  * tabs are code, not runtime configuration, so they are checked here too: a misspelt one fails the shipped-
  * configuration unit test before it can ship.
  * @param {any[]} catalog Every catalog metric, shown or not.
- * @param {{ breakdowns?: Record<string, unknown>, studies?: Record<string, { configs?: Record<string, unknown> }>, pageWidgets?: Array<{ widget: string }>, detailTabs?: Array<{ widget: string }>, reportBase?: string | null, page?: string }} [sources]
+ * @param {{ breakdowns?: Record<string, unknown>, studies?: Record<string, { configs?: Record<string, unknown> }>, pageWidgets?: Array<{ widget: string }>, detailTabs?: Array<{ widget: string }>, kriGroups?: Array<{ id: string, label: string, metrics: string[] }>, reportBase?: string | null, page?: string, studyId?: string }} [sources] `studyId` fills the `{StudyID}` in report links.
  * @returns {Problem[]}
  */
 export function configProblems(
@@ -57,8 +58,10 @@ export function configProblems(
     studies = STUDY_VIEW_CONFIG,
     pageWidgets = STUDY_PAGE_SPEC.pageWidgets,
     detailTabs = DETAIL_TABS,
+    kriGroups = KRI_GROUPS,
     reportBase = null,
     page = globalThis.location?.href ?? '',
+    studyId = '',
   } = {},
 ) {
   const ids = new Set(catalog.flatMap((m) => [m.ID, m.MetricID]));
@@ -78,8 +81,19 @@ export function configProblems(
     }
   }
   for (const m of catalog) {
-    if (m.ReportLink != null && !reportLink(m, reportBase, page)) {
-      problems.push({ reference: `Report link "${m.ReportLink}" for ${m.Abbreviation} (${m.MetricID})`, reason: `it can't be resolved against the report base "${reportBase ?? './'}"` });
+    const reason = reportLinkProblem(m, reportBase, page, studyId);
+    if (reason) problems.push({ reference: `Report link "${m.ReportLink}" for ${m.Abbreviation} (${m.MetricID})`, reason });
+  }
+  for (const g of kriGroups) {
+    for (const id of g.metrics) {
+      if (!ids.has(id)) problems.push({ reference: `Metric "${id}" in the KRI group "${g.label}"`, reason: 'it is not in the metric catalog' });
+    }
+  }
+  const groupIds = new Set(kriGroups.map((g) => g.id));
+  for (const m of catalog) {
+    const group = m.WidgetConfigs?.['kri-summary']?.group;
+    if (group != null && !groupIds.has(group)) {
+      problems.push({ reference: `KRI group "${group}" in the view options of ${m.Abbreviation} (${m.MetricID})`, reason: 'it is not a configured KRI group' });
     }
   }
   for (const { widget } of pageWidgets) {

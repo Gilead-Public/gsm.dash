@@ -25,6 +25,10 @@
         }
       }
     },
-    "summary": { "$ref": "portfolio-summary.schema.json" }
+    "summary": { "$ref": "portfolio-summary.schema.json" },
+    "config": {
+      "description": "The portfolio's defaults, each optional: groupBy and heatmap (one of the Controls panel's choices), show (a list of them) and metrics (the MetricIDs hidden by default, each an active, site-level metric in the catalog). Its values are checked when the document is built and when the report loads.",
+      "type": "object"
+    }
   }
 }

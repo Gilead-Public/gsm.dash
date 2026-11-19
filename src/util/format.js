@@ -82,12 +82,3 @@ export function ndLine(metric, row) {
   return `${fmtInt(row.Numerator)} / ${fmtInt(row.Denominator)}`;
 }
 
-/** Difference between two rates in the metric's display unit: "+1.2 pt" or "−0.08 / 28 d". */
-export function fmtRateDiff(metric, a, b) {
-  if (a == null || b == null) return '';
-  const diff = displayRate(metric, a) - displayRate(metric, b);
-  const sign = diff >= 0 ? '+' : '−';
-  return metric?.Display === 'per_28d'
-    ? `${sign}${Math.abs(diff).toFixed(2)} / ${DAYS_PER_MONTH} d`
-    : `${sign}${Math.abs(diff * 100).toFixed(1)} pt`;
-}

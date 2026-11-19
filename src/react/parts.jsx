@@ -1,7 +1,7 @@
 // @ts-check
 // Small pieces both report pages render the same way.
 import { useEffect, useLayoutEffect, useRef } from 'react';
-import { attachHoverTooltip, metricTip } from '../components/tooltip.js';
+import { attachHoverTooltip, metricTip } from '../app/tooltip.js';
 import { metricParts } from '../util/format.js';
 import { sparkline } from '../charts/sparkline.js';
 

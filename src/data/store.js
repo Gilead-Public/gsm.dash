@@ -3,18 +3,19 @@ import { selectLatestSnapshots, poolResults, bucketStudies, filterStudies } from
 import { indexSummary, poolSummary, POPULATIONS } from './summary.js';
 import { nextSort } from './sort.js';
 import { STATUS_ORDER, CATEGORY_ORDER, groupByCategory } from './catalog.js';
-import { CELL_MODES, GROUP_BY_OPTIONS, HEATMAPS, RAMPS, showOptions } from '../app/portfolio-controls.js';
+import { CELL_MODES, COLUMN_OPTIONS, DENSITIES, GROUP_BY_OPTIONS, HEATMAPS, showOptions } from '../app/portfolio-controls.js';
 import { POP_COLUMNS } from '../app/portfolio-table.js';
+import { portfolioDefaults } from './portfolio-config.js';
 
-// The portfolio's single-valued settings in its URL: [param, state field, default, the controls' choices].
+// The portfolio's single-valued settings in its URL: [param, state field, the controls' choices].
 const SCALARS = [
-  ['group', 'groupBy', 'none', GROUP_BY_OPTIONS],
-  ['cell', 'cellMode', 'defined', CELL_MODES],
-  ['heatmap', 'heatmap', 'none', HEATMAPS],
-  ['ramp', 'ramp', 'blue', RAMPS],
+  ['group', 'groupBy', GROUP_BY_OPTIONS],
+  ['cell', 'cellMode', CELL_MODES],
+  ['density', 'density', DENSITIES],
+  ['heatmap', 'heatmap', HEATMAPS],
 ];
 const SHOW_PARTS = showOptions(false).map(([part]) => part);
-const DEFAULT_SHOW = ['num', 'rate'];
+const COLUMN_PARTS = COLUMN_OPTIONS.map(([part]) => part);
 
 /**
  * The known values of a set the user can empty. An emptied set is written as one empty value; a set whose values are
@@ -38,22 +39,32 @@ function chosen(params, key, options, fallback) {
  */
 export class PortfolioStore extends EventTarget {
   #summary = null;
-  #comparison = null;
+  #defaults;
+  /** @type {Set<string>} */
+  #offCycle = new Set();
 
   /**
-   * @param {{ manifest: any, snapshots: any[], summary?: any, comparison?: Array<{ SnapshotDate: string, MetricID: string, Numerator: number, Denominator: number }> }} data
-   *   A study report passes its injected `comparison` (portfolio counts per visit date × metric) instead of the summary.
+   * @param {{ manifest: any, snapshots: any[], summary?: any, config?: import('./portfolio-config.js').PortfolioConfig }} data
+   *   The portfolio passes its summary and its configured defaults (#16), already checked; a study report passes
+   *   neither.
    */
-  constructor({ manifest, snapshots, summary, comparison }) {
+  constructor({ manifest, snapshots, summary, config }) {
     super();
+    this.#defaults = { cellMode: 'defined', ...portfolioDefaults(config) };
     const { active, inactive } = orderMetrics(manifest.metrics.map(normalizeMetric));
     this.metrics = active;
     this.inactiveMetrics = inactive;
     this.studies = manifest.studies;
+    // Trends draw on every study's history, off-cycle ones included (#14).
+    this.historyStudies = manifest.studies;
     this.generated = manifest.generated;
     this.reportBase = manifest.reportBase ?? null;
-    if (comparison) this.#comparison = new Map(comparison.map((r) => [`${r.SnapshotDate}\n${r.MetricID}`, r]));
-    else this.#summary = indexSummary(summary, manifest.studies);
+    if (summary) {
+      this.#summary = indexSummary(summary, manifest.studies);
+      // Off-cycle studies are left out of every current figure; the cycle notice names them (#14).
+      this.#offCycle = new Set(this.#summary.cycle.offCycle.map((s) => s.StudyID));
+      this.studies = manifest.studies.filter((s) => !this.#offCycle.has(s.StudyID));
+    }
 
     // StudyID -> SnapshotDate -> {snapshot, byMetric, groupParams}
     this.snapshotIndex = new Map();
@@ -67,20 +78,20 @@ export class PortfolioStore extends EventTarget {
     }
 
     this.state = {
-      show: new Set(DEFAULT_SHOW), // any of num | den | rate | trend; cells stack what's on
-      heatmap: 'none', // 'none' | 'num' | 'den' | 'rate' — column-relative cell shading (and the metric sort measure)
-      ramp: 'blue', // heatmap palette: 'blue' | 'teal' | 'purple' | 'grey'
-      groupBy: 'none', // 'none' (one row per study) | a study param
-      filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set() },
-      hiddenMetrics: new Set(), // MetricIDs the user has switched off
+      show: new Set(this.#defaults.show), // any of num | den | rate | trend; cells stack what's on
+      columns: new Set(this.#defaults.columns), // the table's optional columns shown: name | enroll | status (#21)
+      density: this.#defaults.density, // 'roomy' | 'condensed' (#21)
+      heatmap: this.#defaults.heatmap, // 'none' | 'num' | 'den' | 'rate' — column-relative cell shading (and the metric sort measure)
+      groupBy: this.#defaults.groupBy, // 'none' (one row per study) | a study param
+      filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set(), study: new Set() },
+      hiddenMetrics: new Set(this.#defaults.metrics), // MetricIDs the user has switched off
       expanded: new Set(),
       sort: { key: null, dir: null }, // key: 'label' | 'meta' | a MetricID
       detail: { metricId: null, tab: 'viz-bar' }, // study-page drill-in panel (W4)
       tileViews: new Map(), // MetricID -> the view currently shown in its tile
       groupByCategory: true, // study page: lifecycle rows (meta.Category) vs one flat grid
-      selectedSite: null, // GroupID highlighted across every site-level chart at once
       asOf: null, // view the portfolio as of this date; the study page's visit scrubber drives it
-      cellMode: 'defined', // 'defined' — each metric shows its glossary display rule | 'custom' — the `show` stack for every metric
+      cellMode: this.#defaults.cellMode, // 'defined' — each metric shows its glossary display rule | 'custom' — the `show` stack for every metric
       statuses: new Set(STATUS_ORDER), // glossary Status values to show (Released | New | Planned)
       // Program table zoom: folded categories show one headline value per
       // metric. All folded = Overview (the landing view), none = Details.
@@ -93,49 +104,17 @@ export class PortfolioStore extends EventTarget {
   }
 
   get #index() {
-    if (!this.#summary) throw new Error('a study report carries no portfolio summary, only its comparison');
+    if (!this.#summary) throw new Error('a study report carries no portfolio summary');
     return this.#summary;
   }
 
-  /**
-   * The portfolio a study's tiles compare with, at the visit shown. A study report looks it up in its injected
-   * comparison; otherwise it is pooled from the summary.
-   * @returns {{ Numerator: number, Denominator: number, Rate: number | null } | null}
-   */
-  portfolioComparison(studyId, metricId) {
-    if (!this.#comparison) return this.rollup(this.studies, metricId);
-    const row = this.#comparison.get(`${this.latestDate(studyId)}\n${metricId}`);
-    if (!row) return null;
-    return { Numerator: row.Numerator, Denominator: row.Denominator, Rate: row.Denominator > 0 ? row.Numerator / row.Denominator : null };
-  }
-
-  /**
-   * Highlight one site everywhere. Selecting the already-selected site clears
-   * it, so clicking the same point twice is the way back to the default view.
-   */
-  selectSite(groupId) {
-    this.state.selectedSite = this.state.selectedSite === groupId ? null : groupId;
-    this.#emit();
+  /** The portfolio's snapshot cycle and the studies left out of it (#14); null in a study report. */
+  get cycle() {
+    return this.#summary?.cycle ?? null;
   }
 
   setTileView(metricId, viewName) {
     this.state.tileViews.set(metricId, viewName);
-    this.#emit();
-  }
-
-  /** Page every tile to one view; null returns each metric to its default view. */
-  setAllTileViews(viewName) {
-    this.state.tileViews = viewName ? new Map(this.metrics.map((m) => [m.MetricID, viewName])) : new Map();
-    this.#emit();
-  }
-
-  /**
-   * Replace the whole tile-view map in one shot — one 'change' for the batch
-   * rather than one per tile. Which views a metric actually has depends on the
-   * widget registry, so the caller supplies the [MetricID, viewName] pairs.
-   */
-  setTileViews(entries) {
-    this.state.tileViews = new Map(entries);
     this.#emit();
   }
 
@@ -154,10 +133,6 @@ export class PortfolioStore extends EventTarget {
    */
   supportedMetrics() {
     return this.metrics.filter((m) => m.GroupLevel === 'Site');
-  }
-
-  unsupportedMetrics() {
-    return this.metrics.filter((m) => m.GroupLevel !== 'Site');
   }
 
   /** Supported catalog minus user-hidden metrics — what views should render. */
@@ -235,21 +210,25 @@ export class PortfolioStore extends EventTarget {
     if (zoom === 'mixed' || (zoom === 'details' && view === 'distribution')) add('open', zoom === 'details' ? ['all'] : open);
     add('dfold', cats.filter((c) => state.distCollapsed.has(c)));
     if (state.highlightStudy) params.set('study', state.highlightStudy);
-    for (const [key, field, value] of SCALARS) if (state[field] !== value) params.set(key, state[field]);
+    for (const [key, field] of SCALARS) if (state[field] !== this.#defaults[field]) params.set(key, state[field]);
     if (state.groupBy !== 'none') add('expand', this.#bucketValues().filter((v) => state.expanded.has(v)));
     if (state.sort.key && state.sort.dir) {
       params.set('sort', state.sort.key);
       params.set('dir', state.sort.dir);
     }
-    if (SHOW_PARTS.some((p) => state.show.has(p) !== DEFAULT_SHOW.includes(p))) addSet('show', SHOW_PARTS.filter((p) => state.show.has(p)));
+    if (SHOW_PARTS.some((p) => state.show.has(p) !== this.#defaults.show.includes(p))) addSet('show', SHOW_PARTS.filter((p) => state.show.has(p)));
+    if (COLUMN_PARTS.some((p) => state.columns.has(p) !== this.#defaults.columns.includes(p))) addSet('cols', COLUMN_PARTS.filter((p) => state.columns.has(p)));
     const options = this.filterOptions();
     for (const param of Object.keys(state.filters)) add(`filter.${param}`, options[param].filter((v) => state.filters[param].has(v)));
     if (STATUS_ORDER.some((s) => !state.statuses.has(s))) addSet('statuses', STATUS_ORDER.filter((s) => state.statuses.has(s)));
-    add('hide', this.metrics.map((m) => m.MetricID).filter((id) => state.hiddenMetrics.has(id)));
+    const hidden = this.metrics.map((m) => m.MetricID).filter((id) => state.hiddenMetrics.has(id));
+    // Written even when it equals the configured default: a study report has no configuration, and takes the hidden
+    // metrics from the link.
+    if (hidden.length || this.#defaults.metrics.length) addSet('hide', hidden);
     return params;
   }
 
-  /** Restore what programParams() wrote: an absent param is its default, and unknown values are dropped. One 'change'. */
+  /** Restore what programParams() wrote: an absent param is its configured default, and unknown values are dropped. One 'change'. */
   applyProgramParams(params) {
     const { state } = this;
     const cats = this.#allCategories();
@@ -263,15 +242,16 @@ export class PortfolioStore extends EventTarget {
     state.distCollapsed = new Set(known(params.getAll('dfold'), cats));
     const study = params.get('study');
     state.highlightStudy = this.studies.some((st) => st.StudyID === study) ? study : null;
-    for (const [key, field, value, choices] of SCALARS) {
+    for (const [key, field, choices] of SCALARS) {
       const v = params.get(key);
-      state[field] = choices.some(([choice]) => choice === v) ? v : value;
+      state[field] = choices.some(([choice]) => choice === v) ? v : this.#defaults[field];
     }
     state.expanded = new Set(state.groupBy === 'none' ? [] : known(params.getAll('expand'), this.#bucketValues()));
     const [sortKey, dir] = [params.get('sort'), params.get('dir')];
     const sortable = ['label', 'meta', ...POP_COLUMNS.map((c) => c.key), ...this.metrics.map((m) => m.MetricID)];
     state.sort = sortable.includes(sortKey) && (dir === 'asc' || dir === 'desc') ? { key: sortKey, dir } : { key: null, dir: null };
-    state.show = new Set(chosen(params, 'show', SHOW_PARTS, DEFAULT_SHOW));
+    state.show = new Set(chosen(params, 'show', SHOW_PARTS, this.#defaults.show));
+    state.columns = new Set(chosen(params, 'cols', COLUMN_PARTS, this.#defaults.columns));
     const options = this.filterOptions();
     for (const param of Object.keys(state.filters)) state.filters[param] = new Set(known(params.getAll(`filter.${param}`), options[param]));
     this.#applyMetricParams(params);
@@ -285,9 +265,8 @@ export class PortfolioStore extends EventTarget {
   }
 
   #applyMetricParams(params) {
-    const hide = params.getAll('hide');
     this.state.statuses = new Set(chosen(params, 'statuses', STATUS_ORDER, STATUS_ORDER));
-    this.state.hiddenMetrics = new Set(this.metrics.map((m) => m.MetricID).filter((id) => hide.includes(id)));
+    this.state.hiddenMetrics = new Set(chosen(params, 'hide', this.metrics.map((m) => m.MetricID), this.#defaults.metrics));
   }
 
   #bucketValues() {
@@ -301,20 +280,9 @@ export class PortfolioStore extends EventTarget {
     this.#emit();
   }
 
-  /** Show or hide a batch of metrics in one change (sidebar category toggles). */
-  setMetricsVisible(metricIds, visible) {
-    for (const id of metricIds) visible ? this.state.hiddenMetrics.delete(id) : this.state.hiddenMetrics.add(id);
-    this.#emit();
-  }
-
   toggleMetric(metricId) {
     const set = this.state.hiddenMetrics;
     set.has(metricId) ? set.delete(metricId) : set.add(metricId);
-    this.#emit();
-  }
-
-  setAllMetrics(visible) {
-    this.state.hiddenMetrics = visible ? new Set() : new Set(this.metrics.map((m) => m.MetricID));
     this.#emit();
   }
 
@@ -339,6 +307,17 @@ export class PortfolioStore extends EventTarget {
     this.#emit();
   }
 
+  toggleColumn(part) {
+    const set = this.state.columns;
+    set.has(part) ? set.delete(part) : set.add(part);
+    this.#emit();
+  }
+
+  /** Return every setting the address holds to its configured default, as a fresh load with no hash would. One 'change'. */
+  reset() {
+    this.applyProgramParams(new URLSearchParams());
+  }
+
   clearFilters() {
     for (const set of Object.values(this.state.filters)) set.clear();
     this.#emit();
@@ -358,7 +337,8 @@ export class PortfolioStore extends EventTarget {
   filterOptions() {
     const out = {};
     for (const param of Object.keys(this.state.filters)) {
-      out[param] = [...new Set(this.studies.map((s) => String(s.params?.[param])).filter((v) => v !== 'undefined'))].sort();
+      const values = this.studies.map((s) => String(param === 'study' ? s.StudyID : s.params?.[param]));
+      out[param] = [...new Set(values.filter((v) => v !== 'undefined'))].sort();
     }
     return out;
   }
@@ -475,14 +455,27 @@ export class PortfolioStore extends EventTarget {
     return bucketStudies(this.filteredStudies(), this.state.groupBy);
   }
 
+  /** The filtered studies whose history the trends draw on, off-cycle ones included (#14). */
+  filteredHistory() {
+    return filterStudies(this.historyStudies, this.state.filters);
+  }
+
+  /** Each group's history studies, off-cycle ones included, by group value. */
+  historyBuckets() {
+    return new Map(bucketStudies(this.filteredHistory(), this.state.groupBy).map((b) => [String(b.value), b.studies]));
+  }
+
   /**
    * Portfolio pooled rate per snapshot grid date (D5). Each study contributes
    * its latest snapshot as of the grid date; studies with none yet are absent.
    */
-  trendSeries(metricId, studies = this.filteredStudies()) {
-    const gridDates = [...new Set(studies.flatMap((s) => s.snapshots))].sort();
+  trendSeries(metricId, studies = this.filteredHistory()) {
+    const cycle = this.cycle?.SnapshotDate;
+    const gridDates = [...new Set(studies.flatMap((s) => s.snapshots))].filter((d) => !cycle || d <= cycle).sort();
     return gridDates.map((date) => {
-      const { Rate, NumStudies } = poolSummary(this.#index, selectLatestSnapshots(studies, date), metricId);
+      // The cycle's own point is a current figure, so like the totals it leaves off-cycle studies out (#14).
+      const counted = date === cycle ? studies.filter((s) => !this.#offCycle.has(s.StudyID)) : studies;
+      const { Rate, NumStudies } = poolSummary(this.#index, selectLatestSnapshots(counted, date), metricId);
       return { date, rate: Rate, nStudies: NumStudies };
     });
   }

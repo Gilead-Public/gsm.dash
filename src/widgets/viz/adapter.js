@@ -20,13 +20,6 @@ export function chartConfig(metric, overrides = {}) {
   return { GroupLevel: 'Site', maintainAspectRatio: false, ...config, ...overrides };
 }
 
-/**
- * gsm.viz's own cross-chart highlight key. It expects an array and treats an
- * empty one as "nothing selected", so this maps our single selection onto its
- * vocabulary rather than inventing a parallel one.
- */
-export const selectedGroupIDs = (selectedSite) => (selectedSite ? [String(selectedSite)] : []);
-
 /** gsm.viz mutates the rows it is given (attaches group metadata etc.); never hand it store rows. */
 export const clone = (rows) => (rows ?? []).map((r) => ({ ...r }));
 

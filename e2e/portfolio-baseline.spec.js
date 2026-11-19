@@ -27,7 +27,7 @@ async function expectState(page, testInfo, name) {
 }
 
 /** @param {Page} page */
-const sidebar = (page) => page.locator('gsm-sidebar, .sidebar');
+const sidebar = (page) => page.locator('.sidebar');
 
 test.describe('the portfolio against its recorded baseline', () => {
   test('11.03: the table matches its baseline in Overview, Details and Mixed, sorted both ways, with a heatmap and with each cell display (#11)', async ({ app, page }, testInfo) => {
@@ -44,8 +44,6 @@ test.describe('the portfolio against its recorded baseline', () => {
     await expectState(page, testInfo, 'table-sorted-twice');
     await sidebar(page).locator('select[data-heatmap]').selectOption('rate');
     await expectState(page, testInfo, 'table-heatmap-rate');
-    await sidebar(page).locator('button[data-seg="ramp"][data-value="teal"]').click();
-    await expectState(page, testInfo, 'table-heatmap-teal');
     await sidebar(page).locator('button[data-seg="cellMode"][data-value="custom"]').click();
     for (const show of ['num', 'den', 'trend']) await sidebar(page).locator(`button[data-show="${show}"]`).click();
     await expectState(page, testInfo, 'table-custom-cells');
@@ -87,7 +85,7 @@ test.describe('the portfolio against its recorded baseline', () => {
     await page.locator('#app .otile').first().hover();
     await expectState(page, testInfo, 'tooltip-table-cell');
     await page.locator('button[data-view="details"]').click();
-    await page.locator('#app thead .info').first().hover();
+    await page.locator('#app thead th[data-sort^="Analysis_"]').first().hover();
     await expectState(page, testInfo, 'tooltip-table-header');
     await page.locator('button[data-view="distribution"]').click();
     await page.locator('.track .pt').first().hover();
