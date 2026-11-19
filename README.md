@@ -68,11 +68,12 @@ To share a build for feedback without releasing it: every CI run that passes als
   target.
 - `src/pages/`, `src/react/` — the reports: an Astro page each for the
   portfolio and a study, with one React root rendering it from one injected
-  document (gsm.viz inlined into study reports). The portfolio table carries an
-  **Enrolled** column (`Reporting_Groups` `ParticipantCount` summed over the
-  row's studies at the same latest snapshots the metric rollups use), and every
-  metric header carries an ⓘ with that metric's definition from
-  `Reporting_Metrics`. The study page composes its view from widgets. Links
+  document (gsm.viz inlined into study reports). Hovering a metric's header
+  shows its definition from `Reporting_Metrics` (#20). The Controls panel
+  chooses the portfolio table's optional columns (study name, **Enrolled**,
+  Status) and its row density (#21); Enrolled is the summary's
+  `ParticipantCount`, summed over the row's studies. The study page composes
+  its view from widgets. Links
   between reports are relative and carry the portfolio's view in the hash.
   `src/app/` holds the rules and text both pages share.
 - `src/widgets/` — the **widget framework** (see the Widget Framework
@@ -90,20 +91,17 @@ To share a build for feedback without releasing it: every CI run that passes als
   KRIs, #32, configured in `src/config/kri-groups.js`), `link-out`, and
   `threshold-list` (watch sites — its derivation is a pure, unit-tested
   export per the "widgets render, the pipeline computes" boundary).
-- `src/widgets/views/` — the **standard tile views** every site-level metric
-  gets for free from the reporting layer: Overview (text), Details, Scatter
-  (n vs d), Numerator by site, Outlier sites, Flag distribution, Trend over
-  time. A metric tile pages through these (and any custom views bound to the
-  metric) with ‹ › arrows. Each tile carries a **Standard / Custom** badge
-  derived from the data layers the view declares: reporting-layer-only
-  (`results`, `history`, `bounds`, `groups`) is Standard; anything reading
-  `details`, `listings` or an external link is Custom. These small views
-  live here for now; their long-term home is gsm.viz.
+- `src/widgets/views/` — tile views beyond Details (`scalar-tile`): Trend
+  over time, which every site-level metric gets from the reporting layer, and
+  the site-flag views (Outlier sites, Flag distribution), which a study or a
+  metric turns on (#11). A full metric tile pages through Details, Trend over
+  time, then the metric's own views and, where configured, the flag views
+  (#35). These small views live here for now; their long-term home is gsm.viz.
 - `src/widgets/viz/` — **gsm.viz adapters**: the standard KRI-report charts
   as widgets (`viz-bar`, `viz-scatter`, `viz-timeseries`), fed by the same
   site-level rows, group metadata, bounds and snapshot history the contract
-  already carries. On the study page every metric tile opens a drill-in
-  panel with these as tabs. Each adapter guards the gsm.viz call and
+  already carries. On the study page each standard-KRI widget opens a Charts
+  drill-in panel with these as tabs (#32); CTQ tiles have none (#35). Each adapter guards the gsm.viz call and
   degrades to a labeled placeholder if a chart cannot run in widget mode.
   gsm.viz 2.3.0 is vendored under `public/vendor/` (see its README) until
   it ships as an ESM package.
