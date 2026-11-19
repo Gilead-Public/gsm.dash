@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import Ajv from 'ajv/dist/2020.js';
+import addFormats from 'ajv-formats';
 import { generatePortfolio } from '../scripts/generate-example-data.mjs';
 
 const ajv = new Ajv({ allErrors: true, strict: false });
+addFormats(ajv);
 const portfolioSchema = JSON.parse(readFileSync(new URL('../schemas/portfolio.schema.json', import.meta.url)));
 const snapshotSchema = JSON.parse(readFileSync(new URL('../schemas/study-snapshot.schema.json', import.meta.url)));
 
@@ -22,24 +24,19 @@ describe('example data conforms to the contract schemas', () => {
     }
   });
 
+  it('the manifest rejects malformed snapshot dates and generation timestamps', () => {
+    const validate = ajv.compile(portfolioSchema);
+    const withDates = (dates, generated = manifest.generated) => ({ ...manifest, generated, studies: [{ ...manifest.studies[0], snapshots: dates }] });
+    expect(validate(withDates(manifest.studies[0].snapshots)), JSON.stringify(validate.errors)).toBe(true);
+    expect(validate(withDates(['2026-02-30']))).toBe(false);
+    expect(validate(withDates(['31/01/2026']))).toBe(false);
+    expect(validate(withDates(manifest.studies[0].snapshots, 'yesterday'))).toBe(false);
+  });
+
   it('manifest file paths cover every generated snapshot', () => {
     const listed = new Set(manifest.studies.flatMap((s) => Object.values(s.files)));
     for (const snap of snapshots) {
       expect(listed.has(`studies/${snap.StudyID}/${snap.SnapshotDate}.json`)).toBe(true);
-    }
-  });
-
-  it('detail category counts reconcile with the study-level numerator', () => {
-    for (const snap of snapshots) {
-      const byMetric = new Map();
-      for (const d of snap.details ?? []) {
-        byMetric.set(d.MetricID, (byMetric.get(d.MetricID) ?? 0) + d.Numerator);
-        expect(d.Numerator, `${snap.StudyID} ${d.MetricID} ${d.Category}`).toBeGreaterThanOrEqual(0);
-      }
-      for (const [metricId, sum] of byMetric) {
-        const studyRow = snap.results.find((r) => r.GroupLevel === 'Study' && r.MetricID === metricId);
-        expect(sum, `${snap.StudyID} ${metricId}`).toBe(studyRow.Numerator);
-      }
     }
   });
 

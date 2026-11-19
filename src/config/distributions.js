@@ -1,0 +1,64 @@
+// @ts-check
+// Distribution widget configuration per metric (keyed by gsm metric ID): business labels for each
+// Source × Variable section (a denominator section's `percentLabel` names its population), which variables are
+// statuses (coloured) rather than reasons (uncoloured), and top-N collapsing.
+// Labels never say "Numerator" or "Denominator". Status colours stay empty until the colour map is agreed (#18).
+
+export const DISTRIBUTION_CONFIG = {
+  kri0006: {
+    statusVariables: ['disposition'],
+    sections: {
+      'Numerator:compreas': { title: 'Reasons for study discontinuation' },
+      'Denominator:disposition': { title: 'Study disposition', percentLabel: '% of enrolled' },
+    },
+  },
+  'kri0007-2': {
+    statusVariables: ['drv_drg_completion'],
+    sections: {
+      'Numerator:drv_premature_discontinuation_reason': { title: 'Reasons for treatment discontinuation' },
+      'Denominator:drv_drg_completion': { title: 'Treatment disposition', percentLabel: '% of dosed' },
+    },
+  },
+  kri0019: {
+    statusVariables: ['ipns_status'],
+    sections: {
+      'Denominator:ipns_status': { title: 'IP status', percentLabel: '% of enrolled' },
+    },
+  },
+  kri0014: {
+    statusVariables: ['eligibility_status'],
+    sections: {
+      'Numerator:ietestcd_concat': { title: 'Top I/E criteria not met', topN: 5 },
+      'Denominator:eligibility_status': { title: 'Eligibility status', percentLabel: '% of enrolled' },
+    },
+  },
+  kri0015: {
+    statusVariables: [],
+    sections: {
+      'Numerator:death_window': { title: 'Deaths by time from randomisation' },
+      'Numerator:ineligible_flag': { title: 'Deaths by eligibility' },
+      'Numerator:treatment_related': { title: 'Deaths by relatedness to treatment' },
+    },
+  },
+  strat0001: {
+    statusVariables: ['strat_status'],
+    sections: {
+      'Numerator:factor_names': { title: 'Mis-stratification by factor' },
+      'Denominator:strat_status': { title: 'Stratification status', percentLabel: '% of enrolled' },
+    },
+  },
+  kri0012: {
+    statusVariables: ['screening_status'],
+    sections: {
+      'Numerator:sf_reason': { title: 'Screen failure reasons', topN: 5 },
+      'Denominator:screening_status': { title: 'Screening status', percentLabel: '% of screened' },
+    },
+  },
+};
+
+/** The configuration for a metric (catalog entry with `ID`), merged with any per-metric override. */
+export function distributionConfig(metric, override = {}) {
+  const base = metric ? DISTRIBUTION_CONFIG[metric.ID] : undefined;
+  if (!base) return null;
+  return { ...base, ...override, sections: { ...base.sections, ...(override.sections ?? {}) } };
+}

@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "jsx": "react-jsx"
+  },
+  "include": ["validation/**/*.js", "e2e/**/*.js", "playwright.config.js", "src/react/**/*", "src/app/portfolio-*.js", "scripts/inject.mjs", "scripts/package-reports.mjs", "scripts/study-document.mjs", "scripts/portfolio-document.mjs"]
+}
