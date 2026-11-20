@@ -309,16 +309,16 @@ test.describe('Layout A distribution widget', () => {
   });
 
   test('10.06: configured status colours render, unmapped statuses fall back to neutral, reasons stay uncoloured (#10)', async ({ app, page }) => {
-    const m = metricById('kri0006');
+    const m = metricById('kri0014');
     await app.openStudy(study.StudyID, {
       portfolio: (p) => {
-        const meta = p.metrics.find((x) => x.ID === 'kri0006');
-        meta.WidgetConfigs = { ...meta.WidgetConfigs, 'distribution-bar': { colours: { 'Study Completion': 'rgb(21, 101, 192)', Ongoing: 'rgb(46, 125, 50)' } } };
+        const meta = p.metrics.find((x) => x.ID === 'kri0014');
+        meta.WidgetConfigs = { ...meta.WidgetConfigs, 'distribution-bar': { colours: { Eligible: 'rgb(21, 101, 192)', Ineligible: 'rgb(46, 125, 50)' } } };
       },
     });
-    const status = body(page, m).locator('.dist-sec[data-variable="disposition"]');
-    await expect(status.locator('.dist-row[data-category="Study Completion"] .b')).toHaveCSS('background-color', 'rgb(21, 101, 192)');
-    await expect(status.locator('.dist-row[data-category="Ongoing"] .b')).toHaveCSS('background-color', 'rgb(46, 125, 50)');
+    const status = body(page, m).locator('.dist-sec[data-variable="eligibility_status"]');
+    await expect(status.locator('.dist-row[data-category="Eligible"] .b')).toHaveCSS('background-color', 'rgb(21, 101, 192)');
+    await expect(status.locator('.dist-row[data-category="Ineligible"] .b')).toHaveCSS('background-color', 'rgb(46, 125, 50)');
     const neutral = await page.evaluate(() => {
       const probe = document.createElement('div');
       probe.style.background = 'var(--na)';
@@ -327,8 +327,8 @@ test.describe('Layout A distribution widget', () => {
       probe.remove();
       return colour;
     });
-    await expect(status.locator('.dist-row[data-category="Death"] .b')).toHaveCSS('background-color', neutral);
-    const reasons = body(page, m).locator('.dist-sec[data-variable="compreas"] .dist-row[data-kind="category"] .b');
+    await expect(status.locator('.dist-row[data-category="Potentially Ineligible"] .b')).toHaveCSS('background-color', neutral);
+    const reasons = body(page, m).locator('.dist-sec[data-variable="ietestcd_concat"] .dist-row[data-kind="category"] .b');
     expect(await reasons.count()).toBeGreaterThan(0);
     for (const bar of await reasons.all()) expect(await bar.getAttribute('style')).not.toMatch(/background/);
   });

@@ -6,10 +6,9 @@
 
 export const DISTRIBUTION_CONFIG = {
   kri0006: {
-    statusVariables: ['disposition'],
+    statusVariables: ['drv_study_disposition'],
     sections: {
-      'Numerator:compreas': { title: 'Reasons for study discontinuation' },
-      'Denominator:disposition': { title: 'Study disposition', percentLabel: '% of enrolled' },
+      'Denominator:drv_study_disposition': { title: 'Study disposition', percentLabel: '% of enrolled' },
     },
   },
   'kri0007-2': {
@@ -20,9 +19,9 @@ export const DISTRIBUTION_CONFIG = {
     },
   },
   kri0019: {
-    statusVariables: ['ipns_status'],
+    statusVariables: ['drv_ip_nonstarter_status'],
     sections: {
-      'Denominator:ipns_status': { title: 'IP status', percentLabel: '% of enrolled' },
+      'Denominator:drv_ip_nonstarter_status': { title: 'IP status', percentLabel: '% of enrolled' },
     },
   },
   kri0014: {
@@ -36,22 +35,17 @@ export const DISTRIBUTION_CONFIG = {
     statusVariables: [],
     sections: {
       'Numerator:death_window': { title: 'Deaths by time from randomisation' },
-      'Numerator:ineligible_flag': { title: 'Deaths by eligibility' },
+      'Numerator:eligibility_status': { title: 'Deaths by eligibility' },
       'Numerator:treatment_related': { title: 'Deaths by relatedness to treatment' },
-    },
-  },
-  strat0001: {
-    statusVariables: ['strat_status'],
-    sections: {
-      'Numerator:factor_names': { title: 'Mis-stratification by factor' },
-      'Denominator:strat_status': { title: 'Stratification status', percentLabel: '% of enrolled' },
+      'Numerator:window_eligibility': { title: 'Deaths by time and eligibility' },
+      'Numerator:window_treatment_related': { title: 'Deaths by time and relatedness to treatment' },
     },
   },
   kri0012: {
-    statusVariables: ['screening_status'],
+    statusVariables: ['drv_study_disposition'],
     sections: {
       'Numerator:sf_reason': { title: 'Screen failure reasons', topN: 5 },
-      'Denominator:screening_status': { title: 'Screening status', percentLabel: '% of screened' },
+      'Denominator:drv_study_disposition': { title: 'Screening status', percentLabel: '% of screened' },
     },
   },
 };
