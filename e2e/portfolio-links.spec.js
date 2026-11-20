@@ -232,7 +232,7 @@ test('25.04: a report link with {StudyID} gives each study its own address in th
   for (const id of [ids[0], ids[5]]) {
     await app.openStudy(id, { portfolio: configure });
     const links = await page
-      .locator('.tile[data-metric-id]')
+      .locator('.card[data-metric-id]')
       .evaluateAll((els) =>
         Object.fromEntries(
           els
@@ -240,22 +240,14 @@ test('25.04: a report link with {StudyID} gives each study its own address in th
             .filter(([, hrefs]) => hrefs.length),
         ),
       );
+    // Only metrics with a card (#32) show a link in a study report; the portfolio above covers the others.
     expect(links, id).toEqual({
-      Analysis_kri0007: [`https://reports.example.org/cod/studies/${id}/tdsc.html`],
       Analysis_kri0001: [`https://reports.example.org/cod/kri/${id}.html`],
-      Analysis_ctq0001: ['https://other.example.org/wc.html'],
       [DTH90]: [`https://reports.example.org/cod/mortality/${id}/index.html`],
     });
     const notice = (await page.locator('.config-notice').allTextContents()).join(' ');
     for (const path of ['tdsc.html', 'kri/', 'wc.html', 'mortality/']) expect(notice, `${id}: a valid link isn't reported`).not.toContain(path);
     expect(notice, `${id}: a link that can't be resolved with this study's ID is reported`).toContain('ltfu.html');
-
-    const own = page.locator(`.tile[data-metric-id="${DTH90}"]`);
-    for (let i = 0; i < 12 && !(await own.locator('.view-name').textContent())?.trim().startsWith('Report link'); i++) {
-      await own.locator('button[data-view-step="1"]').click();
-    }
-    await expect(own.locator('.view-name'), `${id}: the report-link view`).toHaveText(/^Report link /);
-    expect(await own.locator('a.more').evaluate((a) => /** @type {HTMLAnchorElement} */ (a).href), `${id}: the report-link view`).toBe(`https://reports.example.org/cod/mortality/${id}/index.html`);
   }
 });
 

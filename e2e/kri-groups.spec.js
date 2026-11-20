@@ -3,17 +3,16 @@
 /** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
 /** @typedef {import('../test/qual/pooling.js').MetricMeta} MetricMeta */
 /** @typedef {MetricMeta & { ID: string, Metric: string }} Meta */
-import { KRI_GROUPS } from '../src/config/kri-groups.js';
 import { pooled, shownMetrics } from '../test/qual/pooling.js';
 import { expect, readData, test } from './fixtures/app.js';
+import { TRACKER_CARDS } from './fixtures/tiles.js';
 
 const portfolio = readData('portfolio.json');
 /** @type {StudyEntry[]} */
 const studies = portfolio.studies;
 /** @type {Meta[]} */
 const shown = /** @type {Meta[]} */ (shownMetrics(portfolio.metrics));
-const KRIS = KRI_GROUPS.flatMap((g) => g.metrics);
-const ctq = shown.filter((m) => !KRIS.includes(m.ID));
+const KRIS = TRACKER_CARDS.filter((c) => c.kind === 'kri').map((c) => c.metric);
 const study = studies[0];
 /** @param {string} id */
 const metricOf = (id) => /** @type {Meta} */ (shown.find((m) => m.ID === id));
@@ -59,7 +58,7 @@ function expectedKri(m, of, asOf) {
  * @param {string} metricId
  */
 async function readKri(page, metricId) {
-  const body = page.locator(`.tile.kri[data-metric-id="${metricId}"] .tile-body`);
+  const body = page.locator(`.card.kri[data-metric-id="${metricId}"] .tile-body`);
   await expect(body).toBeVisible();
   return body.evaluate((el) => {
     const shownEl = (/** @type {Element | null} */ e) => Boolean(e?.checkVisibility({ opacityProperty: true, visibilityProperty: true }));
@@ -74,23 +73,21 @@ async function readKri(page, metricId) {
 }
 
 /**
- * The page's rows in order: each row's label and the metric IDs of its tiles, then the expand control if any. A tile
- * or control a user can't see is marked "(hidden)".
+ * The grid in order: each card's id, then the expand control if any. One a user can't see is marked "(hidden)".
  * @param {Page} page
  */
-const rowsOf = (page) =>
-  page.locator('.study-page > .dd-row').evaluateAll((rows) =>
-    rows.map((r) => ({
-      label: (r.querySelector('.rowlab')?.textContent ?? '').trim(),
-      group: r.getAttribute('data-kri-group'),
-      tiles: [...r.querySelectorAll('.tiles > *')].map((t) => {
-        const name = t.getAttribute('data-metric-id') ?? (t.matches('[data-kri-expand]') ? 'expand' : '?');
-        const box = t.getBoundingClientRect();
-        const seen = t.checkVisibility({ opacityProperty: true, visibilityProperty: true }) && box.width > 0 && box.height > 0;
-        return seen ? name : `${name} (hidden)`;
-      }),
-    })),
+const gridOf = (page) =>
+  page.locator('.study-page .cards > :not(.detail)').evaluateAll((els) =>
+    els.map((t) => {
+      const name = t.getAttribute('data-card') ?? (t.matches('[data-kri-expand]') ? 'expand' : '?');
+      const box = t.getBoundingClientRect();
+      const seen = t.checkVisibility({ opacityProperty: true, visibilityProperty: true }) && box.width > 0 && box.height > 0;
+      return seen ? name : `${name} (hidden)`;
+    }),
   );
+
+/** The tracker's card ids, less the KRIs given. */
+const trackerWithout = (/** @type {string[]} */ out) => TRACKER_CARDS.map((c) => c.id).filter((id) => !out.includes(id));
 
 /**
  * Whether a user can see an element: rendered, neither transparent nor invisible (itself or an ancestor), and with a
@@ -103,8 +100,6 @@ const userSees = (locator) =>
     return el.checkVisibility({ opacityProperty: true, visibilityProperty: true }) && box.width > 0 && box.height > 0;
   });
 
-/** @param {string[]} metricIds */
-const asIds = (metricIds) => metricIds.map((id) => metricOf(id).MetricID);
 
 /**
  * @param {Page} page
@@ -119,7 +114,7 @@ async function goToVisit(page, index) {
   }, index);
 }
 
-test.describe('grouped standard KRIs', () => {
+test.describe('the standard KRIs\' cards', () => {
   test('32.01: every compact widget\'s rate, n / N and site counts and percentages per flag equal an independent pooling of the site rows, at the latest and an earlier visit (#32)', async ({ app, page }) => {
     let compared = 0;
     for (const of of [studies[0], studies[3]]) {
@@ -140,7 +135,7 @@ test.describe('grouped standard KRIs', () => {
 
   test('32.02: a rate per 28 days shows n ÷ exposure days × 28, its N shows exposure days ÷ 28, and a configured unit label replaces the default (#32)', async ({ app, page }) => {
     const per28 = KRIS.map(metricOf).filter((m) => m.Display === 'per_28d');
-    expect(per28.map((m) => m.ID)).toEqual(['kri0001', 'kri0002', 'kri0003', 'kri0004']);
+    expect(per28.map((m) => m.ID).sort()).toEqual(['kri0001', 'kri0002', 'kri0003', 'kri0004']);
     await app.openStudy(study.StudyID, configure({ kri0002: { unit: 'per 4 weeks' } }));
     for (const m of per28) {
       const p = pooled(readData, [study], m.MetricID, null);
@@ -154,91 +149,67 @@ test.describe('grouped standard KRIs', () => {
     for (const m of KRIS.map(metricOf).filter((x) => x.Display !== 'per_28d')) expect((await readKri(page, m.MetricID)).unit, m.ID).toBeNull();
   });
 
-  test('32.03: the three groups follow the CTQ widgets in configured order, with grouping by category on and off, and each grouped KRI appears only in its group (#32)', async ({ app, page }) => {
+  test('32.03: the cards follow tracker order, the breakdowns then the standard KRIs, each once, with no control to group them (#32)', async ({ app, page }) => {
     await app.openStudy(study.StudyID);
-    const groupRows = KRI_GROUPS.map((g) => ({ label: `${g.label} · ${g.metrics.length}`, group: g.id, tiles: asIds(g.metrics) }));
-    for (const grouped of [true, false]) {
-      if (!grouped) await page.locator('input[data-group-cat]').uncheck();
-      const rows = await rowsOf(page);
-      const ctqRows = rows.slice(0, rows.length - KRI_GROUPS.length);
-      expect(rows.slice(-KRI_GROUPS.length), `grouping ${grouped}`).toEqual(groupRows);
-      expect(ctqRows.every((r) => r.group === null), `grouping ${grouped}: CTQ rows first`).toBe(true);
-      expect(ctqRows.flatMap((r) => r.tiles).sort(), `grouping ${grouped}: CTQ rows hold exactly the CTQ widgets`).toEqual(ctq.map((m) => m.MetricID).sort());
-      if (!grouped) expect(ctqRows, 'one flat CTQ row').toHaveLength(1);
-      for (const m of KRIS.map(metricOf)) await expect(page.locator(`[data-metric-id="${m.MetricID}"]`), m.ID).toHaveCount(1);
-    }
+    expect(await gridOf(page)).toEqual(TRACKER_CARDS.map((c) => c.id));
+    for (const m of KRIS.map(metricOf)) await expect(page.locator(`.card[data-metric-id="${m.MetricID}"]`), m.ID).toHaveCount(1);
+    await expect(page.locator('input[data-group-cat], .dd-row, .kri-group, .rowlab')).toHaveCount(0);
+    await expect(page.getByText(/group by category/i)).toHaveCount(0);
   });
 
-  test('32.03: configuration moves KRIs between groups, out of every group and within a group (#32)', async ({ app, page }) => {
-    await app.openStudy(study.StudyID, configure({ kri0005: { group: 'deviations', order: -1 }, kri0001: { group: null }, kri0011: { order: 0 } }));
-    const rows = await rowsOf(page);
-    expect(rows.filter((r) => r.group).map((r) => [r.group, r.tiles])).toEqual([
-      ['safety', asIds(['kri0002'])],
-      ['deviations', asIds(['kri0005', 'kri0003', 'kri0004'])],
-      ['data', asIds(['kri0008', 'kri0011', 'kri0009', 'kri0010'])],
-    ]);
-    expect(rows.filter((r) => !r.group).flatMap((r) => r.tiles), 'a KRI out of every group is a CTQ widget').toContain(metricOf('kri0001').MetricID);
-  });
-
-  test('32.03: KRIs hidden from the portfolio, by hidden metric or status filter, are left out, and a group left empty is not shown (#32)', async ({ app, page }) => {
+  test('32.03: KRIs hidden from the portfolio, by hidden metric or status filter, are left out (#32)', async ({ app, page }) => {
     await app.openStudy(study.StudyID, undefined, `#statuses=Released&statuses=Planned&hide=${metricOf('kri0005').MetricID}`);
-    const rows = await rowsOf(page);
-    expect(rows.filter((r) => r.group).map((r) => [r.group, r.tiles])).toEqual([['data', asIds(['kri0008', 'kri0009', 'kri0010', 'kri0011'])]]);
-    for (const id of ['kri0001', 'kri0002', 'kri0003', 'kri0004', 'kri0005']) await expect(page.locator(`[data-metric-id="${metricOf(id).MetricID}"]`), id).toHaveCount(0);
+    expect(await gridOf(page)).toEqual(trackerWithout(['kri0001', 'kri0002', 'kri0003', 'kri0004', 'kri0005']));
   });
 
-  test('32.04: with the default configuration no group has an expand control (#32)', async ({ app, page }) => {
+  test('32.04: with the default configuration there is no expand control (#32)', async ({ app, page }) => {
     await app.openStudy(study.StudyID);
-    await expect(page.locator('.tile.kri')).toHaveCount(KRIS.length);
+    await expect(page.locator('.card.kri')).toHaveCount(KRIS.length);
     await expect(page.locator('[data-kri-expand]')).toHaveCount(0);
   });
 
-  test('32.04: KRIs hidden by default appear only after their own group\'s expand control is used, and portfolio hiding still applies after expanding (#32)', async ({ app, page }) => {
+  test('32.04: KRIs hidden by default appear only after the expand control after the last KRI card is used, which reveals them all in order, and portfolio hiding still applies (#32)', async ({ app, page }) => {
     const hash = `#statuses=Released&statuses=Planned&hide=${metricOf('kri0009').MetricID}`;
     await app.openStudy(study.StudyID, configure({ kri0002: { hidden: true }, kri0005: { hidden: true }, kri0009: { hidden: true }, kri0010: { hidden: true } }), hash);
-    let rows = await rowsOf(page);
-    expect(rows.filter((r) => r.group).map((r) => [r.group, r.tiles])).toEqual([
-      ['safety', ['expand']],
-      ['data', [...asIds(['kri0008', 'kri0011']), 'expand']],
-    ]);
-    await page.locator('.kri-group[data-kri-group="data"] [data-kri-expand]').click();
-    rows = await rowsOf(page);
-    expect(rows.filter((r) => r.group).map((r) => [r.group, r.tiles]), 'only the data group expands, in configured order').toEqual([
-      ['safety', ['expand']],
-      ['data', asIds(['kri0008', 'kri0010', 'kri0011'])],
-    ]);
-    expect(await readKri(page, metricOf('kri0010').MetricID), 'the revealed widget shows its values').toEqual(expectedKri(metricOf('kri0010'), study, null));
-    await page.locator('.kri-group[data-kri-group="safety"] [data-kri-expand]').click();
-    rows = await rowsOf(page);
-    expect(rows.filter((r) => r.group).map((r) => [r.group, r.tiles]), 'kri0002 stays out by status filter, kri0009 by hidden metric').toEqual([
-      ['safety', asIds(['kri0005'])],
-      ['data', asIds(['kri0008', 'kri0010', 'kri0011'])],
-    ]);
-    expect(await readKri(page, metricOf('kri0005').MetricID), 'the revealed widget shows its values').toEqual(expectedKri(metricOf('kri0005'), study, null));
+    const out = ['kri0001', 'kri0002', 'kri0003', 'kri0004'];
+    expect(await gridOf(page)).toEqual([...trackerWithout([...out, 'kri0005', 'kri0009', 'kri0010']), 'expand']);
+    await expect(page.locator('[data-kri-expand]')).toHaveCount(1);
+    await page.locator('[data-kri-expand]').click();
+    expect(await gridOf(page), 'kri0002 stays out by status filter, kri0009 by hidden metric').toEqual(trackerWithout([...out, 'kri0009']));
+    for (const id of ['kri0005', 'kri0010']) expect(await readKri(page, metricOf(id).MetricID), `${id}: the revealed card shows its values`).toEqual(expectedKri(metricOf(id), study, null));
   });
 
-  test('32.03: an expanded group shows its KRIs in configured order, each visible with its values (#32)', async ({ app, page }) => {
-    await app.openStudy(study.StudyID, configure({ kri0002: { hidden: true } }));
-    const safety = async () => (await rowsOf(page)).find((r) => r.group === 'safety')?.tiles;
-    expect(await safety()).toEqual([...asIds(['kri0001', 'kri0005']), 'expand']);
-    await page.locator('.kri-group[data-kri-group="safety"] [data-kri-expand]').click();
-    expect(await safety()).toEqual(asIds(['kri0001', 'kri0002', 'kri0005']));
-    for (const id of ['kri0001', 'kri0002', 'kri0005']) expect(await readKri(page, metricOf(id).MetricID), id).toEqual(expectedKri(metricOf(id), study, null));
+  test('32.04: with every KRI hidden by default, the expand control ends the grid and reveals them all (#32)', async ({ app, page }) => {
+    await app.openStudy(study.StudyID, configure(Object.fromEntries(KRIS.map((id) => [id, { hidden: true }]))));
+    expect(await gridOf(page)).toEqual([...trackerWithout(KRIS), 'expand']);
+    await page.locator('[data-kri-expand]').click();
+    expect(await gridOf(page)).toEqual(TRACKER_CARDS.map((c) => c.id));
   });
 
-  test('32.06: each compact widget opens the Charts drill-in under its group, shows a configured detailed-report link and nothing else in its footer, and has no view pager (#32)', async ({ app, page }) => {
+  test('32.04: with every KRI hidden by default and every other card\'s metric hidden from the portfolio, the expand control alone is shown and reveals the KRIs (#32)', async ({ app, page }) => {
+    const ctqMetrics = [...new Set(TRACKER_CARDS.filter((c) => c.kind !== 'kri').map((c) => c.metric))];
+    expect(ctqMetrics).toHaveLength(6);
+    const hash = `#${ctqMetrics.map((id) => `hide=${metricOf(id).MetricID}`).join('&')}`;
+    await app.openStudy(study.StudyID, configure(Object.fromEntries(KRIS.map((id) => [id, { hidden: true }]))), hash);
+    expect(await gridOf(page)).toEqual(['expand']);
+    await page.locator('[data-kri-expand]').click();
+    expect(await gridOf(page)).toEqual(KRIS);
+    for (const id of KRIS) expect(await readKri(page, metricOf(id).MetricID), `${id}: the revealed card shows its values`).toEqual(expectedKri(metricOf(id), study, null));
+  });
+
+  test('32.06: each compact widget opens the Charts drill-in after its card, shows a configured detailed-report link and nothing else in its footer, and has no view pager (#32)', async ({ app, page }) => {
     const linked = metricOf('kri0004');
     await app.openStudy(study.StudyID, {
       portfolio: (p) => {
         p.metrics.find((/** @type {any} */ x) => x.ID === linked.ID).ReportLink = 'reports/ipd.html';
       },
     });
-    const kris = page.locator('.tile.kri');
+    const kris = page.locator('.card.kri');
     await expect(kris).toHaveCount(KRIS.length);
-    await expect(page.locator('.tile.kri :is(.vbtn, .view-name, [data-view-step])')).toHaveCount(0);
+    await expect(page.locator('.card.kri :is(.vbtn, .view-name, [data-view-step])')).toHaveCount(0);
     for (const id of KRIS) {
       const m = metricOf(id);
-      const foot = page.locator(`.tile.kri[data-metric-id="${m.MetricID}"] .tile-foot`);
+      const foot = page.locator(`.card.kri[data-metric-id="${m.MetricID}"] .tile-foot`);
       const link = foot.locator('a.report-link');
       if (id === linked.ID) {
         await expect(link, id).toBeVisible();
@@ -249,25 +220,26 @@ test.describe('grouped standard KRIs', () => {
       } else await expect(link, id).toHaveCount(0);
       await expect(foot.locator(':scope > *'), id).toHaveCount(id === linked.ID ? 2 : 1);
     }
-    for (const g of KRI_GROUPS) {
-      const m = metricOf(g.metrics[0]);
-      const row = page.locator(`.kri-group[data-kri-group="${g.id}"]`);
-      const charts = row.locator(`[data-detail-metric="${m.MetricID}"]`);
-      expect(await userSees(charts), `${g.id}: the Charts button can be seen`).toBe(true);
+    for (const id of KRIS) {
+      const m = metricOf(id);
+      const charts = page.locator(`[data-detail-metric="${m.MetricID}"]`);
+      expect(await userSees(charts), `${id}: the Charts button can be seen`).toBe(true);
       await charts.click();
-      await expect(row.locator('.detail .detail-title'), g.id).toHaveText(m.Metric);
-      await expect(row.locator('.detail [data-detail-tab]'), g.id).toHaveCount(3);
-      await expect(row.locator('.detail .detail-body'), g.id).toBeVisible();
-      await expect(page.locator('.detail'), g.id).toHaveCount(1);
-      await row.locator('[data-detail-close]').click();
-      await expect(page.locator('.detail'), g.id).toHaveCount(0);
+      const panel = page.locator('.cards > .detail');
+      await expect(panel.locator('.detail-title'), id).toHaveText(m.Metric);
+      expect(await panel.evaluate((el) => el.previousElementSibling?.getAttribute('data-metric-id')), `${id}: the panel follows its card`).toBe(m.MetricID);
+      await expect(panel.locator('[data-detail-tab]'), id).toHaveCount(3);
+      await expect(panel.locator('.detail-body'), id).toBeVisible();
+      await expect(page.locator('.detail'), id).toHaveCount(1);
+      await panel.locator('[data-detail-close]').click();
+      await expect(page.locator('.detail'), id).toHaveCount(0);
     }
   });
 
-  test('32.05: the grouped KRI view, with a KRI hidden by default, captured for user acceptance (user acceptance) (#32)', async ({ app, page, evidence }) => {
+  test('32.05: the card grid, with a KRI hidden by default, captured for user acceptance (user acceptance) (#32)', async ({ app, page, evidence }) => {
     await app.openStudy(study.StudyID, configure({ kri0002: { hidden: true } }));
-    await expect(page.locator('.kri-group[data-kri-group="safety"] [data-kri-expand]')).toBeVisible();
-    await expect(page.locator('.tile.kri')).toHaveCount(KRIS.length - 1);
-    await evidence.shot(page, 'grouped standard KRIs with one hidden by default');
+    await expect(page.locator('.cards > [data-kri-expand]')).toBeVisible();
+    await expect(page.locator('.card.kri')).toHaveCount(KRIS.length - 1);
+    await evidence.shot(page, 'the card grid with a KRI hidden by default');
   });
 });

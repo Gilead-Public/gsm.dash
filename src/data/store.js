@@ -89,8 +89,7 @@ export class PortfolioStore extends EventTarget {
       expanded: new Set(),
       sort: { key: null, dir: null }, // key: 'label' | 'meta' | a MetricID
       detail: { metricId: null, tab: 'viz-bar' }, // study-page drill-in panel (W4)
-      tileViews: new Map(), // MetricID -> the view currently shown in its tile
-      groupByCategory: true, // study page: lifecycle rows (meta.Category) vs one flat grid
+      groupByCategory: false, // study page: the grouped layout, unwired since the 19 Nov design review (#35)
       asOf: null, // view the portfolio as of this date; the study page's visit scrubber drives it
       cellMode: this.#defaults.cellMode, // 'defined' — each metric shows its glossary display rule | 'custom' — the `show` stack for every metric
       statuses: new Set(STATUS_ORDER), // glossary Status values to show (Released | New | Planned)
@@ -108,11 +107,6 @@ export class PortfolioStore extends EventTarget {
   /** The portfolio's snapshot cycle and the studies left out of it (#14); null in a study report. */
   get cycle() {
     return this.#summary?.cycle ?? null;
-  }
-
-  setTileView(metricId, viewName) {
-    this.state.tileViews.set(metricId, viewName);
-    this.#emit();
   }
 
   /** Header click: cycle the sort for a column ('label'/'meta' are text/numeric row attributes; anything else is a MetricID). */

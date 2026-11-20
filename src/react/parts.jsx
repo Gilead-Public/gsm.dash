@@ -1,7 +1,7 @@
 // @ts-check
 // Small pieces both report pages render the same way.
 import { useEffect, useLayoutEffect, useRef } from 'react';
-import { attachHoverTooltip, metricTip } from '../app/tooltip.js';
+import { attachHoverTooltip } from '../app/tooltip.js';
 import { metricParts } from '../util/format.js';
 import { sparkline } from '../charts/sparkline.js';
 
@@ -13,15 +13,6 @@ import { sparkline } from '../charts/sparkline.js';
 export function studyHref(store, studyId) {
   const view = store.programParams().toString();
   return `./${encodeURIComponent(studyId)}.html${view ? `#${view}` : ''}`;
-}
-
-/** @param {{ metric: any }} props */
-export function InfoIcon({ metric }) {
-  return (
-    <span className="info" data-tip={metricTip(metric)} role="img" aria-label={`${metric.Metric} definition`}>
-      i
-    </span>
-  );
 }
 
 /** @param {{ metric: any }} props */

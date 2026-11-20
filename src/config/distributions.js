@@ -1,7 +1,8 @@
 // @ts-check
 // Distribution widget configuration per metric (keyed by gsm metric ID): business labels for each
 // Source × Variable section (a denominator section's `percentLabel` names its population), which variables are
-// statuses (coloured) rather than reasons (uncoloured), and top-N collapsing.
+// statuses (coloured) rather than reasons (uncoloured), and top-N collapsing. In a joint-count table (#10), a section's
+// `label` heads its rows or column group, and the rows' section's `total` heads their counts.
 // Labels never say "Numerator" or "Denominator". Status colours stay empty until the colour map is agreed (#18).
 
 export const DISTRIBUTION_CONFIG = {
@@ -34,11 +35,11 @@ export const DISTRIBUTION_CONFIG = {
   kri0015: {
     statusVariables: [],
     sections: {
-      'Numerator:death_window': { title: 'Deaths by time from randomisation' },
+      'Numerator:death_window': { title: 'Deaths by time from randomisation', label: 'Time from randomisation', total: 'Deaths' },
       'Numerator:eligibility_status': { title: 'Deaths by eligibility' },
       'Numerator:treatment_related': { title: 'Deaths by relatedness to treatment' },
-      'Numerator:window_eligibility': { title: 'Deaths by time and eligibility' },
-      'Numerator:window_treatment_related': { title: 'Deaths by time and relatedness to treatment' },
+      'Numerator:window_eligibility': { title: 'Deaths by time and eligibility', label: 'Eligibility' },
+      'Numerator:window_treatment_related': { title: 'Deaths by time and relatedness to treatment', label: 'Related to treatment' },
     },
   },
   kri0012: {

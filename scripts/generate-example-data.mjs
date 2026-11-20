@@ -93,11 +93,7 @@ export const METRICS = GLOSSARY.map((g, i) => ({
   // Shared by the study page tile rows and the program table column bands.
   Category: g.cat,
   ...(DISTRIBUTION_CONFIG[g.id] && { Widget: 'distribution-bar' }),
-  ...(g.abbr === 'DTH90' && {
-    Widgets: ['link-out'],
-    ReportLink: 'https://gilead-biostats.github.io/gsm.kri/',
-    WidgetConfigs: { 'link-out': { label: 'mortality report' } },
-  }),
+  ...(g.abbr === 'DTH90' && { ReportLink: 'https://gilead-biostats.github.io/gsm.kri/' }),
   // generator-only; stripped before writing
   base: g.base,
   denKey: g.denKey,

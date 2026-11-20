@@ -1,5 +1,6 @@
 // @ts-check
 import { expect, readData, test } from './fixtures/app.js';
+import { TRACKER_CARDS } from './fixtures/tiles.js';
 import { countText, displayed, latestSnapshot, pooled, readRate, shownMetrics, tolerance } from '../test/qual/pooling.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
@@ -9,7 +10,8 @@ const portfolio = readData('portfolio.json');
 /** @type {StudyEntry[]} */
 const studies = portfolio.studies;
 // A percentage metric whose tile opens on Details.
-const metric = /** @type {MetricMeta} */ (shownMetrics(portfolio.metrics).find((m) => m.Display !== 'per_28d' && !m.Widget));
+// A standard KRI shown as a percentage: its card states its rate alone.
+const metric = /** @type {MetricMeta} */ (shownMetrics(portfolio.metrics).find((m) => m.Display !== 'per_28d' && TRACKER_CARDS.some((c) => c.kind === 'kri' && c.metric === /** @type {any} */ (m).ID)));
 const [changed] = studies;
 const changedDate = latestSnapshot(changed);
 const before = pooled(readData, studies, metric.MetricID);
@@ -112,9 +114,9 @@ test.describe('the portfolio reads the counts-only summary', () => {
 
     await app.openStudy(changed.StudyID, overrides);
     expect(edited, "the study's file was edited before its report read it").toBeGreaterThan(0);
-    const big = (await page.locator(`.tile[data-metric-id="${metric.MetricID}"] .big`).textContent())?.trim() ?? '';
-    const pct = /\((\d+\.\d)%\)$/.exec(big);
-    expect(pct, `the tile's value "${big}"`).toBeTruthy();
-    expect(near(Number(pct?.[1]), editedOwn.rate), "the study's tile uses its edited file").toBe(true);
+    const big = (await page.locator(`.card[data-metric-id="${metric.MetricID}"] .kri-rate .big`).textContent())?.trim() ?? '';
+    const pct = /^(\d+\.\d)%$/.exec(big);
+    expect(pct, `the card's value "${big}"`).toBeTruthy();
+    expect(near(Number(pct?.[1]), editedOwn.rate), "the study's card uses its edited file").toBe(true);
   });
 });

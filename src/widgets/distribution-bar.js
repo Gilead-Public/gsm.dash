@@ -41,14 +41,40 @@ function sectionHtml(s) {
   </section>`;
 }
 
+const count = (/** @type {number | null} */ n) => (n == null ? '—' : fmtInt(n));
+
+/**
+ * Widget 4's joint counts (#10): a table per column group, each with a row per category of the rows' section; the
+ * first also gives each row's count.
+ */
+function jointHtml(t, title) {
+  const tables = t.groups.map((g, i) => {
+    const head = `<tr><th scope="col">${esc(t.rowLabel)}</th>${i === 0 ? `<th scope="col">${esc(t.totalLabel)}</th>` : ''}${g.columns.map((c) => `<th scope="col">${esc(c)}</th>`).join('')}</tr>`;
+    const body = t.rows
+      .map((r) => `<tr data-category="${esc(r.label)}"><th scope="row">${esc(r.label)}</th>${i === 0 ? `<td data-total="">${count(r.total)}</td>` : ''}${r.cells[i].map((n) => `<td>${count(n)}</td>`).join('')}</tr>`)
+      .join('');
+    return `<table class="dist-joint" data-section="${esc(g.key)}" aria-label="${esc(`${title}: ${g.label}`)}"><caption>${esc(g.label)}</caption><thead>${head}</thead><tbody>${body}</tbody></table>`;
+  });
+  const notes = t.footnotes.map((f) => `<p class="dist-note">${esc(FOOTNOTES[f]())}</p>`).join('');
+  return `${tables.join('')}${notes}`;
+}
+
+/**
+ * `config.only` (section keys) or `config.joint` choose what a card shows (#10); the rest is the metric's
+ * distribution configuration, merged over the shipped one.
+ */
 export function renderDistribution(el, data, config = {}) {
+  const { only = null, joint = null, ...options } = /** @type {any} */ (config);
+  const merged = distributionConfig(data.metric, options);
   const model = buildDistributionModel({
     rows: data.distributions,
     metric: data.metric,
     study: data.study,
     siteRows: data.siteRows,
-    config: distributionConfig(data.metric, config),
-    groupId: config.groupId ?? null,
+    config: merged,
+    groupId: options.groupId ?? null,
+    only,
+    joint,
   });
   el.dataset.state = model.state;
   if (model.state === 'missing') {
@@ -60,7 +86,9 @@ export function renderDistribution(el, data, config = {}) {
     <b class="dist-pct">${fmtPct(h.percent)}</b><span class="dist-nd">${fmtInt(h.numerator)} / ${fmtInt(h.denominator)}</span></div>`;
   const body = model.state === 'empty'
     ? `<div class="nd" data-empty="${model.reason}">${EMPTY[model.reason]}</div>`
-    : model.sections.map(sectionHtml).join('');
+    : model.joint
+      ? jointHtml(model.joint, `${h.name} by ${model.joint.rowLabel.toLowerCase()}`)
+      : model.sections.map(sectionHtml).join('');
   el.innerHTML = `<div class="dist" role="group" aria-label="${esc(`${h.name} breakdowns`)}">${head}${body}</div>`;
 }
 

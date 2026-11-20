@@ -75,8 +75,9 @@ To share a build for feedback without releasing it: every CI run that passes als
   (the table's View, Overview or Details), the display settings, the optional
   columns (study name, **Enrolled**, Status; #21) and each metric's checkbox;
   and **Reset**. Enrolled is the summary's
-  `ParticipantCount`, summed over the row's studies. The study page composes
-  its view from widgets. Links
+  `ParticipantCount`, summed over the row's studies. The study page is one
+  grid of cards, one per widget the tracker requests, in its order (#32); its
+  back link reads "← Portfolio". Links
   between reports are relative and carry the portfolio's view in the hash.
   `src/app/` holds the rules and text both pages share.
 - `src/widgets/` — the **widget framework** (see the Widget Framework
@@ -85,26 +86,33 @@ To share a build for feedback without releasing it: every CI run that passes als
   resolves the data against its layer allow-list (the exec build never
   carries `listings`). A widget that is unknown, needs a layer the host
   doesn't carry, or doesn't apply to the metric (`appliesTo`) is never
-  swapped for another: its tile shows a placeholder naming it and the
-  reason, and configuration no tile can show is listed above the study
-  page (`src/app/references.js`). Metric tiles bind via metric metadata
-  (`Category`/`Widget`/`WidgetConfig`); page-level widgets come from the
-  minimal spec in `src/app/study-page-spec.js`. Shipped set: `scalar-tile`
-  (default), `distribution-bar` (#10), `kri-summary` (the grouped standard
-  KRIs, #32, configured in `src/config/kri-groups.js`), `link-out`, and
-  `threshold-list` (watch sites — its derivation is a pure, unit-tested
-  export per the "widgets render, the pipeline computes" boundary).
-- `src/widgets/views/` — tile views beyond Details (`scalar-tile`): Trend
-  over time, which every site-level metric gets from the reporting layer, and
-  the site-flag views (Outlier sites, Flag distribution), which a study or a
-  metric turns on (#11). A full metric tile pages through Details, Trend over
-  time, then the metric's own views and, where configured, the flag views
-  (#35). These small views live here for now; their long-term home is gsm.viz.
+  swapped for another: its card shows a placeholder naming it and the
+  reason, and configuration no card can show is listed above the study
+  page (`src/app/references.js`). Shipped set: `distribution-bar` (#10),
+  `kri-summary` (the standard KRIs, #32, configured in
+  `src/config/kri-groups.js`), and `threshold-list` (watch sites — its
+  derivation is a pure, unit-tested export per the "widgets render, the
+  pipeline computes" boundary).
+- `src/config/study-cards.js` — the **study page's cards**, in tracker order
+  (gsm.roadmap#617): each names its widget, its metric, its title and, for a
+  breakdown, the one section it shows, or a joint-count table (widget 4). The
+  catalog declares each metric's widget (`Widget`, with options in
+  `WidgetConfigs`); a standard KRI declares its card by being in a KRI group.
+  A card whose metric is unknown or inactive, whose metric declares another
+  widget, or which names an unknown widget or section shows a placeholder
+  (#12). Cards of metrics the portfolio hides are left out (#27), and KRIs
+  hidden by default appear after the one "Show more" control. The tile views
+  are retired (#35): a catalog entry's `Widgets`, or a `Widget` or
+  `WidgetConfigs` naming Details, Trend over time, a flag view or Report link,
+  is listed in the page's notice. The grouped layout
+  (`src/react/StudyGroupedCards.jsx`) is kept but unwired: the 19 Nov design
+  review orders cards by layout only and leaves grouping for later.
 - `src/widgets/viz/` — **gsm.viz adapters**: the standard KRI-report charts
   as widgets (`viz-bar`, `viz-scatter`, `viz-timeseries`), fed by the same
   site-level rows, group metadata, bounds and snapshot history the contract
-  already carries. On the study page each standard-KRI widget opens a Charts
-  drill-in panel with these as tabs (#32); CTQ tiles have none (#35). Each adapter guards the gsm.viz call and
+  already carries. On the study page each standard KRI's card opens a Charts
+  drill-in panel with these as tabs, across the grid after the card (#32);
+  CTQ cards have none (#35). Each adapter guards the gsm.viz call and
   degrades to a labeled placeholder if a chart cannot run in widget mode.
   gsm.viz 2.3.0 is vendored under `public/vendor/` (see its README) until
   it ships as an ESM package.

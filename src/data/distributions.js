@@ -5,8 +5,10 @@
 
 export const NOT_RECORDED = 'Not recorded';
 export const NEUTRAL_COLOUR = 'var(--na)';
+/** Joins the two parts of a combined category, as #617's upstream step builds them (e.g. `death_window || ' | ' || …`). */
+export const JOINT_DELIMITER = ' | ';
 
-const sectionKey = (source, variable) => `${source}:${variable}`;
+export const sectionKey = (source, variable) => `${source}:${variable}`;
 
 /**
  * Sum one metric's site rows to study level (or keep one group with `groupId`).
@@ -60,19 +62,69 @@ export function scopeTotals({ study, siteRows, groupId = null }) {
  * variables, colours); without one the metric is "missing". With one but no rows it is "empty": either the
  * snapshot publishes no distributions at all (`rows` undefined; they cover the latest snapshot only), or none
  * for this metric or group. Header and percentages use the same scope as the rows (`groupId` or the study).
+ * A card shows one section (`only`, a list of 'Source:Variable' keys) or a joint-count table (`joint`, #10).
+ * @param {{ rows: any[] | undefined, metric: any, study: any, siteRows?: any[], config: any, groupId?: string | null, only?: string[] | null, joint?: { rows: string, columns: string[] } | null }} input
  */
-export function buildDistributionModel({ rows, metric, study, siteRows, config, groupId = null }) {
+export function buildDistributionModel({ rows, metric, study, siteRows, config, groupId = null, only = null, joint = null }) {
   if (!config) return { state: 'missing' };
   const totals = scopeTotals({ study, siteRows, groupId });
   if (rows === undefined) return { state: 'empty', reason: 'not-published', header: header(metric, totals) };
-  const sections = sumSitesToStudy(rows, { groupId });
+  const wanted = joint ? [joint.rows, ...joint.columns] : only;
+  const sections = sumSitesToStudy(rows, { groupId }).filter((s) => !wanted || wanted.includes(sectionKey(s.Source, s.Variable)));
   if (!sections.length) return { state: 'empty', reason: 'no-rows', header: header(metric, totals) };
+  if (joint) return { state: 'ok', header: header(metric, totals), joint: jointTable(sections, joint, config) };
 
   const ordered = [...sections].sort((a, b) => (a.Source === b.Source ? 0 : a.Source === 'Numerator' ? -1 : 1));
   return {
     state: 'ok',
     header: header(metric, totals),
     sections: ordered.map((s) => section(s, { config })),
+  };
+}
+
+/**
+ * Counts only (#10): a row per category of the `rows` section with its count, then, for each column section, a
+ * column per second part of its "<row> | <column>" categories. Blank rows are counted in a "Not recorded" row with no
+ * cells; a blank combined category (either part blank upstream) has no cell. Either is noted. Columns keep first
+ * appearance; a pair with no rows is 0, and a row only the combined sections name has no count of its own.
+ */
+function jointTable(sections, joint, config) {
+  const byKey = new Map(sections.map((s) => [sectionKey(s.Source, s.Variable), s]));
+  const label = (key) => config.sections?.[key]?.label ?? config.sections?.[key]?.title ?? key.slice(key.indexOf(':') + 1);
+  const rowSection = byKey.get(joint.rows);
+  const rowCounts = new Map((rowSection?.categories ?? []).filter((c) => c.Category !== null).map((c) => [c.Category, c.Count]));
+  const rowBlank = rowSection?.categories.find((c) => c.Category === null)?.Count ?? 0;
+  const rowNames = [...rowCounts.keys()];
+  let blank = rowBlank;
+  const groups = joint.columns.map((key) => {
+    const cells = new Map();
+    const columns = [];
+    for (const c of byKey.get(key)?.categories ?? []) {
+      const at = c.Category === null ? -1 : c.Category.indexOf(JOINT_DELIMITER);
+      if (at < 0) {
+        blank += c.Count;
+        continue;
+      }
+      const row = c.Category.slice(0, at);
+      const column = c.Category.slice(at + JOINT_DELIMITER.length);
+      if (!rowNames.includes(row)) rowNames.push(row);
+      if (!columns.includes(column)) columns.push(column);
+      cells.set(`${row}${JOINT_DELIMITER}${column}`, c.Count);
+    }
+    return { key, label: label(key), columns, cells };
+  });
+  const rows = rowNames.map((row) => ({
+    label: row,
+    total: rowCounts.get(row) ?? null,
+    cells: groups.map((g) => g.columns.map((column) => g.cells.get(`${row}${JOINT_DELIMITER}${column}`) ?? 0)),
+  }));
+  if (rowBlank > 0) rows.push({ label: NOT_RECORDED, total: rowBlank, cells: groups.map((g) => g.columns.map(() => null)) });
+  return {
+    rowLabel: label(joint.rows),
+    totalLabel: config.sections?.[joint.rows]?.total ?? 'n',
+    groups: groups.map(({ key, label: l, columns }) => ({ key, label: l, columns })),
+    rows,
+    footnotes: blank > 0 ? ['not-recorded'] : [],
   };
 }
 
