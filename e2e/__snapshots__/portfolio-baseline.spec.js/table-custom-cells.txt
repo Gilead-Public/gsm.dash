@@ -1,9 +1,15 @@
 state: table-custom-cells
-canonical dom: sha256 c9874e0dd37c3edcb37cd3aba01434f87b3d32603b19f63200912c5ef1cc22fb (341678 characters)
-computed styles: sha256 be4b2025cef1e325685ed006fbab1bbfcb39902136e5f190ebceb19af101bbb1 (2278 elements)
+canonical dom: sha256 4329a63dac8e64aabeadd27400c1c10aa6960893d5397f7f2309e1c54916c2c3 (411374 characters)
+computed styles: sha256 3cd0164dc6faf640d8653d8feebb88be48f7ae947818bbc629ec74a7095f9ab3 (2870 elements)
 tooltip: none
-cell backgrounds: rgb(237, 240, 238) ×3 | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) | rgb(214, 228, 245) ×7 | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) ×3 | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) ×2 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) ×2 | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(214, 228, 245) ×3 | rgb(179, 203, 233) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(179, 203, 233) ×2 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(179, 203, 233) ×3 | rgb(214, 228, 245) | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) | rgb(134, 169, 216) ×2 | rgb(179, 203, 233) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(134, 169, 216) ×2 | rgb(238, 244, 251) | rgb(134, 169, 216) ×2 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) ×2 | rgb(179, 203, 233) | rgb(134, 169, 216) ×2 | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(179, 203, 233) | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×4 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(134, 169, 216) ×2 | rgb(214, 228, 245) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) | rgb(179, 203, 233) ×2 | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(238, 244, 251) ×3 | rgb(134, 169, 216) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) ×2 | rgb(134, 169, 216) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) ×2 | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(134, 169, 216) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(134, 169, 216) ×2 | rgb(238, 244, 251) | rgb(214, 228, 245) ×2 | rgb(134, 169, 216) ×2 | rgb(179, 203, 233) | rgb(134, 169, 216) ×3 | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(134, 169, 216) ×2 | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(179, 203, 233) ×2 | rgb(214, 228, 245)
+cell backgrounds: rgb(237, 240, 238) ×2 | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) | rgb(214, 228, 245) ×7 | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) ×3 | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) ×2 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(238, 244, 251) ×3 | rgb(134, 169, 216) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) ×2 | rgb(134, 169, 216) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) ×2 | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(214, 228, 245) ×3 | rgb(179, 203, 233) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(179, 203, 233) ×2 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) ×3 | rgb(214, 228, 245) | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) | rgb(134, 169, 216) ×2 | rgb(179, 203, 233) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(134, 169, 216) ×2 | rgb(238, 244, 251) | rgb(134, 169, 216) ×2 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(134, 169, 216) ×2 | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) | rgb(179, 203, 233) ×2 | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) ×2 | rgb(179, 203, 233) | rgb(134, 169, 216) ×2 | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×4 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(134, 169, 216) ×2 | rgb(214, 228, 245) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) ×2 | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(134, 169, 216) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(134, 169, 216) ×2 | rgb(238, 244, 251) | rgb(214, 228, 245) ×2 | rgb(134, 169, 216) ×2 | rgb(179, 203, 233) | rgb(134, 169, 216) ×3 | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(238, 244, 251)
 sparklines:
+  Portfolio total · SF trend: 6 snapshots, latest 23.8%: line M3.0,4.4 L14.6,3.0 L26.2,17.0 L37.8,15.2 L49.4,12.5 L61.0,12.4; dot 61.0,12.4
+  Portfolio total · SDSC trend: 6 snapshots, latest 7.9%: line M3.0,17.0 L14.6,15.0 L26.2,8.4 L37.8,9.0 L49.4,14.1 L61.0,3.0; dot 61.0,3.0
+  Portfolio total · TDSC trend: 6 snapshots, latest 11.3%: line M3.0,17.0 L14.6,8.0 L26.2,3.0 L37.8,6.5 L49.4,5.2 L61.0,13.1; dot 61.0,13.1
+  Portfolio total · PTDSC trend: 6 snapshots, latest 9.0%: line M3.0,3.0 L14.6,17.0 L26.2,16.3 L37.8,15.1 L49.4,8.9 L61.0,15.8; dot 61.0,15.8
+  Portfolio total · WC trend: 6 snapshots, latest 2.6%: line M3.0,3.0 L14.6,14.6 L26.2,9.6 L37.8,10.9 L49.4,8.0 L61.0,17.0; dot 61.0,17.0
+  Portfolio total · LTFU trend: 6 snapshots, latest 1.6%: line M3.0,17.0 L14.6,11.5 L26.2,10.6 L37.8,10.6 L49.4,7.1 L61.0,3.0; dot 61.0,3.0
   Portfolio total · DTH30 trend: 6 snapshots, latest 0.8%: line M3.0,3.0 L14.6,7.7 L26.2,6.9 L37.8,16.6 L49.4,17.0 L61.0,12.3; dot 61.0,12.3
   Portfolio total · DTH90 trend: 6 snapshots, latest 2.1%: line M3.0,9.3 L14.6,3.0 L26.2,8.6 L37.8,17.0 L49.4,10.6 L61.0,11.3; dot 61.0,11.3
   Portfolio total · IPNS trend: 6 snapshots, latest 1.8%: line M3.0,3.2 L14.6,8.6 L26.2,12.7 L37.8,17.0 L49.4,3.0 L61.0,15.6; dot 61.0,15.6
@@ -19,156 +25,12 @@ sparklines:
   Portfolio total · OQRY trend: 6 snapshots, latest 9.0%: line M3.0,11.9 L14.6,3.0 L26.2,6.3 L37.8,13.3 L49.4,10.3 L61.0,17.0; dot 61.0,17.0
   Portfolio total · ODAT trend: 6 snapshots, latest 11.7%: line M3.0,14.4 L14.6,10.6 L26.2,3.0 L37.8,13.2 L49.4,17.0 L61.0,9.5; dot 61.0,9.5
   Portfolio total · CDAT trend: 6 snapshots, latest 3.3%: line M3.0,16.8 L14.6,13.7 L26.2,5.4 L37.8,3.0 L49.4,17.0 L61.0,3.4; dot 61.0,3.4
-  STUDY002 · DTH30 trend: 5 snapshots, latest 0.2%: line M3.0,9.6 L17.5,3.0 L32.0,14.2 L46.5,12.7 L61.0,17.0; dot 61.0,17.0
-  STUDY002 · DTH90 trend: 5 snapshots, latest 1.6%: line M3.0,4.1 L17.5,5.5 L32.0,3.0 L46.5,17.0 L61.0,13.9; dot 61.0,13.9
-  STUDY002 · IPNS trend: 5 snapshots, latest 2.3%: line M3.0,3.0 L17.5,15.3 L32.0,17.0 L46.5,11.6 L61.0,13.4; dot 61.0,13.4
-  STUDY002 · IE trend: 5 snapshots, latest 3.1%: line M3.0,11.5 L17.5,17.0 L32.0,16.4 L46.5,3.0 L61.0,11.9; dot 61.0,11.9
-  STUDY002 · STRAT trend: 5 snapshots, latest 1.6%: line M3.0,13.9 L17.5,17.0 L32.0,3.0 L46.5,15.4 L61.0,9.6; dot 61.0,9.6
-  STUDY002 · PFSC trend: 5 snapshots, latest 2.0%: line M3.0,12.9 L17.5,3.0 L32.0,3.1 L46.5,5.3 L61.0,17.0; dot 61.0,17.0
-  STUDY002 · AE trend: 5 snapshots, latest 3.4%: line M3.0,3.0 L17.5,9.7 L32.0,12.6 L46.5,17.0 L61.0,14.3; dot 61.0,14.3
-  STUDY002 · SAE trend: 5 snapshots, latest 0.3%: line M3.0,17.0 L17.5,13.9 L32.0,3.0 L46.5,7.7 L61.0,13.3; dot 61.0,13.3
-  STUDY002 · PD trend: 5 snapshots, latest 1.6%: line M3.0,11.8 L17.5,17.0 L32.0,12.4 L46.5,10.5 L61.0,3.0; dot 61.0,3.0
-  STUDY002 · IPD trend: 5 snapshots, latest 0.1%: line M3.0,17.0 L17.5,9.5 L32.0,3.7 L46.5,6.5 L61.0,3.0; dot 61.0,3.0
-  STUDY002 · LB trend: 5 snapshots, latest 5.6%: line M3.0,3.0 L17.5,14.6 L32.0,12.5 L46.5,17.0 L61.0,3.2; dot 61.0,3.2
-  STUDY002 · QRY trend: 5 snapshots, latest 6.7%: line M3.0,12.7 L17.5,15.0 L32.0,3.0 L46.5,17.0 L61.0,7.6; dot 61.0,7.6
-  STUDY002 · OQRY trend: 5 snapshots, latest 8.8%: line M3.0,3.0 L17.5,14.6 L32.0,15.5 L46.5,17.0 L61.0,15.9; dot 61.0,15.9
-  STUDY002 · ODAT trend: 5 snapshots, latest 9.8%: line M3.0,4.0 L17.5,13.9 L32.0,3.0 L46.5,8.0 L61.0,17.0; dot 61.0,17.0
-  STUDY002 · CDAT trend: 5 snapshots, latest 3.4%: line M3.0,4.1 L17.5,5.5 L32.0,17.0 L46.5,9.8 L61.0,3.0; dot 61.0,3.0
-  STUDY008 · DTH30 trend: 6 snapshots, latest 0.4%: line M3.0,3.0 L14.6,13.0 L26.2,10.0 L37.8,17.0 L49.4,5.8 L61.0,11.9; dot 61.0,11.9
-  STUDY008 · DTH90 trend: 6 snapshots, latest 1.2%: line M3.0,8.1 L14.6,3.0 L26.2,3.2 L37.8,16.7 L49.4,3.1 L61.0,17.0; dot 61.0,17.0
-  STUDY008 · IPNS trend: 6 snapshots, latest 1.6%: line M3.0,17.0 L14.6,13.9 L26.2,11.9 L37.8,3.0 L49.4,8.6 L61.0,13.3; dot 61.0,13.3
-  STUDY008 · IE trend: 6 snapshots, latest 2.8%: line M3.0,17.0 L14.6,13.8 L26.2,8.3 L37.8,12.7 L49.4,3.0 L61.0,14.3; dot 61.0,14.3
-  STUDY008 · STRAT trend: 6 snapshots, latest 2.8%: line M3.0,13.5 L14.6,17.0 L26.2,15.1 L37.8,3.2 L49.4,3.0 L61.0,14.7; dot 61.0,14.7
-  STUDY008 · PFSC trend: 6 snapshots, latest 2.0%: line M3.0,7.6 L14.6,3.4 L26.2,9.3 L37.8,13.7 L49.4,3.0 L61.0,17.0; dot 61.0,17.0
-  STUDY008 · AE trend: 6 snapshots, latest 4.4%: line M3.0,10.7 L14.6,8.3 L26.2,16.4 L37.8,3.0 L49.4,17.0 L61.0,6.5; dot 61.0,6.5
-  STUDY008 · SAE trend: 6 snapshots, latest 0.3%: line M3.0,17.0 L14.6,3.9 L26.2,15.0 L37.8,9.3 L49.4,15.1 L61.0,3.0; dot 61.0,3.0
-  STUDY008 · PD trend: 6 snapshots, latest 0.8%: line M3.0,5.8 L14.6,10.1 L26.2,17.0 L37.8,3.0 L49.4,10.6 L61.0,12.6; dot 61.0,12.6
-  STUDY008 · IPD trend: 6 snapshots, latest 0.1%: line M3.0,3.0 L14.6,12.7 L26.2,11.8 L37.8,5.0 L49.4,17.0 L61.0,16.6; dot 61.0,16.6
-  STUDY008 · LB trend: 6 snapshots, latest 2.2%: line M3.0,14.1 L14.6,12.1 L26.2,11.9 L37.8,10.8 L49.4,3.0 L61.0,17.0; dot 61.0,17.0
-  STUDY008 · QRY trend: 6 snapshots, latest 6.8%: line M3.0,16.8 L14.6,3.0 L26.2,9.3 L37.8,7.1 L49.4,10.8 L61.0,17.0; dot 61.0,17.0
-  STUDY008 · OQRY trend: 6 snapshots, latest 13.4%: line M3.0,16.1 L14.6,4.9 L26.2,3.0 L37.8,11.1 L49.4,17.0 L61.0,3.4; dot 61.0,3.4
-  STUDY008 · ODAT trend: 6 snapshots, latest 12.2%: line M3.0,10.7 L14.6,17.0 L26.2,3.0 L37.8,11.3 L49.4,5.3 L61.0,7.4; dot 61.0,7.4
-  STUDY008 · CDAT trend: 6 snapshots, latest 3.5%: line M3.0,17.0 L14.6,6.0 L26.2,3.0 L37.8,3.7 L49.4,12.6 L61.0,6.1; dot 61.0,6.1
-  STUDY007 · DTH30 trend: 6 snapshots, latest 0.4%: line M3.0,5.4 L14.6,16.6 L26.2,3.0 L37.8,5.5 L49.4,16.2 L61.0,17.0; dot 61.0,17.0
-  STUDY007 · DTH90 trend: 6 snapshots, latest 1.9%: line M3.0,3.0 L14.6,13.3 L26.2,9.8 L37.8,17.0 L49.4,15.7 L61.0,16.1; dot 61.0,16.1
-  STUDY007 · IPNS trend: 6 snapshots, latest 2.2%: line M3.0,3.0 L14.6,7.4 L26.2,10.7 L37.8,13.2 L49.4,4.5 L61.0,17.0; dot 61.0,17.0
-  STUDY007 · IE trend: 6 snapshots, latest 4.5%: line M3.0,17.0 L14.6,3.0 L26.2,3.9 L37.8,14.8 L49.4,10.0 L61.0,10.0; dot 61.0,10.0
-  STUDY007 · STRAT trend: 6 snapshots, latest 2.4%: line M3.0,13.3 L14.6,3.0 L26.2,17.0 L37.8,11.8 L49.4,7.7 L61.0,9.6; dot 61.0,9.6
-  STUDY007 · PFSC trend: 6 snapshots, latest 1.5%: line M3.0,17.0 L14.6,16.5 L26.2,8.2 L37.8,13.5 L49.4,3.0 L61.0,13.6; dot 61.0,13.6
-  STUDY007 · AE trend: 6 snapshots, latest 2.9%: line M3.0,15.6 L14.6,14.0 L26.2,7.8 L37.8,17.0 L49.4,3.0 L61.0,9.4; dot 61.0,9.4
-  STUDY007 · SAE trend: 6 snapshots, latest 0.3%: line M3.0,12.6 L14.6,12.2 L26.2,14.0 L37.8,17.0 L49.4,3.0 L61.0,11.6; dot 61.0,11.6
-  STUDY007 · PD trend: 6 snapshots, latest 1.4%: line M3.0,14.6 L14.6,9.2 L26.2,3.6 L37.8,17.0 L49.4,10.0 L61.0,3.0; dot 61.0,3.0
-  STUDY007 · IPD trend: 6 snapshots, latest 0.1%: line M3.0,3.0 L14.6,17.0 L26.2,6.4 L37.8,9.1 L49.4,3.5 L61.0,5.1; dot 61.0,5.1
-  STUDY007 · LB trend: 6 snapshots, latest 6.0%: line M3.0,14.5 L14.6,11.1 L26.2,8.7 L37.8,13.0 L49.4,17.0 L61.0,3.0; dot 61.0,3.0
-  STUDY007 · QRY trend: 6 snapshots, latest 10.9%: line M3.0,12.4 L14.6,11.4 L26.2,11.1 L37.8,17.0 L49.4,10.1 L61.0,3.0; dot 61.0,3.0
-  STUDY007 · OQRY trend: 6 snapshots, latest 6.1%: line M3.0,3.0 L14.6,6.1 L26.2,8.1 L37.8,17.0 L49.4,7.9 L61.0,12.6; dot 61.0,12.6
-  STUDY007 · ODAT trend: 6 snapshots, latest 14.9%: line M3.0,3.0 L14.6,14.9 L26.2,7.1 L37.8,17.0 L49.4,12.2 L61.0,6.5; dot 61.0,6.5
-  STUDY007 · CDAT trend: 6 snapshots, latest 4.8%: line M3.0,16.1 L14.6,16.1 L26.2,17.0 L37.8,13.0 L49.4,12.0 L61.0,3.0; dot 61.0,3.0
-  STUDY001 · DTH30 trend: 5 snapshots, latest 0.6%: line M3.0,3.0 L17.5,15.0 L32.0,17.0 L46.5,15.5 L61.0,14.2; dot 61.0,14.2
-  STUDY001 · DTH90 trend: 5 snapshots, latest 1.6%: line M3.0,3.0 L17.5,17.0 L32.0,7.2 L46.5,10.5 L61.0,16.2; dot 61.0,16.2
-  STUDY001 · IPNS trend: 5 snapshots, latest 1.5%: line M3.0,17.0 L17.5,3.0 L32.0,7.3 L46.5,8.7 L61.0,11.5; dot 61.0,11.5
-  STUDY001 · IE trend: 5 snapshots, latest 3.7%: line M3.0,3.0 L17.5,9.1 L32.0,16.4 L46.5,11.5 L61.0,17.0; dot 61.0,17.0
-  STUDY001 · STRAT trend: 5 snapshots, latest 3.2%: line M3.0,17.0 L17.5,16.1 L32.0,5.9 L46.5,10.9 L61.0,3.0; dot 61.0,3.0
-  STUDY001 · PFSC trend: 5 snapshots, latest 3.2%: line M3.0,14.1 L17.5,13.8 L32.0,17.0 L46.5,3.0 L61.0,9.3; dot 61.0,9.3
-  STUDY001 · AE trend: 5 snapshots, latest 3.1%: line M3.0,3.0 L17.5,5.6 L32.0,5.4 L46.5,17.0 L61.0,4.0; dot 61.0,4.0
-  STUDY001 · SAE trend: 5 snapshots, latest 0.5%: line M3.0,17.0 L17.5,3.0 L32.0,14.1 L46.5,13.7 L61.0,14.1; dot 61.0,14.1
-  STUDY001 · PD trend: 5 snapshots, latest 1.5%: line M3.0,11.2 L17.5,13.2 L32.0,3.0 L46.5,17.0 L61.0,11.4; dot 61.0,11.4
-  STUDY001 · IPD trend: 5 snapshots, latest 0.2%: line M3.0,3.0 L17.5,13.0 L32.0,17.0 L46.5,13.7 L61.0,15.4; dot 61.0,15.4
-  STUDY001 · LB trend: 5 snapshots, latest 5.0%: line M3.0,3.0 L17.5,16.4 L32.0,17.0 L46.5,4.3 L61.0,4.4; dot 61.0,4.4
-  STUDY001 · QRY trend: 5 snapshots, latest 5.2%: line M3.0,9.5 L17.5,17.0 L32.0,12.0 L46.5,14.5 L61.0,3.0; dot 61.0,3.0
-  STUDY001 · OQRY trend: 5 snapshots, latest 5.5%: line M3.0,17.0 L17.5,12.1 L32.0,3.9 L46.5,3.0 L61.0,14.9; dot 61.0,14.9
-  STUDY001 · ODAT trend: 5 snapshots, latest 10.4%: line M3.0,3.0 L17.5,6.5 L32.0,17.0 L46.5,6.1 L61.0,6.6; dot 61.0,6.6
-  STUDY001 · CDAT trend: 5 snapshots, latest 2.1%: line M3.0,13.2 L17.5,14.4 L32.0,3.0 L46.5,16.4 L61.0,17.0; dot 61.0,17.0
-  STUDY011 · DTH30 trend: 6 snapshots, latest 0.7%: line M3.0,10.8 L14.6,3.0 L26.2,15.4 L37.8,17.0 L49.4,10.9 L61.0,15.9; dot 61.0,15.9
-  STUDY011 · DTH90 trend: 6 snapshots, latest 2.0%: line M3.0,3.0 L14.6,5.1 L26.2,16.8 L37.8,17.0 L49.4,12.9 L61.0,13.2; dot 61.0,13.2
-  STUDY011 · IPNS trend: 6 snapshots, latest 1.5%: line M3.0,3.0 L14.6,13.3 L26.2,9.7 L37.8,17.0 L49.4,11.5 L61.0,11.0; dot 61.0,11.0
-  STUDY011 · IE trend: 6 snapshots, latest 2.0%: line M3.0,3.0 L14.6,8.0 L26.2,16.9 L37.8,17.0 L49.4,4.6 L61.0,15.1; dot 61.0,15.1
-  STUDY011 · STRAT trend: 6 snapshots, latest 3.0%: line M3.0,17.0 L14.6,13.0 L26.2,3.0 L37.8,4.7 L49.4,12.9 L61.0,8.2; dot 61.0,8.2
-  STUDY011 · PFSC trend: 6 snapshots, latest 2.0%: line M3.0,17.0 L14.6,15.8 L26.2,8.2 L37.8,11.3 L49.4,3.0 L61.0,5.9; dot 61.0,5.9
-  STUDY011 · AE trend: 6 snapshots, latest 6.3%: line M3.0,10.0 L14.6,5.1 L26.2,3.0 L37.8,8.4 L49.4,17.0 L61.0,3.3; dot 61.0,3.3
-  STUDY011 · SAE trend: 6 snapshots, latest 0.3%: line M3.0,17.0 L14.6,3.0 L26.2,6.1 L37.8,15.1 L49.4,3.6 L61.0,14.6; dot 61.0,14.6
-  STUDY011 · PD trend: 6 snapshots, latest 0.8%: line M3.0,13.6 L14.6,3.0 L26.2,17.0 L37.8,11.5 L49.4,10.8 L61.0,14.2; dot 61.0,14.2
-  STUDY011 · IPD trend: 6 snapshots, latest 0.2%: line M3.0,17.0 L14.6,16.6 L26.2,10.0 L37.8,16.9 L49.4,3.0 L61.0,14.8; dot 61.0,14.8
-  STUDY011 · LB trend: 6 snapshots, latest 3.1%: line M3.0,3.0 L14.6,14.9 L26.2,14.7 L37.8,16.6 L49.4,17.0 L61.0,11.0; dot 61.0,11.0
-  STUDY011 · QRY trend: 6 snapshots, latest 4.3%: line M3.0,16.6 L14.6,3.0 L26.2,10.8 L37.8,9.0 L49.4,6.6 L61.0,17.0; dot 61.0,17.0
-  STUDY011 · OQRY trend: 6 snapshots, latest 12.5%: line M3.0,17.0 L14.6,10.0 L26.2,9.4 L37.8,6.6 L49.4,11.2 L61.0,3.0; dot 61.0,3.0
-  STUDY011 · ODAT trend: 6 snapshots, latest 5.9%: line M3.0,17.0 L14.6,12.1 L26.2,3.0 L37.8,12.1 L49.4,10.9 L61.0,15.9; dot 61.0,15.9
-  STUDY011 · CDAT trend: 6 snapshots, latest 4.1%: line M3.0,17.0 L14.6,14.6 L26.2,13.8 L37.8,3.0 L49.4,13.8 L61.0,14.7; dot 61.0,14.7
-  STUDY003 · DTH30 trend: 6 snapshots, latest 0.7%: line M3.0,10.8 L14.6,14.3 L26.2,17.0 L37.8,3.0 L49.4,11.0 L61.0,13.2; dot 61.0,13.2
-  STUDY003 · DTH90 trend: 6 snapshots, latest 1.7%: line M3.0,12.1 L14.6,13.6 L26.2,7.6 L37.8,3.0 L49.4,5.0 L61.0,17.0; dot 61.0,17.0
-  STUDY003 · IPNS trend: 6 snapshots, latest 1.5%: line M3.0,8.7 L14.6,3.0 L26.2,13.9 L37.8,17.0 L49.4,9.8 L61.0,17.0; dot 61.0,17.0
-  STUDY003 · IE trend: 6 snapshots, latest 2.2%: line M3.0,6.4 L14.6,17.0 L26.2,3.0 L37.8,14.9 L49.4,6.8 L61.0,8.1; dot 61.0,8.1
-  STUDY003 · STRAT trend: 6 snapshots, latest 1.9%: line M3.0,9.6 L14.6,16.1 L26.2,3.0 L37.8,10.8 L49.4,17.0 L61.0,13.9; dot 61.0,13.9
-  STUDY003 · PFSC trend: 6 snapshots, latest 3.5%: line M3.0,3.0 L14.6,17.0 L26.2,15.4 L37.8,12.3 L49.4,9.8 L61.0,15.1; dot 61.0,15.1
-  STUDY003 · AE trend: 6 snapshots, latest 4.4%: line M3.0,17.0 L14.6,3.0 L26.2,11.9 L37.8,13.7 L49.4,7.0 L61.0,9.7; dot 61.0,9.7
-  STUDY003 · SAE trend: 6 snapshots, latest 0.2%: line M3.0,10.5 L14.6,11.4 L26.2,14.8 L37.8,3.0 L49.4,11.9 L61.0,17.0; dot 61.0,17.0
-  STUDY003 · PD trend: 6 snapshots, latest 1.6%: line M3.0,12.7 L14.6,13.5 L26.2,3.0 L37.8,13.2 L49.4,13.5 L61.0,17.0; dot 61.0,17.0
-  STUDY003 · IPD trend: 6 snapshots, latest 0.2%: line M3.0,16.1 L14.6,6.6 L26.2,3.0 L37.8,17.0 L49.4,11.4 L61.0,8.8; dot 61.0,8.8
-  STUDY003 · LB trend: 6 snapshots, latest 6.4%: line M3.0,11.0 L14.6,6.2 L26.2,4.9 L37.8,17.0 L49.4,13.6 L61.0,3.0; dot 61.0,3.0
-  STUDY003 · QRY trend: 6 snapshots, latest 6.2%: line M3.0,17.0 L14.6,16.3 L26.2,13.4 L37.8,14.7 L49.4,3.0 L61.0,9.5; dot 61.0,9.5
-  STUDY003 · OQRY trend: 6 snapshots, latest 13.0%: line M3.0,17.0 L14.6,3.0 L26.2,10.6 L37.8,13.9 L49.4,9.4 L61.0,10.6; dot 61.0,10.6
-  STUDY003 · ODAT trend: 6 snapshots, latest 15.4%: line M3.0,8.3 L14.6,7.5 L26.2,11.3 L37.8,3.0 L49.4,17.0 L61.0,6.5; dot 61.0,6.5
-  STUDY003 · CDAT trend: 6 snapshots, latest 2.8%: line M3.0,15.9 L14.6,7.1 L26.2,17.0 L37.8,3.0 L49.4,11.7 L61.0,5.3; dot 61.0,5.3
-  STUDY005 · DTH30 trend: 6 snapshots, latest 0.8%: line M3.0,3.0 L14.6,13.7 L26.2,17.0 L37.8,13.4 L49.4,16.1 L61.0,9.9; dot 61.0,9.9
-  STUDY005 · DTH90 trend: 6 snapshots, latest 1.3%: line M3.0,3.0 L14.6,15.3 L26.2,11.7 L37.8,17.0 L49.4,13.9 L61.0,15.4; dot 61.0,15.4
-  STUDY005 · IPNS trend: 6 snapshots, latest 2.0%: line M3.0,3.0 L14.6,14.4 L26.2,17.0 L37.8,13.7 L49.4,11.1 L61.0,10.4; dot 61.0,10.4
-  STUDY005 · IE trend: 6 snapshots, latest 2.2%: line M3.0,14.2 L14.6,17.0 L26.2,13.4 L37.8,3.0 L49.4,12.8 L61.0,16.9; dot 61.0,16.9
-  STUDY005 · STRAT trend: 6 snapshots, latest 2.0%: line M3.0,13.7 L14.6,3.0 L26.2,12.6 L37.8,17.0 L49.4,14.8 L61.0,7.9; dot 61.0,7.9
-  STUDY005 · PFSC trend: 6 snapshots, latest 3.0%: line M3.0,3.0 L14.6,17.0 L26.2,7.9 L37.8,10.3 L49.4,12.2 L61.0,9.9; dot 61.0,9.9
-  STUDY005 · AE trend: 6 snapshots, latest 5.0%: line M3.0,12.5 L14.6,14.9 L26.2,3.0 L37.8,14.5 L49.4,17.0 L61.0,14.3; dot 61.0,14.3
-  STUDY005 · SAE trend: 6 snapshots, latest 0.4%: line M3.0,7.6 L14.6,14.2 L26.2,3.0 L37.8,12.0 L49.4,9.6 L61.0,17.0; dot 61.0,17.0
-  STUDY005 · PD trend: 6 snapshots, latest 1.3%: line M3.0,9.7 L14.6,8.5 L26.2,8.1 L37.8,17.0 L49.4,12.7 L61.0,3.0; dot 61.0,3.0
-  STUDY005 · IPD trend: 6 snapshots, latest 0.1%: line M3.0,13.5 L14.6,13.8 L26.2,8.4 L37.8,3.0 L49.4,17.0 L61.0,11.9; dot 61.0,11.9
-  STUDY005 · LB trend: 6 snapshots, latest 2.9%: line M3.0,16.3 L14.6,9.8 L26.2,3.0 L37.8,15.0 L49.4,17.0 L61.0,11.2; dot 61.0,11.2
-  STUDY005 · QRY trend: 6 snapshots, latest 8.6%: line M3.0,15.6 L14.6,17.0 L26.2,11.1 L37.8,6.8 L49.4,12.9 L61.0,3.0; dot 61.0,3.0
-  STUDY005 · OQRY trend: 6 snapshots, latest 10.3%: line M3.0,6.0 L14.6,10.2 L26.2,17.0 L37.8,9.0 L49.4,3.0 L61.0,14.2; dot 61.0,14.2
-  STUDY005 · ODAT trend: 6 snapshots, latest 15.0%: line M3.0,16.7 L14.6,3.0 L26.2,16.2 L37.8,12.5 L49.4,8.0 L61.0,17.0; dot 61.0,17.0
-  STUDY005 · CDAT trend: 6 snapshots, latest 3.5%: line M3.0,12.4 L14.6,13.9 L26.2,3.0 L37.8,17.0 L49.4,12.8 L61.0,11.5; dot 61.0,11.5
-  STUDY009 · DTH30 trend: 6 snapshots, latest 0.8%: line M3.0,17.0 L14.6,11.7 L26.2,3.0 L37.8,4.6 L49.4,7.7 L61.0,8.6; dot 61.0,8.6
-  STUDY009 · DTH90 trend: 6 snapshots, latest 2.5%: line M3.0,17.0 L14.6,12.8 L26.2,8.0 L37.8,3.0 L49.4,6.8 L61.0,9.9; dot 61.0,9.9
-  STUDY009 · IPNS trend: 6 snapshots, latest 1.7%: line M3.0,9.3 L14.6,3.0 L26.2,3.4 L37.8,17.0 L49.4,8.0 L61.0,7.8; dot 61.0,7.8
-  STUDY009 · IE trend: 6 snapshots, latest 4.2%: line M3.0,17.0 L14.6,10.3 L26.2,3.0 L37.8,9.7 L49.4,11.0 L61.0,9.2; dot 61.0,9.2
-  STUDY009 · STRAT trend: 6 snapshots, latest 2.3%: line M3.0,3.0 L14.6,10.3 L26.2,7.2 L37.8,17.0 L49.4,13.8 L61.0,11.1; dot 61.0,11.1
-  STUDY009 · PFSC trend: 6 snapshots, latest 3.0%: line M3.0,17.0 L14.6,11.4 L26.2,15.8 L37.8,3.0 L49.4,4.6 L61.0,10.7; dot 61.0,10.7
-  STUDY009 · AE trend: 6 snapshots, latest 4.1%: line M3.0,15.2 L14.6,17.0 L26.2,15.0 L37.8,3.0 L49.4,9.2 L61.0,6.0; dot 61.0,6.0
-  STUDY009 · SAE trend: 6 snapshots, latest 0.4%: line M3.0,11.6 L14.6,17.0 L26.2,12.2 L37.8,16.6 L49.4,13.5 L61.0,3.0; dot 61.0,3.0
-  STUDY009 · PD trend: 6 snapshots, latest 0.9%: line M3.0,12.3 L14.6,13.3 L26.2,17.0 L37.8,11.5 L49.4,3.0 L61.0,14.9; dot 61.0,14.9
-  STUDY009 · IPD trend: 6 snapshots, latest 0.2%: line M3.0,10.2 L14.6,7.0 L26.2,7.4 L37.8,17.0 L49.4,3.0 L61.0,15.6; dot 61.0,15.6
-  STUDY009 · LB trend: 6 snapshots, latest 3.9%: line M3.0,6.1 L14.6,16.8 L26.2,15.4 L37.8,17.0 L49.4,14.8 L61.0,3.0; dot 61.0,3.0
-  STUDY009 · QRY trend: 6 snapshots, latest 4.1%: line M3.0,3.9 L14.6,17.0 L26.2,3.0 L37.8,8.4 L49.4,7.7 L61.0,12.5; dot 61.0,12.5
-  STUDY009 · OQRY trend: 6 snapshots, latest 9.0%: line M3.0,12.1 L14.6,13.7 L26.2,3.0 L37.8,6.3 L49.4,13.3 L61.0,17.0; dot 61.0,17.0
-  STUDY009 · ODAT trend: 6 snapshots, latest 9.3%: line M3.0,17.0 L14.6,6.5 L26.2,4.5 L37.8,8.9 L49.4,14.2 L61.0,3.0; dot 61.0,3.0
-  STUDY009 · CDAT trend: 6 snapshots, latest 4.1%: line M3.0,13.2 L14.6,3.0 L26.2,9.9 L37.8,9.6 L49.4,17.0 L61.0,11.6; dot 61.0,11.6
-  STUDY012 · DTH30 trend: 6 snapshots, latest 0.9%: line M3.0,17.0 L14.6,15.0 L26.2,3.0 L37.8,10.0 L49.4,9.3 L61.0,8.8; dot 61.0,8.8
-  STUDY012 · DTH90 trend: 6 snapshots, latest 1.9%: line M3.0,16.0 L14.6,15.1 L26.2,3.0 L37.8,17.0 L49.4,11.7 L61.0,15.6; dot 61.0,15.6
-  STUDY012 · IPNS trend: 6 snapshots, latest 1.4%: line M3.0,7.0 L14.6,11.1 L26.2,10.3 L37.8,3.0 L49.4,6.2 L61.0,17.0; dot 61.0,17.0
-  STUDY012 · IE trend: 6 snapshots, latest 5.2%: line M3.0,17.0 L14.6,11.0 L26.2,6.5 L37.8,3.0 L49.4,10.5 L61.0,4.5; dot 61.0,4.5
-  STUDY012 · STRAT trend: 6 snapshots, latest 1.8%: line M3.0,17.0 L14.6,3.0 L26.2,3.5 L37.8,10.8 L49.4,10.4 L61.0,13.5; dot 61.0,13.5
-  STUDY012 · PFSC trend: 6 snapshots, latest 2.1%: line M3.0,10.2 L14.6,14.9 L26.2,14.7 L37.8,3.0 L49.4,11.4 L61.0,17.0; dot 61.0,17.0
-  STUDY012 · AE trend: 6 snapshots, latest 3.4%: line M3.0,14.1 L14.6,12.5 L26.2,17.0 L37.8,3.0 L49.4,13.7 L61.0,16.0; dot 61.0,16.0
-  STUDY012 · SAE trend: 6 snapshots, latest 0.3%: line M3.0,7.3 L14.6,15.7 L26.2,11.2 L37.8,17.0 L49.4,3.0 L61.0,12.2; dot 61.0,12.2
-  STUDY012 · PD trend: 6 snapshots, latest 1.6%: line M3.0,8.2 L14.6,5.8 L26.2,16.4 L37.8,3.0 L49.4,17.0 L61.0,7.1; dot 61.0,7.1
-  STUDY012 · IPD trend: 6 snapshots, latest 0.3%: line M3.0,11.3 L14.6,17.0 L26.2,12.6 L37.8,11.8 L49.4,14.3 L61.0,3.0; dot 61.0,3.0
-  STUDY012 · LB trend: 6 snapshots, latest 4.3%: line M3.0,3.0 L14.6,7.4 L26.2,14.9 L37.8,14.1 L49.4,16.5 L61.0,17.0; dot 61.0,17.0
-  STUDY012 · QRY trend: 6 snapshots, latest 6.8%: line M3.0,3.0 L14.6,16.2 L26.2,17.0 L37.8,12.2 L49.4,7.2 L61.0,4.6; dot 61.0,4.6
-  STUDY012 · OQRY trend: 6 snapshots, latest 9.5%: line M3.0,9.0 L14.6,12.4 L26.2,3.0 L37.8,17.0 L49.4,16.2 L61.0,11.1; dot 61.0,11.1
-  STUDY012 · ODAT trend: 6 snapshots, latest 11.8%: line M3.0,15.3 L14.6,17.0 L26.2,3.0 L37.8,11.0 L49.4,10.8 L61.0,5.1; dot 61.0,5.1
-  STUDY012 · CDAT trend: 6 snapshots, latest 2.8%: line M3.0,17.0 L14.6,14.0 L26.2,10.9 L37.8,3.0 L49.4,13.3 L61.0,4.3; dot 61.0,4.3
-  STUDY004 · DTH30 trend: 6 snapshots, latest 1.0%: line M3.0,7.6 L14.6,3.0 L26.2,17.0 L37.8,3.9 L49.4,15.3 L61.0,4.8; dot 61.0,4.8
-  STUDY004 · DTH90 trend: 6 snapshots, latest 3.6%: line M3.0,17.0 L14.6,13.3 L26.2,14.7 L37.8,12.0 L49.4,12.2 L61.0,3.0; dot 61.0,3.0
-  STUDY004 · IPNS trend: 6 snapshots, latest 2.3%: line M3.0,17.0 L14.6,16.0 L26.2,4.5 L37.8,4.8 L49.4,8.1 L61.0,3.0; dot 61.0,3.0
-  STUDY004 · IE trend: 6 snapshots, latest 1.9%: line M3.0,3.0 L14.6,17.0 L26.2,11.6 L37.8,15.8 L49.4,10.4 L61.0,11.6; dot 61.0,11.6
-  STUDY004 · STRAT trend: 6 snapshots, latest 2.3%: line M3.0,17.0 L14.6,16.8 L26.2,3.0 L37.8,16.0 L49.4,7.4 L61.0,9.8; dot 61.0,9.8
-  STUDY004 · PFSC trend: 6 snapshots, latest 2.3%: line M3.0,15.1 L14.6,7.4 L26.2,7.3 L37.8,7.2 L49.4,17.0 L61.0,3.0; dot 61.0,3.0
-  STUDY004 · AE trend: 6 snapshots, latest 5.5%: line M3.0,17.0 L14.6,4.9 L26.2,5.8 L37.8,9.4 L49.4,3.0 L61.0,7.9; dot 61.0,7.9
-  STUDY004 · SAE trend: 6 snapshots, latest 0.5%: line M3.0,17.0 L14.6,13.0 L26.2,3.3 L37.8,12.3 L49.4,13.9 L61.0,3.0; dot 61.0,3.0
-  STUDY004 · PD trend: 6 snapshots, latest 1.4%: line M3.0,15.4 L14.6,3.0 L26.2,7.1 L37.8,15.9 L49.4,11.5 L61.0,17.0; dot 61.0,17.0
-  STUDY004 · IPD trend: 6 snapshots, latest 0.3%: line M3.0,13.3 L14.6,5.7 L26.2,17.0 L37.8,3.0 L49.4,11.5 L61.0,3.1; dot 61.0,3.1
-  STUDY004 · LB trend: 6 snapshots, latest 5.4%: line M3.0,17.0 L14.6,8.8 L26.2,15.7 L37.8,3.0 L49.4,6.6 L61.0,8.4; dot 61.0,8.4
-  STUDY004 · QRY trend: 6 snapshots, latest 11.1%: line M3.0,13.9 L14.6,13.2 L26.2,9.2 L37.8,17.0 L49.4,4.5 L61.0,3.0; dot 61.0,3.0
-  STUDY004 · OQRY trend: 6 snapshots, latest 6.2%: line M3.0,12.2 L14.6,3.0 L26.2,12.7 L37.8,17.0 L49.4,7.7 L61.0,9.6; dot 61.0,9.6
-  STUDY004 · ODAT trend: 6 snapshots, latest 11.7%: line M3.0,4.4 L14.6,17.0 L26.2,7.1 L37.8,3.0 L49.4,12.0 L61.0,12.9; dot 61.0,12.9
-  STUDY004 · CDAT trend: 6 snapshots, latest 1.8%: line M3.0,8.2 L14.6,13.5 L26.2,17.0 L37.8,13.1 L49.4,3.0 L61.0,13.3; dot 61.0,13.3
+  STUDY006 · SF trend: 6 snapshots, latest 14.1%: line M3.0,17.0 L14.6,11.9 L26.2,4.9 L37.8,15.4 L49.4,3.0 L61.0,9.4; dot 61.0,9.4
+  STUDY006 · SDSC trend: 6 snapshots, latest 6.9%: line M3.0,6.1 L14.6,8.1 L26.2,14.4 L37.8,3.0 L49.4,13.4 L61.0,17.0; dot 61.0,17.0
+  STUDY006 · TDSC trend: 6 snapshots, latest 17.3%: line M3.0,8.6 L14.6,17.0 L26.2,15.2 L37.8,11.5 L49.4,3.0 L61.0,6.3; dot 61.0,6.3
+  STUDY006 · PTDSC trend: 6 snapshots, latest 4.9%: line M3.0,13.9 L14.6,8.3 L26.2,17.0 L37.8,14.9 L49.4,3.0 L61.0,15.5; dot 61.0,15.5
+  STUDY006 · WC trend: 6 snapshots, latest 2.4%: line M3.0,4.3 L14.6,17.0 L26.2,5.5 L37.8,3.0 L49.4,9.2 L61.0,11.8; dot 61.0,11.8
+  STUDY006 · LTFU trend: 6 snapshots, latest 2.0%: line M3.0,3.0 L14.6,9.6 L26.2,7.3 L37.8,17.0 L49.4,8.5 L61.0,10.9; dot 61.0,10.9
   STUDY006 · DTH30 trend: 6 snapshots, latest 1.1%: line M3.0,12.5 L14.6,3.0 L26.2,17.0 L37.8,10.9 L49.4,12.0 L61.0,8.9; dot 61.0,8.9
   STUDY006 · DTH90 trend: 6 snapshots, latest 2.6%: line M3.0,11.2 L14.6,3.0 L26.2,11.9 L37.8,17.0 L49.4,9.0 L61.0,4.1; dot 61.0,4.1
   STUDY006 · IPNS trend: 6 snapshots, latest 1.6%: line M3.0,10.4 L14.6,7.7 L26.2,17.0 L37.8,6.8 L49.4,3.0 L61.0,8.1; dot 61.0,8.1
@@ -184,6 +46,117 @@ sparklines:
   STUDY006 · OQRY trend: 6 snapshots, latest 7.3%: line M3.0,16.6 L14.6,15.9 L26.2,12.7 L37.8,15.2 L49.4,3.0 L61.0,17.0; dot 61.0,17.0
   STUDY006 · ODAT trend: 6 snapshots, latest 10.8%: line M3.0,13.1 L14.6,3.0 L26.2,5.7 L37.8,10.4 L49.4,17.0 L61.0,8.8; dot 61.0,8.8
   STUDY006 · CDAT trend: 6 snapshots, latest 4.4%: line M3.0,17.0 L14.6,16.9 L26.2,11.9 L37.8,3.0 L49.4,13.1 L61.0,13.4; dot 61.0,13.4
+  STUDY009 · SF trend: 6 snapshots, latest 15.7%: line M3.0,17.0 L14.6,8.2 L26.2,16.9 L37.8,3.0 L49.4,6.6 L61.0,10.2; dot 61.0,10.2
+  STUDY009 · SDSC trend: 6 snapshots, latest 6.0%: line M3.0,17.0 L14.6,9.8 L26.2,3.0 L37.8,16.6 L49.4,14.4 L61.0,12.0; dot 61.0,12.0
+  STUDY009 · TDSC trend: 6 snapshots, latest 7.2%: line M3.0,3.1 L14.6,10.6 L26.2,17.0 L37.8,12.7 L49.4,3.0 L61.0,11.7; dot 61.0,11.7
+  STUDY009 · PTDSC trend: 6 snapshots, latest 13.1%: line M3.0,3.0 L14.6,11.5 L26.2,17.0 L37.8,11.1 L49.4,12.7 L61.0,9.4; dot 61.0,9.4
+  STUDY009 · WC trend: 6 snapshots, latest 4.4%: line M3.0,9.2 L14.6,17.0 L26.2,6.6 L37.8,10.7 L49.4,3.0 L61.0,3.9; dot 61.0,3.9
+  STUDY009 · LTFU trend: 6 snapshots, latest 1.7%: line M3.0,17.0 L14.6,7.6 L26.2,9.8 L37.8,6.2 L49.4,10.5 L61.0,3.0; dot 61.0,3.0
+  STUDY009 · DTH30 trend: 6 snapshots, latest 0.8%: line M3.0,17.0 L14.6,11.7 L26.2,3.0 L37.8,4.6 L49.4,7.7 L61.0,8.6; dot 61.0,8.6
+  STUDY009 · DTH90 trend: 6 snapshots, latest 2.5%: line M3.0,17.0 L14.6,12.8 L26.2,8.0 L37.8,3.0 L49.4,6.8 L61.0,9.9; dot 61.0,9.9
+  STUDY009 · IPNS trend: 6 snapshots, latest 1.7%: line M3.0,9.3 L14.6,3.0 L26.2,3.4 L37.8,17.0 L49.4,8.0 L61.0,7.8; dot 61.0,7.8
+  STUDY009 · IE trend: 6 snapshots, latest 4.2%: line M3.0,17.0 L14.6,10.3 L26.2,3.0 L37.8,9.7 L49.4,11.0 L61.0,9.2; dot 61.0,9.2
+  STUDY009 · STRAT trend: 6 snapshots, latest 2.3%: line M3.0,3.0 L14.6,10.3 L26.2,7.2 L37.8,17.0 L49.4,13.8 L61.0,11.1; dot 61.0,11.1
+  STUDY009 · PFSC trend: 6 snapshots, latest 3.0%: line M3.0,17.0 L14.6,11.4 L26.2,15.8 L37.8,3.0 L49.4,4.6 L61.0,10.7; dot 61.0,10.7
+  STUDY009 · AE trend: 6 snapshots, latest 4.1%: line M3.0,15.2 L14.6,17.0 L26.2,15.0 L37.8,3.0 L49.4,9.2 L61.0,6.0; dot 61.0,6.0
+  STUDY009 · SAE trend: 6 snapshots, latest 0.4%: line M3.0,11.6 L14.6,17.0 L26.2,12.2 L37.8,16.6 L49.4,13.5 L61.0,3.0; dot 61.0,3.0
+  STUDY009 · PD trend: 6 snapshots, latest 0.9%: line M3.0,12.3 L14.6,13.3 L26.2,17.0 L37.8,11.5 L49.4,3.0 L61.0,14.9; dot 61.0,14.9
+  STUDY009 · IPD trend: 6 snapshots, latest 0.2%: line M3.0,10.2 L14.6,7.0 L26.2,7.4 L37.8,17.0 L49.4,3.0 L61.0,15.6; dot 61.0,15.6
+  STUDY009 · LB trend: 6 snapshots, latest 3.9%: line M3.0,6.1 L14.6,16.8 L26.2,15.4 L37.8,17.0 L49.4,14.8 L61.0,3.0; dot 61.0,3.0
+  STUDY009 · QRY trend: 6 snapshots, latest 4.1%: line M3.0,3.9 L14.6,17.0 L26.2,3.0 L37.8,8.4 L49.4,7.7 L61.0,12.5; dot 61.0,12.5
+  STUDY009 · OQRY trend: 6 snapshots, latest 9.0%: line M3.0,12.1 L14.6,13.7 L26.2,3.0 L37.8,6.3 L49.4,13.3 L61.0,17.0; dot 61.0,17.0
+  STUDY009 · ODAT trend: 6 snapshots, latest 9.3%: line M3.0,17.0 L14.6,6.5 L26.2,4.5 L37.8,8.9 L49.4,14.2 L61.0,3.0; dot 61.0,3.0
+  STUDY009 · CDAT trend: 6 snapshots, latest 4.1%: line M3.0,13.2 L14.6,3.0 L26.2,9.9 L37.8,9.6 L49.4,17.0 L61.0,11.6; dot 61.0,11.6
+  STUDY002 · SF trend: 5 snapshots, latest 16.1%: line M3.0,4.1 L17.5,15.2 L32.0,17.0 L46.5,3.0 L61.0,4.1; dot 61.0,4.1
+  STUDY002 · SDSC trend: 5 snapshots, latest 6.8%: line M3.0,17.0 L17.5,7.5 L32.0,3.0 L46.5,10.9 L61.0,8.0; dot 61.0,8.0
+  STUDY002 · TDSC trend: 5 snapshots, latest 11.7%: line M3.0,11.7 L17.5,3.0 L32.0,17.0 L46.5,7.5 L61.0,11.8; dot 61.0,11.8
+  STUDY002 · PTDSC trend: 5 snapshots, latest 9.8%: line M3.0,17.0 L17.5,3.0 L32.0,16.0 L46.5,12.3 L61.0,8.4; dot 61.0,8.4
+  STUDY002 · WC trend: 5 snapshots, latest 2.5%: line M3.0,5.4 L17.5,11.1 L32.0,9.5 L46.5,3.0 L61.0,17.0; dot 61.0,17.0
+  STUDY002 · LTFU trend: 5 snapshots, latest 1.4%: line M3.0,3.0 L17.5,12.0 L32.0,10.9 L46.5,17.0 L61.0,6.3; dot 61.0,6.3
+  STUDY002 · DTH30 trend: 5 snapshots, latest 0.2%: line M3.0,9.6 L17.5,3.0 L32.0,14.2 L46.5,12.7 L61.0,17.0; dot 61.0,17.0
+  STUDY002 · DTH90 trend: 5 snapshots, latest 1.6%: line M3.0,4.1 L17.5,5.5 L32.0,3.0 L46.5,17.0 L61.0,13.9; dot 61.0,13.9
+  STUDY002 · IPNS trend: 5 snapshots, latest 2.3%: line M3.0,3.0 L17.5,15.3 L32.0,17.0 L46.5,11.6 L61.0,13.4; dot 61.0,13.4
+  STUDY002 · IE trend: 5 snapshots, latest 3.1%: line M3.0,11.5 L17.5,17.0 L32.0,16.4 L46.5,3.0 L61.0,11.9; dot 61.0,11.9
+  STUDY002 · STRAT trend: 5 snapshots, latest 1.6%: line M3.0,13.9 L17.5,17.0 L32.0,3.0 L46.5,15.4 L61.0,9.6; dot 61.0,9.6
+  STUDY002 · PFSC trend: 5 snapshots, latest 2.0%: line M3.0,12.9 L17.5,3.0 L32.0,3.1 L46.5,5.3 L61.0,17.0; dot 61.0,17.0
+  STUDY002 · AE trend: 5 snapshots, latest 3.4%: line M3.0,3.0 L17.5,9.7 L32.0,12.6 L46.5,17.0 L61.0,14.3; dot 61.0,14.3
+  STUDY002 · SAE trend: 5 snapshots, latest 0.3%: line M3.0,17.0 L17.5,13.9 L32.0,3.0 L46.5,7.7 L61.0,13.3; dot 61.0,13.3
+  STUDY002 · PD trend: 5 snapshots, latest 1.6%: line M3.0,11.8 L17.5,17.0 L32.0,12.4 L46.5,10.5 L61.0,3.0; dot 61.0,3.0
+  STUDY002 · IPD trend: 5 snapshots, latest 0.1%: line M3.0,17.0 L17.5,9.5 L32.0,3.7 L46.5,6.5 L61.0,3.0; dot 61.0,3.0
+  STUDY002 · LB trend: 5 snapshots, latest 5.6%: line M3.0,3.0 L17.5,14.6 L32.0,12.5 L46.5,17.0 L61.0,3.2; dot 61.0,3.2
+  STUDY002 · QRY trend: 5 snapshots, latest 6.7%: line M3.0,12.7 L17.5,15.0 L32.0,3.0 L46.5,17.0 L61.0,7.6; dot 61.0,7.6
+  STUDY002 · OQRY trend: 5 snapshots, latest 8.8%: line M3.0,3.0 L17.5,14.6 L32.0,15.5 L46.5,17.0 L61.0,15.9; dot 61.0,15.9
+  STUDY002 · ODAT trend: 5 snapshots, latest 9.8%: line M3.0,4.0 L17.5,13.9 L32.0,3.0 L46.5,8.0 L61.0,17.0; dot 61.0,17.0
+  STUDY002 · CDAT trend: 5 snapshots, latest 3.4%: line M3.0,4.1 L17.5,5.5 L32.0,17.0 L46.5,9.8 L61.0,3.0; dot 61.0,3.0
+  STUDY008 · SF trend: 6 snapshots, latest 18.3%: line M3.0,13.3 L14.6,17.0 L26.2,4.0 L37.8,3.0 L49.4,16.5 L61.0,11.2; dot 61.0,11.2
+  STUDY008 · SDSC trend: 6 snapshots, latest 5.2%: line M3.0,3.8 L14.6,10.0 L26.2,3.4 L37.8,17.0 L49.4,3.0 L61.0,3.5; dot 61.0,3.5
+  STUDY008 · TDSC trend: 6 snapshots, latest 9.2%: line M3.0,12.5 L14.6,10.5 L26.2,3.0 L37.8,17.0 L49.4,16.0 L61.0,14.6; dot 61.0,14.6
+  STUDY008 · PTDSC trend: 6 snapshots, latest 8.8%: line M3.0,3.0 L14.6,10.4 L26.2,15.2 L37.8,13.5 L49.4,17.0 L61.0,15.0; dot 61.0,15.0
+  STUDY008 · WC trend: 6 snapshots, latest 2.4%: line M3.0,5.8 L14.6,17.0 L26.2,3.0 L37.8,8.0 L49.4,4.7 L61.0,8.7; dot 61.0,8.7
+  STUDY008 · LTFU trend: 6 snapshots, latest 1.4%: line M3.0,6.8 L14.6,17.0 L26.2,3.3 L37.8,5.3 L49.4,6.9 L61.0,3.0; dot 61.0,3.0
+  STUDY008 · DTH30 trend: 6 snapshots, latest 0.4%: line M3.0,3.0 L14.6,13.0 L26.2,10.0 L37.8,17.0 L49.4,5.8 L61.0,11.9; dot 61.0,11.9
+  STUDY008 · DTH90 trend: 6 snapshots, latest 1.2%: line M3.0,8.1 L14.6,3.0 L26.2,3.2 L37.8,16.7 L49.4,3.1 L61.0,17.0; dot 61.0,17.0
+  STUDY008 · IPNS trend: 6 snapshots, latest 1.6%: line M3.0,17.0 L14.6,13.9 L26.2,11.9 L37.8,3.0 L49.4,8.6 L61.0,13.3; dot 61.0,13.3
+  STUDY008 · IE trend: 6 snapshots, latest 2.8%: line M3.0,17.0 L14.6,13.8 L26.2,8.3 L37.8,12.7 L49.4,3.0 L61.0,14.3; dot 61.0,14.3
+  STUDY008 · STRAT trend: 6 snapshots, latest 2.8%: line M3.0,13.5 L14.6,17.0 L26.2,15.1 L37.8,3.2 L49.4,3.0 L61.0,14.7; dot 61.0,14.7
+  STUDY008 · PFSC trend: 6 snapshots, latest 2.0%: line M3.0,7.6 L14.6,3.4 L26.2,9.3 L37.8,13.7 L49.4,3.0 L61.0,17.0; dot 61.0,17.0
+  STUDY008 · AE trend: 6 snapshots, latest 4.4%: line M3.0,10.7 L14.6,8.3 L26.2,16.4 L37.8,3.0 L49.4,17.0 L61.0,6.5; dot 61.0,6.5
+  STUDY008 · SAE trend: 6 snapshots, latest 0.3%: line M3.0,17.0 L14.6,3.9 L26.2,15.0 L37.8,9.3 L49.4,15.1 L61.0,3.0; dot 61.0,3.0
+  STUDY008 · PD trend: 6 snapshots, latest 0.8%: line M3.0,5.8 L14.6,10.1 L26.2,17.0 L37.8,3.0 L49.4,10.6 L61.0,12.6; dot 61.0,12.6
+  STUDY008 · IPD trend: 6 snapshots, latest 0.1%: line M3.0,3.0 L14.6,12.7 L26.2,11.8 L37.8,5.0 L49.4,17.0 L61.0,16.6; dot 61.0,16.6
+  STUDY008 · LB trend: 6 snapshots, latest 2.2%: line M3.0,14.1 L14.6,12.1 L26.2,11.9 L37.8,10.8 L49.4,3.0 L61.0,17.0; dot 61.0,17.0
+  STUDY008 · QRY trend: 6 snapshots, latest 6.8%: line M3.0,16.8 L14.6,3.0 L26.2,9.3 L37.8,7.1 L49.4,10.8 L61.0,17.0; dot 61.0,17.0
+  STUDY008 · OQRY trend: 6 snapshots, latest 13.4%: line M3.0,16.1 L14.6,4.9 L26.2,3.0 L37.8,11.1 L49.4,17.0 L61.0,3.4; dot 61.0,3.4
+  STUDY008 · ODAT trend: 6 snapshots, latest 12.2%: line M3.0,10.7 L14.6,17.0 L26.2,3.0 L37.8,11.3 L49.4,5.3 L61.0,7.4; dot 61.0,7.4
+  STUDY008 · CDAT trend: 6 snapshots, latest 3.5%: line M3.0,17.0 L14.6,6.0 L26.2,3.0 L37.8,3.7 L49.4,12.6 L61.0,6.1; dot 61.0,6.1
+  STUDY011 · SF trend: 6 snapshots, latest 23.3%: line M3.0,14.3 L14.6,3.0 L26.2,6.9 L37.8,14.3 L49.4,3.9 L61.0,17.0; dot 61.0,17.0
+  STUDY011 · SDSC trend: 6 snapshots, latest 7.5%: line M3.0,17.0 L14.6,11.3 L26.2,9.4 L37.8,8.1 L49.4,3.0 L61.0,5.0; dot 61.0,5.0
+  STUDY011 · TDSC trend: 6 snapshots, latest 11.5%: line M3.0,12.3 L14.6,17.0 L26.2,3.0 L37.8,11.6 L49.4,14.3 L61.0,12.6; dot 61.0,12.6
+  STUDY011 · PTDSC trend: 6 snapshots, latest 8.3%: line M3.0,3.0 L14.6,17.0 L26.2,9.9 L37.8,16.9 L49.4,15.1 L61.0,15.5; dot 61.0,15.5
+  STUDY011 · WC trend: 6 snapshots, latest 2.2%: line M3.0,3.0 L14.6,15.2 L26.2,9.4 L37.8,12.6 L49.4,16.7 L61.0,17.0; dot 61.0,17.0
+  STUDY011 · LTFU trend: 6 snapshots, latest 1.0%: line M3.0,14.2 L14.6,6.1 L26.2,17.0 L37.8,15.5 L49.4,3.0 L61.0,13.2; dot 61.0,13.2
+  STUDY011 · DTH30 trend: 6 snapshots, latest 0.7%: line M3.0,10.8 L14.6,3.0 L26.2,15.4 L37.8,17.0 L49.4,10.9 L61.0,15.9; dot 61.0,15.9
+  STUDY011 · DTH90 trend: 6 snapshots, latest 2.0%: line M3.0,3.0 L14.6,5.1 L26.2,16.8 L37.8,17.0 L49.4,12.9 L61.0,13.2; dot 61.0,13.2
+  STUDY011 · IPNS trend: 6 snapshots, latest 1.5%: line M3.0,3.0 L14.6,13.3 L26.2,9.7 L37.8,17.0 L49.4,11.5 L61.0,11.0; dot 61.0,11.0
+  STUDY011 · IE trend: 6 snapshots, latest 2.0%: line M3.0,3.0 L14.6,8.0 L26.2,16.9 L37.8,17.0 L49.4,4.6 L61.0,15.1; dot 61.0,15.1
+  STUDY011 · STRAT trend: 6 snapshots, latest 3.0%: line M3.0,17.0 L14.6,13.0 L26.2,3.0 L37.8,4.7 L49.4,12.9 L61.0,8.2; dot 61.0,8.2
+  STUDY011 · PFSC trend: 6 snapshots, latest 2.0%: line M3.0,17.0 L14.6,15.8 L26.2,8.2 L37.8,11.3 L49.4,3.0 L61.0,5.9; dot 61.0,5.9
+  STUDY011 · AE trend: 6 snapshots, latest 6.3%: line M3.0,10.0 L14.6,5.1 L26.2,3.0 L37.8,8.4 L49.4,17.0 L61.0,3.3; dot 61.0,3.3
+  STUDY011 · SAE trend: 6 snapshots, latest 0.3%: line M3.0,17.0 L14.6,3.0 L26.2,6.1 L37.8,15.1 L49.4,3.6 L61.0,14.6; dot 61.0,14.6
+  STUDY011 · PD trend: 6 snapshots, latest 0.8%: line M3.0,13.6 L14.6,3.0 L26.2,17.0 L37.8,11.5 L49.4,10.8 L61.0,14.2; dot 61.0,14.2
+  STUDY011 · IPD trend: 6 snapshots, latest 0.2%: line M3.0,17.0 L14.6,16.6 L26.2,10.0 L37.8,16.9 L49.4,3.0 L61.0,14.8; dot 61.0,14.8
+  STUDY011 · LB trend: 6 snapshots, latest 3.1%: line M3.0,3.0 L14.6,14.9 L26.2,14.7 L37.8,16.6 L49.4,17.0 L61.0,11.0; dot 61.0,11.0
+  STUDY011 · QRY trend: 6 snapshots, latest 4.3%: line M3.0,16.6 L14.6,3.0 L26.2,10.8 L37.8,9.0 L49.4,6.6 L61.0,17.0; dot 61.0,17.0
+  STUDY011 · OQRY trend: 6 snapshots, latest 12.5%: line M3.0,17.0 L14.6,10.0 L26.2,9.4 L37.8,6.6 L49.4,11.2 L61.0,3.0; dot 61.0,3.0
+  STUDY011 · ODAT trend: 6 snapshots, latest 5.9%: line M3.0,17.0 L14.6,12.1 L26.2,3.0 L37.8,12.1 L49.4,10.9 L61.0,15.9; dot 61.0,15.9
+  STUDY011 · CDAT trend: 6 snapshots, latest 4.1%: line M3.0,17.0 L14.6,14.6 L26.2,13.8 L37.8,3.0 L49.4,13.8 L61.0,14.7; dot 61.0,14.7
+  STUDY007 · SF trend: 6 snapshots, latest 23.6%: line M3.0,11.8 L14.6,4.1 L26.2,17.0 L37.8,3.0 L49.4,13.3 L61.0,5.3; dot 61.0,5.3
+  STUDY007 · SDSC trend: 6 snapshots, latest 10.5%: line M3.0,8.0 L14.6,11.8 L26.2,10.8 L37.8,17.0 L49.4,10.4 L61.0,3.0; dot 61.0,3.0
+  STUDY007 · TDSC trend: 6 snapshots, latest 13.2%: line M3.0,16.6 L14.6,3.0 L26.2,8.7 L37.8,17.0 L49.4,13.6 L61.0,15.1; dot 61.0,15.1
+  STUDY007 · PTDSC trend: 6 snapshots, latest 7.8%: line M3.0,16.5 L14.6,9.5 L26.2,17.0 L37.8,13.2 L49.4,3.0 L61.0,5.7; dot 61.0,5.7
+  STUDY007 · WC trend: 6 snapshots, latest 1.6%: line M3.0,14.9 L14.6,8.1 L26.2,3.0 L37.8,7.7 L49.4,6.4 L61.0,17.0; dot 61.0,17.0
+  STUDY007 · LTFU trend: 6 snapshots, latest 1.0%: line M3.0,14.4 L14.6,3.0 L26.2,17.0 L37.8,7.8 L49.4,6.6 L61.0,16.4; dot 61.0,16.4
+  STUDY007 · DTH30 trend: 6 snapshots, latest 0.4%: line M3.0,5.4 L14.6,16.6 L26.2,3.0 L37.8,5.5 L49.4,16.2 L61.0,17.0; dot 61.0,17.0
+  STUDY007 · DTH90 trend: 6 snapshots, latest 1.9%: line M3.0,3.0 L14.6,13.3 L26.2,9.8 L37.8,17.0 L49.4,15.7 L61.0,16.1; dot 61.0,16.1
+  STUDY007 · IPNS trend: 6 snapshots, latest 2.2%: line M3.0,3.0 L14.6,7.4 L26.2,10.7 L37.8,13.2 L49.4,4.5 L61.0,17.0; dot 61.0,17.0
+  STUDY007 · IE trend: 6 snapshots, latest 4.5%: line M3.0,17.0 L14.6,3.0 L26.2,3.9 L37.8,14.8 L49.4,10.0 L61.0,10.0; dot 61.0,10.0
+  STUDY007 · STRAT trend: 6 snapshots, latest 2.4%: line M3.0,13.3 L14.6,3.0 L26.2,17.0 L37.8,11.8 L49.4,7.7 L61.0,9.6; dot 61.0,9.6
+  STUDY007 · PFSC trend: 6 snapshots, latest 1.5%: line M3.0,17.0 L14.6,16.5 L26.2,8.2 L37.8,13.5 L49.4,3.0 L61.0,13.6; dot 61.0,13.6
+  STUDY007 · AE trend: 6 snapshots, latest 2.9%: line M3.0,15.6 L14.6,14.0 L26.2,7.8 L37.8,17.0 L49.4,3.0 L61.0,9.4; dot 61.0,9.4
+  STUDY007 · SAE trend: 6 snapshots, latest 0.3%: line M3.0,12.6 L14.6,12.2 L26.2,14.0 L37.8,17.0 L49.4,3.0 L61.0,11.6; dot 61.0,11.6
+  STUDY007 · PD trend: 6 snapshots, latest 1.4%: line M3.0,14.6 L14.6,9.2 L26.2,3.6 L37.8,17.0 L49.4,10.0 L61.0,3.0; dot 61.0,3.0
+  STUDY007 · IPD trend: 6 snapshots, latest 0.1%: line M3.0,3.0 L14.6,17.0 L26.2,6.4 L37.8,9.1 L49.4,3.5 L61.0,5.1; dot 61.0,5.1
+  STUDY007 · LB trend: 6 snapshots, latest 6.0%: line M3.0,14.5 L14.6,11.1 L26.2,8.7 L37.8,13.0 L49.4,17.0 L61.0,3.0; dot 61.0,3.0
+  STUDY007 · QRY trend: 6 snapshots, latest 10.9%: line M3.0,12.4 L14.6,11.4 L26.2,11.1 L37.8,17.0 L49.4,10.1 L61.0,3.0; dot 61.0,3.0
+  STUDY007 · OQRY trend: 6 snapshots, latest 6.1%: line M3.0,3.0 L14.6,6.1 L26.2,8.1 L37.8,17.0 L49.4,7.9 L61.0,12.6; dot 61.0,12.6
+  STUDY007 · ODAT trend: 6 snapshots, latest 14.9%: line M3.0,3.0 L14.6,14.9 L26.2,7.1 L37.8,17.0 L49.4,12.2 L61.0,6.5; dot 61.0,6.5
+  STUDY007 · CDAT trend: 6 snapshots, latest 4.8%: line M3.0,16.1 L14.6,16.1 L26.2,17.0 L37.8,13.0 L49.4,12.0 L61.0,3.0; dot 61.0,3.0
+  STUDY010 · SF trend: 6 snapshots, latest 25.3%: line M3.0,3.0 L14.6,17.0 L26.2,14.9 L37.8,15.4 L49.4,14.0 L61.0,12.2; dot 61.0,12.2
+  STUDY010 · SDSC trend: 6 snapshots, latest 7.5%: line M3.0,12.6 L14.6,17.0 L26.2,10.8 L37.8,7.8 L49.4,11.6 L61.0,3.0; dot 61.0,3.0
+  STUDY010 · TDSC trend: 6 snapshots, latest 11.3%: line M3.0,13.4 L14.6,13.2 L26.2,17.0 L37.8,3.0 L49.4,12.4 L61.0,11.3; dot 61.0,11.3
+  STUDY010 · PTDSC trend: 6 snapshots, latest 9.1%: line M3.0,11.4 L14.6,17.0 L26.2,16.2 L37.8,11.3 L49.4,3.0 L61.0,16.8; dot 61.0,16.8
+  STUDY010 · WC trend: 6 snapshots, latest 2.7%: line M3.0,3.0 L14.6,17.0 L26.2,14.3 L37.8,12.1 L49.4,9.1 L61.0,9.2; dot 61.0,9.2
+  STUDY010 · LTFU trend: 6 snapshots, latest 1.2%: line M3.0,13.8 L14.6,7.9 L26.2,15.4 L37.8,17.0 L49.4,3.0 L61.0,12.4; dot 61.0,12.4
   STUDY010 · DTH30 trend: 6 snapshots, latest 1.4%: line M3.0,9.7 L14.6,16.6 L26.2,11.9 L37.8,17.0 L49.4,8.0 L61.0,3.0; dot 61.0,3.0
   STUDY010 · DTH90 trend: 6 snapshots, latest 3.2%: line M3.0,17.0 L14.6,3.0 L26.2,17.0 L37.8,16.9 L49.4,13.8 L61.0,12.1; dot 61.0,12.1
   STUDY010 · IPNS trend: 6 snapshots, latest 2.1%: line M3.0,11.9 L14.6,3.0 L26.2,10.9 L37.8,17.0 L49.4,10.4 L61.0,4.9; dot 61.0,4.9
@@ -199,13 +172,122 @@ sparklines:
   STUDY010 · OQRY trend: 6 snapshots, latest 11.0%: line M3.0,9.0 L14.6,3.0 L26.2,17.0 L37.8,12.9 L49.4,10.9 L61.0,16.3; dot 61.0,16.3
   STUDY010 · ODAT trend: 6 snapshots, latest 11.1%: line M3.0,17.0 L14.6,3.0 L26.2,13.5 L37.8,11.2 L49.4,8.4 L61.0,12.0; dot 61.0,12.0
   STUDY010 · CDAT trend: 6 snapshots, latest 3.0%: line M3.0,10.5 L14.6,17.0 L26.2,3.0 L37.8,12.2 L49.4,11.1 L61.0,15.2; dot 61.0,15.2
+  STUDY005 · SF trend: 6 snapshots, latest 25.4%: line M3.0,3.0 L14.6,17.0 L26.2,13.0 L37.8,15.4 L49.4,5.3 L61.0,14.4; dot 61.0,14.4
+  STUDY005 · SDSC trend: 6 snapshots, latest 13.5%: line M3.0,17.0 L14.6,10.3 L26.2,8.3 L37.8,13.0 L49.4,14.2 L61.0,3.0; dot 61.0,3.0
+  STUDY005 · TDSC trend: 6 snapshots, latest 7.0%: line M3.0,3.0 L14.6,4.9 L26.2,9.1 L37.8,7.5 L49.4,17.0 L61.0,16.6; dot 61.0,16.6
+  STUDY005 · PTDSC trend: 6 snapshots, latest 8.7%: line M3.0,8.3 L14.6,4.7 L26.2,9.2 L37.8,17.0 L49.4,3.0 L61.0,7.1; dot 61.0,7.1
+  STUDY005 · WC trend: 6 snapshots, latest 2.0%: line M3.0,9.9 L14.6,4.2 L26.2,7.6 L37.8,17.0 L49.4,3.0 L61.0,14.0; dot 61.0,14.0
+  STUDY005 · LTFU trend: 6 snapshots, latest 1.6%: line M3.0,10.5 L14.6,6.9 L26.2,17.0 L37.8,5.0 L49.4,3.0 L61.0,3.8; dot 61.0,3.8
+  STUDY005 · DTH30 trend: 6 snapshots, latest 0.8%: line M3.0,3.0 L14.6,13.7 L26.2,17.0 L37.8,13.4 L49.4,16.1 L61.0,9.9; dot 61.0,9.9
+  STUDY005 · DTH90 trend: 6 snapshots, latest 1.3%: line M3.0,3.0 L14.6,15.3 L26.2,11.7 L37.8,17.0 L49.4,13.9 L61.0,15.4; dot 61.0,15.4
+  STUDY005 · IPNS trend: 6 snapshots, latest 2.0%: line M3.0,3.0 L14.6,14.4 L26.2,17.0 L37.8,13.7 L49.4,11.1 L61.0,10.4; dot 61.0,10.4
+  STUDY005 · IE trend: 6 snapshots, latest 2.2%: line M3.0,14.2 L14.6,17.0 L26.2,13.4 L37.8,3.0 L49.4,12.8 L61.0,16.9; dot 61.0,16.9
+  STUDY005 · STRAT trend: 6 snapshots, latest 2.0%: line M3.0,13.7 L14.6,3.0 L26.2,12.6 L37.8,17.0 L49.4,14.8 L61.0,7.9; dot 61.0,7.9
+  STUDY005 · PFSC trend: 6 snapshots, latest 3.0%: line M3.0,3.0 L14.6,17.0 L26.2,7.9 L37.8,10.3 L49.4,12.2 L61.0,9.9; dot 61.0,9.9
+  STUDY005 · AE trend: 6 snapshots, latest 5.0%: line M3.0,12.5 L14.6,14.9 L26.2,3.0 L37.8,14.5 L49.4,17.0 L61.0,14.3; dot 61.0,14.3
+  STUDY005 · SAE trend: 6 snapshots, latest 0.4%: line M3.0,7.6 L14.6,14.2 L26.2,3.0 L37.8,12.0 L49.4,9.6 L61.0,17.0; dot 61.0,17.0
+  STUDY005 · PD trend: 6 snapshots, latest 1.3%: line M3.0,9.7 L14.6,8.5 L26.2,8.1 L37.8,17.0 L49.4,12.7 L61.0,3.0; dot 61.0,3.0
+  STUDY005 · IPD trend: 6 snapshots, latest 0.1%: line M3.0,13.5 L14.6,13.8 L26.2,8.4 L37.8,3.0 L49.4,17.0 L61.0,11.9; dot 61.0,11.9
+  STUDY005 · LB trend: 6 snapshots, latest 2.9%: line M3.0,16.3 L14.6,9.8 L26.2,3.0 L37.8,15.0 L49.4,17.0 L61.0,11.2; dot 61.0,11.2
+  STUDY005 · QRY trend: 6 snapshots, latest 8.6%: line M3.0,15.6 L14.6,17.0 L26.2,11.1 L37.8,6.8 L49.4,12.9 L61.0,3.0; dot 61.0,3.0
+  STUDY005 · OQRY trend: 6 snapshots, latest 10.3%: line M3.0,6.0 L14.6,10.2 L26.2,17.0 L37.8,9.0 L49.4,3.0 L61.0,14.2; dot 61.0,14.2
+  STUDY005 · ODAT trend: 6 snapshots, latest 15.0%: line M3.0,16.7 L14.6,3.0 L26.2,16.2 L37.8,12.5 L49.4,8.0 L61.0,17.0; dot 61.0,17.0
+  STUDY005 · CDAT trend: 6 snapshots, latest 3.5%: line M3.0,12.4 L14.6,13.9 L26.2,3.0 L37.8,17.0 L49.4,12.8 L61.0,11.5; dot 61.0,11.5
+  STUDY001 · SF trend: 5 snapshots, latest 26.3%: line M3.0,11.5 L17.5,17.0 L32.0,3.0 L46.5,16.8 L61.0,8.7; dot 61.0,8.7
+  STUDY001 · SDSC trend: 5 snapshots, latest 6.6%: line M3.0,13.2 L17.5,17.0 L32.0,3.0 L46.5,14.7 L61.0,11.5; dot 61.0,11.5
+  STUDY001 · TDSC trend: 5 snapshots, latest 12.2%: line M3.0,3.0 L17.5,17.0 L32.0,11.0 L46.5,8.4 L61.0,15.2; dot 61.0,15.2
+  STUDY001 · PTDSC trend: 5 snapshots, latest 8.6%: line M3.0,14.0 L17.5,12.5 L32.0,7.9 L46.5,17.0 L61.0,3.0; dot 61.0,3.0
+  STUDY001 · WC trend: 5 snapshots, latest 2.5%: line M3.0,3.0 L17.5,13.9 L32.0,9.2 L46.5,17.0 L61.0,12.9; dot 61.0,12.9
+  STUDY001 · LTFU trend: 5 snapshots, latest 2.6%: line M3.0,17.0 L17.5,9.6 L32.0,6.9 L46.5,15.8 L61.0,3.0; dot 61.0,3.0
+  STUDY001 · DTH30 trend: 5 snapshots, latest 0.6%: line M3.0,3.0 L17.5,15.0 L32.0,17.0 L46.5,15.5 L61.0,14.2; dot 61.0,14.2
+  STUDY001 · DTH90 trend: 5 snapshots, latest 1.6%: line M3.0,3.0 L17.5,17.0 L32.0,7.2 L46.5,10.5 L61.0,16.2; dot 61.0,16.2
+  STUDY001 · IPNS trend: 5 snapshots, latest 1.5%: line M3.0,17.0 L17.5,3.0 L32.0,7.3 L46.5,8.7 L61.0,11.5; dot 61.0,11.5
+  STUDY001 · IE trend: 5 snapshots, latest 3.7%: line M3.0,3.0 L17.5,9.1 L32.0,16.4 L46.5,11.5 L61.0,17.0; dot 61.0,17.0
+  STUDY001 · STRAT trend: 5 snapshots, latest 3.2%: line M3.0,17.0 L17.5,16.1 L32.0,5.9 L46.5,10.9 L61.0,3.0; dot 61.0,3.0
+  STUDY001 · PFSC trend: 5 snapshots, latest 3.2%: line M3.0,14.1 L17.5,13.8 L32.0,17.0 L46.5,3.0 L61.0,9.3; dot 61.0,9.3
+  STUDY001 · AE trend: 5 snapshots, latest 3.1%: line M3.0,3.0 L17.5,5.6 L32.0,5.4 L46.5,17.0 L61.0,4.0; dot 61.0,4.0
+  STUDY001 · SAE trend: 5 snapshots, latest 0.5%: line M3.0,17.0 L17.5,3.0 L32.0,14.1 L46.5,13.7 L61.0,14.1; dot 61.0,14.1
+  STUDY001 · PD trend: 5 snapshots, latest 1.5%: line M3.0,11.2 L17.5,13.2 L32.0,3.0 L46.5,17.0 L61.0,11.4; dot 61.0,11.4
+  STUDY001 · IPD trend: 5 snapshots, latest 0.2%: line M3.0,3.0 L17.5,13.0 L32.0,17.0 L46.5,13.7 L61.0,15.4; dot 61.0,15.4
+  STUDY001 · LB trend: 5 snapshots, latest 5.0%: line M3.0,3.0 L17.5,16.4 L32.0,17.0 L46.5,4.3 L61.0,4.4; dot 61.0,4.4
+  STUDY001 · QRY trend: 5 snapshots, latest 5.2%: line M3.0,9.5 L17.5,17.0 L32.0,12.0 L46.5,14.5 L61.0,3.0; dot 61.0,3.0
+  STUDY001 · OQRY trend: 5 snapshots, latest 5.5%: line M3.0,17.0 L17.5,12.1 L32.0,3.9 L46.5,3.0 L61.0,14.9; dot 61.0,14.9
+  STUDY001 · ODAT trend: 5 snapshots, latest 10.4%: line M3.0,3.0 L17.5,6.5 L32.0,17.0 L46.5,6.1 L61.0,6.6; dot 61.0,6.6
+  STUDY001 · CDAT trend: 5 snapshots, latest 2.1%: line M3.0,13.2 L17.5,14.4 L32.0,3.0 L46.5,16.4 L61.0,17.0; dot 61.0,17.0
+  STUDY003 · SF trend: 6 snapshots, latest 28.6%: line M3.0,8.4 L14.6,3.0 L26.2,17.0 L37.8,16.0 L49.4,14.3 L61.0,13.3; dot 61.0,13.3
+  STUDY003 · SDSC trend: 6 snapshots, latest 9.3%: line M3.0,17.0 L14.6,13.8 L26.2,5.4 L37.8,3.0 L49.4,14.6 L61.0,6.0; dot 61.0,6.0
+  STUDY003 · TDSC trend: 6 snapshots, latest 12.8%: line M3.0,5.9 L14.6,17.0 L26.2,13.9 L37.8,16.1 L49.4,3.0 L61.0,5.8; dot 61.0,5.8
+  STUDY003 · PTDSC trend: 6 snapshots, latest 12.1%: line M3.0,17.0 L14.6,12.8 L26.2,3.0 L37.8,5.0 L49.4,8.4 L61.0,13.3; dot 61.0,13.3
+  STUDY003 · WC trend: 6 snapshots, latest 2.8%: line M3.0,6.7 L14.6,17.0 L26.2,9.1 L37.8,3.0 L49.4,7.0 L61.0,10.2; dot 61.0,10.2
+  STUDY003 · LTFU trend: 6 snapshots, latest 1.4%: line M3.0,17.0 L14.6,3.0 L26.2,3.1 L37.8,5.4 L49.4,9.4 L61.0,5.0; dot 61.0,5.0
+  STUDY003 · DTH30 trend: 6 snapshots, latest 0.7%: line M3.0,10.8 L14.6,14.3 L26.2,17.0 L37.8,3.0 L49.4,11.0 L61.0,13.2; dot 61.0,13.2
+  STUDY003 · DTH90 trend: 6 snapshots, latest 1.7%: line M3.0,12.1 L14.6,13.6 L26.2,7.6 L37.8,3.0 L49.4,5.0 L61.0,17.0; dot 61.0,17.0
+  STUDY003 · IPNS trend: 6 snapshots, latest 1.5%: line M3.0,8.7 L14.6,3.0 L26.2,13.9 L37.8,17.0 L49.4,9.8 L61.0,17.0; dot 61.0,17.0
+  STUDY003 · IE trend: 6 snapshots, latest 2.2%: line M3.0,6.4 L14.6,17.0 L26.2,3.0 L37.8,14.9 L49.4,6.8 L61.0,8.1; dot 61.0,8.1
+  STUDY003 · STRAT trend: 6 snapshots, latest 1.9%: line M3.0,9.6 L14.6,16.1 L26.2,3.0 L37.8,10.8 L49.4,17.0 L61.0,13.9; dot 61.0,13.9
+  STUDY003 · PFSC trend: 6 snapshots, latest 3.5%: line M3.0,3.0 L14.6,17.0 L26.2,15.4 L37.8,12.3 L49.4,9.8 L61.0,15.1; dot 61.0,15.1
+  STUDY003 · AE trend: 6 snapshots, latest 4.4%: line M3.0,17.0 L14.6,3.0 L26.2,11.9 L37.8,13.7 L49.4,7.0 L61.0,9.7; dot 61.0,9.7
+  STUDY003 · SAE trend: 6 snapshots, latest 0.2%: line M3.0,10.5 L14.6,11.4 L26.2,14.8 L37.8,3.0 L49.4,11.9 L61.0,17.0; dot 61.0,17.0
+  STUDY003 · PD trend: 6 snapshots, latest 1.6%: line M3.0,12.7 L14.6,13.5 L26.2,3.0 L37.8,13.2 L49.4,13.5 L61.0,17.0; dot 61.0,17.0
+  STUDY003 · IPD trend: 6 snapshots, latest 0.2%: line M3.0,16.1 L14.6,6.6 L26.2,3.0 L37.8,17.0 L49.4,11.4 L61.0,8.8; dot 61.0,8.8
+  STUDY003 · LB trend: 6 snapshots, latest 6.4%: line M3.0,11.0 L14.6,6.2 L26.2,4.9 L37.8,17.0 L49.4,13.6 L61.0,3.0; dot 61.0,3.0
+  STUDY003 · QRY trend: 6 snapshots, latest 6.2%: line M3.0,17.0 L14.6,16.3 L26.2,13.4 L37.8,14.7 L49.4,3.0 L61.0,9.5; dot 61.0,9.5
+  STUDY003 · OQRY trend: 6 snapshots, latest 13.0%: line M3.0,17.0 L14.6,3.0 L26.2,10.6 L37.8,13.9 L49.4,9.4 L61.0,10.6; dot 61.0,10.6
+  STUDY003 · ODAT trend: 6 snapshots, latest 15.4%: line M3.0,8.3 L14.6,7.5 L26.2,11.3 L37.8,3.0 L49.4,17.0 L61.0,6.5; dot 61.0,6.5
+  STUDY003 · CDAT trend: 6 snapshots, latest 2.8%: line M3.0,15.9 L14.6,7.1 L26.2,17.0 L37.8,3.0 L49.4,11.7 L61.0,5.3; dot 61.0,5.3
+  STUDY012 · SF trend: 6 snapshots, latest 29.2%: line M3.0,15.4 L14.6,3.0 L26.2,17.0 L37.8,14.9 L49.4,16.3 L61.0,11.9; dot 61.0,11.9
+  STUDY012 · SDSC trend: 6 snapshots, latest 7.3%: line M3.0,17.0 L14.6,16.5 L26.2,12.4 L37.8,7.0 L49.4,5.7 L61.0,3.0; dot 61.0,3.0
+  STUDY012 · TDSC trend: 6 snapshots, latest 11.9%: line M3.0,17.0 L14.6,4.8 L26.2,4.2 L37.8,3.3 L49.4,7.4 L61.0,3.0; dot 61.0,3.0
+  STUDY012 · PTDSC trend: 6 snapshots, latest 10.5%: line M3.0,15.9 L14.6,11.5 L26.2,6.5 L37.8,3.0 L49.4,7.2 L61.0,17.0; dot 61.0,17.0
+  STUDY012 · WC trend: 6 snapshots, latest 4.1%: line M3.0,3.9 L14.6,3.0 L26.2,16.2 L37.8,17.0 L49.4,6.5 L61.0,13.4; dot 61.0,13.4
+  STUDY012 · LTFU trend: 6 snapshots, latest 1.3%: line M3.0,12.8 L14.6,14.2 L26.2,3.0 L37.8,5.0 L49.4,6.7 L61.0,17.0; dot 61.0,17.0
+  STUDY012 · DTH30 trend: 6 snapshots, latest 0.9%: line M3.0,17.0 L14.6,15.0 L26.2,3.0 L37.8,10.0 L49.4,9.3 L61.0,8.8; dot 61.0,8.8
+  STUDY012 · DTH90 trend: 6 snapshots, latest 1.9%: line M3.0,16.0 L14.6,15.1 L26.2,3.0 L37.8,17.0 L49.4,11.7 L61.0,15.6; dot 61.0,15.6
+  STUDY012 · IPNS trend: 6 snapshots, latest 1.4%: line M3.0,7.0 L14.6,11.1 L26.2,10.3 L37.8,3.0 L49.4,6.2 L61.0,17.0; dot 61.0,17.0
+  STUDY012 · IE trend: 6 snapshots, latest 5.2%: line M3.0,17.0 L14.6,11.0 L26.2,6.5 L37.8,3.0 L49.4,10.5 L61.0,4.5; dot 61.0,4.5
+  STUDY012 · STRAT trend: 6 snapshots, latest 1.8%: line M3.0,17.0 L14.6,3.0 L26.2,3.5 L37.8,10.8 L49.4,10.4 L61.0,13.5; dot 61.0,13.5
+  STUDY012 · PFSC trend: 6 snapshots, latest 2.1%: line M3.0,10.2 L14.6,14.9 L26.2,14.7 L37.8,3.0 L49.4,11.4 L61.0,17.0; dot 61.0,17.0
+  STUDY012 · AE trend: 6 snapshots, latest 3.4%: line M3.0,14.1 L14.6,12.5 L26.2,17.0 L37.8,3.0 L49.4,13.7 L61.0,16.0; dot 61.0,16.0
+  STUDY012 · SAE trend: 6 snapshots, latest 0.3%: line M3.0,7.3 L14.6,15.7 L26.2,11.2 L37.8,17.0 L49.4,3.0 L61.0,12.2; dot 61.0,12.2
+  STUDY012 · PD trend: 6 snapshots, latest 1.6%: line M3.0,8.2 L14.6,5.8 L26.2,16.4 L37.8,3.0 L49.4,17.0 L61.0,7.1; dot 61.0,7.1
+  STUDY012 · IPD trend: 6 snapshots, latest 0.3%: line M3.0,11.3 L14.6,17.0 L26.2,12.6 L37.8,11.8 L49.4,14.3 L61.0,3.0; dot 61.0,3.0
+  STUDY012 · LB trend: 6 snapshots, latest 4.3%: line M3.0,3.0 L14.6,7.4 L26.2,14.9 L37.8,14.1 L49.4,16.5 L61.0,17.0; dot 61.0,17.0
+  STUDY012 · QRY trend: 6 snapshots, latest 6.8%: line M3.0,3.0 L14.6,16.2 L26.2,17.0 L37.8,12.2 L49.4,7.2 L61.0,4.6; dot 61.0,4.6
+  STUDY012 · OQRY trend: 6 snapshots, latest 9.5%: line M3.0,9.0 L14.6,12.4 L26.2,3.0 L37.8,17.0 L49.4,16.2 L61.0,11.1; dot 61.0,11.1
+  STUDY012 · ODAT trend: 6 snapshots, latest 11.8%: line M3.0,15.3 L14.6,17.0 L26.2,3.0 L37.8,11.0 L49.4,10.8 L61.0,5.1; dot 61.0,5.1
+  STUDY012 · CDAT trend: 6 snapshots, latest 2.8%: line M3.0,17.0 L14.6,14.0 L26.2,10.9 L37.8,3.0 L49.4,13.3 L61.0,4.3; dot 61.0,4.3
+  STUDY004 · SF trend: 6 snapshots, latest 31.8%: line M3.0,9.4 L14.6,3.0 L26.2,14.7 L37.8,16.2 L49.4,17.0 L61.0,9.4; dot 61.0,9.4
+  STUDY004 · SDSC trend: 6 snapshots, latest 6.1%: line M3.0,16.7 L14.6,4.2 L26.2,4.4 L37.8,11.0 L49.4,17.0 L61.0,3.0; dot 61.0,3.0
+  STUDY004 · TDSC trend: 6 snapshots, latest 6.9%: line M3.0,13.2 L14.6,12.0 L26.2,3.0 L37.8,11.5 L49.4,11.4 L61.0,17.0; dot 61.0,17.0
+  STUDY004 · PTDSC trend: 6 snapshots, latest 7.8%: line M3.0,3.0 L14.6,13.7 L26.2,13.2 L37.8,17.0 L49.4,8.9 L61.0,16.0; dot 61.0,16.0
+  STUDY004 · WC trend: 6 snapshots, latest 1.9%: line M3.0,17.0 L14.6,3.0 L26.2,6.6 L37.8,9.4 L49.4,7.3 L61.0,9.5; dot 61.0,9.5
+  STUDY004 · LTFU trend: 6 snapshots, latest 2.4%: line M3.0,5.3 L14.6,17.0 L26.2,3.5 L37.8,6.9 L49.4,7.4 L61.0,3.0; dot 61.0,3.0
+  STUDY004 · DTH30 trend: 6 snapshots, latest 1.0%: line M3.0,7.6 L14.6,3.0 L26.2,17.0 L37.8,3.9 L49.4,15.3 L61.0,4.8; dot 61.0,4.8
+  STUDY004 · DTH90 trend: 6 snapshots, latest 3.6%: line M3.0,17.0 L14.6,13.3 L26.2,14.7 L37.8,12.0 L49.4,12.2 L61.0,3.0; dot 61.0,3.0
+  STUDY004 · IPNS trend: 6 snapshots, latest 2.3%: line M3.0,17.0 L14.6,16.0 L26.2,4.5 L37.8,4.8 L49.4,8.1 L61.0,3.0; dot 61.0,3.0
+  STUDY004 · IE trend: 6 snapshots, latest 1.9%: line M3.0,3.0 L14.6,17.0 L26.2,11.6 L37.8,15.8 L49.4,10.4 L61.0,11.6; dot 61.0,11.6
+  STUDY004 · STRAT trend: 6 snapshots, latest 2.3%: line M3.0,17.0 L14.6,16.8 L26.2,3.0 L37.8,16.0 L49.4,7.4 L61.0,9.8; dot 61.0,9.8
+  STUDY004 · PFSC trend: 6 snapshots, latest 2.3%: line M3.0,15.1 L14.6,7.4 L26.2,7.3 L37.8,7.2 L49.4,17.0 L61.0,3.0; dot 61.0,3.0
+  STUDY004 · AE trend: 6 snapshots, latest 5.5%: line M3.0,17.0 L14.6,4.9 L26.2,5.8 L37.8,9.4 L49.4,3.0 L61.0,7.9; dot 61.0,7.9
+  STUDY004 · SAE trend: 6 snapshots, latest 0.5%: line M3.0,17.0 L14.6,13.0 L26.2,3.3 L37.8,12.3 L49.4,13.9 L61.0,3.0; dot 61.0,3.0
+  STUDY004 · PD trend: 6 snapshots, latest 1.4%: line M3.0,15.4 L14.6,3.0 L26.2,7.1 L37.8,15.9 L49.4,11.5 L61.0,17.0; dot 61.0,17.0
+  STUDY004 · IPD trend: 6 snapshots, latest 0.3%: line M3.0,13.3 L14.6,5.7 L26.2,17.0 L37.8,3.0 L49.4,11.5 L61.0,3.1; dot 61.0,3.1
+  STUDY004 · LB trend: 6 snapshots, latest 5.4%: line M3.0,17.0 L14.6,8.8 L26.2,15.7 L37.8,3.0 L49.4,6.6 L61.0,8.4; dot 61.0,8.4
+  STUDY004 · QRY trend: 6 snapshots, latest 11.1%: line M3.0,13.9 L14.6,13.2 L26.2,9.2 L37.8,17.0 L49.4,4.5 L61.0,3.0; dot 61.0,3.0
+  STUDY004 · OQRY trend: 6 snapshots, latest 6.2%: line M3.0,12.2 L14.6,3.0 L26.2,12.7 L37.8,17.0 L49.4,7.7 L61.0,9.6; dot 61.0,9.6
+  STUDY004 · ODAT trend: 6 snapshots, latest 11.7%: line M3.0,4.4 L14.6,17.0 L26.2,7.1 L37.8,3.0 L49.4,12.0 L61.0,12.9; dot 61.0,12.9
+  STUDY004 · CDAT trend: 6 snapshots, latest 1.8%: line M3.0,8.2 L14.6,13.5 L26.2,17.0 L37.8,13.1 L49.4,3.0 L61.0,13.3; dot 61.0,13.3
 accessibility:
 - main:
   - text: Controls
   - button "Reset"
   - button "Collapse controls" [expanded]: «
   - group:
-    - text: ▸ Config Highlight study
+    - text: ▸ Config View
+    - group:
+      - button "Overview"
+      - button "Details"
+    - text: Highlight study
     - combobox:
       - option "None" [selected]
       - option "STUDY001 · ATLAS-1"
@@ -241,10 +323,6 @@ accessibility:
     - button "Study name" [pressed]
     - button "Enrolled"
     - button "Status"
-    - text: Row density
-    - group:
-      - button "Roomy"
-      - button "Condensed"
     - text: Group rows by
     - combobox:
       - option "None — one row per study" [selected]
@@ -341,33 +419,25 @@ accessibility:
     - text: STUDY011 KESTREL-3
     - checkbox "STUDY012 LUMEN-1"
     - text: STUDY012 LUMEN-1
-  - tablist "Program view":
-    - text: Table
-    - tab "Overview"
-    - tab "Details"
-  - text: "Mixed: Early events, Eligibility & integrity, Safety & deviations, Data quality open Showing 12 / 12 studies · 21 / 21 site-level metrics (8 released · 4 new · 9 planned) · custom cell contents · each study at its own latest snapshot · sorted by DTH30 rate ↑"
+  - text: Showing 12 / 12 studies · 21 / 21 site-level metrics (8 released · 4 new · 9 planned) · custom cell contents · each study at its own latest snapshot · sorted by SF rate ↑
   - table:
     - rowgroup:
-      - row "Study Population Open Disposition Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU Fold Early events Early events3 Fold Eligibility & integrity Eligibility & integrity3 Fold Safety & deviations Safety & deviations5 Fold Data quality Data quality4":
+      - row "Study Population Disposition6 Early events3 Eligibility & integrity3 Safety & deviations5 Data quality4":
         - columnheader "Study"
         - columnheader "Population"
-        - columnheader "Open Disposition Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU":
-          - button "Open Disposition": +
-          - text: Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU
-        - columnheader "Fold Early events Early events3":
-          - button "Fold Early events" [expanded]: −
-          - text: Early events3
-        - columnheader "Fold Eligibility & integrity Eligibility & integrity3":
-          - button "Fold Eligibility & integrity" [expanded]: −
-          - text: Eligibility & integrity3
-        - columnheader "Fold Safety & deviations Safety & deviations5":
-          - button "Fold Safety & deviations" [expanded]: −
-          - text: Safety & deviations5
-        - columnheader "Fold Data quality Data quality4":
-          - button "Fold Data quality" [expanded]: −
-          - text: Data quality4
-      - row "Scr. n DTH30 n (% enr.) Planned DTH90 n (% enr.) Planned IPNS n (% enr.) Planned IE n (% enr.) Planned STRAT n (% enr.) Planned PFSC n (% enr.) Planned AE / 28 d New SAE / 28 d New PD / 28 d New IPD / 28 d New LB n (%) QRY % OQRY % ODAT % CDAT %":
+        - columnheader "Disposition6"
+        - columnheader "Early events3"
+        - columnheader "Eligibility & integrity3"
+        - columnheader "Safety & deviations5"
+        - columnheader "Data quality4"
+      - row "Scr. n SF % scr. SDSC n (% enr.) TDSC n (% dosed) PTDSC n (% dosed) Planned WC n (% enr.) Planned LTFU n (% enr.) Planned DTH30 n (% enr.) Planned DTH90 n (% enr.) Planned IPNS n (% enr.) Planned IE n (% enr.) Planned STRAT n (% enr.) Planned PFSC n (% enr.) Planned AE / 28 d New SAE / 28 d New PD / 28 d New IPD / 28 d New LB n (%) QRY % OQRY % ODAT % CDAT %":
         - columnheader "Scr. n"
+        - columnheader "SF % scr."
+        - columnheader "SDSC n (% enr.)"
+        - columnheader "TDSC n (% dosed)"
+        - columnheader "PTDSC n (% dosed) Planned"
+        - columnheader "WC n (% enr.) Planned"
+        - columnheader "LTFU n (% enr.) Planned"
         - columnheader "DTH30 n (% enr.) Planned"
         - columnheader "DTH90 n (% enr.) Planned"
         - columnheader "IPNS n (% enr.) Planned"
@@ -387,7 +457,24 @@ accessibility:
       - row:
         - cell "Portfolio total"
         - cell "11,645"
-        - cell "23.8% 7.9% 11.3% 9.0% 2.6% 1.6%"
+        - 'cell "11,645 23.8% Portfolio total · SF trend: 6 snapshots, latest 23.8%"':
+          - text: 11,645 23.8%
+          - 'img "Portfolio total · SF trend: 6 snapshots, latest 23.8%"'
+        - 'cell "8,874 7.9% Portfolio total · SDSC trend: 6 snapshots, latest 7.9%"':
+          - text: 8,874 7.9%
+          - 'img "Portfolio total · SDSC trend: 6 snapshots, latest 7.9%"'
+        - 'cell "8,715 11.3% Portfolio total · TDSC trend: 6 snapshots, latest 11.3%"':
+          - text: 8,715 11.3%
+          - 'img "Portfolio total · TDSC trend: 6 snapshots, latest 11.3%"'
+        - 'cell "8,715 9.0% Portfolio total · PTDSC trend: 6 snapshots, latest 9.0%"':
+          - text: 8,715 9.0%
+          - 'img "Portfolio total · PTDSC trend: 6 snapshots, latest 9.0%"'
+        - 'cell "8,874 2.6% Portfolio total · WC trend: 6 snapshots, latest 2.6%"':
+          - text: 8,874 2.6%
+          - 'img "Portfolio total · WC trend: 6 snapshots, latest 2.6%"'
+        - 'cell "8,874 1.6% Portfolio total · LTFU trend: 6 snapshots, latest 1.6%"':
+          - text: 8,874 1.6%
+          - 'img "Portfolio total · LTFU trend: 6 snapshots, latest 1.6%"'
         - 'cell "8,874 0.8% Portfolio total · DTH30 trend: 6 snapshots, latest 0.8%"':
           - text: 8,874 0.8%
           - 'img "Portfolio total · DTH30 trend: 6 snapshots, latest 0.8%"'
@@ -434,12 +521,171 @@ accessibility:
           - text: 2,592,369 3.3%
           - 'img "Portfolio total · CDAT trend: 6 snapshots, latest 3.3%"'
       - row:
+        - cell "STUDY006FALCON-2":
+          - link "STUDY006":
+            - /url: study:STUDY006
+          - text: FALCON-2
+        - cell "1,023"
+        - 'cell "1,023 14.1% STUDY006 · SF trend: 6 snapshots, latest 14.1%"':
+          - text: 1,023 14.1%
+          - 'img "STUDY006 · SF trend: 6 snapshots, latest 14.1%"'
+        - 'cell "879 6.9% STUDY006 · SDSC trend: 6 snapshots, latest 6.9%"':
+          - text: 879 6.9%
+          - 'img "STUDY006 · SDSC trend: 6 snapshots, latest 6.9%"'
+        - 'cell "865 17.3% STUDY006 · TDSC trend: 6 snapshots, latest 17.3%"':
+          - text: 865 17.3%
+          - 'img "STUDY006 · TDSC trend: 6 snapshots, latest 17.3%"'
+        - 'cell "865 4.9% STUDY006 · PTDSC trend: 6 snapshots, latest 4.9%"':
+          - text: 865 4.9%
+          - 'img "STUDY006 · PTDSC trend: 6 snapshots, latest 4.9%"'
+        - 'cell "879 2.4% STUDY006 · WC trend: 6 snapshots, latest 2.4%"':
+          - text: 879 2.4%
+          - 'img "STUDY006 · WC trend: 6 snapshots, latest 2.4%"'
+        - 'cell "879 2.0% STUDY006 · LTFU trend: 6 snapshots, latest 2.0%"':
+          - text: 879 2.0%
+          - 'img "STUDY006 · LTFU trend: 6 snapshots, latest 2.0%"'
+        - 'cell "879 1.1% STUDY006 · DTH30 trend: 6 snapshots, latest 1.1%"':
+          - text: 879 1.1%
+          - 'img "STUDY006 · DTH30 trend: 6 snapshots, latest 1.1%"'
+        - 'cell "879 2.6% STUDY006 · DTH90 trend: 6 snapshots, latest 2.6%"':
+          - 'link "879 2.6% STUDY006 · DTH90 trend: 6 snapshots, latest 2.6%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 879 2.6%
+            - 'img "STUDY006 · DTH90 trend: 6 snapshots, latest 2.6%"'
+        - 'cell "879 1.6% STUDY006 · IPNS trend: 6 snapshots, latest 1.6%"':
+          - text: 879 1.6%
+          - 'img "STUDY006 · IPNS trend: 6 snapshots, latest 1.6%"'
+        - 'cell "879 3.5% STUDY006 · IE trend: 6 snapshots, latest 3.5%"':
+          - text: 879 3.5%
+          - 'img "STUDY006 · IE trend: 6 snapshots, latest 3.5%"'
+        - 'cell "879 1.5% STUDY006 · STRAT trend: 6 snapshots, latest 1.5%"':
+          - text: 879 1.5%
+          - 'img "STUDY006 · STRAT trend: 6 snapshots, latest 1.5%"'
+        - 'cell "879 2.0% STUDY006 · PFSC trend: 6 snapshots, latest 2.0%"':
+          - text: 879 2.0%
+          - 'img "STUDY006 · PFSC trend: 6 snapshots, latest 2.0%"'
+        - 'cell "165,991 1.34 STUDY006 · AE trend: 6 snapshots, latest 4.8%"':
+          - text: 165,991 1.34
+          - 'img "STUDY006 · AE trend: 6 snapshots, latest 4.8%"'
+        - 'cell "165,991 0.09 STUDY006 · SAE trend: 6 snapshots, latest 0.3%"':
+          - text: 165,991 0.09
+          - 'img "STUDY006 · SAE trend: 6 snapshots, latest 0.3%"'
+        - 'cell "165,991 0.52 STUDY006 · PD trend: 6 snapshots, latest 1.8%"':
+          - text: 165,991 0.52
+          - 'img "STUDY006 · PD trend: 6 snapshots, latest 1.8%"'
+        - 'cell "165,991 0.06 STUDY006 · IPD trend: 6 snapshots, latest 0.2%"':
+          - text: 165,991 0.06
+          - 'img "STUDY006 · IPD trend: 6 snapshots, latest 0.2%"'
+        - 'cell "19,324 3.7% STUDY006 · LB trend: 6 snapshots, latest 3.7%"':
+          - text: 19,324 3.7%
+          - 'img "STUDY006 · LB trend: 6 snapshots, latest 3.7%"'
+        - 'cell "261,148 6.5% STUDY006 · QRY trend: 6 snapshots, latest 6.5%"':
+          - text: 261,148 6.5%
+          - 'img "STUDY006 · QRY trend: 6 snapshots, latest 6.5%"'
+        - 'cell "17,103 7.3% STUDY006 · OQRY trend: 6 snapshots, latest 7.3%"':
+          - text: 17,103 7.3%
+          - 'img "STUDY006 · OQRY trend: 6 snapshots, latest 7.3%"'
+        - 'cell "33,992 10.8% STUDY006 · ODAT trend: 6 snapshots, latest 10.8%"':
+          - text: 33,992 10.8%
+          - 'img "STUDY006 · ODAT trend: 6 snapshots, latest 10.8%"'
+        - 'cell "261,148 4.4% STUDY006 · CDAT trend: 6 snapshots, latest 4.4%"':
+          - text: 261,148 4.4%
+          - 'img "STUDY006 · CDAT trend: 6 snapshots, latest 4.4%"'
+      - row:
+        - cell "STUDY009IRIS-1":
+          - link "STUDY009":
+            - /url: study:STUDY009
+          - text: IRIS-1
+        - cell "708"
+        - 'cell "708 15.7% STUDY009 · SF trend: 6 snapshots, latest 15.7%"':
+          - text: 708 15.7%
+          - 'img "STUDY009 · SF trend: 6 snapshots, latest 15.7%"'
+        - 'cell "597 6.0% STUDY009 · SDSC trend: 6 snapshots, latest 6.0%"':
+          - text: 597 6.0%
+          - 'img "STUDY009 · SDSC trend: 6 snapshots, latest 6.0%"'
+        - 'cell "587 7.2% STUDY009 · TDSC trend: 6 snapshots, latest 7.2%"':
+          - text: 587 7.2%
+          - 'img "STUDY009 · TDSC trend: 6 snapshots, latest 7.2%"'
+        - 'cell "587 13.1% STUDY009 · PTDSC trend: 6 snapshots, latest 13.1%"':
+          - text: 587 13.1%
+          - 'img "STUDY009 · PTDSC trend: 6 snapshots, latest 13.1%"'
+        - 'cell "597 4.4% STUDY009 · WC trend: 6 snapshots, latest 4.4%"':
+          - text: 597 4.4%
+          - 'img "STUDY009 · WC trend: 6 snapshots, latest 4.4%"'
+        - 'cell "597 1.7% STUDY009 · LTFU trend: 6 snapshots, latest 1.7%"':
+          - text: 597 1.7%
+          - 'img "STUDY009 · LTFU trend: 6 snapshots, latest 1.7%"'
+        - 'cell "597 0.8% STUDY009 · DTH30 trend: 6 snapshots, latest 0.8%"':
+          - text: 597 0.8%
+          - 'img "STUDY009 · DTH30 trend: 6 snapshots, latest 0.8%"'
+        - 'cell "597 2.5% STUDY009 · DTH90 trend: 6 snapshots, latest 2.5%"':
+          - 'link "597 2.5% STUDY009 · DTH90 trend: 6 snapshots, latest 2.5%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 597 2.5%
+            - 'img "STUDY009 · DTH90 trend: 6 snapshots, latest 2.5%"'
+        - 'cell "597 1.7% STUDY009 · IPNS trend: 6 snapshots, latest 1.7%"':
+          - text: 597 1.7%
+          - 'img "STUDY009 · IPNS trend: 6 snapshots, latest 1.7%"'
+        - 'cell "597 4.2% STUDY009 · IE trend: 6 snapshots, latest 4.2%"':
+          - text: 597 4.2%
+          - 'img "STUDY009 · IE trend: 6 snapshots, latest 4.2%"'
+        - 'cell "597 2.3% STUDY009 · STRAT trend: 6 snapshots, latest 2.3%"':
+          - text: 597 2.3%
+          - 'img "STUDY009 · STRAT trend: 6 snapshots, latest 2.3%"'
+        - 'cell "597 3.0% STUDY009 · PFSC trend: 6 snapshots, latest 3.0%"':
+          - text: 597 3.0%
+          - 'img "STUDY009 · PFSC trend: 6 snapshots, latest 3.0%"'
+        - 'cell "102,953 1.15 STUDY009 · AE trend: 6 snapshots, latest 4.1%"':
+          - text: 102,953 1.15
+          - 'img "STUDY009 · AE trend: 6 snapshots, latest 4.1%"'
+        - 'cell "102,953 0.12 STUDY009 · SAE trend: 6 snapshots, latest 0.4%"':
+          - text: 102,953 0.12
+          - 'img "STUDY009 · SAE trend: 6 snapshots, latest 0.4%"'
+        - 'cell "102,953 0.24 STUDY009 · PD trend: 6 snapshots, latest 0.9%"':
+          - text: 102,953 0.24
+          - 'img "STUDY009 · PD trend: 6 snapshots, latest 0.9%"'
+        - 'cell "102,953 0.06 STUDY009 · IPD trend: 6 snapshots, latest 0.2%"':
+          - text: 102,953 0.06
+          - 'img "STUDY009 · IPD trend: 6 snapshots, latest 0.2%"'
+        - 'cell "13,465 3.9% STUDY009 · LB trend: 6 snapshots, latest 3.9%"':
+          - text: 13,465 3.9%
+          - 'img "STUDY009 · LB trend: 6 snapshots, latest 3.9%"'
+        - 'cell "182,319 4.1% STUDY009 · QRY trend: 6 snapshots, latest 4.1%"':
+          - text: 182,319 4.1%
+          - 'img "STUDY009 · QRY trend: 6 snapshots, latest 4.1%"'
+        - 'cell "7,414 9.0% STUDY009 · OQRY trend: 6 snapshots, latest 9.0%"':
+          - text: 7,414 9.0%
+          - 'img "STUDY009 · OQRY trend: 6 snapshots, latest 9.0%"'
+        - 'cell "22,974 9.3% STUDY009 · ODAT trend: 6 snapshots, latest 9.3%"':
+          - text: 22,974 9.3%
+          - 'img "STUDY009 · ODAT trend: 6 snapshots, latest 9.3%"'
+        - 'cell "182,319 4.1% STUDY009 · CDAT trend: 6 snapshots, latest 4.1%"':
+          - text: 182,319 4.1%
+          - 'img "STUDY009 · CDAT trend: 6 snapshots, latest 4.1%"'
+      - row:
         - cell "STUDY002BEACON-1":
           - link "STUDY002":
             - /url: study:STUDY002
           - text: BEACON-1
         - cell "769"
-        - cell "16.1% 6.8% 11.7% 9.8% 2.5% 1.4%"
+        - 'cell "769 16.1% STUDY002 · SF trend: 5 snapshots, latest 16.1%"':
+          - text: 769 16.1%
+          - 'img "STUDY002 · SF trend: 5 snapshots, latest 16.1%"'
+        - 'cell "645 6.8% STUDY002 · SDSC trend: 5 snapshots, latest 6.8%"':
+          - text: 645 6.8%
+          - 'img "STUDY002 · SDSC trend: 5 snapshots, latest 6.8%"'
+        - 'cell "630 11.7% STUDY002 · TDSC trend: 5 snapshots, latest 11.7%"':
+          - text: 630 11.7%
+          - 'img "STUDY002 · TDSC trend: 5 snapshots, latest 11.7%"'
+        - 'cell "630 9.8% STUDY002 · PTDSC trend: 5 snapshots, latest 9.8%"':
+          - text: 630 9.8%
+          - 'img "STUDY002 · PTDSC trend: 5 snapshots, latest 9.8%"'
+        - 'cell "645 2.5% STUDY002 · WC trend: 5 snapshots, latest 2.5%"':
+          - text: 645 2.5%
+          - 'img "STUDY002 · WC trend: 5 snapshots, latest 2.5%"'
+        - 'cell "645 1.4% STUDY002 · LTFU trend: 5 snapshots, latest 1.4%"':
+          - text: 645 1.4%
+          - 'img "STUDY002 · LTFU trend: 5 snapshots, latest 1.4%"'
         - 'cell "645 0.2% STUDY002 · DTH30 trend: 5 snapshots, latest 0.2%"':
           - text: 645 0.2%
           - 'img "STUDY002 · DTH30 trend: 5 snapshots, latest 0.2%"'
@@ -493,7 +739,24 @@ accessibility:
             - /url: study:STUDY008
           - text: HARBOR-2
         - cell "611"
-        - cell "18.3% 5.2% 9.2% 8.8% 2.4% 1.4%"
+        - 'cell "611 18.3% STUDY008 · SF trend: 6 snapshots, latest 18.3%"':
+          - text: 611 18.3%
+          - 'img "STUDY008 · SF trend: 6 snapshots, latest 18.3%"'
+        - 'cell "499 5.2% STUDY008 · SDSC trend: 6 snapshots, latest 5.2%"':
+          - text: 499 5.2%
+          - 'img "STUDY008 · SDSC trend: 6 snapshots, latest 5.2%"'
+        - 'cell "491 9.2% STUDY008 · TDSC trend: 6 snapshots, latest 9.2%"':
+          - text: 491 9.2%
+          - 'img "STUDY008 · TDSC trend: 6 snapshots, latest 9.2%"'
+        - 'cell "491 8.8% STUDY008 · PTDSC trend: 6 snapshots, latest 8.8%"':
+          - text: 491 8.8%
+          - 'img "STUDY008 · PTDSC trend: 6 snapshots, latest 8.8%"'
+        - 'cell "499 2.4% STUDY008 · WC trend: 6 snapshots, latest 2.4%"':
+          - text: 499 2.4%
+          - 'img "STUDY008 · WC trend: 6 snapshots, latest 2.4%"'
+        - 'cell "499 1.4% STUDY008 · LTFU trend: 6 snapshots, latest 1.4%"':
+          - text: 499 1.4%
+          - 'img "STUDY008 · LTFU trend: 6 snapshots, latest 1.4%"'
         - 'cell "499 0.4% STUDY008 · DTH30 trend: 6 snapshots, latest 0.4%"':
           - text: 499 0.4%
           - 'img "STUDY008 · DTH30 trend: 6 snapshots, latest 0.4%"'
@@ -542,120 +805,29 @@ accessibility:
           - text: 155,813 3.5%
           - 'img "STUDY008 · CDAT trend: 6 snapshots, latest 3.5%"'
       - row:
-        - cell "STUDY007GRANITE-3":
-          - link "STUDY007":
-            - /url: study:STUDY007
-          - text: GRANITE-3
-        - cell "962"
-        - cell "23.6% 10.5% 13.2% 7.8% 1.6% 1.0%"
-        - 'cell "735 0.4% STUDY007 · DTH30 trend: 6 snapshots, latest 0.4%"':
-          - text: 735 0.4%
-          - 'img "STUDY007 · DTH30 trend: 6 snapshots, latest 0.4%"'
-        - 'cell "735 1.9% STUDY007 · DTH90 trend: 6 snapshots, latest 1.9%"':
-          - 'link "735 1.9% STUDY007 · DTH90 trend: 6 snapshots, latest 1.9%"':
-            - /url: https://gilead-biostats.github.io/gsm.kri/
-            - text: 735 1.9%
-            - 'img "STUDY007 · DTH90 trend: 6 snapshots, latest 1.9%"'
-        - 'cell "735 2.2% STUDY007 · IPNS trend: 6 snapshots, latest 2.2%"':
-          - text: 735 2.2%
-          - 'img "STUDY007 · IPNS trend: 6 snapshots, latest 2.2%"'
-        - 'cell "735 4.5% STUDY007 · IE trend: 6 snapshots, latest 4.5%"':
-          - text: 735 4.5%
-          - 'img "STUDY007 · IE trend: 6 snapshots, latest 4.5%"'
-        - 'cell "735 2.4% STUDY007 · STRAT trend: 6 snapshots, latest 2.4%"':
-          - text: 735 2.4%
-          - 'img "STUDY007 · STRAT trend: 6 snapshots, latest 2.4%"'
-        - 'cell "735 1.5% STUDY007 · PFSC trend: 6 snapshots, latest 1.5%"':
-          - text: 735 1.5%
-          - 'img "STUDY007 · PFSC trend: 6 snapshots, latest 1.5%"'
-        - 'cell "131,673 0.81 STUDY007 · AE trend: 6 snapshots, latest 2.9%"':
-          - text: 131,673 0.81
-          - 'img "STUDY007 · AE trend: 6 snapshots, latest 2.9%"'
-        - 'cell "131,673 0.10 STUDY007 · SAE trend: 6 snapshots, latest 0.3%"':
-          - text: 131,673 0.10
-          - 'img "STUDY007 · SAE trend: 6 snapshots, latest 0.3%"'
-        - 'cell "131,673 0.40 STUDY007 · PD trend: 6 snapshots, latest 1.4%"':
-          - text: 131,673 0.40
-          - 'img "STUDY007 · PD trend: 6 snapshots, latest 1.4%"'
-        - 'cell "131,673 0.03 STUDY007 · IPD trend: 6 snapshots, latest 0.1%"':
-          - text: 131,673 0.03
-          - 'img "STUDY007 · IPD trend: 6 snapshots, latest 0.1%"'
-        - 'cell "16,009 6.0% STUDY007 · LB trend: 6 snapshots, latest 6.0%"':
-          - text: 16,009 6.0%
-          - 'img "STUDY007 · LB trend: 6 snapshots, latest 6.0%"'
-        - 'cell "217,876 10.9% STUDY007 · QRY trend: 6 snapshots, latest 10.9%"':
-          - text: 217,876 10.9%
-          - 'img "STUDY007 · QRY trend: 6 snapshots, latest 10.9%"'
-        - 'cell "23,801 6.1% STUDY007 · OQRY trend: 6 snapshots, latest 6.1%"':
-          - text: 23,801 6.1%
-          - 'img "STUDY007 · OQRY trend: 6 snapshots, latest 6.1%"'
-        - 'cell "28,298 14.9% STUDY007 · ODAT trend: 6 snapshots, latest 14.9%"':
-          - text: 28,298 14.9%
-          - 'img "STUDY007 · ODAT trend: 6 snapshots, latest 14.9%"'
-        - 'cell "217,876 4.8% STUDY007 · CDAT trend: 6 snapshots, latest 4.8%"':
-          - text: 217,876 4.8%
-          - 'img "STUDY007 · CDAT trend: 6 snapshots, latest 4.8%"'
-      - row:
-        - cell "STUDY001ATLAS-1":
-          - link "STUDY001":
-            - /url: study:STUDY001
-          - text: ATLAS-1
-        - cell "1,341"
-        - cell "26.3% 6.6% 12.2% 8.6% 2.5% 2.6%"
-        - 'cell "988 0.6% STUDY001 · DTH30 trend: 5 snapshots, latest 0.6%"':
-          - text: 988 0.6%
-          - 'img "STUDY001 · DTH30 trend: 5 snapshots, latest 0.6%"'
-        - 'cell "988 1.6% STUDY001 · DTH90 trend: 5 snapshots, latest 1.6%"':
-          - 'link "988 1.6% STUDY001 · DTH90 trend: 5 snapshots, latest 1.6%"':
-            - /url: https://gilead-biostats.github.io/gsm.kri/
-            - text: 988 1.6%
-            - 'img "STUDY001 · DTH90 trend: 5 snapshots, latest 1.6%"'
-        - 'cell "988 1.5% STUDY001 · IPNS trend: 5 snapshots, latest 1.5%"':
-          - text: 988 1.5%
-          - 'img "STUDY001 · IPNS trend: 5 snapshots, latest 1.5%"'
-        - 'cell "988 3.7% STUDY001 · IE trend: 5 snapshots, latest 3.7%"':
-          - text: 988 3.7%
-          - 'img "STUDY001 · IE trend: 5 snapshots, latest 3.7%"'
-        - 'cell "988 3.2% STUDY001 · STRAT trend: 5 snapshots, latest 3.2%"':
-          - text: 988 3.2%
-          - 'img "STUDY001 · STRAT trend: 5 snapshots, latest 3.2%"'
-        - 'cell "988 3.2% STUDY001 · PFSC trend: 5 snapshots, latest 3.2%"':
-          - text: 988 3.2%
-          - 'img "STUDY001 · PFSC trend: 5 snapshots, latest 3.2%"'
-        - 'cell "158,946 0.86 STUDY001 · AE trend: 5 snapshots, latest 3.1%"':
-          - text: 158,946 0.86
-          - 'img "STUDY001 · AE trend: 5 snapshots, latest 3.1%"'
-        - 'cell "158,946 0.14 STUDY001 · SAE trend: 5 snapshots, latest 0.5%"':
-          - text: 158,946 0.14
-          - 'img "STUDY001 · SAE trend: 5 snapshots, latest 0.5%"'
-        - 'cell "158,946 0.41 STUDY001 · PD trend: 5 snapshots, latest 1.5%"':
-          - text: 158,946 0.41
-          - 'img "STUDY001 · PD trend: 5 snapshots, latest 1.5%"'
-        - 'cell "158,946 0.05 STUDY001 · IPD trend: 5 snapshots, latest 0.2%"':
-          - text: 158,946 0.05
-          - 'img "STUDY001 · IPD trend: 5 snapshots, latest 0.2%"'
-        - 'cell "18,181 5.0% STUDY001 · LB trend: 5 snapshots, latest 5.0%"':
-          - text: 18,181 5.0%
-          - 'img "STUDY001 · LB trend: 5 snapshots, latest 5.0%"'
-        - 'cell "260,521 5.2% STUDY001 · QRY trend: 5 snapshots, latest 5.2%"':
-          - text: 260,521 5.2%
-          - 'img "STUDY001 · QRY trend: 5 snapshots, latest 5.2%"'
-        - 'cell "13,649 5.5% STUDY001 · OQRY trend: 5 snapshots, latest 5.5%"':
-          - text: 13,649 5.5%
-          - 'img "STUDY001 · OQRY trend: 5 snapshots, latest 5.5%"'
-        - 'cell "31,612 10.4% STUDY001 · ODAT trend: 5 snapshots, latest 10.4%"':
-          - text: 31,612 10.4%
-          - 'img "STUDY001 · ODAT trend: 5 snapshots, latest 10.4%"'
-        - 'cell "260,521 2.1% STUDY001 · CDAT trend: 5 snapshots, latest 2.1%"':
-          - text: 260,521 2.1%
-          - 'img "STUDY001 · CDAT trend: 5 snapshots, latest 2.1%"'
-      - row:
         - cell "STUDY011KESTREL-3":
           - link "STUDY011":
             - /url: study:STUDY011
           - text: KESTREL-3
         - cell "780"
-        - cell "23.3% 7.5% 11.5% 8.3% 2.2% 1.0%"
+        - 'cell "780 23.3% STUDY011 · SF trend: 6 snapshots, latest 23.3%"':
+          - text: 780 23.3%
+          - 'img "STUDY011 · SF trend: 6 snapshots, latest 23.3%"'
+        - 'cell "598 7.5% STUDY011 · SDSC trend: 6 snapshots, latest 7.5%"':
+          - text: 598 7.5%
+          - 'img "STUDY011 · SDSC trend: 6 snapshots, latest 7.5%"'
+        - 'cell "589 11.5% STUDY011 · TDSC trend: 6 snapshots, latest 11.5%"':
+          - text: 589 11.5%
+          - 'img "STUDY011 · TDSC trend: 6 snapshots, latest 11.5%"'
+        - 'cell "589 8.3% STUDY011 · PTDSC trend: 6 snapshots, latest 8.3%"':
+          - text: 589 8.3%
+          - 'img "STUDY011 · PTDSC trend: 6 snapshots, latest 8.3%"'
+        - 'cell "598 2.2% STUDY011 · WC trend: 6 snapshots, latest 2.2%"':
+          - text: 598 2.2%
+          - 'img "STUDY011 · WC trend: 6 snapshots, latest 2.2%"'
+        - 'cell "598 1.0% STUDY011 · LTFU trend: 6 snapshots, latest 1.0%"':
+          - text: 598 1.0%
+          - 'img "STUDY011 · LTFU trend: 6 snapshots, latest 1.0%"'
         - 'cell "598 0.7% STUDY011 · DTH30 trend: 6 snapshots, latest 0.7%"':
           - text: 598 0.7%
           - 'img "STUDY011 · DTH30 trend: 6 snapshots, latest 0.7%"'
@@ -704,66 +876,171 @@ accessibility:
           - text: 175,777 4.1%
           - 'img "STUDY011 · CDAT trend: 6 snapshots, latest 4.1%"'
       - row:
-        - cell "STUDY003COBALT-1":
-          - link "STUDY003":
-            - /url: study:STUDY003
-          - text: COBALT-1
-        - cell "1,011"
-        - cell "28.6% 9.3% 12.8% 12.1% 2.8% 1.4%"
-        - 'cell "722 0.7% STUDY003 · DTH30 trend: 6 snapshots, latest 0.7%"':
-          - text: 722 0.7%
-          - 'img "STUDY003 · DTH30 trend: 6 snapshots, latest 0.7%"'
-        - 'cell "722 1.7% STUDY003 · DTH90 trend: 6 snapshots, latest 1.7%"':
-          - 'link "722 1.7% STUDY003 · DTH90 trend: 6 snapshots, latest 1.7%"':
+        - cell "STUDY007GRANITE-3":
+          - link "STUDY007":
+            - /url: study:STUDY007
+          - text: GRANITE-3
+        - cell "962"
+        - 'cell "962 23.6% STUDY007 · SF trend: 6 snapshots, latest 23.6%"':
+          - text: 962 23.6%
+          - 'img "STUDY007 · SF trend: 6 snapshots, latest 23.6%"'
+        - 'cell "735 10.5% STUDY007 · SDSC trend: 6 snapshots, latest 10.5%"':
+          - text: 735 10.5%
+          - 'img "STUDY007 · SDSC trend: 6 snapshots, latest 10.5%"'
+        - 'cell "719 13.2% STUDY007 · TDSC trend: 6 snapshots, latest 13.2%"':
+          - text: 719 13.2%
+          - 'img "STUDY007 · TDSC trend: 6 snapshots, latest 13.2%"'
+        - 'cell "719 7.8% STUDY007 · PTDSC trend: 6 snapshots, latest 7.8%"':
+          - text: 719 7.8%
+          - 'img "STUDY007 · PTDSC trend: 6 snapshots, latest 7.8%"'
+        - 'cell "735 1.6% STUDY007 · WC trend: 6 snapshots, latest 1.6%"':
+          - text: 735 1.6%
+          - 'img "STUDY007 · WC trend: 6 snapshots, latest 1.6%"'
+        - 'cell "735 1.0% STUDY007 · LTFU trend: 6 snapshots, latest 1.0%"':
+          - text: 735 1.0%
+          - 'img "STUDY007 · LTFU trend: 6 snapshots, latest 1.0%"'
+        - 'cell "735 0.4% STUDY007 · DTH30 trend: 6 snapshots, latest 0.4%"':
+          - text: 735 0.4%
+          - 'img "STUDY007 · DTH30 trend: 6 snapshots, latest 0.4%"'
+        - 'cell "735 1.9% STUDY007 · DTH90 trend: 6 snapshots, latest 1.9%"':
+          - 'link "735 1.9% STUDY007 · DTH90 trend: 6 snapshots, latest 1.9%"':
             - /url: https://gilead-biostats.github.io/gsm.kri/
-            - text: 722 1.7%
-            - 'img "STUDY003 · DTH90 trend: 6 snapshots, latest 1.7%"'
-        - 'cell "722 1.5% STUDY003 · IPNS trend: 6 snapshots, latest 1.5%"':
-          - text: 722 1.5%
-          - 'img "STUDY003 · IPNS trend: 6 snapshots, latest 1.5%"'
-        - 'cell "722 2.2% STUDY003 · IE trend: 6 snapshots, latest 2.2%"':
-          - text: 722 2.2%
-          - 'img "STUDY003 · IE trend: 6 snapshots, latest 2.2%"'
-        - 'cell "722 1.9% STUDY003 · STRAT trend: 6 snapshots, latest 1.9%"':
-          - text: 722 1.9%
-          - 'img "STUDY003 · STRAT trend: 6 snapshots, latest 1.9%"'
-        - 'cell "722 3.5% STUDY003 · PFSC trend: 6 snapshots, latest 3.5%"':
-          - text: 722 3.5%
-          - 'img "STUDY003 · PFSC trend: 6 snapshots, latest 3.5%"'
-        - 'cell "136,278 1.24 STUDY003 · AE trend: 6 snapshots, latest 4.4%"':
-          - text: 136,278 1.24
-          - 'img "STUDY003 · AE trend: 6 snapshots, latest 4.4%"'
-        - 'cell "136,278 0.06 STUDY003 · SAE trend: 6 snapshots, latest 0.2%"':
-          - text: 136,278 0.06
-          - 'img "STUDY003 · SAE trend: 6 snapshots, latest 0.2%"'
-        - 'cell "136,278 0.44 STUDY003 · PD trend: 6 snapshots, latest 1.6%"':
-          - text: 136,278 0.44
-          - 'img "STUDY003 · PD trend: 6 snapshots, latest 1.6%"'
-        - 'cell "136,278 0.05 STUDY003 · IPD trend: 6 snapshots, latest 0.2%"':
-          - text: 136,278 0.05
-          - 'img "STUDY003 · IPD trend: 6 snapshots, latest 0.2%"'
-        - 'cell "16,033 6.4% STUDY003 · LB trend: 6 snapshots, latest 6.4%"':
-          - text: 16,033 6.4%
-          - 'img "STUDY003 · LB trend: 6 snapshots, latest 6.4%"'
-        - 'cell "228,706 6.2% STUDY003 · QRY trend: 6 snapshots, latest 6.2%"':
-          - text: 228,706 6.2%
-          - 'img "STUDY003 · QRY trend: 6 snapshots, latest 6.2%"'
-        - 'cell "14,232 13.0% STUDY003 · OQRY trend: 6 snapshots, latest 13.0%"':
-          - text: 14,232 13.0%
-          - 'img "STUDY003 · OQRY trend: 6 snapshots, latest 13.0%"'
-        - 'cell "27,440 15.4% STUDY003 · ODAT trend: 6 snapshots, latest 15.4%"':
-          - text: 27,440 15.4%
-          - 'img "STUDY003 · ODAT trend: 6 snapshots, latest 15.4%"'
-        - 'cell "228,706 2.8% STUDY003 · CDAT trend: 6 snapshots, latest 2.8%"':
-          - text: 228,706 2.8%
-          - 'img "STUDY003 · CDAT trend: 6 snapshots, latest 2.8%"'
+            - text: 735 1.9%
+            - 'img "STUDY007 · DTH90 trend: 6 snapshots, latest 1.9%"'
+        - 'cell "735 2.2% STUDY007 · IPNS trend: 6 snapshots, latest 2.2%"':
+          - text: 735 2.2%
+          - 'img "STUDY007 · IPNS trend: 6 snapshots, latest 2.2%"'
+        - 'cell "735 4.5% STUDY007 · IE trend: 6 snapshots, latest 4.5%"':
+          - text: 735 4.5%
+          - 'img "STUDY007 · IE trend: 6 snapshots, latest 4.5%"'
+        - 'cell "735 2.4% STUDY007 · STRAT trend: 6 snapshots, latest 2.4%"':
+          - text: 735 2.4%
+          - 'img "STUDY007 · STRAT trend: 6 snapshots, latest 2.4%"'
+        - 'cell "735 1.5% STUDY007 · PFSC trend: 6 snapshots, latest 1.5%"':
+          - text: 735 1.5%
+          - 'img "STUDY007 · PFSC trend: 6 snapshots, latest 1.5%"'
+        - 'cell "131,673 0.81 STUDY007 · AE trend: 6 snapshots, latest 2.9%"':
+          - text: 131,673 0.81
+          - 'img "STUDY007 · AE trend: 6 snapshots, latest 2.9%"'
+        - 'cell "131,673 0.10 STUDY007 · SAE trend: 6 snapshots, latest 0.3%"':
+          - text: 131,673 0.10
+          - 'img "STUDY007 · SAE trend: 6 snapshots, latest 0.3%"'
+        - 'cell "131,673 0.40 STUDY007 · PD trend: 6 snapshots, latest 1.4%"':
+          - text: 131,673 0.40
+          - 'img "STUDY007 · PD trend: 6 snapshots, latest 1.4%"'
+        - 'cell "131,673 0.03 STUDY007 · IPD trend: 6 snapshots, latest 0.1%"':
+          - text: 131,673 0.03
+          - 'img "STUDY007 · IPD trend: 6 snapshots, latest 0.1%"'
+        - 'cell "16,009 6.0% STUDY007 · LB trend: 6 snapshots, latest 6.0%"':
+          - text: 16,009 6.0%
+          - 'img "STUDY007 · LB trend: 6 snapshots, latest 6.0%"'
+        - 'cell "217,876 10.9% STUDY007 · QRY trend: 6 snapshots, latest 10.9%"':
+          - text: 217,876 10.9%
+          - 'img "STUDY007 · QRY trend: 6 snapshots, latest 10.9%"'
+        - 'cell "23,801 6.1% STUDY007 · OQRY trend: 6 snapshots, latest 6.1%"':
+          - text: 23,801 6.1%
+          - 'img "STUDY007 · OQRY trend: 6 snapshots, latest 6.1%"'
+        - 'cell "28,298 14.9% STUDY007 · ODAT trend: 6 snapshots, latest 14.9%"':
+          - text: 28,298 14.9%
+          - 'img "STUDY007 · ODAT trend: 6 snapshots, latest 14.9%"'
+        - 'cell "217,876 4.8% STUDY007 · CDAT trend: 6 snapshots, latest 4.8%"':
+          - text: 217,876 4.8%
+          - 'img "STUDY007 · CDAT trend: 6 snapshots, latest 4.8%"'
+      - row:
+        - cell "STUDY010JUNIPER-2":
+          - link "STUDY010":
+            - /url: study:STUDY010
+          - text: JUNIPER-2
+        - cell "1,147"
+        - 'cell "1,147 25.3% STUDY010 · SF trend: 6 snapshots, latest 25.3%"':
+          - text: 1,147 25.3%
+          - 'img "STUDY010 · SF trend: 6 snapshots, latest 25.3%"'
+        - 'cell "857 7.5% STUDY010 · SDSC trend: 6 snapshots, latest 7.5%"':
+          - text: 857 7.5%
+          - 'img "STUDY010 · SDSC trend: 6 snapshots, latest 7.5%"'
+        - 'cell "839 11.3% STUDY010 · TDSC trend: 6 snapshots, latest 11.3%"':
+          - text: 839 11.3%
+          - 'img "STUDY010 · TDSC trend: 6 snapshots, latest 11.3%"'
+        - 'cell "839 9.1% STUDY010 · PTDSC trend: 6 snapshots, latest 9.1%"':
+          - text: 839 9.1%
+          - 'img "STUDY010 · PTDSC trend: 6 snapshots, latest 9.1%"'
+        - 'cell "857 2.7% STUDY010 · WC trend: 6 snapshots, latest 2.7%"':
+          - text: 857 2.7%
+          - 'img "STUDY010 · WC trend: 6 snapshots, latest 2.7%"'
+        - 'cell "857 1.2% STUDY010 · LTFU trend: 6 snapshots, latest 1.2%"':
+          - text: 857 1.2%
+          - 'img "STUDY010 · LTFU trend: 6 snapshots, latest 1.2%"'
+        - 'cell "857 1.4% STUDY010 · DTH30 trend: 6 snapshots, latest 1.4%"':
+          - text: 857 1.4%
+          - 'img "STUDY010 · DTH30 trend: 6 snapshots, latest 1.4%"'
+        - 'cell "857 3.2% STUDY010 · DTH90 trend: 6 snapshots, latest 3.2%"':
+          - 'link "857 3.2% STUDY010 · DTH90 trend: 6 snapshots, latest 3.2%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 857 3.2%
+            - 'img "STUDY010 · DTH90 trend: 6 snapshots, latest 3.2%"'
+        - 'cell "857 2.1% STUDY010 · IPNS trend: 6 snapshots, latest 2.1%"':
+          - text: 857 2.1%
+          - 'img "STUDY010 · IPNS trend: 6 snapshots, latest 2.1%"'
+        - 'cell "857 1.6% STUDY010 · IE trend: 6 snapshots, latest 1.6%"':
+          - text: 857 1.6%
+          - 'img "STUDY010 · IE trend: 6 snapshots, latest 1.6%"'
+        - 'cell "857 3.4% STUDY010 · STRAT trend: 6 snapshots, latest 3.4%"':
+          - text: 857 3.4%
+          - 'img "STUDY010 · STRAT trend: 6 snapshots, latest 3.4%"'
+        - 'cell "857 2.8% STUDY010 · PFSC trend: 6 snapshots, latest 2.8%"':
+          - text: 857 2.8%
+          - 'img "STUDY010 · PFSC trend: 6 snapshots, latest 2.8%"'
+        - 'cell "146,728 1.29 STUDY010 · AE trend: 6 snapshots, latest 4.6%"':
+          - text: 146,728 1.29
+          - 'img "STUDY010 · AE trend: 6 snapshots, latest 4.6%"'
+        - 'cell "146,728 0.09 STUDY010 · SAE trend: 6 snapshots, latest 0.3%"':
+          - text: 146,728 0.09
+          - 'img "STUDY010 · SAE trend: 6 snapshots, latest 0.3%"'
+        - 'cell "146,728 0.22 STUDY010 · PD trend: 6 snapshots, latest 0.8%"':
+          - text: 146,728 0.22
+          - 'img "STUDY010 · PD trend: 6 snapshots, latest 0.8%"'
+        - 'cell "146,728 0.08 STUDY010 · IPD trend: 6 snapshots, latest 0.3%"':
+          - text: 146,728 0.08
+          - 'img "STUDY010 · IPD trend: 6 snapshots, latest 0.3%"'
+        - 'cell "18,039 4.6% STUDY010 · LB trend: 6 snapshots, latest 4.6%"':
+          - text: 18,039 4.6%
+          - 'img "STUDY010 · LB trend: 6 snapshots, latest 4.6%"'
+        - 'cell "254,193 5.2% STUDY010 · QRY trend: 6 snapshots, latest 5.2%"':
+          - text: 254,193 5.2%
+          - 'img "STUDY010 · QRY trend: 6 snapshots, latest 5.2%"'
+        - 'cell "13,321 11.0% STUDY010 · OQRY trend: 6 snapshots, latest 11.0%"':
+          - text: 13,321 11.0%
+          - 'img "STUDY010 · OQRY trend: 6 snapshots, latest 11.0%"'
+        - 'cell "32,840 11.1% STUDY010 · ODAT trend: 6 snapshots, latest 11.1%"':
+          - text: 32,840 11.1%
+          - 'img "STUDY010 · ODAT trend: 6 snapshots, latest 11.1%"'
+        - 'cell "254,193 3.0% STUDY010 · CDAT trend: 6 snapshots, latest 3.0%"':
+          - text: 254,193 3.0%
+          - 'img "STUDY010 · CDAT trend: 6 snapshots, latest 3.0%"'
       - row:
         - cell "STUDY005EMBER-1":
           - link "STUDY005":
             - /url: study:STUDY005
           - text: EMBER-1
         - cell "1,168"
-        - cell "25.4% 13.5% 7.0% 8.7% 2.0% 1.6%"
+        - 'cell "1,168 25.4% STUDY005 · SF trend: 6 snapshots, latest 25.4%"':
+          - text: 1,168 25.4%
+          - 'img "STUDY005 · SF trend: 6 snapshots, latest 25.4%"'
+        - 'cell "871 13.5% STUDY005 · SDSC trend: 6 snapshots, latest 13.5%"':
+          - text: 871 13.5%
+          - 'img "STUDY005 · SDSC trend: 6 snapshots, latest 13.5%"'
+        - 'cell "854 7.0% STUDY005 · TDSC trend: 6 snapshots, latest 7.0%"':
+          - text: 854 7.0%
+          - 'img "STUDY005 · TDSC trend: 6 snapshots, latest 7.0%"'
+        - 'cell "854 8.7% STUDY005 · PTDSC trend: 6 snapshots, latest 8.7%"':
+          - text: 854 8.7%
+          - 'img "STUDY005 · PTDSC trend: 6 snapshots, latest 8.7%"'
+        - 'cell "871 2.0% STUDY005 · WC trend: 6 snapshots, latest 2.0%"':
+          - text: 871 2.0%
+          - 'img "STUDY005 · WC trend: 6 snapshots, latest 2.0%"'
+        - 'cell "871 1.6% STUDY005 · LTFU trend: 6 snapshots, latest 1.6%"':
+          - text: 871 1.6%
+          - 'img "STUDY005 · LTFU trend: 6 snapshots, latest 1.6%"'
         - 'cell "871 0.8% STUDY005 · DTH30 trend: 6 snapshots, latest 0.8%"':
           - text: 871 0.8%
           - 'img "STUDY005 · DTH30 trend: 6 snapshots, latest 0.8%"'
@@ -812,66 +1089,171 @@ accessibility:
           - text: 258,664 3.5%
           - 'img "STUDY005 · CDAT trend: 6 snapshots, latest 3.5%"'
       - row:
-        - cell "STUDY009IRIS-1":
-          - link "STUDY009":
-            - /url: study:STUDY009
-          - text: IRIS-1
-        - cell "708"
-        - cell "15.7% 6.0% 7.2% 13.1% 4.4% 1.7%"
-        - 'cell "597 0.8% STUDY009 · DTH30 trend: 6 snapshots, latest 0.8%"':
-          - text: 597 0.8%
-          - 'img "STUDY009 · DTH30 trend: 6 snapshots, latest 0.8%"'
-        - 'cell "597 2.5% STUDY009 · DTH90 trend: 6 snapshots, latest 2.5%"':
-          - 'link "597 2.5% STUDY009 · DTH90 trend: 6 snapshots, latest 2.5%"':
+        - cell "STUDY001ATLAS-1":
+          - link "STUDY001":
+            - /url: study:STUDY001
+          - text: ATLAS-1
+        - cell "1,341"
+        - 'cell "1,341 26.3% STUDY001 · SF trend: 5 snapshots, latest 26.3%"':
+          - text: 1,341 26.3%
+          - 'img "STUDY001 · SF trend: 5 snapshots, latest 26.3%"'
+        - 'cell "988 6.6% STUDY001 · SDSC trend: 5 snapshots, latest 6.6%"':
+          - text: 988 6.6%
+          - 'img "STUDY001 · SDSC trend: 5 snapshots, latest 6.6%"'
+        - 'cell "973 12.2% STUDY001 · TDSC trend: 5 snapshots, latest 12.2%"':
+          - text: 973 12.2%
+          - 'img "STUDY001 · TDSC trend: 5 snapshots, latest 12.2%"'
+        - 'cell "973 8.6% STUDY001 · PTDSC trend: 5 snapshots, latest 8.6%"':
+          - text: 973 8.6%
+          - 'img "STUDY001 · PTDSC trend: 5 snapshots, latest 8.6%"'
+        - 'cell "988 2.5% STUDY001 · WC trend: 5 snapshots, latest 2.5%"':
+          - text: 988 2.5%
+          - 'img "STUDY001 · WC trend: 5 snapshots, latest 2.5%"'
+        - 'cell "988 2.6% STUDY001 · LTFU trend: 5 snapshots, latest 2.6%"':
+          - text: 988 2.6%
+          - 'img "STUDY001 · LTFU trend: 5 snapshots, latest 2.6%"'
+        - 'cell "988 0.6% STUDY001 · DTH30 trend: 5 snapshots, latest 0.6%"':
+          - text: 988 0.6%
+          - 'img "STUDY001 · DTH30 trend: 5 snapshots, latest 0.6%"'
+        - 'cell "988 1.6% STUDY001 · DTH90 trend: 5 snapshots, latest 1.6%"':
+          - 'link "988 1.6% STUDY001 · DTH90 trend: 5 snapshots, latest 1.6%"':
             - /url: https://gilead-biostats.github.io/gsm.kri/
-            - text: 597 2.5%
-            - 'img "STUDY009 · DTH90 trend: 6 snapshots, latest 2.5%"'
-        - 'cell "597 1.7% STUDY009 · IPNS trend: 6 snapshots, latest 1.7%"':
-          - text: 597 1.7%
-          - 'img "STUDY009 · IPNS trend: 6 snapshots, latest 1.7%"'
-        - 'cell "597 4.2% STUDY009 · IE trend: 6 snapshots, latest 4.2%"':
-          - text: 597 4.2%
-          - 'img "STUDY009 · IE trend: 6 snapshots, latest 4.2%"'
-        - 'cell "597 2.3% STUDY009 · STRAT trend: 6 snapshots, latest 2.3%"':
-          - text: 597 2.3%
-          - 'img "STUDY009 · STRAT trend: 6 snapshots, latest 2.3%"'
-        - 'cell "597 3.0% STUDY009 · PFSC trend: 6 snapshots, latest 3.0%"':
-          - text: 597 3.0%
-          - 'img "STUDY009 · PFSC trend: 6 snapshots, latest 3.0%"'
-        - 'cell "102,953 1.15 STUDY009 · AE trend: 6 snapshots, latest 4.1%"':
-          - text: 102,953 1.15
-          - 'img "STUDY009 · AE trend: 6 snapshots, latest 4.1%"'
-        - 'cell "102,953 0.12 STUDY009 · SAE trend: 6 snapshots, latest 0.4%"':
-          - text: 102,953 0.12
-          - 'img "STUDY009 · SAE trend: 6 snapshots, latest 0.4%"'
-        - 'cell "102,953 0.24 STUDY009 · PD trend: 6 snapshots, latest 0.9%"':
-          - text: 102,953 0.24
-          - 'img "STUDY009 · PD trend: 6 snapshots, latest 0.9%"'
-        - 'cell "102,953 0.06 STUDY009 · IPD trend: 6 snapshots, latest 0.2%"':
-          - text: 102,953 0.06
-          - 'img "STUDY009 · IPD trend: 6 snapshots, latest 0.2%"'
-        - 'cell "13,465 3.9% STUDY009 · LB trend: 6 snapshots, latest 3.9%"':
-          - text: 13,465 3.9%
-          - 'img "STUDY009 · LB trend: 6 snapshots, latest 3.9%"'
-        - 'cell "182,319 4.1% STUDY009 · QRY trend: 6 snapshots, latest 4.1%"':
-          - text: 182,319 4.1%
-          - 'img "STUDY009 · QRY trend: 6 snapshots, latest 4.1%"'
-        - 'cell "7,414 9.0% STUDY009 · OQRY trend: 6 snapshots, latest 9.0%"':
-          - text: 7,414 9.0%
-          - 'img "STUDY009 · OQRY trend: 6 snapshots, latest 9.0%"'
-        - 'cell "22,974 9.3% STUDY009 · ODAT trend: 6 snapshots, latest 9.3%"':
-          - text: 22,974 9.3%
-          - 'img "STUDY009 · ODAT trend: 6 snapshots, latest 9.3%"'
-        - 'cell "182,319 4.1% STUDY009 · CDAT trend: 6 snapshots, latest 4.1%"':
-          - text: 182,319 4.1%
-          - 'img "STUDY009 · CDAT trend: 6 snapshots, latest 4.1%"'
+            - text: 988 1.6%
+            - 'img "STUDY001 · DTH90 trend: 5 snapshots, latest 1.6%"'
+        - 'cell "988 1.5% STUDY001 · IPNS trend: 5 snapshots, latest 1.5%"':
+          - text: 988 1.5%
+          - 'img "STUDY001 · IPNS trend: 5 snapshots, latest 1.5%"'
+        - 'cell "988 3.7% STUDY001 · IE trend: 5 snapshots, latest 3.7%"':
+          - text: 988 3.7%
+          - 'img "STUDY001 · IE trend: 5 snapshots, latest 3.7%"'
+        - 'cell "988 3.2% STUDY001 · STRAT trend: 5 snapshots, latest 3.2%"':
+          - text: 988 3.2%
+          - 'img "STUDY001 · STRAT trend: 5 snapshots, latest 3.2%"'
+        - 'cell "988 3.2% STUDY001 · PFSC trend: 5 snapshots, latest 3.2%"':
+          - text: 988 3.2%
+          - 'img "STUDY001 · PFSC trend: 5 snapshots, latest 3.2%"'
+        - 'cell "158,946 0.86 STUDY001 · AE trend: 5 snapshots, latest 3.1%"':
+          - text: 158,946 0.86
+          - 'img "STUDY001 · AE trend: 5 snapshots, latest 3.1%"'
+        - 'cell "158,946 0.14 STUDY001 · SAE trend: 5 snapshots, latest 0.5%"':
+          - text: 158,946 0.14
+          - 'img "STUDY001 · SAE trend: 5 snapshots, latest 0.5%"'
+        - 'cell "158,946 0.41 STUDY001 · PD trend: 5 snapshots, latest 1.5%"':
+          - text: 158,946 0.41
+          - 'img "STUDY001 · PD trend: 5 snapshots, latest 1.5%"'
+        - 'cell "158,946 0.05 STUDY001 · IPD trend: 5 snapshots, latest 0.2%"':
+          - text: 158,946 0.05
+          - 'img "STUDY001 · IPD trend: 5 snapshots, latest 0.2%"'
+        - 'cell "18,181 5.0% STUDY001 · LB trend: 5 snapshots, latest 5.0%"':
+          - text: 18,181 5.0%
+          - 'img "STUDY001 · LB trend: 5 snapshots, latest 5.0%"'
+        - 'cell "260,521 5.2% STUDY001 · QRY trend: 5 snapshots, latest 5.2%"':
+          - text: 260,521 5.2%
+          - 'img "STUDY001 · QRY trend: 5 snapshots, latest 5.2%"'
+        - 'cell "13,649 5.5% STUDY001 · OQRY trend: 5 snapshots, latest 5.5%"':
+          - text: 13,649 5.5%
+          - 'img "STUDY001 · OQRY trend: 5 snapshots, latest 5.5%"'
+        - 'cell "31,612 10.4% STUDY001 · ODAT trend: 5 snapshots, latest 10.4%"':
+          - text: 31,612 10.4%
+          - 'img "STUDY001 · ODAT trend: 5 snapshots, latest 10.4%"'
+        - 'cell "260,521 2.1% STUDY001 · CDAT trend: 5 snapshots, latest 2.1%"':
+          - text: 260,521 2.1%
+          - 'img "STUDY001 · CDAT trend: 5 snapshots, latest 2.1%"'
+      - row:
+        - cell "STUDY003COBALT-1":
+          - link "STUDY003":
+            - /url: study:STUDY003
+          - text: COBALT-1
+        - cell "1,011"
+        - 'cell "1,011 28.6% STUDY003 · SF trend: 6 snapshots, latest 28.6%"':
+          - text: 1,011 28.6%
+          - 'img "STUDY003 · SF trend: 6 snapshots, latest 28.6%"'
+        - 'cell "722 9.3% STUDY003 · SDSC trend: 6 snapshots, latest 9.3%"':
+          - text: 722 9.3%
+          - 'img "STUDY003 · SDSC trend: 6 snapshots, latest 9.3%"'
+        - 'cell "711 12.8% STUDY003 · TDSC trend: 6 snapshots, latest 12.8%"':
+          - text: 711 12.8%
+          - 'img "STUDY003 · TDSC trend: 6 snapshots, latest 12.8%"'
+        - 'cell "711 12.1% STUDY003 · PTDSC trend: 6 snapshots, latest 12.1%"':
+          - text: 711 12.1%
+          - 'img "STUDY003 · PTDSC trend: 6 snapshots, latest 12.1%"'
+        - 'cell "722 2.8% STUDY003 · WC trend: 6 snapshots, latest 2.8%"':
+          - text: 722 2.8%
+          - 'img "STUDY003 · WC trend: 6 snapshots, latest 2.8%"'
+        - 'cell "722 1.4% STUDY003 · LTFU trend: 6 snapshots, latest 1.4%"':
+          - text: 722 1.4%
+          - 'img "STUDY003 · LTFU trend: 6 snapshots, latest 1.4%"'
+        - 'cell "722 0.7% STUDY003 · DTH30 trend: 6 snapshots, latest 0.7%"':
+          - text: 722 0.7%
+          - 'img "STUDY003 · DTH30 trend: 6 snapshots, latest 0.7%"'
+        - 'cell "722 1.7% STUDY003 · DTH90 trend: 6 snapshots, latest 1.7%"':
+          - 'link "722 1.7% STUDY003 · DTH90 trend: 6 snapshots, latest 1.7%"':
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+            - text: 722 1.7%
+            - 'img "STUDY003 · DTH90 trend: 6 snapshots, latest 1.7%"'
+        - 'cell "722 1.5% STUDY003 · IPNS trend: 6 snapshots, latest 1.5%"':
+          - text: 722 1.5%
+          - 'img "STUDY003 · IPNS trend: 6 snapshots, latest 1.5%"'
+        - 'cell "722 2.2% STUDY003 · IE trend: 6 snapshots, latest 2.2%"':
+          - text: 722 2.2%
+          - 'img "STUDY003 · IE trend: 6 snapshots, latest 2.2%"'
+        - 'cell "722 1.9% STUDY003 · STRAT trend: 6 snapshots, latest 1.9%"':
+          - text: 722 1.9%
+          - 'img "STUDY003 · STRAT trend: 6 snapshots, latest 1.9%"'
+        - 'cell "722 3.5% STUDY003 · PFSC trend: 6 snapshots, latest 3.5%"':
+          - text: 722 3.5%
+          - 'img "STUDY003 · PFSC trend: 6 snapshots, latest 3.5%"'
+        - 'cell "136,278 1.24 STUDY003 · AE trend: 6 snapshots, latest 4.4%"':
+          - text: 136,278 1.24
+          - 'img "STUDY003 · AE trend: 6 snapshots, latest 4.4%"'
+        - 'cell "136,278 0.06 STUDY003 · SAE trend: 6 snapshots, latest 0.2%"':
+          - text: 136,278 0.06
+          - 'img "STUDY003 · SAE trend: 6 snapshots, latest 0.2%"'
+        - 'cell "136,278 0.44 STUDY003 · PD trend: 6 snapshots, latest 1.6%"':
+          - text: 136,278 0.44
+          - 'img "STUDY003 · PD trend: 6 snapshots, latest 1.6%"'
+        - 'cell "136,278 0.05 STUDY003 · IPD trend: 6 snapshots, latest 0.2%"':
+          - text: 136,278 0.05
+          - 'img "STUDY003 · IPD trend: 6 snapshots, latest 0.2%"'
+        - 'cell "16,033 6.4% STUDY003 · LB trend: 6 snapshots, latest 6.4%"':
+          - text: 16,033 6.4%
+          - 'img "STUDY003 · LB trend: 6 snapshots, latest 6.4%"'
+        - 'cell "228,706 6.2% STUDY003 · QRY trend: 6 snapshots, latest 6.2%"':
+          - text: 228,706 6.2%
+          - 'img "STUDY003 · QRY trend: 6 snapshots, latest 6.2%"'
+        - 'cell "14,232 13.0% STUDY003 · OQRY trend: 6 snapshots, latest 13.0%"':
+          - text: 14,232 13.0%
+          - 'img "STUDY003 · OQRY trend: 6 snapshots, latest 13.0%"'
+        - 'cell "27,440 15.4% STUDY003 · ODAT trend: 6 snapshots, latest 15.4%"':
+          - text: 27,440 15.4%
+          - 'img "STUDY003 · ODAT trend: 6 snapshots, latest 15.4%"'
+        - 'cell "228,706 2.8% STUDY003 · CDAT trend: 6 snapshots, latest 2.8%"':
+          - text: 228,706 2.8%
+          - 'img "STUDY003 · CDAT trend: 6 snapshots, latest 2.8%"'
       - row:
         - cell "STUDY012LUMEN-1":
           - link "STUDY012":
             - /url: study:STUDY012
           - text: LUMEN-1
         - cell "1,281"
-        - cell "29.2% 7.3% 11.9% 10.5% 4.1% 1.3%"
+        - 'cell "1,281 29.2% STUDY012 · SF trend: 6 snapshots, latest 29.2%"':
+          - text: 1,281 29.2%
+          - 'img "STUDY012 · SF trend: 6 snapshots, latest 29.2%"'
+        - 'cell "907 7.3% STUDY012 · SDSC trend: 6 snapshots, latest 7.3%"':
+          - text: 907 7.3%
+          - 'img "STUDY012 · SDSC trend: 6 snapshots, latest 7.3%"'
+        - 'cell "894 11.9% STUDY012 · TDSC trend: 6 snapshots, latest 11.9%"':
+          - text: 894 11.9%
+          - 'img "STUDY012 · TDSC trend: 6 snapshots, latest 11.9%"'
+        - 'cell "894 10.5% STUDY012 · PTDSC trend: 6 snapshots, latest 10.5%"':
+          - text: 894 10.5%
+          - 'img "STUDY012 · PTDSC trend: 6 snapshots, latest 10.5%"'
+        - 'cell "907 4.1% STUDY012 · WC trend: 6 snapshots, latest 4.1%"':
+          - text: 907 4.1%
+          - 'img "STUDY012 · WC trend: 6 snapshots, latest 4.1%"'
+        - 'cell "907 1.3% STUDY012 · LTFU trend: 6 snapshots, latest 1.3%"':
+          - text: 907 1.3%
+          - 'img "STUDY012 · LTFU trend: 6 snapshots, latest 1.3%"'
         - 'cell "907 0.9% STUDY012 · DTH30 trend: 6 snapshots, latest 0.9%"':
           - text: 907 0.9%
           - 'img "STUDY012 · DTH30 trend: 6 snapshots, latest 0.9%"'
@@ -925,7 +1307,24 @@ accessibility:
             - /url: study:STUDY004
           - text: DELTA-1
         - cell "844"
-        - cell "31.8% 6.1% 6.9% 7.8% 1.9% 2.4%"
+        - 'cell "844 31.8% STUDY004 · SF trend: 6 snapshots, latest 31.8%"':
+          - text: 844 31.8%
+          - 'img "STUDY004 · SF trend: 6 snapshots, latest 31.8%"'
+        - 'cell "576 6.1% STUDY004 · SDSC trend: 6 snapshots, latest 6.1%"':
+          - text: 576 6.1%
+          - 'img "STUDY004 · SDSC trend: 6 snapshots, latest 6.1%"'
+        - 'cell "563 6.9% STUDY004 · TDSC trend: 6 snapshots, latest 6.9%"':
+          - text: 563 6.9%
+          - 'img "STUDY004 · TDSC trend: 6 snapshots, latest 6.9%"'
+        - 'cell "563 7.8% STUDY004 · PTDSC trend: 6 snapshots, latest 7.8%"':
+          - text: 563 7.8%
+          - 'img "STUDY004 · PTDSC trend: 6 snapshots, latest 7.8%"'
+        - 'cell "576 1.9% STUDY004 · WC trend: 6 snapshots, latest 1.9%"':
+          - text: 576 1.9%
+          - 'img "STUDY004 · WC trend: 6 snapshots, latest 1.9%"'
+        - 'cell "576 2.4% STUDY004 · LTFU trend: 6 snapshots, latest 2.4%"':
+          - text: 576 2.4%
+          - 'img "STUDY004 · LTFU trend: 6 snapshots, latest 2.4%"'
         - 'cell "576 1.0% STUDY004 · DTH30 trend: 6 snapshots, latest 1.0%"':
           - text: 576 1.0%
           - 'img "STUDY004 · DTH30 trend: 6 snapshots, latest 1.0%"'
@@ -973,111 +1372,3 @@ accessibility:
         - 'cell "168,389 1.8% STUDY004 · CDAT trend: 6 snapshots, latest 1.8%"':
           - text: 168,389 1.8%
           - 'img "STUDY004 · CDAT trend: 6 snapshots, latest 1.8%"'
-      - row:
-        - cell "STUDY006FALCON-2":
-          - link "STUDY006":
-            - /url: study:STUDY006
-          - text: FALCON-2
-        - cell "1,023"
-        - cell "14.1% 6.9% 17.3% 4.9% 2.4% 2.0%"
-        - 'cell "879 1.1% STUDY006 · DTH30 trend: 6 snapshots, latest 1.1%"':
-          - text: 879 1.1%
-          - 'img "STUDY006 · DTH30 trend: 6 snapshots, latest 1.1%"'
-        - 'cell "879 2.6% STUDY006 · DTH90 trend: 6 snapshots, latest 2.6%"':
-          - 'link "879 2.6% STUDY006 · DTH90 trend: 6 snapshots, latest 2.6%"':
-            - /url: https://gilead-biostats.github.io/gsm.kri/
-            - text: 879 2.6%
-            - 'img "STUDY006 · DTH90 trend: 6 snapshots, latest 2.6%"'
-        - 'cell "879 1.6% STUDY006 · IPNS trend: 6 snapshots, latest 1.6%"':
-          - text: 879 1.6%
-          - 'img "STUDY006 · IPNS trend: 6 snapshots, latest 1.6%"'
-        - 'cell "879 3.5% STUDY006 · IE trend: 6 snapshots, latest 3.5%"':
-          - text: 879 3.5%
-          - 'img "STUDY006 · IE trend: 6 snapshots, latest 3.5%"'
-        - 'cell "879 1.5% STUDY006 · STRAT trend: 6 snapshots, latest 1.5%"':
-          - text: 879 1.5%
-          - 'img "STUDY006 · STRAT trend: 6 snapshots, latest 1.5%"'
-        - 'cell "879 2.0% STUDY006 · PFSC trend: 6 snapshots, latest 2.0%"':
-          - text: 879 2.0%
-          - 'img "STUDY006 · PFSC trend: 6 snapshots, latest 2.0%"'
-        - 'cell "165,991 1.34 STUDY006 · AE trend: 6 snapshots, latest 4.8%"':
-          - text: 165,991 1.34
-          - 'img "STUDY006 · AE trend: 6 snapshots, latest 4.8%"'
-        - 'cell "165,991 0.09 STUDY006 · SAE trend: 6 snapshots, latest 0.3%"':
-          - text: 165,991 0.09
-          - 'img "STUDY006 · SAE trend: 6 snapshots, latest 0.3%"'
-        - 'cell "165,991 0.52 STUDY006 · PD trend: 6 snapshots, latest 1.8%"':
-          - text: 165,991 0.52
-          - 'img "STUDY006 · PD trend: 6 snapshots, latest 1.8%"'
-        - 'cell "165,991 0.06 STUDY006 · IPD trend: 6 snapshots, latest 0.2%"':
-          - text: 165,991 0.06
-          - 'img "STUDY006 · IPD trend: 6 snapshots, latest 0.2%"'
-        - 'cell "19,324 3.7% STUDY006 · LB trend: 6 snapshots, latest 3.7%"':
-          - text: 19,324 3.7%
-          - 'img "STUDY006 · LB trend: 6 snapshots, latest 3.7%"'
-        - 'cell "261,148 6.5% STUDY006 · QRY trend: 6 snapshots, latest 6.5%"':
-          - text: 261,148 6.5%
-          - 'img "STUDY006 · QRY trend: 6 snapshots, latest 6.5%"'
-        - 'cell "17,103 7.3% STUDY006 · OQRY trend: 6 snapshots, latest 7.3%"':
-          - text: 17,103 7.3%
-          - 'img "STUDY006 · OQRY trend: 6 snapshots, latest 7.3%"'
-        - 'cell "33,992 10.8% STUDY006 · ODAT trend: 6 snapshots, latest 10.8%"':
-          - text: 33,992 10.8%
-          - 'img "STUDY006 · ODAT trend: 6 snapshots, latest 10.8%"'
-        - 'cell "261,148 4.4% STUDY006 · CDAT trend: 6 snapshots, latest 4.4%"':
-          - text: 261,148 4.4%
-          - 'img "STUDY006 · CDAT trend: 6 snapshots, latest 4.4%"'
-      - row:
-        - cell "STUDY010JUNIPER-2":
-          - link "STUDY010":
-            - /url: study:STUDY010
-          - text: JUNIPER-2
-        - cell "1,147"
-        - cell "25.3% 7.5% 11.3% 9.1% 2.7% 1.2%"
-        - 'cell "857 1.4% STUDY010 · DTH30 trend: 6 snapshots, latest 1.4%"':
-          - text: 857 1.4%
-          - 'img "STUDY010 · DTH30 trend: 6 snapshots, latest 1.4%"'
-        - 'cell "857 3.2% STUDY010 · DTH90 trend: 6 snapshots, latest 3.2%"':
-          - 'link "857 3.2% STUDY010 · DTH90 trend: 6 snapshots, latest 3.2%"':
-            - /url: https://gilead-biostats.github.io/gsm.kri/
-            - text: 857 3.2%
-            - 'img "STUDY010 · DTH90 trend: 6 snapshots, latest 3.2%"'
-        - 'cell "857 2.1% STUDY010 · IPNS trend: 6 snapshots, latest 2.1%"':
-          - text: 857 2.1%
-          - 'img "STUDY010 · IPNS trend: 6 snapshots, latest 2.1%"'
-        - 'cell "857 1.6% STUDY010 · IE trend: 6 snapshots, latest 1.6%"':
-          - text: 857 1.6%
-          - 'img "STUDY010 · IE trend: 6 snapshots, latest 1.6%"'
-        - 'cell "857 3.4% STUDY010 · STRAT trend: 6 snapshots, latest 3.4%"':
-          - text: 857 3.4%
-          - 'img "STUDY010 · STRAT trend: 6 snapshots, latest 3.4%"'
-        - 'cell "857 2.8% STUDY010 · PFSC trend: 6 snapshots, latest 2.8%"':
-          - text: 857 2.8%
-          - 'img "STUDY010 · PFSC trend: 6 snapshots, latest 2.8%"'
-        - 'cell "146,728 1.29 STUDY010 · AE trend: 6 snapshots, latest 4.6%"':
-          - text: 146,728 1.29
-          - 'img "STUDY010 · AE trend: 6 snapshots, latest 4.6%"'
-        - 'cell "146,728 0.09 STUDY010 · SAE trend: 6 snapshots, latest 0.3%"':
-          - text: 146,728 0.09
-          - 'img "STUDY010 · SAE trend: 6 snapshots, latest 0.3%"'
-        - 'cell "146,728 0.22 STUDY010 · PD trend: 6 snapshots, latest 0.8%"':
-          - text: 146,728 0.22
-          - 'img "STUDY010 · PD trend: 6 snapshots, latest 0.8%"'
-        - 'cell "146,728 0.08 STUDY010 · IPD trend: 6 snapshots, latest 0.3%"':
-          - text: 146,728 0.08
-          - 'img "STUDY010 · IPD trend: 6 snapshots, latest 0.3%"'
-        - 'cell "18,039 4.6% STUDY010 · LB trend: 6 snapshots, latest 4.6%"':
-          - text: 18,039 4.6%
-          - 'img "STUDY010 · LB trend: 6 snapshots, latest 4.6%"'
-        - 'cell "254,193 5.2% STUDY010 · QRY trend: 6 snapshots, latest 5.2%"':
-          - text: 254,193 5.2%
-          - 'img "STUDY010 · QRY trend: 6 snapshots, latest 5.2%"'
-        - 'cell "13,321 11.0% STUDY010 · OQRY trend: 6 snapshots, latest 11.0%"':
-          - text: 13,321 11.0%
-          - 'img "STUDY010 · OQRY trend: 6 snapshots, latest 11.0%"'
-        - 'cell "32,840 11.1% STUDY010 · ODAT trend: 6 snapshots, latest 11.1%"':
-          - text: 32,840 11.1%
-          - 'img "STUDY010 · ODAT trend: 6 snapshots, latest 11.1%"'
-        - 'cell "254,193 3.0% STUDY010 · CDAT trend: 6 snapshots, latest 3.0%"':
-          - text: 254,193 3.0%
-          - 'img "STUDY010 · CDAT trend: 6 snapshots, latest 3.0%"'

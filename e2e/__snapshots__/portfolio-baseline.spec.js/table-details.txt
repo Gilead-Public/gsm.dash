@@ -1,6 +1,6 @@
 state: table-details
-canonical dom: sha256 1bbfcf9d43d6074a78d19cede0387a5253cbc7b286f9a392b482d3c1e16febd1 (215394 characters)
-computed styles: sha256 6050f980b1ffa28f48619b68e633505800cca96026ac2feb20a94b86dd60157c (1397 elements)
+canonical dom: sha256 27dbc04144cead85033a88e26fe607b9e0e559b6b5c856b68cfde14e2360b9fe (213448 characters)
+computed styles: sha256 63e7ac14fb8270546dd5025ec0e615f35ec1da268583dd9a0047c3b70091b2c7 (1384 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×23 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21
 sparklines:
@@ -11,7 +11,11 @@ accessibility:
   - button "Reset"
   - button "Collapse controls" [expanded]: «
   - group:
-    - text: ▸ Config Highlight study
+    - text: ▸ Config View
+    - group:
+      - button "Overview"
+      - button "Details"
+    - text: Highlight study
     - combobox:
       - option "None" [selected]
       - option "STUDY001 · ATLAS-1"
@@ -44,10 +48,6 @@ accessibility:
     - button "Study name" [pressed]
     - button "Enrolled"
     - button "Status"
-    - text: Row density
-    - group:
-      - button "Roomy"
-      - button "Condensed"
     - text: Group rows by
     - combobox:
       - option "None — one row per study" [selected]
@@ -144,31 +144,17 @@ accessibility:
     - text: STUDY011 KESTREL-3
     - checkbox "STUDY012 LUMEN-1"
     - text: STUDY012 LUMEN-1
-  - tablist "Program view":
-    - text: Table
-    - tab "Overview"
-    - tab "Details" [selected]
-  - text: Every category open · click a band to fold it Showing 12 / 12 studies · 21 / 21 site-level metrics (8 released · 4 new · 9 planned) · cells as defined in the glossary · each study at its own latest snapshot
+  - text: Showing 12 / 12 studies · 21 / 21 site-level metrics (8 released · 4 new · 9 planned) · cells as defined in the glossary · each study at its own latest snapshot
   - table:
     - rowgroup:
-      - row "Study Population Fold Disposition Disposition6 Fold Early events Early events3 Fold Eligibility & integrity Eligibility & integrity3 Fold Safety & deviations Safety & deviations5 Fold Data quality Data quality4":
+      - row "Study Population Disposition6 Early events3 Eligibility & integrity3 Safety & deviations5 Data quality4":
         - columnheader "Study"
         - columnheader "Population"
-        - columnheader "Fold Disposition Disposition6":
-          - button "Fold Disposition" [expanded]: −
-          - text: Disposition6
-        - columnheader "Fold Early events Early events3":
-          - button "Fold Early events" [expanded]: −
-          - text: Early events3
-        - columnheader "Fold Eligibility & integrity Eligibility & integrity3":
-          - button "Fold Eligibility & integrity" [expanded]: −
-          - text: Eligibility & integrity3
-        - columnheader "Fold Safety & deviations Safety & deviations5":
-          - button "Fold Safety & deviations" [expanded]: −
-          - text: Safety & deviations5
-        - columnheader "Fold Data quality Data quality4":
-          - button "Fold Data quality" [expanded]: −
-          - text: Data quality4
+        - columnheader "Disposition6"
+        - columnheader "Early events3"
+        - columnheader "Eligibility & integrity3"
+        - columnheader "Safety & deviations5"
+        - columnheader "Data quality4"
       - row "Scr. n SF % scr. SDSC n (% enr.) TDSC n (% dosed) PTDSC n (% dosed) Planned WC n (% enr.) Planned LTFU n (% enr.) Planned DTH30 n (% enr.) Planned DTH90 n (% enr.) Planned IPNS n (% enr.) Planned IE n (% enr.) Planned STRAT n (% enr.) Planned PFSC n (% enr.) Planned AE / 28 d New SAE / 28 d New PD / 28 d New IPD / 28 d New LB n (%) QRY % OQRY % ODAT % CDAT %":
         - columnheader "Scr. n"
         - columnheader "SF % scr."

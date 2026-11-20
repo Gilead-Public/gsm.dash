@@ -16,7 +16,8 @@ export const HEATMAPS = [['none', 'None'], ['num', 'Numerator'], ['den', 'Denomi
 export const CELL_MODES = [['defined', 'As defined'], ['custom', 'Custom']];
 /** The table's optional columns (#21). */
 export const COLUMN_OPTIONS = [['name', 'Study name'], ['enroll', 'Enrolled'], ['status', 'Status']];
-export const DENSITIES = [['roomy', 'Roomy'], ['condensed', 'Condensed']];
+/** The table's two views: Overview folds each category to one headline value per metric; Details opens them all. */
+export const VIEWS = [['overview', 'Overview'], ['details', 'Details']];
 
 /**
  * What each cell can also show: in "defined" mode only the trend, in "custom" mode the counts and rate too.
@@ -45,32 +46,6 @@ export const studyLabel = (study) => `${study.StudyID}${study.params?.nickname ?
  * @param {any} store
  */
 export function controlStates(store) {
-  const cells = store.tableZoom() === 'overview' ? 'Overview tiles show one headline value per metric. Open a category or switch to Details.' : '';
+  const cells = store.state.view === 'overview' ? 'Overview tiles show one headline value per metric. Switch View to Details for full cells.' : '';
   return { cellMode: cells, show: cells ? ' ' : '' };
-}
-
-/** The table's two zoom levels. */
-export const TABLE_VIEWS = [
-  ['overview', 'Overview', 'Every category folded to one headline value per metric'],
-  ['details', 'Details', 'Every category open with full cells'],
-];
-
-/**
- * Which view buttons are lit. The table's are derived from the category folds, so opening a single band gives a
- * "mixed" state with both table buttons outlined.
- * @param {string} view
- * @param {string} zoom
- */
-export const viewButton = (view, zoom) => ({ on: view === zoom, part: zoom === 'mixed' });
-
-/**
- * The note beside the view switch. In a mixed table it lists the open categories, after a bold "Mixed".
- * @param {string} zoom
- * @param {string[]} open
- * @returns {{ text: string, mixed: string[] | null }}
- */
-export function viewNote(zoom, open) {
-  if (zoom === 'overview') return { text: 'Every category folded to headline values · click a band to open it', mixed: null };
-  if (zoom === 'details') return { text: 'Every category open · click a band to fold it', mixed: null };
-  return { text: `${open.join(', ')} open`, mixed: open };
 }

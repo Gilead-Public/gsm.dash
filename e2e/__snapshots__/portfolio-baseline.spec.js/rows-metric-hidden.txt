@@ -1,6 +1,6 @@
 state: rows-metric-hidden
-canonical dom: sha256 0e49e9cffdc3dee1a4806d3b1ddf6008b3d6715cd9c38e08569a8f184af1e967 (66645 characters)
-computed styles: sha256 b75959bc1fb764813e2021adf381b528552f5e5264dd4479386dd8e25e71ec56 (443 elements)
+canonical dom: sha256 592bb42d9f072909aa0f04e7571b5c934094c89860ef310a4d0c3780ca03c8d0 (64684 characters)
+computed styles: sha256 835b7945a0afdd30d1bc0d15c8f6ea2c873bf627ef58ab30131efe343f074d65 (430 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×3 | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 sparklines:
@@ -11,7 +11,11 @@ accessibility:
   - button "Reset"
   - button "Collapse controls" [expanded]: «
   - group:
-    - text: ▸ Config Highlight study
+    - text: ▸ Config View
+    - group:
+      - button "Overview"
+      - button "Details"
+    - text: Highlight study
     - combobox:
       - option "None" [selected]
       - option "STUDY001 · ATLAS-1"
@@ -22,7 +26,7 @@ accessibility:
     - group [disabled]:
       - button "As defined" [disabled]
       - button "Custom" [disabled]
-    - paragraph: Overview tiles show one headline value per metric. Open a category or switch to Details.
+    - paragraph: Overview tiles show one headline value per metric. Switch View to Details for full cells.
     - text: Also show
     - button "Trend" [disabled]
     - text: Heatmap (also drives column sort)
@@ -35,10 +39,6 @@ accessibility:
     - button "Study name" [pressed]
     - button "Enrolled"
     - button "Status"
-    - text: Row density
-    - group:
-      - button "Roomy"
-      - button "Condensed"
     - text: Group rows by
     - combobox:
       - option "None — one row per study" [selected]
@@ -136,31 +136,17 @@ accessibility:
     - checkbox "STUDY012 LUMEN-1"
     - text: STUDY012 LUMEN-1
     - button "Clear filters"
-  - tablist "Program view":
-    - text: Table
-    - tab "Overview" [selected]
-    - tab "Details"
-  - text: Every category folded to headline values · click a band to open it Showing 3 / 12 studies · 16 / 21 site-level metrics (7 released · 9 planned) · one headline value per metric · each study at its own latest snapshot
+  - text: Showing 3 / 12 studies · 16 / 21 site-level metrics (7 released · 9 planned) · one headline value per metric · each study at its own latest snapshot
   - table:
     - rowgroup:
-      - row "Study Population Open Disposition Disposition 5 metrics SDSC TDSC PTDSC WC LTFU Open Early events Early events 3 metrics Planned DTH30 DTH90 IPNS Open Eligibility & integrity Eligibility & integrity 3 metrics Planned IE STRAT PFSC Open Safety & deviations Safety & deviations 1 metric LB Open Data quality Data quality 4 metrics QRY OQRY ODAT CDAT":
+      - row "Study Population Disposition 5 metrics SDSC TDSC PTDSC WC LTFU Early events 3 metrics Planned DTH30 DTH90 IPNS Eligibility & integrity 3 metrics Planned IE STRAT PFSC Safety & deviations 1 metric LB Data quality 4 metrics QRY OQRY ODAT CDAT":
         - columnheader "Study"
         - columnheader "Population"
-        - columnheader "Open Disposition Disposition 5 metrics SDSC TDSC PTDSC WC LTFU":
-          - button "Open Disposition": +
-          - text: Disposition 5 metrics SDSC TDSC PTDSC WC LTFU
-        - columnheader "Open Early events Early events 3 metrics Planned DTH30 DTH90 IPNS":
-          - button "Open Early events": +
-          - text: Early events 3 metrics Planned DTH30 DTH90 IPNS
-        - columnheader "Open Eligibility & integrity Eligibility & integrity 3 metrics Planned IE STRAT PFSC":
-          - button "Open Eligibility & integrity": +
-          - text: Eligibility & integrity 3 metrics Planned IE STRAT PFSC
-        - columnheader "Open Safety & deviations Safety & deviations 1 metric LB":
-          - button "Open Safety & deviations": +
-          - text: Safety & deviations 1 metric LB
-        - columnheader "Open Data quality Data quality 4 metrics QRY OQRY ODAT CDAT":
-          - button "Open Data quality": +
-          - text: Data quality 4 metrics QRY OQRY ODAT CDAT
+        - columnheader "Disposition 5 metrics SDSC TDSC PTDSC WC LTFU"
+        - columnheader "Early events 3 metrics Planned DTH30 DTH90 IPNS"
+        - columnheader "Eligibility & integrity 3 metrics Planned IE STRAT PFSC"
+        - columnheader "Safety & deviations 1 metric LB"
+        - columnheader "Data quality 4 metrics QRY OQRY ODAT CDAT"
       - row "Scr. n":
         - columnheader "Scr. n"
     - rowgroup:

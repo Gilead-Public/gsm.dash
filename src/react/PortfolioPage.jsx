@@ -2,10 +2,9 @@
 import { useState } from 'react';
 import { useStore } from './useStore.js';
 import { Sidebar } from './Sidebar.jsx';
-import { ViewSwitch } from './ViewSwitch.jsx';
 import { PortfolioTable } from './PortfolioTable.jsx';
 
-// The portfolio overview: the controls, the view switch and the table. It keeps the
+// The portfolio overview: the controls and the table. It keeps the
 // markup of the original program page, each custom element becoming a div that carries its name as a class, so the
 // same tests and styles apply.
 
@@ -59,7 +58,6 @@ export function PortfolioPage({ store }) {
       <Sidebar store={store} collapsed={collapsed} onCollapse={collapse} />
       <div className="content">
         <CycleNotice cycle={store.cycle} />
-        <ViewSwitch store={store} />
         <PortfolioTable store={store} />
       </div>
     </div>

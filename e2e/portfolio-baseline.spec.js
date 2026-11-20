@@ -1,12 +1,14 @@
 // @ts-check
 // 11.03 regression evidence: the portfolio as it rendered before #11's changes, recorded state by state in
-// e2e/__snapshots__/portfolio-baseline.spec.js/, at 69b2240; re-recorded when the Distribution view was removed (#35),
-// which changed only the view switch and the highlight hint. Each state is reached through the UI and recorded as its
-// canonical DOM and computed styles (by hash), every sparkline's points, its accessibility tree (which leaves out
-// hidden elements) and what CSS colours: every table cell's background, and any open tooltip. The canonical DOM lets
-// the React page be compared with the same records.
+// e2e/__snapshots__/portfolio-baseline.spec.js/, at 69b2240; re-recorded when the Distribution view was removed (#35)
+// and when View replaced the category folds and row density, each time with every tooltip, cell background, sparkline
+// and table row unchanged. Each state is reached through the UI and recorded as its canonical DOM and computed styles
+// (by hash), every sparkline's points, its accessibility tree (which leaves out hidden elements) and what CSS colours:
+// every table cell's background, and any open tooltip. The canonical DOM lets the React page be compared with the same
+// records.
 import { readData, test } from './fixtures/app.js';
 import { capturePortfolio as capture, expectRecorded } from './fixtures/baseline.js';
+import { chooseView } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('@playwright/test').TestInfo} TestInfo */
 
@@ -30,13 +32,11 @@ async function expectState(page, testInfo, name) {
 const sidebar = (page) => page.locator('.sidebar');
 
 test.describe('the portfolio against its recorded baseline', () => {
-  test('11.03: the table matches its baseline in Overview, Details and Mixed, sorted both ways, with a heatmap and with each cell display (#11)', async ({ app, page }, testInfo) => {
+  test('11.03: the table matches its baseline in Overview and Details, sorted both ways, with a heatmap and with each cell display (#11)', async ({ app, page }, testInfo) => {
     await app.open();
     await expectState(page, testInfo, 'table-overview');
-    await page.locator('button[data-view="details"]').click();
+    await chooseView(page, 'details');
     await expectState(page, testInfo, 'table-details');
-    await page.locator('[data-fold]').first().click();
-    await expectState(page, testInfo, 'table-mixed');
     const column = await page.locator('th.sortable[data-sort^="Analysis_"]').first().getAttribute('data-sort');
     await page.locator(`th[data-sort="${column}"]`).click();
     await expectState(page, testInfo, 'table-sorted-once');
@@ -71,7 +71,7 @@ test.describe('the portfolio against its recorded baseline', () => {
     await app.open();
     await page.locator('#app .otile').first().hover();
     await expectState(page, testInfo, 'tooltip-table-cell');
-    await page.locator('button[data-view="details"]').click();
+    await chooseView(page, 'details');
     await page.locator('#app thead th[data-sort^="Analysis_"]').first().hover();
     await expectState(page, testInfo, 'tooltip-table-header');
   });

@@ -3,7 +3,7 @@ import { selectLatestSnapshots, poolResults, bucketStudies, filterStudies } from
 import { indexSummary, poolSummary, POPULATIONS } from './summary.js';
 import { nextSort } from './sort.js';
 import { STATUS_ORDER, CATEGORY_ORDER, groupByCategory } from './catalog.js';
-import { CELL_MODES, COLUMN_OPTIONS, DENSITIES, GROUP_BY_OPTIONS, HEATMAPS, showOptions } from '../app/portfolio-controls.js';
+import { CELL_MODES, COLUMN_OPTIONS, GROUP_BY_OPTIONS, HEATMAPS, VIEWS, showOptions } from '../app/portfolio-controls.js';
 import { POP_COLUMNS } from '../app/portfolio-table.js';
 import { portfolioDefaults } from './portfolio-config.js';
 
@@ -11,7 +11,7 @@ import { portfolioDefaults } from './portfolio-config.js';
 const SCALARS = [
   ['group', 'groupBy', GROUP_BY_OPTIONS],
   ['cell', 'cellMode', CELL_MODES],
-  ['density', 'density', DENSITIES],
+  ['view', 'view', VIEWS],
   ['heatmap', 'heatmap', HEATMAPS],
 ];
 const SHOW_PARTS = showOptions(false).map(([part]) => part);
@@ -80,7 +80,7 @@ export class PortfolioStore extends EventTarget {
     this.state = {
       show: new Set(this.#defaults.show), // any of num | den | rate | trend; cells stack what's on
       columns: new Set(this.#defaults.columns), // the table's optional columns shown: name | enroll | status (#21)
-      density: this.#defaults.density, // 'roomy' | 'condensed' (#21)
+      view: this.#defaults.view, // 'overview' (each category folded to headline tiles) | 'details'
       heatmap: this.#defaults.heatmap, // 'none' | 'num' | 'den' | 'rate' — column-relative cell shading (and the metric sort measure)
       groupBy: this.#defaults.groupBy, // 'none' (one row per study) | a study param
       filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set(), study: new Set() },
@@ -93,12 +93,8 @@ export class PortfolioStore extends EventTarget {
       asOf: null, // view the portfolio as of this date; the study page's visit scrubber drives it
       cellMode: this.#defaults.cellMode, // 'defined' — each metric shows its glossary display rule | 'custom' — the `show` stack for every metric
       statuses: new Set(STATUS_ORDER), // glossary Status values to show (Released | New | Planned)
-      // Program table zoom: folded categories show one headline value per
-      // metric. All folded = Overview (the landing view), none = Details.
-      collapsedGroups: new Set(), // filled with every category below
       highlightStudy: null, // StudyID marked in the table
     };
-    this.state.collapsedGroups = new Set(this.#allCategories());
   }
 
   get #index() {
@@ -151,33 +147,6 @@ export class PortfolioStore extends EventTarget {
     this.#emit();
   }
 
-  /** Fold / unfold one category band in the program table. */
-  toggleGroup(category) {
-    const set = this.state.collapsedGroups;
-    set.has(category) ? set.delete(category) : set.add(category);
-    this.#emit();
-  }
-
-  /**
-   * Table zoom derived from which visible categories are folded: 'overview'
-   * (all folded), 'details' (none folded) or 'mixed'.
-   */
-  tableZoom(categories = this.metricCategories().map((g) => g.category)) {
-    const folded = categories.filter((c) => this.state.collapsedGroups.has(c)).length;
-    if (folded === categories.length) return 'overview';
-    return folded === 0 ? 'details' : 'mixed';
-  }
-
-  /** The view switch: 'overview' folds every category, 'details' opens them all. */
-  setProgramView(view) {
-    this.state.collapsedGroups = view === 'details' ? new Set() : new Set(this.#allCategories());
-    this.#emit();
-  }
-
-  #allCategories() {
-    return [...new Set([...CATEGORY_ORDER, ...groupByCategory(this.metrics, CATEGORY_ORDER).map((g) => g.category)])];
-  }
-
   /** Mark one study in the table; selecting it again clears the highlight. */
   highlight(studyId) {
     this.state.highlightStudy = studyId && this.state.highlightStudy !== studyId ? studyId : null;
@@ -187,19 +156,14 @@ export class PortfolioStore extends EventTarget {
   /**
    * The portfolio view as URL params, so a link reopens the same view and a study report can carry it there and back.
    * Defaults are left out, so the default view has no params. A list is one param per value, in catalog order, since
-   * study values may contain commas. `open` lists the table's open bands; `all` stands for every band.
+   * study values may contain commas.
    */
   programParams() {
     const { state } = this;
-    const cats = this.#allCategories();
-    const open = cats.filter((c) => !state.collapsedGroups.has(c));
-    const zoom = open.length === 0 ? 'overview' : open.length === cats.length ? 'details' : 'mixed';
     const params = new URLSearchParams();
     const add = (key, values) => values.forEach((v) => params.append(key, v));
     // A set that can be emptied writes an empty value, so that it differs from the default.
     const addSet = (key, values) => (values.length ? add(key, values) : params.set(key, ''));
-    if (zoom !== 'overview') params.set('view', zoom);
-    if (zoom === 'mixed') add('open', open);
     if (state.highlightStudy) params.set('study', state.highlightStudy);
     for (const [key, field] of SCALARS) if (state[field] !== this.#defaults[field]) params.set(key, state[field]);
     if (state.groupBy !== 'none') add('expand', this.#bucketValues().filter((v) => state.expanded.has(v)));
@@ -222,13 +186,7 @@ export class PortfolioStore extends EventTarget {
   /** Restore what programParams() wrote: an absent param is its configured default, and unknown values are dropped. One 'change'. */
   applyProgramParams(params) {
     const { state } = this;
-    const cats = this.#allCategories();
     const known = (values, options) => values.filter((v) => options.includes(v));
-    const view = params.get('view');
-    const open = params.getAll('open');
-    if (open.includes('all') || (!open.length && view === 'details')) state.collapsedGroups = new Set();
-    else if (open.length) state.collapsedGroups = new Set(cats.filter((c) => !open.includes(c)));
-    else state.collapsedGroups = new Set(cats);
     const study = params.get('study');
     state.highlightStudy = this.studies.some((st) => st.StudyID === study) ? study : null;
     for (const [key, field, choices] of SCALARS) {

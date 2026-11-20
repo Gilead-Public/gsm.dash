@@ -13,7 +13,7 @@ const study = 'STUDY004';
 const hidden = 'Analysis_kri0005';
 const CONFIG = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'] };
 /** Every setting the address holds, besides one `filter.<param>` per filter the Controls panel offers. */
-const VIEW_KEYS = ['cell', 'dir', 'expand', 'group', 'heatmap', 'hide', 'open', 'show', 'sort', 'statuses', 'study', 'view'];
+const VIEW_KEYS = ['cell', 'dir', 'expand', 'group', 'heatmap', 'hide', 'show', 'sort', 'statuses', 'study', 'view'];
 
 /** @param {Page} page */
 const sidebar = (page) => page.locator('.sidebar');
@@ -34,7 +34,7 @@ async function changeEverySetting(page) {
   await box.locator('button[data-status="Planned"]').click();
   await box.locator(`input[data-metric="${hidden}"]`).uncheck();
   await box.locator('select[data-groupby]').selectOption('therapeutic_area');
-  await page.locator('[data-fold="Data quality"]').first().click();
+  await box.locator('button[data-seg="view"][data-value="details"]').click();
   await page.locator('tr[data-bucket="Cardiology"] td.grp').click();
   await page.locator('th[data-sort="Analysis_kri0008"]').click();
   await box.locator('button[data-seg="cellMode"][data-value="custom"]').click();

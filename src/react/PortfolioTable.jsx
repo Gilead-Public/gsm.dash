@@ -3,7 +3,7 @@ import { reportLink } from '../app/report-links.js';
 import { metricTip } from '../app/tooltip.js';
 import { fmtInt, fmtRate, metricUnit } from '../util/format.js';
 import {
-  POP_COLUMNS, MEASURE_LABELS, bandTitle, cellTip, enrollTarget, heatClasses, metricHeadTip, popHeadTip, popTip, popValue, sortMeasure,
+  POP_COLUMNS, MEASURE_LABELS, cellTip, enrollTarget, heatClasses, metricHeadTip, popHeadTip, popTip, popValue, sortMeasure,
   studyTip, tableRows, tableShowing, tileTip,
 } from '../app/portfolio-table.js';
 import { MetricValue, Sparkline, StatusPill, studyHref, useHoverTooltip } from './parts.jsx';
@@ -23,7 +23,7 @@ export function PortfolioTable({ store }) {
   const { state } = store;
   const { sort, heatmap } = state;
   const metrics = store.visibleMetrics();
-  const groups = store.metricCategories(metrics).map((/** @type {any} */ g) => ({ ...g, collapsed: state.collapsedGroups.has(g.category) }));
+  const groups = store.metricCategories(metrics).map((/** @type {any} */ g) => ({ ...g, collapsed: state.view === 'overview' }));
   const { filtered, latest, flat, total, primary } = tableRows(store);
   const heatClass = heatClasses(heatmap, metrics, primary);
   const measureLabel = MEASURE_LABELS[sortMeasure(heatmap)];
@@ -36,8 +36,6 @@ export function PortfolioTable({ store }) {
   const onClick = (/** @type {import('react').MouseEvent} */ e) => {
     const target = /** @type {Element} */ (e.target);
     if (target.closest('a[href]')) return;
-    const fold = target.closest('[data-fold]');
-    if (fold instanceof HTMLElement) return store.toggleGroup(fold.dataset.fold);
     const bucketCell = target.closest('tr[data-bucket] td.grp');
     if (bucketCell) return store.toggleExpanded(/** @type {HTMLElement} */ (bucketCell.parentElement).dataset.bucket);
     const th = target.closest('th[data-sort]');
@@ -78,15 +76,9 @@ export function PortfolioTable({ store }) {
       </th>
       {groups.map((/** @type {any} */ g) => {
         const n = g.metrics.length;
-        const fold = (
-          <button type="button" className="fold" aria-expanded={!g.collapsed} aria-label={`${g.collapsed ? 'Open' : 'Fold'} ${g.category}`}>
-            {g.collapsed ? '+' : '−'}
-          </button>
-        );
         if (!g.collapsed) {
           return (
-            <th key={g.category} colSpan={n} className="bandh gs open" data-band={g.category} data-fold={g.category} title={bandTitle(g.category, false)}>
-              {fold}
+            <th key={g.category} colSpan={n} className="bandh gs open" data-band={g.category}>
               {g.category}
               <span className="tw">{n}</span>
             </th>
@@ -94,8 +86,7 @@ export function PortfolioTable({ store }) {
         }
         const statuses = new Set(g.metrics.map((/** @type {any} */ m) => m.Status ?? 'Released'));
         return (
-          <th key={g.category} rowSpan={2} className="bandh gs closed" data-band={g.category} data-fold={g.category} title={bandTitle(g.category, true)}>
-            {fold}
+          <th key={g.category} rowSpan={2} className="bandh gs closed" data-band={g.category}>
             {g.category}
             <span className="u">
               {`${n} metric${n === 1 ? '' : 's'}`}
@@ -313,7 +304,7 @@ export function PortfolioTable({ store }) {
     if (row.open) for (const child of row.children ?? []) body.push(studyRow(child, true));
   }
 
-  const showing = tableShowing(store, filtered, metrics, store.tableZoom(groups.map((/** @type {any} */ g) => g.category)));
+  const showing = tableShowing(store, filtered, metrics);
   return (
     <div className="portfolio-table" ref={ref} onClick={onClick}>
       <div className="showing">
@@ -327,7 +318,7 @@ export function PortfolioTable({ store }) {
         {showing.sortNote}
       </div>
       <div className="tblwrap">
-        <table className={state.density === 'condensed' ? 'po condensed' : 'po'}>
+        <table className="po">
           <thead>
             {bandRow}
             {colRow}

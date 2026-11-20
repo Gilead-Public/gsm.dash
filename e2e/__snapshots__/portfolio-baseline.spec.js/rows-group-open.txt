@@ -1,6 +1,6 @@
 state: rows-group-open
-canonical dom: sha256 e11a077e9669bed3419b5e650d9d6b1368b5af91d5631daea4da4dbfd0f22d41 (112841 characters)
-computed styles: sha256 0b60a043160dc92da06e6c8afc9f659750ad66cdcf5c7d51aa0a67b0e6da0c11 (624 elements)
+canonical dom: sha256 6795fb7c25f7c045eced6b6fb363cfb64e820b788def25938fa77b6908073b0d (110880 characters)
+computed styles: sha256 cff44d34a4384b75a937436579508e707ff01d41f80aa1835382bdd400651612 (611 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×4 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(246, 247, 246) ×2 | color(srgb 0.968235 0.973529 0.97) | rgb(246, 247, 246) | rgb(237, 240, 238) ×6 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×5 | rgb(246, 247, 246) | rgb(237, 240, 238) ×4 | rgb(246, 247, 246) ×2 | color(srgb 0.968235 0.973529 0.97) | rgb(246, 247, 246) | rgb(237, 240, 238) ×6 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×5 | rgb(246, 247, 246) | rgb(237, 240, 238) ×4 | rgb(246, 247, 246) ×2 | color(srgb 0.968235 0.973529 0.97) | rgb(246, 247, 246) | rgb(237, 240, 238) ×6 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×5 | rgb(246, 247, 246) | rgb(237, 240, 238) ×4 | rgb(246, 247, 246) ×2 | color(srgb 0.968235 0.973529 0.97) | rgb(246, 247, 246) | rgb(237, 240, 238) ×6 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×5 | rgb(246, 247, 246) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 sparklines:
@@ -11,7 +11,11 @@ accessibility:
   - button "Reset"
   - button "Collapse controls" [expanded]: «
   - group:
-    - text: ▸ Config Highlight study
+    - text: ▸ Config View
+    - group:
+      - button "Overview"
+      - button "Details"
+    - text: Highlight study
     - combobox:
       - option "None" [selected]
       - option "STUDY001 · ATLAS-1"
@@ -31,7 +35,7 @@ accessibility:
     - group [disabled]:
       - button "As defined" [disabled]
       - button "Custom" [disabled]
-    - paragraph: Overview tiles show one headline value per metric. Open a category or switch to Details.
+    - paragraph: Overview tiles show one headline value per metric. Switch View to Details for full cells.
     - text: Also show
     - button "Trend" [disabled]
     - text: Heatmap (also drives column sort)
@@ -44,10 +48,6 @@ accessibility:
     - button "Study name" [pressed]
     - button "Enrolled"
     - button "Status"
-    - text: Row density
-    - group:
-      - button "Roomy"
-      - button "Condensed"
     - text: Group rows by
     - combobox:
       - option "None — one row per study"
@@ -144,32 +144,18 @@ accessibility:
     - text: STUDY011 KESTREL-3
     - checkbox "STUDY012 LUMEN-1"
     - text: STUDY012 LUMEN-1
-  - tablist "Program view":
-    - text: Table
-    - tab "Overview" [selected]
-    - tab "Details"
-  - text: Every category folded to headline values · click a band to open it Showing 12 / 12 studies · 21 / 21 site-level metrics (8 released · 4 new · 9 planned) · one headline value per metric · each study at its own latest snapshot
+  - text: Showing 12 / 12 studies · 21 / 21 site-level metrics (8 released · 4 new · 9 planned) · one headline value per metric · each study at its own latest snapshot
   - table:
     - rowgroup:
-      - row "Group Studies Population Open Disposition Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU Open Early events Early events 3 metrics Planned DTH30 DTH90 IPNS Open Eligibility & integrity Eligibility & integrity 3 metrics Planned IE STRAT PFSC Open Safety & deviations Safety & deviations 5 metrics AE SAE PD IPD LB Open Data quality Data quality 4 metrics QRY OQRY ODAT CDAT":
+      - row "Group Studies Population Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU Early events 3 metrics Planned DTH30 DTH90 IPNS Eligibility & integrity 3 metrics Planned IE STRAT PFSC Safety & deviations 5 metrics AE SAE PD IPD LB Data quality 4 metrics QRY OQRY ODAT CDAT":
         - columnheader "Group"
         - columnheader "Studies"
         - columnheader "Population"
-        - columnheader "Open Disposition Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU":
-          - button "Open Disposition": +
-          - text: Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU
-        - columnheader "Open Early events Early events 3 metrics Planned DTH30 DTH90 IPNS":
-          - button "Open Early events": +
-          - text: Early events 3 metrics Planned DTH30 DTH90 IPNS
-        - columnheader "Open Eligibility & integrity Eligibility & integrity 3 metrics Planned IE STRAT PFSC":
-          - button "Open Eligibility & integrity": +
-          - text: Eligibility & integrity 3 metrics Planned IE STRAT PFSC
-        - columnheader "Open Safety & deviations Safety & deviations 5 metrics AE SAE PD IPD LB":
-          - button "Open Safety & deviations": +
-          - text: Safety & deviations 5 metrics AE SAE PD IPD LB
-        - columnheader "Open Data quality Data quality 4 metrics QRY OQRY ODAT CDAT":
-          - button "Open Data quality": +
-          - text: Data quality 4 metrics QRY OQRY ODAT CDAT
+        - columnheader "Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU"
+        - columnheader "Early events 3 metrics Planned DTH30 DTH90 IPNS"
+        - columnheader "Eligibility & integrity 3 metrics Planned IE STRAT PFSC"
+        - columnheader "Safety & deviations 5 metrics AE SAE PD IPD LB"
+        - columnheader "Data quality 4 metrics QRY OQRY ODAT CDAT"
       - row "Scr. n":
         - columnheader "Scr. n"
     - rowgroup:

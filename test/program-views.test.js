@@ -3,7 +3,7 @@ import { PortfolioStore } from '../src/data/store.js';
 import { enrollTarget } from '../src/app/portfolio-table.js';
 import { generatePortfolio } from '../scripts/generate-example-data.mjs';
 
-// Overview and Details are two zoom levels of one table, derived from the category folds.
+// Overview and Details are the table's two views: every category folded to headline tiles, or every category open.
 
 let store;
 const portfolio = generatePortfolio();
@@ -12,18 +12,10 @@ beforeEach(() => {
 });
 const cats = () => store.metricCategories().map((g) => g.category);
 
-describe('table zoom', () => {
-  it('lands on Overview with every category folded', () => {
-    expect(store.tableZoom()).toBe('overview');
-  });
-
-  it('derives details / mixed from the folds', () => {
-    store.setProgramView('details');
-    expect(store.tableZoom()).toBe('details');
-    store.toggleGroup(cats()[0]);
-    expect(store.tableZoom()).toBe('mixed');
-    store.setProgramView('overview');
-    expect(store.tableZoom()).toBe('overview');
+describe('table view', () => {
+  it('lands on Overview, or on the configured view', () => {
+    expect(store.state.view).toBe('overview');
+    expect(new PortfolioStore({ ...portfolio, config: { view: 'details' } }).state.view).toBe('details');
   });
 });
 
@@ -40,32 +32,32 @@ describe('highlight study', () => {
 });
 
 describe('URL params', () => {
-  it('round-trips view, open bands and highlight', () => {
-    const [a] = cats();
-    store.toggleGroup(a);
+  it('round-trips the view and the highlight', () => {
+    store.set('view', 'details');
     store.highlight(store.studies[0].StudyID);
     const params = store.programParams();
-    expect(params.get('view')).toBe('mixed');
-    expect(params.get('open')).toBe(a);
+    expect(params.get('view')).toBe('details');
 
     const other = new PortfolioStore(portfolio);
     other.applyProgramParams(new URLSearchParams(params.toString()));
-    expect(other.tableZoom()).toBe('mixed');
-    expect(other.state.collapsedGroups.has(a)).toBe(false);
+    expect(other.state.view).toBe('details');
     expect(other.state.highlightStudy).toBe(store.studies[0].StudyID);
   });
 
   it('accepts a hand-written ?view=details and ignores unknown ids', () => {
     store.applyProgramParams(new URLSearchParams('view=details&study=NOPE'));
-    expect(store.tableZoom()).toBe('details');
+    expect(store.state.view).toBe('details');
     expect(store.state.highlightStudy).toBeNull();
   });
 
-  it('ignores an address from the retired Distribution view', () => {
-    const [a] = cats();
-    store.applyProgramParams(new URLSearchParams(`view=distribution&dfold=${a}`));
-    expect(viewState(store)).toEqual(viewState(new PortfolioStore(portfolio)));
-    expect(store.programParams().toString()).toBe('');
+  it('ignores the retired settings in an old address: the Distribution view, its folds, open bands and row density', () => {
+    const [a, b] = cats();
+    for (const old of [`view=distribution&dfold=${a}`, `view=mixed&open=${a}&open=${b}`, 'open=all', 'density=condensed']) {
+      const s = new PortfolioStore(portfolio);
+      s.applyProgramParams(new URLSearchParams(old));
+      expect(viewState(s), old).toEqual(viewState(new PortfolioStore(portfolio)));
+      expect(s.programParams().toString(), old).toBe('');
+    }
   });
 
   it('27.05: writes no params for the default view, and no params restore every default (#27)', () => {
@@ -134,12 +126,12 @@ describe('URL params', () => {
 
 /** Every view setting 27.05 lists, sets as sorted arrays. */
 describe('configured defaults (#16)', () => {
-  const config = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'] };
+  const config = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'], view: 'details' };
   const configured = () => new PortfolioStore({ ...portfolio, config });
 
   it('opens with the configured view, and an empty hash restores it', () => {
     const s = configured();
-    expect([s.state.groupBy, s.state.heatmap, [...s.state.show].sort(), [...s.state.hiddenMetrics].sort()]).toEqual(['phase', 'rate', ['den', 'trend'], config.metrics]);
+    expect([s.state.groupBy, s.state.heatmap, [...s.state.show].sort(), [...s.state.hiddenMetrics].sort(), s.state.view]).toEqual(['phase', 'rate', ['den', 'trend'], config.metrics, 'details']);
     const fresh = viewState(s);
     changeEveryField(s);
     s.applyProgramParams(new URLSearchParams());
@@ -150,6 +142,7 @@ describe('configured defaults (#16)', () => {
     const s = configured();
     s.set('groupBy', 'none');
     s.set('heatmap', 'none');
+    s.set('view', 'overview');
     s.toggleShow('den');
     s.toggleShow('trend');
     s.toggleShow('num');
@@ -195,7 +188,7 @@ describe('the study filter and Reset (#22)', () => {
   });
 
   it('Reset returns every setting the address holds to a fresh load, under the default and a configured view', () => {
-    const config = { groupBy: 'phase', heatmap: 'rate', show: ['den'], metrics: ['Analysis_kri0003'] };
+    const config = { groupBy: 'phase', heatmap: 'rate', show: ['den'], metrics: ['Analysis_kri0003'], view: 'details' };
     for (const data of [portfolio, { ...portfolio, config }]) {
       const s = new PortfolioStore(data);
       const fresh = new PortfolioStore(data);
@@ -208,33 +201,33 @@ describe('the study filter and Reset (#22)', () => {
   });
 });
 
-describe('table columns and density (#21)', () => {
-  it('21.01: by default the table shows the study name, without Enrolled or Status, at roomy density; a configuration sets both (#21)', () => {
-    expect([[...store.state.columns], store.state.density]).toEqual([['name'], 'roomy']);
+describe('table columns and view (#21)', () => {
+  it('21.01: by default the table shows the study name, without Enrolled or Status, in Overview; a configuration sets both (#21)', () => {
+    expect([[...store.state.columns], store.state.view]).toEqual([['name'], 'overview']);
     expect(store.programParams().toString()).toBe('');
-    const s = new PortfolioStore({ ...portfolio, config: { columns: ['enroll', 'status'], density: 'condensed' } });
-    expect([[...s.state.columns].sort(), s.state.density]).toEqual([['enroll', 'status'], 'condensed']);
+    const s = new PortfolioStore({ ...portfolio, config: { columns: ['enroll', 'status'], view: 'details' } });
+    expect([[...s.state.columns].sort(), s.state.view]).toEqual([['enroll', 'status'], 'details']);
     expect(s.programParams().toString()).toBe('');
   });
 
-  it('21.01: the columns and density travel in the address, an emptied choice included, and unknown values are dropped (#21)', () => {
+  it('21.01: the columns and view travel in the address, an emptied choice included, and unknown values are dropped (#21)', () => {
     store.toggleColumn('enroll');
     store.toggleColumn('status');
-    store.set('density', 'condensed');
+    store.set('view', 'details');
     const params = store.programParams();
     expect(params.getAll('cols')).toEqual(['name', 'enroll', 'status']);
-    expect(params.get('density')).toBe('condensed');
+    expect(params.get('view')).toBe('details');
     const other = new PortfolioStore(portfolio);
     other.applyProgramParams(new URLSearchParams(params.toString()));
-    expect([[...other.state.columns].sort(), other.state.density]).toEqual([['enroll', 'name', 'status'], 'condensed']);
+    expect([[...other.state.columns].sort(), other.state.view]).toEqual([['enroll', 'name', 'status'], 'details']);
     other.toggleColumn('name');
     other.toggleColumn('enroll');
     other.toggleColumn('status');
     const empty = new PortfolioStore(portfolio);
     empty.applyProgramParams(new URLSearchParams(other.programParams().toString()));
     expect([...empty.state.columns]).toEqual([]);
-    empty.applyProgramParams(new URLSearchParams('cols=site&density=tight'));
-    expect([[...empty.state.columns], empty.state.density]).toEqual([['name'], 'roomy']);
+    empty.applyProgramParams(new URLSearchParams('cols=site&view=mixed'));
+    expect([[...empty.state.columns], empty.state.view]).toEqual([['name'], 'overview']);
   });
 
   it('21.02: a study\'s enrollment target is its ParticipantTarget above zero, as a number or as text, and none otherwise (#21)', () => {
@@ -249,7 +242,7 @@ function viewState(s) {
   const { state } = s;
   const sorted = (set) => [...set].map(String).sort();
   return {
-    collapsedGroups: sorted(state.collapsedGroups),
+    view: state.view,
     groupBy: state.groupBy,
     expanded: sorted(state.expanded),
     sort: state.sort,
@@ -261,14 +254,12 @@ function viewState(s) {
     hiddenMetrics: sorted(state.hiddenMetrics),
     highlightStudy: state.highlightStudy,
     columns: sorted(state.columns),
-    density: state.density,
   };
 }
 
 /** Moves every setting viewState() reads away from its default, through the store's own setters. */
 function changeEveryField(s) {
-  const [a] = s.metricCategories().map((g) => g.category);
-  s.toggleGroup(a);
+  s.set('view', s.state.view === 'details' ? 'overview' : 'details');
   s.set('groupBy', 'therapeutic_area');
   s.toggleExpanded('Oncology');
   s.toggleSort(s.supportedMetrics()[0].MetricID);
@@ -285,5 +276,4 @@ function changeEveryField(s) {
   s.highlight(s.studies[1].StudyID);
   s.toggleColumn('name');
   s.toggleColumn('status');
-  s.set('density', 'condensed');
 }

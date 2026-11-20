@@ -241,20 +241,13 @@ export const popHeadTip = ({ long, param }) =>
   `<b>${long}</b> participants — Reporting_Groups ${param}, summed over the studies in the row at their latest snapshots. Click to sort.`;
 
 /**
- * @param {string} category
- * @param {boolean} collapsed
- */
-export const bandTitle = (category, collapsed) => (collapsed ? `Open ${category} for full values` : `Fold ${category} to headline tiles`);
-
-/**
  * The line above the table. `highlight` names the highlighted study, shown in bold.
  * @param {any} store
  * @param {any[]} filtered
  * @param {any[]} metrics
- * @param {string} zoom
  * @returns {{ lead: string, highlight: string | null, sortNote: string }}
  */
-export function tableShowing(store, filtered, metrics, zoom) {
+export function tableShowing(store, filtered, metrics) {
   const { state } = store;
   const statusCounts = ['Released', 'New', 'Planned']
     .map((st) => /** @type {[string, number]} */ ([st, metrics.filter((m) => (m.Status ?? 'Released') === st).length]))
@@ -262,7 +255,7 @@ export function tableShowing(store, filtered, metrics, zoom) {
     .map(([st, n]) => `${n} ${st.toLowerCase()}`)
     .join(' · ');
   const mode =
-    zoom === 'overview' ? 'one headline value per metric' : state.cellMode === 'defined' ? 'cells as defined in the glossary' : 'custom cell contents';
+    state.view === 'overview' ? 'one headline value per metric' : state.cellMode === 'defined' ? 'cells as defined in the glossary' : 'custom cell contents';
   const hl = filtered.find((s) => s.StudyID === state.highlightStudy);
   const sorted = metrics.find((m) => m.MetricID === state.sort.key);
   return {

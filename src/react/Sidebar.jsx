@@ -2,8 +2,8 @@
 import { useState } from 'react';
 import { STATUS_ORDER } from '../data/catalog.js';
 import {
-  CELL_MODES, COLUMN_OPTIONS, DENSITIES, FILTER_LABELS, GROUP_BY_OPTIONS, HEATMAPS, HIGHLIGHT_HINT, cellModeHint, controlStates,
-  showLabel, showOptions, studyLabel,
+  CELL_MODES, COLUMN_OPTIONS, FILTER_LABELS, GROUP_BY_OPTIONS, HEATMAPS, HIGHLIGHT_HINT, cellModeHint, controlStates,
+  showLabel, showOptions, studyLabel, VIEWS,
 } from '../app/portfolio-controls.js';
 import { StatusPill } from './parts.jsx';
 
@@ -92,6 +92,10 @@ export function Sidebar({ store, collapsed, onCollapse }) {
       </div>
       <Section open={open.config} name="config" title="Config" badge="" onToggle={toggle('config')}>
         <Control>
+          <label>View</label>
+          {seg('view', VIEWS)}
+        </Control>
+        <Control>
           <label>Highlight study</label>
           <select data-highlight="" value={hl} onChange={(e) => store.highlight(e.target.value || null)}>
             <option value="">None</option>
@@ -118,7 +122,7 @@ export function Sidebar({ store, collapsed, onCollapse }) {
             ))}
           </div>
         </Control>
-        <Control na={na.heatmap}>
+        <Control>
           <label>Heatmap (also drives column sort)</label>
           <select data-heatmap="" value={state.heatmap} onChange={(e) => store.set('heatmap', e.target.value)}>
             {HEATMAPS.map(([k, label]) => (
@@ -128,7 +132,7 @@ export function Sidebar({ store, collapsed, onCollapse }) {
             ))}
           </select>
         </Control>
-        <Control na={na.columns}>
+        <Control>
           <label>Columns</label>
           <div className="chips">
             {COLUMN_OPTIONS.map(([k, label]) => (
@@ -138,11 +142,7 @@ export function Sidebar({ store, collapsed, onCollapse }) {
             ))}
           </div>
         </Control>
-        <Control na={na.density}>
-          <label>Row density</label>
-          {seg('density', DENSITIES)}
-        </Control>
-        <Control na={na.groupBy}>
+        <Control>
           <label>Group rows by</label>
           <select data-groupby="" value={state.groupBy} onChange={(e) => store.set('groupBy', e.target.value)}>
             {GROUP_BY_OPTIONS.map(([value, label]) => (

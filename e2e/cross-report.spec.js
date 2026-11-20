@@ -95,7 +95,7 @@ test('27.05: the table view carries over to a study report, which applies its me
   for (const status of ['Active', 'Enrolling']) await sidebar(page).locator(`button[data-filter="status"][data-value="${status}"]`).click();
   await filterMetrics(page);
   await sidebar(page).locator('select[data-groupby]').selectOption('therapeutic_area');
-  await page.locator('[data-fold="Data quality"]').first().click();
+  await sidebar(page).locator('button[data-seg="view"][data-value="details"]').click();
   await page.locator('tr[data-bucket="Cardiology"] td.grp').click();
   await page.locator('th[data-sort="Analysis_kri0008"]').click();
   await sidebar(page).locator('button[data-seg="cellMode"][data-value="custom"]').click();
@@ -106,7 +106,7 @@ test('27.05: the table view carries over to a study report, which applies its me
 
   const keys = [...new Set(new URLSearchParams(new URL(page.url()).hash.slice(1)).keys())].sort();
   expect(keys, 'every setting moved from its default').toEqual(
-    ['cell', 'dir', 'expand', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'open', 'show', 'sort', 'statuses', 'study', 'view'].sort(),
+    ['cell', 'dir', 'expand', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'show', 'sort', 'statuses', 'study', 'view'].sort(),
   );
   await roundTrip(page, page.locator(`#app .portfolio-table a[data-study="${study}"]`));
 });

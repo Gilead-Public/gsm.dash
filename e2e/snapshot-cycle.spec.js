@@ -6,6 +6,7 @@ import { expect, readData, test } from './fixtures/app.js';
 import { capturePortfolio } from './fixtures/baseline.js';
 import { visibleLines } from './fixtures/visible.js';
 import { latestSnapshot, pooled, pooledTrend, shownMetrics } from '../test/qual/pooling.js';
+import { chooseView } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').MetricMeta} MetricMeta */
 
@@ -79,7 +80,7 @@ test.describe('the snapshot cycle', () => {
     await app.open();
     const expectAsRecorded = async (/** @type {string} */ name) => expect.soft((await capturePortfolio(page, name)).text, name).toBe(recorded(name));
     await expectAsRecorded('table-overview');
-    await page.locator('button[data-view="details"]').click();
+    await chooseView(page, 'details');
     await expectAsRecorded('table-details');
     await app.open();
     await page.locator('.sidebar select[data-groupby]').selectOption('phase');
@@ -95,7 +96,7 @@ test.describe('the snapshot cycle', () => {
 
   test('14.02: with a study off cycle, each Portfolio total trend keeps that study\'s history before the cycle date and ends on the in-cycle total (#14)', async ({ app, page }) => {
     await app.open('', offCycle);
-    await page.locator('button[data-view="details"]').click();
+    await chooseView(page, 'details');
     await page.locator('.sidebar button[data-show="trend"]').click();
     const history = studies.map((s) => (s === off ? { ...s, snapshots: s.snapshots.filter((d) => d !== cycle.SnapshotDate) } : s));
     const inCycle = studies.filter((s) => s !== off);

@@ -4,6 +4,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { expectSeen } from './fixtures/visible.js';
 import { shownMetrics } from '../test/qual/pooling.js';
+import { chooseView } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('@playwright/test').Locator} Locator */
 /** @typedef {import('./fixtures/app.js').App} App */
@@ -126,7 +127,7 @@ async function expectTableLinks(page, rows, view, what) {
 }
 
 /** @param {Page} page @param {'overview' | 'details'} view */
-const showView = (page, view) => page.locator(`button[data-view="${view}"]`).click();
+const showView = (page, view) => chooseView(page, view);
 
 /** @param {Page} page */
 const highlighted = async (page) => ({

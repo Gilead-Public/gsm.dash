@@ -1,7 +1,9 @@
 // @ts-check
-// #21: the portfolio table's optional columns (study name, Enrolled, Status), Enrolled against its target, and the row
-// density. Defaults come from the configuration (#16); choices travel in the address and Reset restores them.
+// #21: the portfolio table's optional columns (study name, Enrolled, Status), Enrolled against its target, and its View,
+// Overview or Details, which replaced the row density. Defaults come from the configuration (#16); choices travel in the
+// address and Reset restores them.
 import { expect, readData, test } from './fixtures/app.js';
+import { chooseView } from './fixtures/controls.js';
 import { visibleLines } from './fixtures/visible.js';
 import { countText } from '../test/qual/pooling.js';
 /** @typedef {import('@playwright/test').Page} Page */
@@ -36,6 +38,24 @@ async function rowParts(page, id) {
 }
 
 /**
+ * Which View the table shows, read from the table itself: Overview folds every category to headline tiles; Details
+ * opens them all, with a header per metric. Null when it is neither.
+ * @param {Page} page
+ */
+async function shownView(page) {
+  const table = page.locator('table.po');
+  const [tiles, closed, open, heads] = await Promise.all(
+    ['.otile', 'thead th.bandh.closed', 'thead th.bandh.open', 'thead th[data-sort^="Analysis_"]'].map((s) => table.locator(s).count()),
+  );
+  if (tiles && closed && !open && !heads) return 'overview';
+  if (!tiles && !closed && open && heads) return 'details';
+  return null;
+}
+
+/** @param {Page} page */
+const viewControl = (page) => page.locator('.sidebar button[data-seg="view"].on').getAttribute('data-value');
+
+/**
  * Opens the portfolio with its document changed, then waits for the table.
  * @param {any} app
  * @param {Page} page
@@ -47,7 +67,7 @@ async function openWith(app, page, change, hash = '') {
   await page.locator('#app > .layout').waitFor();
 }
 
-test.describe('table columns and density', () => {
+test.describe('table columns and view', () => {
   test('21.01: each optional column toggles, the built-in defaults apply, and the choice survives a reload until Reset (#21)', async ({ app, page }) => {
     await app.open();
     const [first] = studies;
@@ -75,17 +95,31 @@ test.describe('table columns and density', () => {
     expect(new URL(page.url()).hash).toBe('');
   });
 
-  test('21.01: configured columns and density are the defaults, and Reset returns to them (#21)', async ({ app, page }) => {
-    await openWith(app, page, (doc) => void (doc.config = { columns: ['enroll', 'status'], density: 'condensed' }));
+  test('21.01: the View shows the table in Overview by default and in Details when chosen, and the choice survives a reload until Reset (#21)', async ({ app, page }) => {
+    await app.open();
+    expect([await viewControl(page), await shownView(page)]).toEqual(['overview', 'overview']);
+    await chooseView(page, 'details');
+    expect([await viewControl(page), await shownView(page)]).toEqual(['details', 'details']);
+    await page.reload();
+    await page.locator('#app > .layout').waitFor();
+    expect([await viewControl(page), await shownView(page)]).toEqual(['details', 'details']);
+    await page.locator('.sidebar [data-reset]').click();
+    expect([await viewControl(page), await shownView(page)]).toEqual(['overview', 'overview']);
+    expect(new URL(page.url()).hash).toBe('');
+  });
+
+  test('21.01: configured columns and View are the defaults, and Reset returns to them (#21)', async ({ app, page }) => {
+    await openWith(app, page, (doc) => void (doc.config = { columns: ['enroll', 'status'], view: 'details' }));
     expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
     expect((await rowParts(page, studies[0].StudyID)).name).toBeNull();
-    await expect(page.locator('table.po')).toHaveClass(/condensed/);
+    expect([await viewControl(page), await shownView(page)]).toEqual(['details', 'details']);
     await chip(page, 'status').click();
-    await page.locator('.sidebar button[data-seg="density"][data-value="roomy"]').click();
+    await chooseView(page, 'overview');
     expect(await headers(page)).toEqual(['Scr.n', 'Enr.n']);
+    expect(await shownView(page)).toBe('overview');
     await page.locator('.sidebar [data-reset]').click();
     expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
-    await expect(page.locator('table.po')).toHaveClass(/condensed/);
+    expect([await viewControl(page), await shownView(page)]).toEqual(['details', 'details']);
   });
 
   test('21.02: Enrolled reads n / expected for a study with a target, as a number or text, and the count alone otherwise (#21)', async ({ app, page }) => {
@@ -111,14 +145,12 @@ test.describe('table columns and density', () => {
     expect(await seenText(page.locator('tbody tr.total td.pop').nth(1))).toBe(countText(total));
   });
 
-  test('21.03: the table at roomy and condensed density, for visual comparison; condensed rows are shorter (#21)', async ({ app, page, evidence }) => {
-    await app.open('#view=details');
-    const height = () => page.locator('tbody tr.study').first().evaluate((tr) => tr.getBoundingClientRect().height);
-    await evidence.shot(page, 'roomy');
-    const roomy = await height();
-    await page.locator('.sidebar button[data-seg="density"][data-value="condensed"]').click();
-    await expect(page.locator('table.po')).toHaveClass(/condensed/);
-    await evidence.shot(page, 'condensed');
-    expect(await height()).toBeLessThan(roomy);
+  test('21.03: the table in Overview and in Details, with the View control, for visual comparison (#21)', async ({ app, page, evidence }) => {
+    await app.open();
+    expect(await shownView(page)).toBe('overview');
+    await evidence.shot(page, 'overview');
+    await chooseView(page, 'details');
+    expect(await shownView(page)).toBe('details');
+    await evidence.shot(page, 'details');
   });
 });

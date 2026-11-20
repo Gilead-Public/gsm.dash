@@ -3,6 +3,7 @@
 // ungrouped table.
 import { expect, readData, test } from './fixtures/app.js';
 import { capturePortfolio } from './fixtures/baseline.js';
+import { chooseView } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 test.describe.configure({ timeout: 120_000 });
@@ -154,7 +155,7 @@ test('23.03: the Controls panel offers no heatmap colour choice (#23)', async ({
     await openAt(page, app, tableHash({ heatmap }));
     const box = sidebar(page);
     const labels = await box.locator('[data-sec="config"] .ctl > label').allTextContents();
-    expect(labels, `heatmap ${heatmap}: the Config controls`).toEqual(['Highlight study', 'Cell display', 'Also show', 'Heatmap (also drives column sort)', 'Columns', 'Row density', 'Group rows by']);
+    expect(labels, `heatmap ${heatmap}: the Config controls`).toEqual(['View', 'Highlight study', 'Cell display', 'Also show', 'Heatmap (also drives column sort)', 'Columns', 'Group rows by']);
     expect(await box.innerText(), `heatmap ${heatmap}: the panel's text`).not.toMatch(/colou?r|palette|\b(blue|teal|purple|gr[ae]y)\b/i);
     await expect(box.locator('[data-seg="ramp"], [data-ramp]'), `heatmap ${heatmap}: old markup`).toHaveCount(0);
     await expect(page.locator('[data-ramp]'), `heatmap ${heatmap}: no palette on the page`).toHaveCount(0);
@@ -176,7 +177,7 @@ test('23.03: the address never carries ramp, whatever the settings, and an addre
     ['heatmap Numerator', () => box.locator('select[data-heatmap]').selectOption('num')],
     ['heatmap Denominator', () => box.locator('select[data-heatmap]').selectOption('den')],
     ['heatmap Rate', () => box.locator('select[data-heatmap]').selectOption('rate')],
-    ['Details', () => page.locator('button[data-view="details"]').click()],
+    ['Details', () => chooseView(page, 'details')],
     ['grouped by phase', () => box.locator('select[data-groupby]').selectOption('phase')],
     ['a group open', () => page.locator('tr[data-bucket="P2"] td.grp').click()],
     ['sorted', () => page.locator('th[data-sort="Analysis_kri0008"]').click()],
@@ -185,7 +186,7 @@ test('23.03: the address never carries ramp, whatever the settings, and an addre
     ['a metric hidden', () => box.locator('input[data-metric="Analysis_kri0005"]').uncheck()],
     ['a study highlighted', () => box.locator('select[data-highlight]').selectOption(study)],
     ['heatmap None', async () => {
-      await page.locator('button[data-view="overview"]').click();
+      await chooseView(page, 'overview');
       await box.locator('select[data-heatmap]').selectOption('none');
     }],
     ['Reset', () => box.locator('[data-reset]').click()],

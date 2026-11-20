@@ -4,6 +4,8 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { pageAllTo, tile } from './fixtures/tiles.js';
 import { visibleLines } from './fixtures/visible.js';
+import { chooseView } from './fixtures/controls.js';
+import { capturePortfolio } from './fixtures/baseline.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 const portfolio = readData('portfolio.json');
@@ -257,7 +259,7 @@ test('35.08: the portfolio\'s Metrics section has no All / None or per-category 
   const sidebar = page.locator('.sidebar');
   await expect(sidebar.getByRole('button', { name: /^(all|none)$/i })).toHaveCount(0);
   await expect(sidebar.locator('[data-metrics-all], [data-group-metrics]')).toHaveCount(0);
-  await page.locator('button[data-view="details"]').click();
+  await chooseView(page, 'details');
   const box = sidebar.locator('input[data-metric="Analysis_kri0012"]');
   const column = page.locator('.portfolio-table th[data-sort="Analysis_kri0012"]');
   await expect(column).toHaveCount(1);
@@ -277,4 +279,47 @@ test('35.09: a study with one snapshot shows "Extract: <date>" with that date, i
   });
   await expect.poll(() => visibleLines(page.locator('.dd-head')), 'the label and its date can be seen').toContain(`Extract: ${last}`);
   await expect(page.locator('input[type="range"][data-visit]')).toHaveCount(0);
+});
+
+test('the portfolio has no Distribution view, view tabs or hint, or category folding; an address\'s retired settings are ignored and removed, and its supported ones keep their effect', async ({ app, page }) => {
+  const settled = async () => {
+    await page.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur());
+    await page.mouse.move(0, 0);
+  };
+  await app.open();
+  await settled();
+  const fresh = await capturePortfolio(page, 'fresh load');
+  await expect(page.getByRole('tab')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /distribution|fold|open .* for full values/i })).toHaveCount(0);
+  await expect(page.locator('.view-switch, .portfolio-dist, [data-view], [data-fold], [data-dfold], button.fold, [data-seg="density"]')).toHaveCount(0);
+  expect(await bodyText(page)).not.toMatch(/distribution|click a band|each dot|row density|\broomy\b|\bcondensed\b/i);
+
+  const tiles = await page.locator('table.po .otile').count();
+  for (const band of await page.locator('thead th.bandh').all()) {
+    const name = await band.innerText();
+    await band.click({ position: { x: 4, y: 4 } });
+    expect(new URL(page.url()).hash, `clicking ${name}`).toBe('');
+    expect(await page.locator('table.po .otile').count(), `clicking ${name}`).toBe(tiles);
+  }
+  await settled();
+  expect((await capturePortfolio(page, 'fresh load')).text, 'clicking the band headers').toBe(fresh.text);
+
+  for (const old of ['#view=distribution&dfold=Disposition', '#view=mixed&open=Disposition&open=Safety', '#open=all', '#density=condensed']) {
+    await page.goto('about:blank');
+    await app.open(old);
+    await settled();
+    expect(new URL(page.url()).hash, old).toBe('');
+    expect((await capturePortfolio(page, 'fresh load')).text, old).toBe(fresh.text);
+  }
+
+  // A supported setting beside retired ones keeps its effect.
+  await page.goto('about:blank');
+  await app.open('#view=details&heatmap=rate');
+  await settled();
+  const supported = await capturePortfolio(page, 'supported settings');
+  await page.goto('about:blank');
+  await app.open('#view=details&density=condensed&open=Disposition&dfold=Safety&heatmap=rate');
+  await settled();
+  expect(new URL(page.url()).hash, 'supported settings beside retired ones').toBe('#view=details&heatmap=rate');
+  expect((await capturePortfolio(page, 'supported settings')).text, 'supported settings beside retired ones').toBe(supported.text);
 });

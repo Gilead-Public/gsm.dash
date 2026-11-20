@@ -70,8 +70,9 @@ To share a build for feedback without releasing it: every CI run that passes als
   portfolio and a study, with one React root rendering it from one injected
   document (gsm.viz inlined into study reports). Hovering a metric's header
   shows its definition from `Reporting_Metrics` (#20). The Controls panel
-  chooses the portfolio table's optional columns (study name, **Enrolled**,
-  Status) and its row density (#21); Enrolled is the summary's
+  sets the portfolio table's View, Overview (each category as headline tiles)
+  or Details, and its optional columns (study name, **Enrolled**, Status;
+  #21); Enrolled is the summary's
   `ParticipantCount`, summed over the row's studies. The study page composes
   its view from widgets. Links
   between reports are relative and carry the portfolio's view in the hash.
@@ -145,7 +146,7 @@ holds the catalog, the study's manifest entry and all its snapshots.
 Portfolio defaults (#16): an optional `config.json` beside `portfolio.json` sets the
 portfolio's initial grouping (`groupBy`), heatmap (`heatmap`), cell values (`show`),
 hidden metrics (`metrics`, MetricIDs), optional table columns (`columns`: `name`, `enroll`,
-`status`; #21) and row density (`density`: `roomy` or `condensed`); every key is optional.
+`status`; #21) and view (`view`: `overview` or `details`); every key is optional.
 The Enrolled column shows a study's count against its `ParticipantTarget` parameter when
 the study has one. It travels in the portfolio
 document, so one template serves any configuration. Its values are checked against the

@@ -158,7 +158,7 @@ describe('the portfolio document', () => {
     const inactive = metrics.find((m) => m.Active === false && m.GroupLevel === 'Site')?.MetricID;
     const studyLevel = metrics.find((m) => m.Active !== false && m.GroupLevel === 'Study')?.MetricID;
     expect([inactive, studyLevel].every(Boolean), 'the catalog has an inactive and a study-level metric').toBe(true);
-    const settings = ['groupBy', 'heatmap', 'show', 'metrics', 'columns', 'density'];
+    const settings = ['groupBy', 'heatmap', 'show', 'metrics', 'columns', 'view'];
     const groupBy = ['none', 'therapeutic_area', 'protocol_indication', 'phase', 'status', 'product'];
     const show = ['num', 'den', 'rate', 'trend'];
     const refused = [
@@ -173,7 +173,8 @@ describe('the portfolio document', () => {
       [{ metrics: [studyLevel] }, 'metrics', studyLevel, eligible],
       [{ columns: ['name', 'site'] }, 'columns', 'site', ['name', 'enroll', 'status']],
       [{ columns: 'name' }, 'columns', 'name', ['name', 'enroll', 'status']],
-      [{ density: 'tight' }, 'density', 'tight', ['roomy', 'condensed']],
+      [{ view: 'mixed' }, 'view', 'mixed', ['overview', 'details']],
+      [{ density: 'roomy' }, 'density', 'roomy', settings],
     ];
     for (const [config, key, value, allowed] of refused) {
       let message = '';

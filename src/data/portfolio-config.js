@@ -1,5 +1,5 @@
 // @ts-check
-import { COLUMN_OPTIONS, DENSITIES, GROUP_BY_OPTIONS, HEATMAPS, showOptions } from '../app/portfolio-controls.js';
+import { COLUMN_OPTIONS, GROUP_BY_OPTIONS, HEATMAPS, VIEWS, showOptions } from '../app/portfolio-controls.js';
 import { orderMetrics } from './normalize.js';
 
 /**
@@ -10,11 +10,11 @@ import { orderMetrics } from './normalize.js';
  * @property {string[]} [show]
  * @property {string[]} [metrics] MetricIDs hidden by default.
  * @property {string[]} [columns] The table's optional columns shown by default (#21).
- * @property {string} [density] The table's row density (#21).
+ * @property {string} [view] The table's view, Overview or Details.
  */
 
 /** @type {Required<PortfolioConfig>} */
-const BUILT_IN = { groupBy: 'none', heatmap: 'none', show: ['num', 'rate'], metrics: [], columns: ['name'], density: 'roomy' };
+const BUILT_IN = { groupBy: 'none', heatmap: 'none', show: ['num', 'rate'], metrics: [], columns: ['name'], view: 'overview' };
 
 /**
  * The MetricIDs a portfolio column can show: active, site-level metrics in the catalog.
@@ -37,7 +37,7 @@ export function configProblems(config, catalog) {
     show: { allowed: showOptions(false).map(([v]) => v), what: 'a Show in each cell choice' },
     metrics: { allowed: portfolioColumnIds(catalog), what: 'an active, site-level metric in the catalog' },
     columns: { allowed: COLUMN_OPTIONS.map(([v]) => v), what: 'an optional table column' },
-    density: { allowed: DENSITIES.map(([v]) => v), what: 'a row density' },
+    view: { allowed: VIEWS.map(([v]) => v), what: 'a View choice' },
   };
   const keys = Object.keys(settings).join(', ');
   if (typeof config !== 'object' || config === null || Array.isArray(config)) return [`config: ${JSON.stringify(config)} is not an object; allowed: ${keys}`];

@@ -4,6 +4,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { expectSeen, visibleLines } from './fixtures/visible.js';
 import { countText, latestSnapshot, pooled, shownMetrics } from '../test/qual/pooling.js';
+import { chooseView } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
 
@@ -23,10 +24,10 @@ const literal = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const VIEWS = {
   Overview: async () => {},
   'Details, ungrouped': async (page) => {
-    await page.locator('button[data-view="details"]').click();
+    await chooseView(page, 'details');
   },
   'Details, grouped with a group open': async (page) => {
-    await page.locator('button[data-view="details"]').click();
+    await chooseView(page, 'details');
     await page.locator('select[data-groupby]').selectOption('phase');
     await page.locator('tr[data-bucket] td.grp').first().click();
     await expect(page.locator('.portfolio-table tr.study').first()).toBeVisible();
@@ -153,7 +154,7 @@ test('20.02: hovering a metric\'s header in Details or its band label in Overvie
     expect(shown.get('Snapshot'), `${s.StudyID}: snapshot date`).toBe(`${latestSnapshot(s)} (${s.snapshots.length} available)`);
   }
 
-  await page.locator('button[data-view="details"]').click();
+  await chooseView(page, 'details');
   for (const m of catalog) await expectGlossary(page, page.locator(`th[data-sort="${m.MetricID}"]`), m, `Details ${m.Abbreviation}`);
 
 });
@@ -169,7 +170,7 @@ test('20.04: the portfolio\'s hovers and tooltips in Overview and Details, for v
   await shoot(page.locator('.tlab').first(), 'overview band label');
   await shoot(page.locator('tbody tr.total .otile').first(), 'overview tile');
   await shoot(page.locator('tr.study a[data-study]').first(), 'study name');
-  await page.locator('button[data-view="details"]').click();
+  await chooseView(page, 'details');
   await shoot(page.locator('th[data-sort^="Analysis_"]').first(), 'details header');
   await shoot(page.locator('tbody tr.total td[data-tip]:not(.pop)').first(), 'details cell');
 });
@@ -178,7 +179,7 @@ test('20.05: ungrouped, the table has no Snapshot column in Overview or Details;
   await app.open();
   const table = page.locator('.portfolio-table table.po');
   for (const view of ['overview', 'details']) {
-    await page.locator(`button[data-view="${view}"]`).click();
+    await chooseView(page, view);
     await expect(table.locator('th[data-sort="meta"]'), view).toHaveCount(0);
     await expect(table.locator('td.nstud'), view).toHaveCount(0);
     expect((await table.locator('thead').innerText()).includes('Snapshot'), view).toBe(false);
@@ -191,7 +192,7 @@ test('20.05: ungrouped, the table has no Snapshot column in Overview or Details;
   const open = [...counts.keys()].sort()[0];
   await page.locator(`tr[data-bucket="${open}"] td.grp`).click();
   for (const view of ['overview', 'details']) {
-    await page.locator(`button[data-view="${view}"]`).click();
+    await chooseView(page, view);
     const head = table.locator('th[data-sort="meta"]');
     await expect(head, view).toHaveText(/^Studies/);
     await expectSeen(head, `${view}: Studies heading`);
@@ -228,7 +229,7 @@ test('20.06: in Overview and Details, every cell\'s and tile\'s hover gives the 
   const byId = new Map(studies.map((s) => [s.StudyID, s]));
   const tooltip = page.locator('#gsm-tooltip');
   for (const view of /** @type {const} */ (['overview', 'details'])) {
-    await page.locator(`button[data-view="${view}"]`).click();
+    await chooseView(page, view);
     const { columns, rows } = await valueGrid(page, view);
     const metrics = columns.map((c) => catalog.find((m) => ('abbr' in c ? m.Abbreviation === c.abbr : m.MetricID === c.id)));
     expect(metrics.every(Boolean) && metrics.length === catalog.length, `${view}: a column for every catalog metric`).toBe(true);
