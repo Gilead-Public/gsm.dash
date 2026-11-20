@@ -58,24 +58,8 @@ body {
 }
 .wrap { max-width: 1480px; margin: 0 auto; padding: 0 20px 64px; }
 
-/* program page layout: collapsible sidebar + content */
-.layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 20px; align-items: start; }
-.layout.collapsed { grid-template-columns: 40px minmax(0, 1fr); }
-div:where(.sidebar) { display: block; position: sticky; top: 14px; background: var(--panel); border: 1px solid var(--line-2); border-radius: 9px; padding: 10px 12px 12px; box-shadow: var(--shadow); }
-div:where(.sidebar).collapsed { padding: 6px; display: flex; justify-content: center; }
-.sb-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
-.sb-title { font-family: "Archivo", sans-serif; font-weight: 700; font-size: 13px; }
-.sb-toggle { font: inherit; font-size: 15px; line-height: 1; padding: 2px 7px; border: 1px solid var(--line-2); border-radius: 6px; background: var(--panel); color: var(--ink-2); cursor: pointer; }
-.sb-toggle:hover { color: var(--accent); border-color: var(--accent); }
-.sb-reset { margin-left: auto; margin-right: 10px; font-size: 12px; }
-.sb-sec { border-top: 1px solid var(--line); padding: 8px 0 4px; }
-.sb-sec summary { font-family: "Archivo", sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-2); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; padding: 2px 0; }
-.sb-sec summary::-webkit-details-marker { display: none; }
-.sb-sec summary::before { content: "▸"; font-size: 10px; color: var(--ink-3); transition: transform 0.12s; }
-.sb-sec[open] summary::before { transform: rotate(90deg); }
-.sb-sec .badge { margin-left: auto; font-family: "IBM Plex Mono", monospace; font-size: 10.5px; font-weight: 500; text-transform: none; letter-spacing: 0; color: var(--accent); background: var(--accent-soft); border-radius: 4px; padding: 1px 6px; }
-.sb-body { display: flex; flex-direction: column; gap: 12px; padding: 8px 0 6px; }
-.sb-actions { display: flex; gap: 12px; }
+/* portfolio: the table, with its controls in the header */
+.layout { display: block; }
 .linkbtn { font: inherit; font-size: 12.5px; color: var(--accent); background: none; border: none; padding: 0; cursor: pointer; }
 .linkbtn:hover { text-decoration: underline; }
 .metric-list { display: flex; flex-direction: column; gap: 3px; }
@@ -91,26 +75,37 @@ div:where(.sidebar).collapsed { padding: 6px; display: flex; justify-content: ce
 .content { min-width: 0; }
 header.app {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 14px;
   flex-wrap: wrap;
   padding: 18px 0 14px;
   border-bottom: 1px solid var(--line);
   margin-bottom: 18px;
 }
+header.app .logo { display: block; height: 32px; width: auto; margin-right: -4px; }
 header.app h1 { font-family: "Archivo", "Segoe UI", system-ui, sans-serif; font-size: 22px; font-weight: 700; margin: 0; }
-header.app .tag {
-  font-family: "Archivo", sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: var(--accent);
-  background: var(--accent-soft);
-  border-radius: 5px;
-  padding: 2px 8px;
-}
-#meta { margin-left: auto; font-size: 12.5px; color: var(--ink-3); }
+
+/* header controls: Filters (a chip bar, collapsed on load), Config and Reset, pulled right */
+#header-controls { margin-left: auto; }
+.hctl { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+.hbtn { font: 600 13px "Archivo", sans-serif; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 8px; background: var(--panel); color: var(--ink-2); cursor: pointer; }
+.hbtn:hover, .hbtn[aria-expanded="true"] { color: var(--accent); border-color: var(--accent); }
+.hbtn.on { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+.hbtn .badge { font: 600 10.5px "IBM Plex Mono", monospace; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; }
+.fchip::after, .hbtn[data-open="config"]::after { content: "▾"; font-size: 10px; opacity: 0.7; }
+.filter-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.filter-bar[hidden] { display: none; }
+.fchip { display: inline-flex; align-items: center; gap: 5px; }
+.fchip[aria-expanded="true"] { border-color: var(--accent); color: var(--accent); }
+.popwrap { position: relative; }
+.hpop { position: absolute; top: calc(100% + 6px); right: 0; z-index: 30; background: var(--panel); border: 1px solid var(--line-2); border-radius: 10px; box-shadow: 0 10px 30px rgb(0 0 0 / 0.14); padding: 12px 14px; }
+.hpop[hidden] { display: none; }
+.filter-pop { left: 0; right: auto; min-width: 220px; max-width: 360px; }
+.config-pop { width: min(720px, 92vw); max-height: 72vh; overflow-y: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 18px; }
+.cfg-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.cfg-col .seg { display: flex; }
+.cfg-col .seg button { flex: 1; padding-left: 5px; padding-right: 5px; font-size: 12px; white-space: nowrap; }
+.view-toggle { align-self: flex-start; }
 .muted { color: var(--ink-2); }
 .mono, code { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.9em; }
 
@@ -125,8 +120,6 @@ header.app .tag {
   color: var(--ink-3);
 }
 .seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 7px; overflow: hidden; }
-.sb-body .seg { display: flex; }
-.sb-body .seg button { flex: 1; padding-left: 5px; padding-right: 5px; font-size: 12px; white-space: nowrap; }
 .seg button {
   font: inherit;
   font-size: 13px;
@@ -163,11 +156,10 @@ select {
 button:focus-visible, .chip:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
 /* table */
-.showing { font-size: 13px; color: var(--ink-2); margin: 2px 0 8px; }
+.showing { font-size: 13px; color: var(--ink-2); margin: 8px 0 2px; }
 .tblwrap { overflow-x: auto; border: 1px solid var(--line-2); border-radius: 9px; background: var(--panel); }
 table.po { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; color: var(--ink); }
 table.po th, table.po td { padding: 7px 8px; text-align: right; font-size: 13px; white-space: nowrap; }
-table.po.condensed th, table.po.condensed td { padding-top: 3px; padding-bottom: 3px; }
 table.po th.status-col, table.po td.status-col { text-align: left; }
 table.po thead th {
   font-family: "IBM Plex Mono", ui-monospace, monospace;
@@ -401,8 +393,6 @@ table.po th .pill { display: table; margin: 3px 0 0 auto; font-size: 8px; paddin
 table.po th.planned { background-image: repeating-linear-gradient(135deg, transparent 0 5px, var(--planned-soft) 5px 10px); }
 table.po td.planned { color: var(--ink-2); }
 table.po th.gs, table.po td.gs { border-left: 1px solid var(--line-2); }
-table.po .fold { font-size: 10px; color: var(--ink-3); background: none; border: 1px solid transparent; border-radius: 4px; padding: 0 4px; margin-right: 4px; cursor: pointer; line-height: 1.3; }
-table.po .fold:hover { color: var(--accent); border-color: var(--line-2); }
 table.po td.pop, table.po th.pop { color: var(--ink-2); }
 table.po td.pop { background: color-mix(in srgb, var(--panel-2) 45%, var(--panel)); font-size: 12.5px; }
 table.po td.pop-last, table.po th.pop-last { border-right: 1px solid var(--line-2); }
@@ -412,34 +402,15 @@ table.po td .pc { color: var(--ink-2); font-size: 11.5px; margin-left: 1px; }
 tr.total td .pc { font-weight: 600; }
 
 /* ---------------------------------------------------------------------------
-   Unified program views: Overview | Details (one table, folded vs open
-   bands) and Distribution (strip plots). No flag colouring anywhere.
+   Program views: Overview | Details (one table, folded vs open bands, set by View).
+   No flag colouring anywhere.
    --------------------------------------------------------------------------- */
-div:where(.view-switch), div:where(.portfolio-table), div:where(.portfolio-dist) { display: block; }
-div:where(.portfolio-table)[hidden], div:where(.portfolio-dist)[hidden] { display: none; }
-div:where(.view-switch) .viewbar { display: flex; align-items: center; gap: 12px; margin: 6px 0 8px; flex-wrap: wrap; }
-div:where(.view-switch) .tabs { display: inline-flex; align-items: stretch; gap: 8px; }
-div:where(.view-switch) .tabs .tset { display: inline-flex; border: 1px solid var(--line-2); border-radius: 8px; background: var(--panel); padding: 2px; gap: 2px; position: relative; }
-div:where(.view-switch) .tabs button { border: 0; background: transparent; border-radius: 6px; padding: 5px 14px; font: 600 13px "Archivo", sans-serif; color: var(--ink-2); cursor: pointer; }
-div:where(.view-switch) .tabs button:hover { color: var(--ink); }
-div:where(.view-switch) .tabs button.on { background: var(--accent); color: #fff; }
-div:where(.view-switch) .tabs button.part { box-shadow: inset 0 0 0 1.5px var(--accent); color: var(--accent); }
-div:where(.view-switch) .tabs .cap { position: absolute; left: 8px; top: -8px; font: 700 8.5px "Archivo", sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); background: var(--bg); padding: 0 4px; }
-div:where(.view-switch) .zoomnote { font-size: 12px; color: var(--ink-2); }
-div:where(.view-switch) .zoomnote b { color: var(--ink); font-weight: 600; }
-div:where(.view-switch) .legend { margin-left: auto; display: flex; align-items: center; font-size: 11.5px; color: var(--ink-2); }
-div:where(.view-switch) .legend .lk { display: inline-flex; align-items: center; gap: 5px; margin-left: 12px; }
-div:where(.view-switch) .legend .pline { width: 2px; height: 14px; background: var(--ink); }
-div:where(.view-switch) .legend .dmd { width: 9px; height: 9px; background: var(--accent); transform: rotate(45deg); }
+div:where(.portfolio-table) { display: block; }
 .showing b { color: var(--ink); font-weight: 600; }
 .showing a { color: var(--accent); text-decoration: none; }
 
-/* bands: the whole band header folds / opens its category */
-table.po thead tr.band th[data-fold] { cursor: pointer; user-select: none; }
-table.po thead tr.band th[data-fold]:hover { color: var(--accent); }
+/* bands: a category's header, folded to headline tiles in Overview */
 table.po thead tr.band th.open { box-shadow: inset 0 3px 0 var(--accent); }
-table.po .fold { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; padding: 0; border: 1px solid var(--line-2); border-radius: 4px; background: var(--panel); color: var(--ink-2); font: 600 11px/1 "Source Sans 3", sans-serif; margin-right: 5px; vertical-align: -2px; }
-table.po th[data-fold]:hover .fold { border-color: var(--accent); color: var(--accent); }
 table.po thead tr.band th.closed { text-align: left; vertical-align: bottom; padding: 6px 9px 7px; border-bottom: 2px solid var(--line-2); }
 table.po thead tr.band th.closed .u { text-transform: none; font-weight: 400; margin-top: 3px; }
 table.po thead tr.band th.closed .u .pill { display: inline-block; margin: 0 0 0 4px; }
@@ -456,49 +427,12 @@ tr.total .otile { font-weight: 700; background: var(--panel); }
 table.po .tlab { font: 600 9px "IBM Plex Mono", monospace; letter-spacing: 0; color: var(--ink-2); cursor: help; overflow: hidden; text-overflow: ellipsis; }
 table.po td.cat { text-align: left; padding: 6px 9px; }
 
-/* highlighted study (all views) */
-tr.study[data-hl] { cursor: pointer; }
-tr.study[data-hl]:hover td { box-shadow: inset 0 1px 0 var(--line-2), inset 0 -1px 0 var(--line-2); }
+/* a highlighted study (unwired, #35) */
 tr.study.sel td { background-color: var(--accent-soft); box-shadow: inset 0 1.5px 0 var(--accent), inset 0 -1.5px 0 var(--accent); }
 tr.study.sel td.grp { box-shadow: inset 4px 0 0 var(--accent), inset 0 1.5px 0 var(--accent), inset 0 -1.5px 0 var(--accent); }
 
-/* Distribution */
-div:where(.portfolio-dist) .dist { background: var(--panel); border: 1px solid var(--line-2); border-radius: 9px; padding: 2px 16px 10px; }
-div:where(.portfolio-dist) .dcols { display: grid; grid-template-columns: 260px minmax(0, 1fr) 150px; gap: 0 18px; }
-div:where(.portfolio-dist) .dcat { align-items: end; padding: 14px 0 6px; border-bottom: 2px solid var(--line-2); cursor: pointer; user-select: none; }
-div:where(.portfolio-dist) .dcat h4 { margin: 0; font: 700 10.5px "Archivo", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; }
-div:where(.portfolio-dist) .dcat h4 small { font: 400 11px "Source Sans 3", sans-serif; letter-spacing: 0; text-transform: none; color: var(--ink-3); margin-left: 6px; }
-div:where(.portfolio-dist) .dcat .tog { display: inline-flex; width: 15px; height: 15px; border-radius: 4px; border: 1px solid var(--line-2); align-items: center; justify-content: center; font: 600 11px/1 "Source Sans 3", sans-serif; color: var(--ink-2); margin-right: 6px; vertical-align: -2px; background: var(--panel); letter-spacing: 0; }
-div:where(.portfolio-dist) .dcat:hover h4, div:where(.portfolio-dist) .dcat:hover .tog { color: var(--accent); border-color: var(--accent); }
-div:where(.portfolio-dist) .dcat.folded { border-bottom-width: 1px; }
-div:where(.portfolio-dist) .colh { font: 700 9px "Archivo", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); text-align: right; }
-div:where(.portfolio-dist) .colh.l { text-align: left; }
-div:where(.portfolio-dist) .dfold { grid-column: 2 / -1; font-size: 12px; color: var(--ink-2); align-self: end; }
-div:where(.portfolio-dist) .mrow { align-items: center; min-height: 44px; border-bottom: 1px solid var(--line); }
-div:where(.portfolio-dist) .mrow.plan { background-image: repeating-linear-gradient(135deg, transparent 0 5px, var(--planned-soft) 5px 10px); }
-div:where(.portfolio-dist) .mn { padding: 5px 0; min-width: 0; }
-div:where(.portfolio-dist) .mn b { font-weight: 600; font-size: 13px; }
-div:where(.portfolio-dist) .mn .ab { font: 500 10.5px "IBM Plex Mono", monospace; color: var(--ink-3); margin-left: 6px; }
-div:where(.portfolio-dist) .mn .pill { font-size: 8px; padding: 2px 4px 1px; }
-div:where(.portfolio-dist) .mn .u { display: block; font-size: 11px; color: var(--ink-3); }
-div:where(.portfolio-dist) .track { position: relative; height: 40px; }
-div:where(.portfolio-dist) .track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--line-2); }
-div:where(.portfolio-dist) .track .tick { position: absolute; bottom: 0; font: 500 9px "IBM Plex Mono", monospace; color: var(--ink-3); }
-div:where(.portfolio-dist) .track .tick.r { right: 0; }
-div:where(.portfolio-dist) .pt { position: absolute; top: 50%; width: 11px; height: 11px; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; background: color-mix(in srgb, var(--ink-2) 28%, transparent); border: 1px solid var(--ink-2); transition: opacity 0.12s; }
-div:where(.portfolio-dist) .pt:hover { z-index: 4; outline: 2px solid var(--ink); outline-offset: 2px; }
-div:where(.portfolio-dist) .track.dim .pt { opacity: 0.4; }
-div:where(.portfolio-dist) .ptot { position: absolute; top: 6px; bottom: 6px; width: 2px; background: var(--ink); transform: translateX(-1px); cursor: help; z-index: 2; }
-div:where(.portfolio-dist) .psel { position: absolute; top: 50%; width: 13px; height: 13px; background: var(--accent); transform: translate(-50%, -50%) rotate(45deg); box-shadow: 0 0 0 2px var(--panel); z-index: 3; cursor: pointer; }
-div:where(.portfolio-dist) .lsel { position: absolute; top: -2px; font: 600 10px "IBM Plex Mono", monospace; color: var(--accent); transform: translateX(-50%); white-space: nowrap; z-index: 3; text-shadow: 0 0 3px var(--panel), 0 0 3px var(--panel); pointer-events: none; }
-div:where(.portfolio-dist) .pv { text-align: right; }
-div:where(.portfolio-dist) .pv .m { font: 600 14px "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; }
-div:where(.portfolio-dist) .pv .sv { font: 500 10.5px "IBM Plex Mono", monospace; color: var(--ink-3); }
-div:where(.portfolio-dist) .pv .sv b { color: var(--accent); font-weight: 600; }
-div:where(.portfolio-dist) .notes { display: flex; gap: 18px; margin: 10px 2px 0; font-size: 11.5px; color: var(--ink-3); }
-div:where(.portfolio-dist) .notes b { color: var(--ink-2); font-weight: 600; }
 
-/* sidebar: controls that don't apply to the current view */
+/* controls that don't apply to the current view */
 .ctl.na > :not(label):not(.sb-why) { opacity: 0.45; pointer-events: none; }
 .ctl.na > label { color: var(--ink-3); }
 .sb-why { font-size: 11.5px; color: var(--ink-3); font-style: italic; margin: 4px 0 0; line-height: 1.35; }
@@ -511,7 +445,6 @@ div:where(.portfolio-dist) .notes b { color: var(--ink-2); font-weight: 600; }
 #gsm-tooltip .tip-dl dt { opacity: 0.65; }
 #gsm-tooltip .tip-dl dd { margin: 0; }
 
-/* sidebar */
 .sb-hint { font-size: 11.5px; color: var(--ink-3); margin: 5px 0 0; line-height: 1.35; }
 .chip .cnt { margin-left: 5px; font-size: 10.5px; opacity: 0.7; }
 .mgroup { margin-bottom: 6px; }

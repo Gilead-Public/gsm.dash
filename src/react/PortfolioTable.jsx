@@ -3,7 +3,7 @@ import { reportLink } from '../app/report-links.js';
 import { metricTip } from '../app/tooltip.js';
 import { fmtInt, fmtRate, metricUnit } from '../util/format.js';
 import {
-  POP_COLUMNS, MEASURE_LABELS, bandTitle, cellTip, enrollTarget, heatClasses, metricHeadTip, popHeadTip, popTip, popValue, sortMeasure,
+  POP_COLUMNS, MEASURE_LABELS, cellTip, enrollTarget, heatClasses, metricHeadTip, popHeadTip, popTip, popValue, sortMeasure,
   studyTip, tableRows, tableShowing, tileTip,
 } from '../app/portfolio-table.js';
 import { MetricValue, Sparkline, StatusPill, studyHref, useHoverTooltip } from './parts.jsx';
@@ -14,16 +14,15 @@ const LINK_HINT = 'Open the detailed report in a new tab';
 /**
  * The portfolio table: the portfolio total, then a row per study or per group-by bucket. A folded category shows one
  * headline tile per metric (Overview); an open one shows full cells (Details). Clicking a study's name opens its
- * report, and its cells and tiles open their metric's detailed report in a new tab (#25); clicking elsewhere on its row
- * highlights it in every view.
- * @param {{ store: any, hidden: boolean }} props
+ * report, and its cells and tiles open their metric's detailed report in a new tab (#25).
+ * @param {{ store: any }} props
  */
-export function PortfolioTable({ store, hidden }) {
+export function PortfolioTable({ store }) {
   const ref = useHoverTooltip();
   const { state } = store;
   const { sort, heatmap } = state;
   const metrics = store.visibleMetrics();
-  const groups = store.metricCategories(metrics).map((/** @type {any} */ g) => ({ ...g, collapsed: state.collapsedGroups.has(g.category) }));
+  const groups = store.metricCategories(metrics).map((/** @type {any} */ g) => ({ ...g, collapsed: state.view === 'overview' }));
   const { filtered, latest, flat, total, primary } = tableRows(store);
   const heatClass = heatClasses(heatmap, metrics, primary);
   const measureLabel = MEASURE_LABELS[sortMeasure(heatmap)];
@@ -36,14 +35,10 @@ export function PortfolioTable({ store, hidden }) {
   const onClick = (/** @type {import('react').MouseEvent} */ e) => {
     const target = /** @type {Element} */ (e.target);
     if (target.closest('a[href]')) return;
-    const fold = target.closest('[data-fold]');
-    if (fold instanceof HTMLElement) return store.toggleGroup(fold.dataset.fold);
     const bucketCell = target.closest('tr[data-bucket] td.grp');
     if (bucketCell) return store.toggleExpanded(/** @type {HTMLElement} */ (bucketCell.parentElement).dataset.bucket);
     const th = target.closest('th[data-sort]');
     if (th instanceof HTMLElement) return store.toggleSort(th.dataset.sort, { numeric: th.dataset.sort !== 'label' });
-    const row = target.closest('tr[data-hl]');
-    if (row instanceof HTMLElement) store.highlight(row.dataset.hl);
   };
 
   /**
@@ -78,15 +73,9 @@ export function PortfolioTable({ store, hidden }) {
       </th>
       {groups.map((/** @type {any} */ g) => {
         const n = g.metrics.length;
-        const fold = (
-          <button type="button" className="fold" aria-expanded={!g.collapsed} aria-label={`${g.collapsed ? 'Open' : 'Fold'} ${g.category}`}>
-            {g.collapsed ? '+' : '−'}
-          </button>
-        );
         if (!g.collapsed) {
           return (
-            <th key={g.category} colSpan={n} className="bandh gs open" data-band={g.category} data-fold={g.category} title={bandTitle(g.category, false)}>
-              {fold}
+            <th key={g.category} colSpan={n} className="bandh gs open" data-band={g.category}>
               {g.category}
               <span className="tw">{n}</span>
             </th>
@@ -94,8 +83,7 @@ export function PortfolioTable({ store, hidden }) {
         }
         const statuses = new Set(g.metrics.map((/** @type {any} */ m) => m.Status ?? 'Released'));
         return (
-          <th key={g.category} rowSpan={2} className="bandh gs closed" data-band={g.category} data-fold={g.category} title={bandTitle(g.category, true)}>
-            {fold}
+          <th key={g.category} rowSpan={2} className="bandh gs closed" data-band={g.category}>
             {g.category}
             <span className="u">
               {`${n} metric${n === 1 ? '' : 's'}`}
@@ -262,7 +250,7 @@ export function PortfolioTable({ store, hidden }) {
     const nick = study.params?.nickname;
     const tip = studyTip(study, date);
     return (
-      <tr key={`study ${study.StudyID}`} className={`study ${child ? 'child' : ''} ${state.highlightStudy === study.StudyID ? 'sel' : ''}`} data-hl={study.StudyID} title="Click to highlight in every view">
+      <tr key={`study ${study.StudyID}`} className={`study ${child ? 'child' : ''} ${state.highlightStudy === study.StudyID ? 'sel' : ''}`} data-hl={study.StudyID}>
         <td className="grp">
           <a href={studyHref(store, study.StudyID)} data-study={study.StudyID} className="mono" data-tip={tip}>
             {study.StudyID}
@@ -313,9 +301,18 @@ export function PortfolioTable({ store, hidden }) {
     if (row.open) for (const child of row.children ?? []) body.push(studyRow(child, true));
   }
 
-  const showing = tableShowing(store, filtered, metrics, store.tableZoom(groups.map((/** @type {any} */ g) => g.category)));
+  const showing = tableShowing(store, filtered, metrics);
   return (
-    <div className="portfolio-table" hidden={hidden} ref={ref} onClick={onClick}>
+    <div className="portfolio-table" ref={ref} onClick={onClick}>
+      <div className="tblwrap">
+        <table className="po">
+          <thead>
+            {bandRow}
+            {colRow}
+          </thead>
+          <tbody>{body}</tbody>
+        </table>
+      </div>
       <div className="showing">
         {showing.lead}
         {showing.highlight && (
@@ -325,15 +322,6 @@ export function PortfolioTable({ store, hidden }) {
           </>
         )}
         {showing.sortNote}
-      </div>
-      <div className="tblwrap">
-        <table className={state.density === 'condensed' ? 'po condensed' : 'po'}>
-          <thead>
-            {bandRow}
-            {colRow}
-          </thead>
-          <tbody>{body}</tbody>
-        </table>
       </div>
     </div>
   );

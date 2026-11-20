@@ -6,6 +6,7 @@ import { expect, readData, test } from './fixtures/app.js';
 import { capturePortfolio } from './fixtures/baseline.js';
 import { visibleLines } from './fixtures/visible.js';
 import { latestSnapshot, pooled, pooledTrend, shownMetrics } from '../test/qual/pooling.js';
+import { chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').MetricMeta} MetricMeta */
 
@@ -64,49 +65,39 @@ test.describe('the snapshot cycle', () => {
     expect(offLatest).toBeDefined();
   });
 
-  test('14.01: a study off cycle is left out of the table, the study filter and Distribution, and named with its latest snapshot (#14)', async ({ app, page }) => {
+  test('14.01: a study off cycle is left out of the table and the study filter, and named with its latest snapshot (#14)', async ({ app, page }) => {
     await app.open('', offCycle);
     const notice = page.locator('.cycle-notice');
     await expect(notice).toBeVisible();
     expect(await visibleLines(notice)).toEqual([heading, `${off.StudyID}: off cycle, latest snapshot ${offLatest}`]);
     await expect(page.locator('tbody tr[data-hl]')).toHaveCount(studies.length - 1);
     await expect(page.locator(`tbody tr[data-hl="${off.StudyID}"]`)).toHaveCount(0);
-    await expect(page.locator('.sidebar input[data-filter="study"]')).toHaveCount(studies.length - 1);
-    await expect(page.locator(`.sidebar input[data-filter="study"][data-value="${off.StudyID}"]`)).toHaveCount(0);
-    await page.locator('button[data-view="distribution"]').click();
-    await expect(page.locator('.pt[data-pick]').first()).toBeVisible();
-    await expect(page.locator(`.pt[data-pick="${off.StudyID}"]`)).toHaveCount(0);
-    await expect(notice).toBeVisible();
+    await expect(control(page, 'input[data-filter="study"]').locator).toHaveCount(studies.length - 1);
+    await expect(control(page, `input[data-filter="study"][data-value="${off.StudyID}"]`).locator).toHaveCount(0);
   });
 
-  test('14.03: with every study in cycle, the portfolio renders as its recorded baseline in Overview, Details, grouped and Distribution (#14)', async ({ app, page }) => {
+  test('14.03: with every study in cycle, the portfolio renders as its recorded baseline in Overview, Details and grouped (#14)', async ({ app, page }) => {
     await app.open();
     const expectAsRecorded = async (/** @type {string} */ name) => expect.soft((await capturePortfolio(page, name)).text, name).toBe(recorded(name));
     await expectAsRecorded('table-overview');
-    await page.locator('button[data-view="details"]').click();
+    await chooseView(page, 'details');
     await expectAsRecorded('table-details');
     await app.open();
-    await page.locator('.sidebar select[data-groupby]').selectOption('phase');
+    await control(page, 'select[data-groupby]').selectOption('phase');
     await expectAsRecorded('rows-grouped');
-    await app.open();
-    await page.locator('button[data-view="distribution"]').click();
-    await expectAsRecorded('distribution');
   });
 
   test('14.03: with every study in cycle, no study is left out and no notice shows (#14)', async ({ app, page }) => {
     await app.open();
     await expect(page.locator('tbody tr[data-hl]')).toHaveCount(studies.length);
-    await expect(page.locator('.sidebar input[data-filter="study"]')).toHaveCount(studies.length);
-    await expect(page.locator('.cycle-notice')).toHaveCount(0);
-    await page.locator('button[data-view="distribution"]').click();
-    for (const s of studies) await expect(page.locator(`.pt[data-pick="${s.StudyID}"]`).first()).toBeAttached();
+    await expect(control(page, 'input[data-filter="study"]').locator).toHaveCount(studies.length);
     await expect(page.locator('.cycle-notice')).toHaveCount(0);
   });
 
   test('14.02: with a study off cycle, each Portfolio total trend keeps that study\'s history before the cycle date and ends on the in-cycle total (#14)', async ({ app, page }) => {
     await app.open('', offCycle);
-    await page.locator('button[data-view="details"]').click();
-    await page.locator('.sidebar button[data-show="trend"]').click();
+    await chooseView(page, 'details');
+    await control(page, 'button[data-show="trend"]').click();
     const history = studies.map((s) => (s === off ? { ...s, snapshots: s.snapshots.filter((d) => d !== cycle.SnapshotDate) } : s));
     const inCycle = studies.filter((s) => s !== off);
     let distinct = 0;

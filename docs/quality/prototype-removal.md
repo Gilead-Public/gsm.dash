@@ -37,7 +37,7 @@ Second pass, 17 Nov, after checking each kept feature for a business source in g
 
 | ID | Feature | Decision |
 |---|---|---|
-| K1 | Page tags "Program overview" / "Study view" | Decided with #24's header work |
+| K1 | Page tags "Program overview" / "Study view" | Removed by #24 (design review 2026-11-19): the header shows the logo and the dashboard's title |
 | K3 | "Extract: <date>" on a single-snapshot study | Kept, and required by 35.09. Source: gsm.roadmap#625 (the view is generated from the scheduled study snapshot) |
 | K4 | Trend over time tile view | Kept, and required by 35.05. Source: gsm.roadmap#618 and #625 (the study view presents CTQ trends) |
 
@@ -45,9 +45,9 @@ A full study tile pages through Details, Trend over time, the metric's own views
 study configures them, the flag views (#11).
 
 These were uncovered in the audit, but a requirement now covers them:
-- row-click highlight (25.05);
+- row-click highlight (25.05), since unwired with the Highlight study control by the 19 Nov design review (35.11);
 - Clear filters (22.04);
-- the Controls panel's collapse and sections (#22);
+- the Controls panel's collapse and sections (#22), since replaced by the header's Filters bar and Config popover;
 - Overview tiles and Details cells (#20, #25);
 - the Distribution view's study link.
 

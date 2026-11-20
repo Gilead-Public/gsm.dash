@@ -3,6 +3,7 @@
 // and under a sub-path, and the portfolio's view travels with those links to a study report and back.
 import { expect, readData, test } from './fixtures/app.js';
 import { capturePortfolio } from './fixtures/baseline.js';
+import { chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 test.describe.configure({ timeout: 90_000 });
@@ -13,8 +14,6 @@ const studies = portfolio.studies;
 /** @type {Array<{ MetricID: string, GroupLevel: string, Status?: string, Active?: boolean, Category: string }>} */
 const catalog = portfolio.metrics;
 
-/** @param {Page} page */
-const sidebar = (page) => page.locator('.sidebar');
 
 const study = 'STUDY004';
 const hidden = 'Analysis_kri0005';
@@ -26,8 +25,8 @@ const allowed = catalog
 
 /** @param {Page} page */
 async function filterMetrics(page) {
-  await sidebar(page).locator('button[data-status="Planned"]').click();
-  await sidebar(page).locator(`input[data-metric="${hidden}"]`).uncheck();
+  await control(page, 'button[data-status="Planned"]').click();
+  await control(page, `input[data-metric="${hidden}"]`).uncheck();
 }
 
 /**
@@ -43,8 +42,9 @@ async function studyReport(page, studyId) {
  * allowed tiles, and the portfolio comes back as it was left.
  * @param {Page} page
  * @param {import('@playwright/test').Locator} link
+ * @param {string[]} [tiles] The tiles the report shows, when not `allowed`.
  */
-async function roundTrip(page, link) {
+async function roundTrip(page, link, tiles = allowed) {
   const left = new URL(page.url());
   const dir = left.href.slice(0, left.href.lastIndexOf('/') + 1);
   expect(await link.getAttribute('href')).toBe(`./${study}.html${left.hash}`);
@@ -55,7 +55,7 @@ async function roundTrip(page, link) {
   await studyReport(page, study);
   expect(page.url()).toBe(`${dir}${study}.html${left.hash}`);
   const shown = await page.locator('#app .tile[data-metric-id]').evaluateAll((els) => els.map((t) => t.getAttribute('data-metric-id')));
-  expect(shown.sort()).toEqual(allowed);
+  expect(shown.sort()).toEqual(tiles);
 
   const back = page.locator('#app a.back');
   expect(await back.getAttribute('href')).toBe(`./portfolio.html${left.hash}`);
@@ -84,16 +84,6 @@ test('27.02: every study link and back link is relative, and each opens its repo
     await page.locator('#app > .layout').waitFor();
     expect(page.url()).toBe(`${dir}portfolio.html`);
   }
-
-  const picked = studies[0].StudyID;
-  await sidebar(page).locator('select[data-highlight]').selectOption(picked);
-  await page.locator('button[data-view="distribution"]').click();
-  const { hash } = new URL(page.url());
-  const link = page.locator('#app .portfolio-dist .showing a[data-study]');
-  expect(await link.getAttribute('href')).toBe(`./${picked}.html${hash}`);
-  await link.click();
-  await studyReport(page, picked);
-  expect(page.url()).toBe(`${dir}${picked}.html${hash}`);
 });
 
 test('27.05: the table view carries over to a study report, which applies its metric filters, and back (#27)', async ({ app, page }) => {
@@ -101,41 +91,25 @@ test('27.05: the table view carries over to a study report, which applies its me
   await page.locator('#app > .layout').waitFor();
 
   // Every setting 27.05 lists, through the controls a user would use.
-  await sidebar(page).locator('button[data-filter="phase"][data-value="P2"]').click();
-  for (const status of ['Active', 'Enrolling']) await sidebar(page).locator(`button[data-filter="status"][data-value="${status}"]`).click();
+  await control(page, 'button[data-filter="phase"][data-value="P2"]').click();
+  for (const status of ['Active', 'Enrolling']) await control(page, `button[data-filter="status"][data-value="${status}"]`).click();
   await filterMetrics(page);
-  await sidebar(page).locator('select[data-groupby]').selectOption('therapeutic_area');
-  await page.locator('button[data-view="distribution"]').click();
-  await page.locator('[data-dfold="Disposition"]').click();
-  await page.locator('button[data-view="overview"]').click();
-  await page.locator('[data-fold="Data quality"]').first().click();
+  await control(page, 'select[data-groupby]').selectOption('therapeutic_area');
+  await chooseView(page, 'details');
   await page.locator('tr[data-bucket="Cardiology"] td.grp').click();
   await page.locator('th[data-sort="Analysis_kri0008"]').click();
-  await sidebar(page).locator('button[data-seg="cellMode"][data-value="custom"]').click();
-  await sidebar(page).locator('button[data-show="den"]').click();
-  await sidebar(page).locator('button[data-show="num"]').click();
-  await sidebar(page).locator('select[data-heatmap]').selectOption('rate');
-  await sidebar(page).locator('select[data-highlight]').selectOption(study);
+  await control(page, 'button[data-seg="cellMode"][data-value="custom"]').click();
+  await control(page, 'button[data-show="den"]').click();
+  await control(page, 'button[data-show="num"]').click();
+  await control(page, 'select[data-heatmap]').selectOption('rate');
+  await control(page, 'button[data-group="Data quality"]').click();
 
   const keys = [...new Set(new URLSearchParams(new URL(page.url()).hash.slice(1)).keys())].sort();
   expect(keys, 'every setting moved from its default').toEqual(
-    ['cell', 'dfold', 'dir', 'expand', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'open', 'show', 'sort', 'statuses', 'study', 'view'].sort(),
+    ['cell', 'dir', 'expand', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'hidebygroup', 'hidegroup', 'show', 'sort', 'statuses', 'view'].sort(),
   );
-  await roundTrip(page, page.locator(`#app .portfolio-table a[data-study="${study}"]`));
-});
-
-test('27.05: Distribution, with a study picked from its dots, carries over to that study\'s report and back (#27)', async ({ app, page }) => {
-  await app.openReport('portfolio');
-  await page.locator('#app > .layout').waitFor();
-  await sidebar(page).locator('button[data-filter="phase"][data-value="P2"]').click();
-  await filterMetrics(page);
-  await page.locator('button[data-view="distribution"]').click();
-  await page.locator('[data-dfold="Disposition"]').click();
-  await page.locator(`.track .pt[data-pick="${study}"]`).first().click();
-
-  const params = new URLSearchParams(new URL(page.url()).hash.slice(1));
-  expect([params.get('view'), params.get('study')]).toEqual(['distribution', study]);
-  await roundTrip(page, page.locator(`#app .portfolio-dist .showing a[data-study="${study}"]`));
-  await expect(page.locator('button[data-view="distribution"]')).toHaveAttribute('aria-selected', 'true');
-  await expect(page.locator('#app .portfolio-dist')).toBeVisible();
+  // The study report also leaves out the hidden group's metrics (16.03).
+  const dataQuality = catalog.filter((/** @type {any} */ m) => m.Category === 'Data quality').map((/** @type {any} */ m) => m.MetricID);
+  expect(dataQuality.length).toBeGreaterThan(0);
+  await roundTrip(page, page.locator(`#app .portfolio-table a[data-study="${study}"]`), allowed.filter((id) => !dataQuality.includes(id)));
 });

@@ -69,9 +69,12 @@ To share a build for feedback without releasing it: every CI run that passes als
 - `src/pages/`, `src/react/` — the reports: an Astro page each for the
   portfolio and a study, with one React root rendering it from one injected
   document (gsm.viz inlined into study reports). Hovering a metric's header
-  shows its definition from `Reporting_Metrics` (#20). The Controls panel
-  chooses the portfolio table's optional columns (study name, **Enrolled**,
-  Status) and its row density (#21); Enrolled is the summary's
+  shows its definition from `Reporting_Metrics` (#20). The portfolio's
+  controls sit in its header (#22, #24): **Filters**, a chip bar collapsed on
+  load with the study filter first; **Config**, with Collapse all / Expand all
+  (the table's View, Overview or Details), the display settings, the optional
+  columns (study name, **Enrolled**, Status; #21) and each metric's checkbox;
+  and **Reset**. Enrolled is the summary's
   `ParticipantCount`, summed over the row's studies. The study page composes
   its view from widgets. Links
   between reports are relative and carry the portfolio's view in the hash.
@@ -140,21 +143,27 @@ To share a build for feedback without releasing it: every CI run that passes als
 Each report carries its data as one injected document (`<script type="application/json"
 id="gsm-data">`), checked against its schema when it loads. The portfolio's holds the
 catalog, the studies, the counts-only summary and its configuration, if any. A study's
-holds the catalog, the study's manifest entry and all its snapshots.
+holds the catalog, the study's manifest entry and all its snapshots. Either may carry a
+`title` (#24), which the render step sets; the header and the browser tab show it, and
+"gsm.dash" when there is none.
 
 Portfolio defaults (#16): an optional `config.json` beside `portfolio.json` sets the
 portfolio's initial grouping (`groupBy`), heatmap (`heatmap`), cell values (`show`),
 hidden metrics (`metrics`, MetricIDs), optional table columns (`columns`: `name`, `enroll`,
-`status`; #21) and row density (`density`: `roomy` or `condensed`); every key is optional.
+`status`; #21), view (`view`: `overview` or `details`) and metric groups (`groups`: an
+ordered list of `{ "name", "metrics", "hidden" }`, each metric in one group; metrics no group
+lists trail in an "Other" group, a reserved name; without it, the catalog's `Category` groups
+apply; #21's Config chips show or hide each group, and a study report opened from the
+portfolio leaves out the metrics a hidden group hides); every key is optional.
 The Enrolled column shows a study's count against its `ParticipantTarget` parameter when
 the study has one. It travels in the portfolio
 document, so one template serves any configuration. Its values are checked against the
-Controls panel's choices and the catalog when the document is built and when the report
+controls' choices and the catalog when the document is built and when the report
 loads. A setting in the address's hash overrides its configured default.
 
 Snapshot cycle (#14): the summary's `cycle` names one snapshot date and every study taking
-part. A study whose latest snapshot is on another date is left out of the table, the totals
-and Distribution, and a notice names it with its latest snapshot; a listed study with no
+part. A study whose latest snapshot is on another date is left out of the table and the
+totals, and a notice names it with its latest snapshot; a listed study with no
 data is named as missing. Trends keep every study's history before the cycle date; their
 point on the cycle date, like the totals, leaves off-cycle studies out, and they end there. A
 summary holding a study its cycle doesn't list is refused.

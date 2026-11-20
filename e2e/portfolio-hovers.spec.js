@@ -4,6 +4,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { expectSeen, visibleLines } from './fixtures/visible.js';
 import { countText, latestSnapshot, pooled, shownMetrics } from '../test/qual/pooling.js';
+import { chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
 
@@ -23,16 +24,13 @@ const literal = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const VIEWS = {
   Overview: async () => {},
   'Details, ungrouped': async (page) => {
-    await page.locator('button[data-view="details"]').click();
+    await chooseView(page, 'details');
   },
   'Details, grouped with a group open': async (page) => {
-    await page.locator('button[data-view="details"]').click();
-    await page.locator('select[data-groupby]').selectOption('phase');
+    await chooseView(page, 'details');
+    await control(page, 'select[data-groupby]').selectOption('phase');
     await page.locator('tr[data-bucket] td.grp').first().click();
     await expect(page.locator('.portfolio-table tr.study').first()).toBeVisible();
-  },
-  Distribution: async (page) => {
-    await page.locator('button[data-view="distribution"]').click();
   },
 };
 
@@ -56,7 +54,7 @@ const tooltipTexts = (page) =>
     }),
   );
 
-test('20.01: the portfolio report has no info icon and no ⓘ in its page or tooltip text, in Overview, Details (ungrouped, and grouped with a group open) and Distribution (#20)', async ({ app, page }) => {
+test('20.01: the portfolio report has no info icon and no ⓘ in its page or tooltip text, in Overview and Details (ungrouped, and grouped with a group open) (#20)', async ({ app, page }) => {
   for (const [view, open] of Object.entries(VIEWS)) {
     await app.open();
     await open(page);
@@ -84,7 +82,7 @@ const technicalFields = (text) => [
   ...THRESHOLDS.filter((rx) => rx.test(text)).map((rx) => `thresholds ${rx.source}`),
 ];
 
-test('20.03: no tooltip on the portfolio report holds a metric\'s MetricID or ID, its score or its thresholds, in Overview, Details or Distribution (#20)', async ({ app, page }) => {
+test('20.03: no tooltip on the portfolio report holds a metric\'s MetricID or ID, its score or its thresholds, in Overview or Details (#20)', async ({ app, page }) => {
   expect([IDS.length, SCORES.length, THRESHOLDS.length].every((n) => n > 0), 'the catalog has IDs, scores and thresholds').toBe(true);
   const id = String(everyMetric[0].ID);
   for (const sample of [`thresholds -2, -1, 2, 3`, `−2 / −1 / 2 / 3`, `-2,-1,2,3`, id.toUpperCase(), `${id.slice(0, 3)} ${id.slice(3)}`, 'adjusted z score']) {
@@ -133,7 +131,7 @@ async function expectGlossary(page, target, metric, where) {
   }
 }
 
-test('20.02: hovering a metric\'s header in Details, its band label in Overview or its name in Distribution shows its glossary entry; hovering a study\'s name shows its details and snapshot date (#20)', async ({ app, page }) => {
+test('20.02: hovering a metric\'s header in Details or its band label in Overview shows its glossary entry; hovering a study\'s name shows its details and snapshot date (#20)', async ({ app, page }) => {
   await app.open();
   for (const m of catalog) await expectGlossary(page, page.locator(`.tlab[data-abbr="${m.Abbreviation}"]`), m, `Overview ${m.Abbreviation}`);
 
@@ -156,14 +154,12 @@ test('20.02: hovering a metric\'s header in Details, its band label in Overview 
     expect(shown.get('Snapshot'), `${s.StudyID}: snapshot date`).toBe(`${latestSnapshot(s)} (${s.snapshots.length} available)`);
   }
 
-  await page.locator('button[data-view="details"]').click();
+  await chooseView(page, 'details');
   for (const m of catalog) await expectGlossary(page, page.locator(`th[data-sort="${m.MetricID}"]`), m, `Details ${m.Abbreviation}`);
 
-  await page.locator('button[data-view="distribution"]').click();
-  for (const m of catalog) await expectGlossary(page, page.locator(`.mrow[data-metric="${m.MetricID}"] .mn`), m, `Distribution ${m.Abbreviation}`);
 });
 
-test('20.04: the portfolio\'s hovers and tooltips in Overview, Details and Distribution, for visual comparison with this issue\'s Scope (#20)', async ({ app, page, evidence }) => {
+test('20.04: the portfolio\'s hovers and tooltips in Overview and Details, for visual comparison with this issue\'s Scope (#20)', async ({ app, page, evidence }) => {
   await app.open();
   /** @param {import('@playwright/test').Locator} target @param {string} label */
   const shoot = async (target, label) => {
@@ -174,31 +170,29 @@ test('20.04: the portfolio\'s hovers and tooltips in Overview, Details and Distr
   await shoot(page.locator('.tlab').first(), 'overview band label');
   await shoot(page.locator('tbody tr.total .otile').first(), 'overview tile');
   await shoot(page.locator('tr.study a[data-study]').first(), 'study name');
-  await page.locator('button[data-view="details"]').click();
+  await chooseView(page, 'details');
   await shoot(page.locator('th[data-sort^="Analysis_"]').first(), 'details header');
   await shoot(page.locator('tbody tr.total td[data-tip]:not(.pop)').first(), 'details cell');
-  await page.locator('button[data-view="distribution"]').click();
-  await shoot(page.locator('.mrow .mn').first(), 'distribution name');
 });
 
 test('20.05: ungrouped, the table has no Snapshot column in Overview or Details; grouped, the Studies column holds each group\'s study count and expanded study rows leave it empty (#20)', async ({ app, page }) => {
   await app.open();
   const table = page.locator('.portfolio-table table.po');
   for (const view of ['overview', 'details']) {
-    await page.locator(`button[data-view="${view}"]`).click();
+    await chooseView(page, view);
     await expect(table.locator('th[data-sort="meta"]'), view).toHaveCount(0);
     await expect(table.locator('td.nstud'), view).toHaveCount(0);
     expect((await table.locator('thead').innerText()).includes('Snapshot'), view).toBe(false);
     await expect(table.locator('tbody tr.study'), view).toHaveCount(studies.length);
   }
 
-  await page.locator('select[data-groupby]').selectOption('phase');
+  await control(page, 'select[data-groupby]').selectOption('phase');
   const counts = new Map();
   for (const s of studies) counts.set(s.params.phase, (counts.get(s.params.phase) ?? 0) + 1);
   const open = [...counts.keys()].sort()[0];
   await page.locator(`tr[data-bucket="${open}"] td.grp`).click();
   for (const view of ['overview', 'details']) {
-    await page.locator(`button[data-view="${view}"]`).click();
+    await chooseView(page, view);
     const head = table.locator('th[data-sort="meta"]');
     await expect(head, view).toHaveText(/^Studies/);
     await expectSeen(head, `${view}: Studies heading`);
@@ -235,7 +229,7 @@ test('20.06: in Overview and Details, every cell\'s and tile\'s hover gives the 
   const byId = new Map(studies.map((s) => [s.StudyID, s]));
   const tooltip = page.locator('#gsm-tooltip');
   for (const view of /** @type {const} */ (['overview', 'details'])) {
-    await page.locator(`button[data-view="${view}"]`).click();
+    await chooseView(page, view);
     const { columns, rows } = await valueGrid(page, view);
     const metrics = columns.map((c) => catalog.find((m) => ('abbr' in c ? m.Abbreviation === c.abbr : m.MetricID === c.id)));
     expect(metrics.every(Boolean) && metrics.length === catalog.length, `${view}: a column for every catalog metric`).toBe(true);

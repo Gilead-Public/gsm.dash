@@ -2,8 +2,8 @@ import { orderMetrics, normalizeMetric, pivotGroups, indexResults } from './norm
 import { selectLatestSnapshots, poolResults, bucketStudies, filterStudies } from './rollup.js';
 import { indexSummary, poolSummary, POPULATIONS } from './summary.js';
 import { nextSort } from './sort.js';
-import { STATUS_ORDER, CATEGORY_ORDER, groupByCategory } from './catalog.js';
-import { CELL_MODES, COLUMN_OPTIONS, DENSITIES, GROUP_BY_OPTIONS, HEATMAPS, showOptions } from '../app/portfolio-controls.js';
+import { STATUS_ORDER, CATEGORY_ORDER, groupAsConfigured, groupByCategory } from './catalog.js';
+import { CELL_MODES, COLUMN_OPTIONS, GROUP_BY_OPTIONS, HEATMAPS, VIEWS, showOptions } from '../app/portfolio-controls.js';
 import { POP_COLUMNS } from '../app/portfolio-table.js';
 import { portfolioDefaults } from './portfolio-config.js';
 
@@ -11,7 +11,7 @@ import { portfolioDefaults } from './portfolio-config.js';
 const SCALARS = [
   ['group', 'groupBy', GROUP_BY_OPTIONS],
   ['cell', 'cellMode', CELL_MODES],
-  ['density', 'density', DENSITIES],
+  ['view', 'view', VIEWS],
   ['heatmap', 'heatmap', HEATMAPS],
 ];
 const SHOW_PARTS = showOptions(false).map(([part]) => part);
@@ -80,11 +80,12 @@ export class PortfolioStore extends EventTarget {
     this.state = {
       show: new Set(this.#defaults.show), // any of num | den | rate | trend; cells stack what's on
       columns: new Set(this.#defaults.columns), // the table's optional columns shown: name | enroll | status (#21)
-      density: this.#defaults.density, // 'roomy' | 'condensed' (#21)
+      view: this.#defaults.view, // 'overview' (each category folded to headline tiles) | 'details'
       heatmap: this.#defaults.heatmap, // 'none' | 'num' | 'den' | 'rate' — column-relative cell shading (and the metric sort measure)
       groupBy: this.#defaults.groupBy, // 'none' (one row per study) | a study param
       filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set(), study: new Set() },
       hiddenMetrics: new Set(this.#defaults.metrics), // MetricIDs the user has switched off
+      hiddenGroups: new Set(this.#hiddenGroupDefaults()), // metric groups whose band is hidden (#21), independent of hiddenMetrics
       expanded: new Set(),
       sort: { key: null, dir: null }, // key: 'label' | 'meta' | a MetricID
       detail: { metricId: null, tab: 'viz-bar' }, // study-page drill-in panel (W4)
@@ -93,14 +94,10 @@ export class PortfolioStore extends EventTarget {
       asOf: null, // view the portfolio as of this date; the study page's visit scrubber drives it
       cellMode: this.#defaults.cellMode, // 'defined' — each metric shows its glossary display rule | 'custom' — the `show` stack for every metric
       statuses: new Set(STATUS_ORDER), // glossary Status values to show (Released | New | Planned)
-      // Program table zoom: folded categories show one headline value per
-      // metric. All folded = Overview (the landing view), none = Details.
-      collapsedGroups: new Set(), // filled with every category below
-      programView: 'table', // 'table' (Overview / Details) | 'distribution'
-      highlightStudy: null, // StudyID marked in every program view
-      distCollapsed: new Set(), // distribution view: categories folded to their header
+      // StudyID marked in the table. Unwired since the 19 Nov 2026 design review (#35): nothing sets it, and the address
+      // doesn't carry it; kept for a possible enhanced version of the page.
+      highlightStudy: null,
     };
-    this.state.collapsedGroups = new Set(this.#allCategories());
   }
 
   get #index() {
@@ -135,16 +132,37 @@ export class PortfolioStore extends EventTarget {
     return this.metrics.filter((m) => m.GroupLevel === 'Site');
   }
 
-  /** Supported catalog minus user-hidden metrics — what views should render. */
+  /** Supported catalog minus user-hidden metrics and the metrics of hidden groups — what views should render. */
   visibleMetrics() {
+    const hiddenGroup = new Set(
+      this.metricCategories(this.supportedMetrics())
+        .filter((g) => this.state.hiddenGroups.has(g.category))
+        .flatMap((g) => g.metrics.map((m) => m.MetricID)),
+    );
     return this.supportedMetrics().filter(
-      (m) => !this.state.hiddenMetrics.has(m.MetricID) && this.state.statuses.has(m.Status ?? 'Released')
+      (m) => !this.state.hiddenMetrics.has(m.MetricID) && !hiddenGroup.has(m.MetricID) && this.state.statuses.has(m.Status ?? 'Released')
     );
   }
 
-  /** Visible metrics banded by glossary Category, in catalog category order. */
+  /** Metrics banded into groups: as configured (#16's `groups`), or by glossary Category in catalog category order. */
   metricCategories(metrics = this.visibleMetrics()) {
-    return groupByCategory(metrics, CATEGORY_ORDER);
+    return this.#defaults.groups ? groupAsConfigured(metrics, this.#defaults.groups) : groupByCategory(metrics, CATEGORY_ORDER);
+  }
+
+  /** Every group's name, in order, whatever is hidden. */
+  groupNames() {
+    return this.metricCategories(this.supportedMetrics()).map((g) => g.category);
+  }
+
+  #hiddenGroupDefaults() {
+    return (this.#defaults.groups ?? []).filter((g) => g.hidden).map((g) => g.name);
+  }
+
+  /** Show or hide one group's band; its metrics' own checkboxes are left as they are. */
+  toggleGroupHidden(name) {
+    const set = this.state.hiddenGroups;
+    set.has(name) ? set.delete(name) : set.add(name);
+    this.#emit();
   }
 
   toggleStatus(status) {
@@ -153,39 +171,7 @@ export class PortfolioStore extends EventTarget {
     this.#emit();
   }
 
-  /** Fold / unfold one category band in the program table. */
-  toggleGroup(category) {
-    const set = this.state.collapsedGroups;
-    set.has(category) ? set.delete(category) : set.add(category);
-    this.#emit();
-  }
-
-  /**
-   * Table zoom derived from which visible categories are folded: 'overview'
-   * (all folded), 'details' (none folded) or 'mixed'.
-   */
-  tableZoom(categories = this.metricCategories().map((g) => g.category)) {
-    const folded = categories.filter((c) => this.state.collapsedGroups.has(c)).length;
-    if (folded === categories.length) return 'overview';
-    return folded === 0 ? 'details' : 'mixed';
-  }
-
-  /** The view switch: 'overview' / 'details' set the table zoom; 'distribution' swaps the view. */
-  setProgramView(view) {
-    if (view === 'distribution') {
-      this.state.programView = 'distribution';
-    } else {
-      this.state.programView = 'table';
-      this.state.collapsedGroups = view === 'details' ? new Set() : new Set(this.#allCategories());
-    }
-    this.#emit();
-  }
-
-  #allCategories() {
-    return [...new Set([...CATEGORY_ORDER, ...groupByCategory(this.metrics, CATEGORY_ORDER).map((g) => g.category)])];
-  }
-
-  /** Mark one study in every program view; selecting it again clears the highlight. */
+  /** Mark one study in the table; selecting it again clears the highlight. */
   highlight(studyId) {
     this.state.highlightStudy = studyId && this.state.highlightStudy !== studyId ? studyId : null;
     this.#emit();
@@ -194,22 +180,14 @@ export class PortfolioStore extends EventTarget {
   /**
    * The portfolio view as URL params, so a link reopens the same view and a study report can carry it there and back.
    * Defaults are left out, so the default view has no params. A list is one param per value, in catalog order, since
-   * study values may contain commas. `open` lists the table's open bands; `all` stands for every band.
+   * study values may contain commas.
    */
   programParams() {
     const { state } = this;
-    const cats = this.#allCategories();
-    const open = cats.filter((c) => !state.collapsedGroups.has(c));
-    const zoom = open.length === 0 ? 'overview' : open.length === cats.length ? 'details' : 'mixed';
-    const view = state.programView === 'distribution' ? 'distribution' : zoom;
     const params = new URLSearchParams();
     const add = (key, values) => values.forEach((v) => params.append(key, v));
     // A set that can be emptied writes an empty value, so that it differs from the default.
     const addSet = (key, values) => (values.length ? add(key, values) : params.set(key, ''));
-    if (view !== 'overview') params.set('view', view);
-    if (zoom === 'mixed' || (zoom === 'details' && view === 'distribution')) add('open', zoom === 'details' ? ['all'] : open);
-    add('dfold', cats.filter((c) => state.distCollapsed.has(c)));
-    if (state.highlightStudy) params.set('study', state.highlightStudy);
     for (const [key, field] of SCALARS) if (state[field] !== this.#defaults[field]) params.set(key, state[field]);
     if (state.groupBy !== 'none') add('expand', this.#bucketValues().filter((v) => state.expanded.has(v)));
     if (state.sort.key && state.sort.dir) {
@@ -225,23 +203,24 @@ export class PortfolioStore extends EventTarget {
     // Written even when it equals the configured default: a study report has no configuration, and takes the hidden
     // metrics from the link.
     if (hidden.length || this.#defaults.metrics.length) addSet('hide', hidden);
+    const groups = this.groupNames();
+    const hiddenGroups = groups.filter((g) => state.hiddenGroups.has(g));
+    const defaultHidden = this.#hiddenGroupDefaults();
+    if (groups.some((g) => state.hiddenGroups.has(g) !== defaultHidden.includes(g))) addSet('hidegroup', hiddenGroups);
+    // A study report has no groups or configuration: it takes the metrics a hidden group hides as a list of its own,
+    // written even at the configured default and apart from `hide`, so the portfolio's checkboxes keep their own state
+    // (16.03).
+    const groupHidden = this.metricCategories(this.supportedMetrics())
+      .filter((g) => state.hiddenGroups.has(g.category))
+      .flatMap((g) => g.metrics.map((m) => m.MetricID));
+    add('hidebygroup', groupHidden);
     return params;
   }
 
   /** Restore what programParams() wrote: an absent param is its configured default, and unknown values are dropped. One 'change'. */
   applyProgramParams(params) {
     const { state } = this;
-    const cats = this.#allCategories();
     const known = (values, options) => values.filter((v) => options.includes(v));
-    const view = params.get('view');
-    const open = params.getAll('open');
-    state.programView = view === 'distribution' ? 'distribution' : 'table';
-    if (open.includes('all') || (!open.length && view === 'details')) state.collapsedGroups = new Set();
-    else if (open.length) state.collapsedGroups = new Set(cats.filter((c) => !open.includes(c)));
-    else state.collapsedGroups = new Set(cats);
-    state.distCollapsed = new Set(known(params.getAll('dfold'), cats));
-    const study = params.get('study');
-    state.highlightStudy = this.studies.some((st) => st.StudyID === study) ? study : null;
     for (const [key, field, choices] of SCALARS) {
       const v = params.get(key);
       state[field] = choices.some(([choice]) => choice === v) ? v : this.#defaults[field];
@@ -254,13 +233,19 @@ export class PortfolioStore extends EventTarget {
     state.columns = new Set(chosen(params, 'cols', COLUMN_PARTS, this.#defaults.columns));
     const options = this.filterOptions();
     for (const param of Object.keys(state.filters)) state.filters[param] = new Set(known(params.getAll(`filter.${param}`), options[param]));
+    state.hiddenGroups = new Set(chosen(params, 'hidegroup', this.groupNames(), this.#hiddenGroupDefaults()));
     this.#applyMetricParams(params);
     this.#emit();
   }
 
-  /** What a study report takes from the portfolio's params: the metric-status filters and hidden metrics. One 'change'. */
+  /**
+   * What a study report takes from the portfolio's params: the metric-status filters, and the hidden metrics, those its
+   * hidden groups hide included. One 'change'.
+   */
   applyMetricParams(params) {
     this.#applyMetricParams(params);
+    const ids = this.metrics.map((m) => m.MetricID);
+    for (const id of params.getAll('hidebygroup')) if (ids.includes(id)) this.state.hiddenMetrics.add(id);
     this.#emit();
   }
 
@@ -271,13 +256,6 @@ export class PortfolioStore extends EventTarget {
 
   #bucketValues() {
     return bucketStudies(this.studies, this.state.groupBy).map((b) => String(b.value));
-  }
-
-  /** Fold / unfold one category in the distribution view (independent of the table's folds). */
-  toggleDistGroup(category) {
-    const set = this.state.distCollapsed;
-    set.has(category) ? set.delete(category) : set.add(category);
-    this.#emit();
   }
 
   toggleMetric(metricId) {

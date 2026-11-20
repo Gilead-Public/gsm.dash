@@ -4,6 +4,8 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { pageAllTo, tile } from './fixtures/tiles.js';
 import { visibleLines } from './fixtures/visible.js';
+import { chooseView, closeControls, control } from './fixtures/controls.js';
+import { capturePortfolio } from './fixtures/baseline.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 const portfolio = readData('portfolio.json');
@@ -254,11 +256,12 @@ test('35.07: CTQ tiles have no Charts button or panel, and each standard-KRI wid
 
 test('35.08: the portfolio\'s Metrics section has no All / None or per-category all / none controls, and each metric\'s checkbox still hides and shows it (#35)', async ({ app, page }) => {
   await app.open();
-  const sidebar = page.locator('.sidebar');
-  await expect(sidebar.getByRole('button', { name: /^(all|none)$/i })).toHaveCount(0);
-  await expect(sidebar.locator('[data-metrics-all], [data-group-metrics]')).toHaveCount(0);
-  await page.locator('button[data-view="details"]').click();
-  const box = sidebar.locator('input[data-metric="Analysis_kri0012"]');
+  const controls = page.locator('#header-controls');
+  await page.locator('#header-controls [data-open="config"]').click();
+  await expect(controls.getByRole('button', { name: /^(all|none)$/i })).toHaveCount(0);
+  await expect(controls.locator('[data-metrics-all], [data-group-metrics]')).toHaveCount(0);
+  await chooseView(page, 'details');
+  const box = control(page, 'input[data-metric="Analysis_kri0012"]');
   const column = page.locator('.portfolio-table th[data-sort="Analysis_kri0012"]');
   await expect(column).toHaveCount(1);
   await box.uncheck();
@@ -277,4 +280,93 @@ test('35.09: a study with one snapshot shows "Extract: <date>" with that date, i
   });
   await expect.poll(() => visibleLines(page.locator('.dd-head')), 'the label and its date can be seen').toContain(`Extract: ${last}`);
   await expect(page.locator('input[type="range"][data-visit]')).toHaveCount(0);
+});
+
+test('35.10: the portfolio has no Distribution view, view tabs or hint, or category folding; an address\'s retired settings are ignored and removed, and its supported ones keep their effect (#35)', async ({ app, page }) => {
+  const settled = async () => {
+    await page.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur());
+    await page.mouse.move(0, 0);
+  };
+  await app.open();
+  await settled();
+  const fresh = await capturePortfolio(page, 'fresh load');
+  await expect(page.getByRole('tab')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /distribution|fold|open .* for full values/i })).toHaveCount(0);
+  await expect(page.locator('.view-switch, .portfolio-dist, [data-view], [data-fold], [data-dfold], button.fold, [data-seg="density"]')).toHaveCount(0);
+  expect(await bodyText(page)).not.toMatch(/distribution|click a band|each dot|row density|\broomy\b|\bcondensed\b/i);
+
+  const tiles = await page.locator('table.po .otile').count();
+  for (const band of await page.locator('thead th.bandh').all()) {
+    const name = await band.innerText();
+    await band.click({ position: { x: 4, y: 4 } });
+    expect(new URL(page.url()).hash, `clicking ${name}`).toBe('');
+    expect(await page.locator('table.po .otile').count(), `clicking ${name}`).toBe(tiles);
+  }
+  await settled();
+  expect((await capturePortfolio(page, 'fresh load')).text, 'clicking the band headers').toBe(fresh.text);
+
+  for (const old of ['#view=distribution&dfold=Disposition', '#view=mixed&open=Disposition&open=Safety', '#open=all', '#density=condensed']) {
+    await page.goto('about:blank');
+    await app.open(old);
+    await settled();
+    expect(new URL(page.url()).hash, old).toBe('');
+    expect((await capturePortfolio(page, 'fresh load')).text, old).toBe(fresh.text);
+  }
+
+  // A supported setting beside retired ones keeps its effect.
+  await page.goto('about:blank');
+  await app.open('#view=details&heatmap=rate');
+  await settled();
+  const supported = await capturePortfolio(page, 'supported settings');
+  await page.goto('about:blank');
+  await app.open('#view=details&density=condensed&open=Disposition&dfold=Safety&heatmap=rate');
+  await settled();
+  expect(new URL(page.url()).hash, 'supported settings beside retired ones').toBe('#view=details&heatmap=rate');
+  expect((await capturePortfolio(page, 'supported settings')).text, 'supported settings beside retired ones').toBe(supported.text);
+});
+
+test('35.11: the portfolio has no study highlight: no Highlight study control and no marked row, clicking a study row outside its links changes nothing, and an address\'s study parameter is ignored and removed (#35)', async ({ app, page }) => {
+  await app.open();
+  const controls = page.locator('#header-controls');
+  await controls.locator('[data-open="config"]').click();
+  await expect(controls.locator('select[data-highlight]')).toHaveCount(0);
+  expect(await controls.innerText(), 'the header controls, Config open').not.toMatch(/highlight/i);
+  await closeControls(page);
+  // No instruction to highlight is left anywhere: the page's text, native titles and hover tips, collapsed and expanded.
+  for (const view of ['overview', 'details']) {
+    await chooseView(page, view);
+    const cues = await page.evaluate(() => [
+      document.body.innerText,
+      ...[...document.querySelectorAll('[title], [data-tip]')].flatMap((el) => [el.getAttribute('title') ?? '', el.getAttribute('data-tip') ?? '']),
+    ].filter((t) => /highlight/i.test(t)));
+    expect(cues, `${view}: highlight instructions`).toEqual([]);
+  }
+  await chooseView(page, 'overview');
+  await closeControls(page);
+  const fresh = await capturePortfolio(page, 'fresh load');
+
+  for (const { StudyID } of studies.slice(0, 3)) {
+    const row = page.locator(`.portfolio-table tr.study[data-hl="${StudyID}"]`);
+    const name = row.locator('td.grp');
+    const box = /** @type {{ width: number, height: number }} */ (await name.boundingBox());
+    for (const [what, click] of /** @type {Array<[string, () => Promise<void>]>} */ ([
+      ['the name cell outside its link', () => name.click({ position: { x: box.width - 3, y: box.height / 2 } })],
+      ['a population cell', () => row.locator('td.pop').first().click()],
+    ])) {
+      await click();
+      await page.mouse.move(0, 0);
+      expect(new URL(page.url()).hash, `${StudyID}, ${what}: the address`).toBe('');
+      await expect(page.locator('.portfolio-table tr.sel'), `${StudyID}, ${what}: a marked row`).toHaveCount(0);
+      expect((await capturePortfolio(page, 'fresh load')).text, `${StudyID}, ${what}: the page`).toBe(fresh.text);
+    }
+  }
+
+  for (const [hash, kept] of [[`#study=${studies[0].StudyID}`, ''], [`#study=${studies[0].StudyID}&heatmap=rate`, '#heatmap=rate']]) {
+    await page.goto('about:blank');
+    await app.open(hash);
+    await page.mouse.move(0, 0);
+    expect(new URL(page.url()).hash, hash).toBe(kept);
+    await expect(page.locator('.portfolio-table tr.sel'), `${hash}: a marked row`).toHaveCount(0);
+    if (!kept) expect((await capturePortfolio(page, 'fresh load')).text, hash).toBe(fresh.text);
+  }
 });

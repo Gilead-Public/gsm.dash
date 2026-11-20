@@ -5,6 +5,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { expectSeen } from './fixtures/visible.js';
 import { countText, displayed, pooled, population, readRate, shownMetrics, snapshotAsOf, studiesBy, tolerance } from '../test/qual/pooling.js';
+import { control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
 /** @typedef {import('../test/qual/pooling.js').MetricMeta} MetricMeta */
@@ -126,7 +127,7 @@ async function expectRow(page, table, label, members) {
  */
 async function openEnrolled(app, page) {
   await app.open();
-  await page.locator('.sidebar button[data-column="enroll"]').click();
+  await control(page, 'button[data-column="enroll"]').click();
 }
 
 test.describe('portfolio view numbers', () => {
@@ -149,7 +150,7 @@ test.describe('portfolio view numbers', () => {
 
   test('11.03: grouping pools each group of studies (#11)', async ({ app, page }) => {
     await openEnrolled(app, page);
-    await page.locator('select[data-groupby]').selectOption('phase');
+    await control(page, 'select[data-groupby]').selectOption('phase');
     await expect(page.locator('.portfolio-table tr.bucket').first()).toBeVisible();
     const table = await shownTable(page);
     await expectHeadings(page, table);
@@ -171,7 +172,7 @@ test.describe('portfolio view numbers', () => {
     expect(kept.length, 'the filter keeps more than one study and drops some').toBeGreaterThan(1);
     expect(kept.length).toBeLessThan(studies.length);
     await openEnrolled(app, page);
-    await page.locator(`button[data-filter="therapeutic_area"][data-value="${area}"]`).click();
+    await control(page, `button[data-filter="therapeutic_area"][data-value="${area}"]`).click();
     await expect(page.locator('.portfolio-table tr.study')).toHaveCount(kept.length);
     const table = await shownTable(page);
     await expectHeadings(page, table);
@@ -180,7 +181,7 @@ test.describe('portfolio view numbers', () => {
     for (const study of kept) await expectRow(page, table, study.StudyID, [study]);
   });
 
-  test('22.01: the study filter, alone and with a phase filter, limits the table, the Distribution view and the highlight menu to the selected studies that pass the other filters, and its totals pool exactly those studies (#22)', async ({ app, page }) => {
+  test('22.01: the study filter, alone and with a phase filter, limits the table to the selected studies that pass the other filters, and its totals pool exactly those studies (#22)', async ({ app, page }) => {
     test.setTimeout(180_000);
     const [[phase, inPhase], [, other]] = [...studiesBy(studies, 'phase')].sort((a, b) => b[1].length - a[1].length);
     expect(inPhase.length, 'the largest phase has more than one study').toBeGreaterThan(1);
@@ -190,8 +191,8 @@ test.describe('portfolio view numbers', () => {
     const cases = [['alone', selected, false], ['with a phase filter', selected.filter((s) => s.params.phase === phase), true]];
     for (const [what, members, withPhase] of cases) {
       await openEnrolled(app, page);
-      for (const s of selected) await page.locator(`input[data-filter="study"][data-value="${s.StudyID}"]`).check();
-      if (withPhase) await page.locator(`button[data-filter="phase"][data-value="${phase}"]`).click();
+      for (const s of selected) await control(page, `input[data-filter="study"][data-value="${s.StudyID}"]`).check();
+      if (withPhase) await control(page, `button[data-filter="phase"][data-value="${phase}"]`).click();
       const ids = members.map((s) => s.StudyID);
 
       await expect(page.locator('.portfolio-table tr.study'), what).toHaveCount(members.length);
@@ -203,7 +204,7 @@ test.describe('portfolio view numbers', () => {
       const labels = [...groups.keys()].sort((a, b) => a.localeCompare(b));
       const open = labels[0];
       const inGroup = (/** @type {string} */ label) => /** @type {StudyEntry[]} */ (groups.get(label));
-      await page.locator('select[data-groupby]').selectOption('phase');
+      await control(page, 'select[data-groupby]').selectOption('phase');
       await page.locator(`tr[data-bucket="${open}"] td.grp`).click();
       await expect(page.locator('.portfolio-table tr.study'), what).toHaveCount(inGroup(open).length);
       table = await shownTable(page);
@@ -217,57 +218,15 @@ test.describe('portfolio view numbers', () => {
         await expectRow(page, table, label, inGroup(label));
       }
 
-      const menu = await page.locator('select[data-highlight] option').evaluateAll((os) => os.map((o) => /** @type {HTMLOptionElement} */ (o).value).filter(Boolean));
-      expect(menu, `${what}: highlight menu`).toEqual(ids);
 
-      await page.locator('button[data-view="distribution"]').click();
-      const rows = page.locator('.portfolio-dist .mrow[data-metric]');
-      await expect(rows).toHaveCount(catalog.length);
-      // What a user can see: rendered with a size, and neither it nor an ancestor hidden or fully transparent.
-      const dist = await rows.evaluateAll((els) => {
-        const sees = (/** @type {Element | null} */ e) => {
-          if (!e) return false;
-          const box = e.getBoundingClientRect();
-          return e.checkVisibility({ opacityProperty: true, visibilityProperty: true }) && box.width > 0 && box.height > 0;
-        };
-        return els.map((el) => {
-          const value = el.querySelector('.pv .m');
-          return {
-            id: el.getAttribute('data-metric'),
-            dots: [...el.querySelectorAll('.track .pt[data-pick]')].map((d) => ({ id: d.getAttribute('data-pick'), seen: sees(d) })),
-            rule: sees(el.querySelector('.track .ptot')),
-            total: value?.textContent ?? '',
-            totalSeen: sees(value),
-          };
-        });
-      });
-      for (const row of dist) {
-        const metric = /** @type {MetricMeta} */ (catalog.find((m) => m.MetricID === row.id));
-        const want = pooled(readData, members, metric.MetricID);
-        const where = `${what}: Distribution ${metric.Abbreviation} ${row.total}`;
-        const plotted = members.filter((st) => pooled(readData, [st], metric.MetricID).rate !== null).map((st) => st.StudyID);
-        expect(row.dots.map((d) => d.id).sort(), `${where}: a dot for each selected study with a value`).toEqual(plotted.sort());
-        expect(row.dots.filter((d) => !d.seen).map((d) => d.id), `${where}: dots a user cannot see`).toEqual([]);
-        expect([row.totalSeen, row.rule], `${where}: the pooled value and its rule can be seen`).toEqual([true, want.rate !== null]);
-        // An n (%) metric shows its pooled count with the percent.
-        const countPct = metric.Display === 'count_pct' && want.rate !== null ? /^([\d,]+) \((\d+\.\d)%\)$/.exec(row.total) : null;
-        if (metric.Display === 'count_pct' && want.rate !== null) expect(countPct, where).not.toBeNull();
-        if (countPct) expect(countPct[1], where).toBe(countText(want.numerator));
-        const shown = countPct ? Number(countPct[2]) : readRate(metric, row.total);
-        if (want.rate === null) expect(shown, where).toBeNull();
-        else expect(Math.abs(/** @type {number} */ (shown) - displayed(metric, want.rate)), where).toBeLessThanOrEqual(tolerance(metric));
-      }
     }
   });
 });
 
-test('the portfolio sits in the app shell: brand, Program overview tag, study count and export date, inside the page margins', async ({ app, page }) => {
+test('the portfolio sits in the app shell: brand, inside the page margins', async ({ app, page }) => {
   await app.open();
   const header = page.locator('header.app');
   await expect(header.locator('h1')).toHaveText('gsm.dash');
-  await expect(header.locator('#page-tag')).toHaveText('Program overview');
-  const active = portfolio.metrics.filter((/** @type {{ Active?: boolean }} */ m) => m.Active !== false).length;
-  await expect(header.locator('#meta')).toHaveText(`${studies.length} studies · ${active} metrics · exported ${portfolio.generated}`);
   const shell = await header.boundingBox();
   const content = await page.locator('#app > .layout').boundingBox();
   expect(shell && content, 'header and portfolio both laid out').toBeTruthy();

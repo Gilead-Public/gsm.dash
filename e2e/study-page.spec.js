@@ -339,11 +339,10 @@ test.describe('study page behaviour', () => {
   });
 });
 
-test('the study page sits in the app shell: brand and Study view tag, inside the page margins', async ({ app, page }) => {
+test('the study page sits in the app shell: brand, inside the page margins', async ({ app, page }) => {
   await app.openStudy(study.StudyID);
   const header = page.locator('header.app');
   await expect(header.locator('h1')).toHaveText('gsm.dash');
-  await expect(header.locator('#page-tag')).toHaveText('Study view');
   const shell = await header.boundingBox();
   const content = await page.locator('#app > .study-page').boundingBox();
   expect(shell && content, 'header and study page both laid out').toBeTruthy();
