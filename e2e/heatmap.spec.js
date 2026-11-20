@@ -184,7 +184,6 @@ test('23.03: the address never carries ramp, whatever the settings, and an addre
     ['a filter', () => box.locator('button[data-filter="phase"][data-value="P2"]').click()],
     ['a metric hidden', () => box.locator('input[data-metric="Analysis_kri0005"]').uncheck()],
     ['a study highlighted', () => box.locator('select[data-highlight]').selectOption(study)],
-    ['Distribution', () => page.locator('button[data-view="distribution"]').click()],
     ['heatmap None', async () => {
       await page.locator('button[data-view="overview"]').click();
       await box.locator('select[data-heatmap]').selectOption('none');

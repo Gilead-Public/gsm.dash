@@ -96,9 +96,7 @@ export class PortfolioStore extends EventTarget {
       // Program table zoom: folded categories show one headline value per
       // metric. All folded = Overview (the landing view), none = Details.
       collapsedGroups: new Set(), // filled with every category below
-      programView: 'table', // 'table' (Overview / Details) | 'distribution'
-      highlightStudy: null, // StudyID marked in every program view
-      distCollapsed: new Set(), // distribution view: categories folded to their header
+      highlightStudy: null, // StudyID marked in the table
     };
     this.state.collapsedGroups = new Set(this.#allCategories());
   }
@@ -170,14 +168,9 @@ export class PortfolioStore extends EventTarget {
     return folded === 0 ? 'details' : 'mixed';
   }
 
-  /** The view switch: 'overview' / 'details' set the table zoom; 'distribution' swaps the view. */
+  /** The view switch: 'overview' folds every category, 'details' opens them all. */
   setProgramView(view) {
-    if (view === 'distribution') {
-      this.state.programView = 'distribution';
-    } else {
-      this.state.programView = 'table';
-      this.state.collapsedGroups = view === 'details' ? new Set() : new Set(this.#allCategories());
-    }
+    this.state.collapsedGroups = view === 'details' ? new Set() : new Set(this.#allCategories());
     this.#emit();
   }
 
@@ -185,7 +178,7 @@ export class PortfolioStore extends EventTarget {
     return [...new Set([...CATEGORY_ORDER, ...groupByCategory(this.metrics, CATEGORY_ORDER).map((g) => g.category)])];
   }
 
-  /** Mark one study in every program view; selecting it again clears the highlight. */
+  /** Mark one study in the table; selecting it again clears the highlight. */
   highlight(studyId) {
     this.state.highlightStudy = studyId && this.state.highlightStudy !== studyId ? studyId : null;
     this.#emit();
@@ -201,14 +194,12 @@ export class PortfolioStore extends EventTarget {
     const cats = this.#allCategories();
     const open = cats.filter((c) => !state.collapsedGroups.has(c));
     const zoom = open.length === 0 ? 'overview' : open.length === cats.length ? 'details' : 'mixed';
-    const view = state.programView === 'distribution' ? 'distribution' : zoom;
     const params = new URLSearchParams();
     const add = (key, values) => values.forEach((v) => params.append(key, v));
     // A set that can be emptied writes an empty value, so that it differs from the default.
     const addSet = (key, values) => (values.length ? add(key, values) : params.set(key, ''));
-    if (view !== 'overview') params.set('view', view);
-    if (zoom === 'mixed' || (zoom === 'details' && view === 'distribution')) add('open', zoom === 'details' ? ['all'] : open);
-    add('dfold', cats.filter((c) => state.distCollapsed.has(c)));
+    if (zoom !== 'overview') params.set('view', zoom);
+    if (zoom === 'mixed') add('open', open);
     if (state.highlightStudy) params.set('study', state.highlightStudy);
     for (const [key, field] of SCALARS) if (state[field] !== this.#defaults[field]) params.set(key, state[field]);
     if (state.groupBy !== 'none') add('expand', this.#bucketValues().filter((v) => state.expanded.has(v)));
@@ -235,11 +226,9 @@ export class PortfolioStore extends EventTarget {
     const known = (values, options) => values.filter((v) => options.includes(v));
     const view = params.get('view');
     const open = params.getAll('open');
-    state.programView = view === 'distribution' ? 'distribution' : 'table';
     if (open.includes('all') || (!open.length && view === 'details')) state.collapsedGroups = new Set();
     else if (open.length) state.collapsedGroups = new Set(cats.filter((c) => !open.includes(c)));
     else state.collapsedGroups = new Set(cats);
-    state.distCollapsed = new Set(known(params.getAll('dfold'), cats));
     const study = params.get('study');
     state.highlightStudy = this.studies.some((st) => st.StudyID === study) ? study : null;
     for (const [key, field, choices] of SCALARS) {
@@ -271,13 +260,6 @@ export class PortfolioStore extends EventTarget {
 
   #bucketValues() {
     return bucketStudies(this.studies, this.state.groupBy).map((b) => String(b.value));
-  }
-
-  /** Fold / unfold one category in the distribution view (independent of the table's folds). */
-  toggleDistGroup(category) {
-    const set = this.state.distCollapsed;
-    set.has(category) ? set.delete(category) : set.add(category);
-    this.#emit();
   }
 
   toggleMetric(metricId) {

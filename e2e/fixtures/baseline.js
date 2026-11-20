@@ -244,8 +244,7 @@ export function canonicalDom(root) {
 
 /**
  * The portfolio as the 11.03 baseline records it: its canonical DOM and computed styles (by hash), every sparkline's
- * points, its accessibility tree, every Distribution mark's position, every table cell's background and any open
- * tooltip.
+ * points, its accessibility tree, every table cell's background and any open tooltip.
  * @param {import('@playwright/test').Page} page
  * @param {string} name
  */
@@ -255,25 +254,13 @@ export async function capturePortfolio(page, name) {
   const aria = ariaStudyLinks(await page.locator('#app').ariaSnapshot());
   const rendered = await page.evaluate(() => {
     const visible = (/** @type {Element} */ el) => el.checkVisibility({ opacityProperty: true, visibilityProperty: true });
-    const along = (/** @type {Element} */ el, /** @type {Element} */ track) => {
-      const t = track.getBoundingClientRect();
-      const r = el.getBoundingClientRect();
-      // Marks are placed by a percentage with two decimals and centred by a transform, so four decimals of the track
-      // width reproduce the placement exactly on any platform; layout rounding is far smaller.
-      return t.width ? ((r.left + r.width / 2 - t.left) / t.width).toFixed(4) : 'n/a';
-    };
-    const tracks = [...document.querySelectorAll('#app .track')].map((track) =>
-      [...track.querySelectorAll('.pt, .ptot, .psel, .lsel')]
-        .map((el) => `${el.className}${el instanceof HTMLElement && el.dataset.pick ? `[${el.dataset.pick}]` : ''}@${along(el, track)}${visible(el) ? '' : ' hidden'}`)
-        .join(' '),
-    );
     const cells = [...document.querySelectorAll('#app td, #app .otile')].map((el) => getComputedStyle(el).backgroundColor);
     const sparklines = [...document.querySelectorAll('#app .spark svg')].map((svg) => {
       const dot = svg.querySelector('.spark-dot');
       return `${svg.getAttribute('aria-label')}: line ${svg.querySelector('.spark-line')?.getAttribute('d')}; dot ${dot?.getAttribute('cx')},${dot?.getAttribute('cy')}${visible(svg) ? '' : ' hidden'}`;
     });
     const tip = document.getElementById('gsm-tooltip');
-    return { tracks, cells, sparklines, tooltip: tip && visible(tip) ? tip.innerHTML : 'none' };
+    return { cells, sparklines, tooltip: tip && visible(tip) ? tip.innerHTML : 'none' };
   });
   // Styles are read with the pointer off the page, as :hover rules would otherwise depend on which element it is over,
   // and once transitions end: React keeps elements across renders, so CSS transitions run on them.
@@ -286,8 +273,6 @@ export async function capturePortfolio(page, name) {
     stylesLine(styles),
     `tooltip: ${rendered.tooltip}`,
     `cell backgrounds: ${runs(rendered.cells)}`,
-    'distribution marks:',
-    ...rendered.tracks.map((t) => `  ${t}`),
     'sparklines:',
     ...(rendered.sparklines.length ? rendered.sparklines.map((t) => `  ${t}`) : ['  none']),
     'accessibility:',

@@ -54,7 +54,6 @@ export function Sidebar({ store, collapsed, onCollapse }) {
   }
   const { state } = store;
   const na = controlStates(store);
-  const { dist } = na;
   /**
    * @param {string} key
    * @param {string[][]} options
@@ -121,7 +120,7 @@ export function Sidebar({ store, collapsed, onCollapse }) {
         </Control>
         <Control na={na.heatmap}>
           <label>Heatmap (also drives column sort)</label>
-          <select data-heatmap="" disabled={dist} value={state.heatmap} onChange={(e) => store.set('heatmap', e.target.value)}>
+          <select data-heatmap="" value={state.heatmap} onChange={(e) => store.set('heatmap', e.target.value)}>
             {HEATMAPS.map(([k, label]) => (
               <option key={k} value={k}>
                 {label}
@@ -133,7 +132,7 @@ export function Sidebar({ store, collapsed, onCollapse }) {
           <label>Columns</label>
           <div className="chips">
             {COLUMN_OPTIONS.map(([k, label]) => (
-              <button key={k} type="button" className={`chip ${state.columns.has(k) ? 'on' : ''}`} data-column={k} aria-pressed={state.columns.has(k)} disabled={dist} onClick={() => store.toggleColumn(k)}>
+              <button key={k} type="button" className={`chip ${state.columns.has(k) ? 'on' : ''}`} data-column={k} aria-pressed={state.columns.has(k)} onClick={() => store.toggleColumn(k)}>
                 {label}
               </button>
             ))}
@@ -141,11 +140,11 @@ export function Sidebar({ store, collapsed, onCollapse }) {
         </Control>
         <Control na={na.density}>
           <label>Row density</label>
-          {seg('density', DENSITIES, dist)}
+          {seg('density', DENSITIES)}
         </Control>
         <Control na={na.groupBy}>
           <label>Group rows by</label>
-          <select data-groupby="" disabled={dist} value={state.groupBy} onChange={(e) => store.set('groupBy', e.target.value)}>
+          <select data-groupby="" value={state.groupBy} onChange={(e) => store.set('groupBy', e.target.value)}>
             {GROUP_BY_OPTIONS.map(([value, label]) => (
               <option key={value} value={value}>
                 {label}

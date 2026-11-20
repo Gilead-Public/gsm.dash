@@ -1,10 +1,10 @@
 // @ts-check
 // 11.03 regression evidence: the portfolio as it rendered before #11's changes, recorded state by state in
-// e2e/__snapshots__/portfolio-baseline.spec.js/, at 69b2240. Each state is reached through the UI and recorded as its
+// e2e/__snapshots__/portfolio-baseline.spec.js/, at 69b2240; re-recorded when the Distribution view was removed (#35),
+// which changed only the view switch and the highlight hint. Each state is reached through the UI and recorded as its
 // canonical DOM and computed styles (by hash), every sparkline's points, its accessibility tree (which leaves out
-// hidden elements) and what CSS places or colours: every Distribution mark's position along its track and whether it
-// is visible, every table cell's background, and any open tooltip. The canonical DOM lets the React page be compared
-// with the same records.
+// hidden elements) and what CSS colours: every table cell's background, and any open tooltip. The canonical DOM lets
+// the React page be compared with the same records.
 import { readData, test } from './fixtures/app.js';
 import { capturePortfolio as capture, expectRecorded } from './fixtures/baseline.js';
 /** @typedef {import('@playwright/test').Page} Page */
@@ -67,30 +67,12 @@ test.describe('the portfolio against its recorded baseline', () => {
     await expectState(page, testInfo, 'rows-highlighted');
   });
 
-  test('11.03: the Distribution view matches its baseline, with a category folded, a study highlighted and a filter on (#11)', async ({ app, page }, testInfo) => {
-    await app.open();
-    await page.locator('button[data-view="distribution"]').click();
-    await expectState(page, testInfo, 'distribution');
-    await page.locator('[data-dfold]').first().click();
-    await expectState(page, testInfo, 'distribution-folded');
-    await page.locator(`.track .pt[data-pick="${studies[1].StudyID}"]`).first().click();
-    await expectState(page, testInfo, 'distribution-highlighted');
-    const phase = studies[1].params.phase;
-    await sidebar(page).locator(`button[data-filter="phase"][data-value="${phase}"]`).click();
-    await expectState(page, testInfo, 'distribution-filtered');
-  });
-
-  test('11.03: tooltips on the table and the Distribution view match their baseline (#11)', async ({ app, page }, testInfo) => {
+  test('11.03: tooltips on the table match their baseline (#11)', async ({ app, page }, testInfo) => {
     await app.open();
     await page.locator('#app .otile').first().hover();
     await expectState(page, testInfo, 'tooltip-table-cell');
     await page.locator('button[data-view="details"]').click();
     await page.locator('#app thead th[data-sort^="Analysis_"]').first().hover();
     await expectState(page, testInfo, 'tooltip-table-header');
-    await page.locator('button[data-view="distribution"]').click();
-    await page.locator('.track .pt').first().hover();
-    await expectState(page, testInfo, 'tooltip-distribution-dot');
-    await page.locator('.track .ptot').first().hover();
-    await expectState(page, testInfo, 'tooltip-distribution-pooled');
   });
 });

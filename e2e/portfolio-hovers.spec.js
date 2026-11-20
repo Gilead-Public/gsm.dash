@@ -31,9 +31,6 @@ const VIEWS = {
     await page.locator('tr[data-bucket] td.grp').first().click();
     await expect(page.locator('.portfolio-table tr.study').first()).toBeVisible();
   },
-  Distribution: async (page) => {
-    await page.locator('button[data-view="distribution"]').click();
-  },
 };
 
 /**
@@ -56,7 +53,7 @@ const tooltipTexts = (page) =>
     }),
   );
 
-test('20.01: the portfolio report has no info icon and no ⓘ in its page or tooltip text, in Overview, Details (ungrouped, and grouped with a group open) and Distribution (#20)', async ({ app, page }) => {
+test('20.01: the portfolio report has no info icon and no ⓘ in its page or tooltip text, in Overview and Details (ungrouped, and grouped with a group open) (#20)', async ({ app, page }) => {
   for (const [view, open] of Object.entries(VIEWS)) {
     await app.open();
     await open(page);
@@ -84,7 +81,7 @@ const technicalFields = (text) => [
   ...THRESHOLDS.filter((rx) => rx.test(text)).map((rx) => `thresholds ${rx.source}`),
 ];
 
-test('20.03: no tooltip on the portfolio report holds a metric\'s MetricID or ID, its score or its thresholds, in Overview, Details or Distribution (#20)', async ({ app, page }) => {
+test('20.03: no tooltip on the portfolio report holds a metric\'s MetricID or ID, its score or its thresholds, in Overview or Details (#20)', async ({ app, page }) => {
   expect([IDS.length, SCORES.length, THRESHOLDS.length].every((n) => n > 0), 'the catalog has IDs, scores and thresholds').toBe(true);
   const id = String(everyMetric[0].ID);
   for (const sample of [`thresholds -2, -1, 2, 3`, `−2 / −1 / 2 / 3`, `-2,-1,2,3`, id.toUpperCase(), `${id.slice(0, 3)} ${id.slice(3)}`, 'adjusted z score']) {
@@ -133,7 +130,7 @@ async function expectGlossary(page, target, metric, where) {
   }
 }
 
-test('20.02: hovering a metric\'s header in Details, its band label in Overview or its name in Distribution shows its glossary entry; hovering a study\'s name shows its details and snapshot date (#20)', async ({ app, page }) => {
+test('20.02: hovering a metric\'s header in Details or its band label in Overview shows its glossary entry; hovering a study\'s name shows its details and snapshot date (#20)', async ({ app, page }) => {
   await app.open();
   for (const m of catalog) await expectGlossary(page, page.locator(`.tlab[data-abbr="${m.Abbreviation}"]`), m, `Overview ${m.Abbreviation}`);
 
@@ -159,11 +156,9 @@ test('20.02: hovering a metric\'s header in Details, its band label in Overview 
   await page.locator('button[data-view="details"]').click();
   for (const m of catalog) await expectGlossary(page, page.locator(`th[data-sort="${m.MetricID}"]`), m, `Details ${m.Abbreviation}`);
 
-  await page.locator('button[data-view="distribution"]').click();
-  for (const m of catalog) await expectGlossary(page, page.locator(`.mrow[data-metric="${m.MetricID}"] .mn`), m, `Distribution ${m.Abbreviation}`);
 });
 
-test('20.04: the portfolio\'s hovers and tooltips in Overview, Details and Distribution, for visual comparison with this issue\'s Scope (#20)', async ({ app, page, evidence }) => {
+test('20.04: the portfolio\'s hovers and tooltips in Overview and Details, for visual comparison with this issue\'s Scope (#20)', async ({ app, page, evidence }) => {
   await app.open();
   /** @param {import('@playwright/test').Locator} target @param {string} label */
   const shoot = async (target, label) => {
@@ -177,8 +172,6 @@ test('20.04: the portfolio\'s hovers and tooltips in Overview, Details and Distr
   await page.locator('button[data-view="details"]').click();
   await shoot(page.locator('th[data-sort^="Analysis_"]').first(), 'details header');
   await shoot(page.locator('tbody tr.total td[data-tip]:not(.pop)').first(), 'details cell');
-  await page.locator('button[data-view="distribution"]').click();
-  await shoot(page.locator('.mrow .mn').first(), 'distribution name');
 });
 
 test('20.05: ungrouped, the table has no Snapshot column in Overview or Details; grouped, the Studies column holds each group\'s study count and expanded study rows leave it empty (#20)', async ({ app, page }) => {

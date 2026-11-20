@@ -13,7 +13,7 @@ const study = 'STUDY004';
 const hidden = 'Analysis_kri0005';
 const CONFIG = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'] };
 /** Every setting the address holds, besides one `filter.<param>` per filter the Controls panel offers. */
-const VIEW_KEYS = ['cell', 'dfold', 'dir', 'expand', 'group', 'heatmap', 'hide', 'open', 'show', 'sort', 'statuses', 'study', 'view'];
+const VIEW_KEYS = ['cell', 'dir', 'expand', 'group', 'heatmap', 'hide', 'open', 'show', 'sort', 'statuses', 'study', 'view'];
 
 /** @param {Page} page */
 const sidebar = (page) => page.locator('.sidebar');
@@ -34,9 +34,6 @@ async function changeEverySetting(page) {
   await box.locator('button[data-status="Planned"]').click();
   await box.locator(`input[data-metric="${hidden}"]`).uncheck();
   await box.locator('select[data-groupby]').selectOption('therapeutic_area');
-  await page.locator('button[data-view="distribution"]').click();
-  await page.locator('[data-dfold="Disposition"]').click();
-  await page.locator('button[data-view="overview"]').click();
   await page.locator('[data-fold="Data quality"]').first().click();
   await page.locator('tr[data-bucket="Cardiology"] td.grp').click();
   await page.locator('th[data-sort="Analysis_kri0008"]').click();
@@ -54,27 +51,24 @@ async function settled(page) {
 }
 
 for (const [configuration, config] of /** @type {const} */ ([['the default configuration', null], ['a non-default configuration', CONFIG]])) {
-  for (const from of ['the table', 'the Distribution view']) {
-    test(`22.02: after every setting the address holds is changed, Reset from ${from} leaves the address and the page equal to a fresh load, under ${configuration} (#22)`, async ({ app, page }) => {
-      const overrides = config ? { document: (/** @type {any} */ doc) => void (doc.config = config) } : undefined;
-      await app.openReport('portfolio', overrides);
-      await page.locator('#app > .layout').waitFor();
-      await settled(page);
-      const freshUrl = page.url();
-      const fresh = await capturePortfolio(page, 'fresh load');
+  test(`22.02: after every setting the address holds is changed, Reset leaves the address and the page equal to a fresh load, under ${configuration} (#22)`, async ({ app, page }) => {
+    const overrides = config ? { document: (/** @type {any} */ doc) => void (doc.config = config) } : undefined;
+    await app.openReport('portfolio', overrides);
+    await page.locator('#app > .layout').waitFor();
+    await settled(page);
+    const freshUrl = page.url();
+    const fresh = await capturePortfolio(page, 'fresh load');
 
-      await changeEverySetting(page);
-      if (from === 'the Distribution view') await page.locator('button[data-view="distribution"]').click();
-      const filters = await sidebar(page).locator('[data-filter]').evaluateAll((els) => els.map((e) => `filter.${e.getAttribute('data-filter')}`));
-      expect([...new Set(filters)].sort(), 'the filters the Controls panel offers').toEqual(['filter.phase', 'filter.status', 'filter.study', 'filter.therapeutic_area']);
-      expect(hashKeys(page), 'every setting moved from its default').toEqual([...VIEW_KEYS, ...new Set(filters)].sort());
+    await changeEverySetting(page);
+    const filters = await sidebar(page).locator('[data-filter]').evaluateAll((els) => els.map((e) => `filter.${e.getAttribute('data-filter')}`));
+    expect([...new Set(filters)].sort(), 'the filters the Controls panel offers').toEqual(['filter.phase', 'filter.status', 'filter.study', 'filter.therapeutic_area']);
+    expect(hashKeys(page), 'every setting moved from its default').toEqual([...VIEW_KEYS, ...new Set(filters)].sort());
 
-      await sidebar(page).locator('[data-reset]').click();
-      await settled(page);
-      expect(page.url(), 'the address').toBe(freshUrl);
-      expect((await capturePortfolio(page, 'fresh load')).text, 'the page, with the Controls panel').toBe(fresh.text);
-    });
-  }
+    await sidebar(page).locator('[data-reset]').click();
+    await settled(page);
+    expect(page.url(), 'the address').toBe(freshUrl);
+    expect((await capturePortfolio(page, 'fresh load')).text, 'the page, with the Controls panel').toBe(fresh.text);
+  });
 }
 
 test('22.03: the study filter, with studies selected, and the Reset control, for visual comparison with this issue\'s Scope (#22)', async ({ app, page }) => {

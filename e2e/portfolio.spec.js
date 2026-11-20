@@ -180,7 +180,7 @@ test.describe('portfolio view numbers', () => {
     for (const study of kept) await expectRow(page, table, study.StudyID, [study]);
   });
 
-  test('22.01: the study filter, alone and with a phase filter, limits the table, the Distribution view and the highlight menu to the selected studies that pass the other filters, and its totals pool exactly those studies (#22)', async ({ app, page }) => {
+  test('22.01: the study filter, alone and with a phase filter, limits the table and the highlight menu to the selected studies that pass the other filters, and its totals pool exactly those studies (#22)', async ({ app, page }) => {
     test.setTimeout(180_000);
     const [[phase, inPhase], [, other]] = [...studiesBy(studies, 'phase')].sort((a, b) => b[1].length - a[1].length);
     expect(inPhase.length, 'the largest phase has more than one study').toBeGreaterThan(1);
@@ -220,43 +220,6 @@ test.describe('portfolio view numbers', () => {
       const menu = await page.locator('select[data-highlight] option').evaluateAll((os) => os.map((o) => /** @type {HTMLOptionElement} */ (o).value).filter(Boolean));
       expect(menu, `${what}: highlight menu`).toEqual(ids);
 
-      await page.locator('button[data-view="distribution"]').click();
-      const rows = page.locator('.portfolio-dist .mrow[data-metric]');
-      await expect(rows).toHaveCount(catalog.length);
-      // What a user can see: rendered with a size, and neither it nor an ancestor hidden or fully transparent.
-      const dist = await rows.evaluateAll((els) => {
-        const sees = (/** @type {Element | null} */ e) => {
-          if (!e) return false;
-          const box = e.getBoundingClientRect();
-          return e.checkVisibility({ opacityProperty: true, visibilityProperty: true }) && box.width > 0 && box.height > 0;
-        };
-        return els.map((el) => {
-          const value = el.querySelector('.pv .m');
-          return {
-            id: el.getAttribute('data-metric'),
-            dots: [...el.querySelectorAll('.track .pt[data-pick]')].map((d) => ({ id: d.getAttribute('data-pick'), seen: sees(d) })),
-            rule: sees(el.querySelector('.track .ptot')),
-            total: value?.textContent ?? '',
-            totalSeen: sees(value),
-          };
-        });
-      });
-      for (const row of dist) {
-        const metric = /** @type {MetricMeta} */ (catalog.find((m) => m.MetricID === row.id));
-        const want = pooled(readData, members, metric.MetricID);
-        const where = `${what}: Distribution ${metric.Abbreviation} ${row.total}`;
-        const plotted = members.filter((st) => pooled(readData, [st], metric.MetricID).rate !== null).map((st) => st.StudyID);
-        expect(row.dots.map((d) => d.id).sort(), `${where}: a dot for each selected study with a value`).toEqual(plotted.sort());
-        expect(row.dots.filter((d) => !d.seen).map((d) => d.id), `${where}: dots a user cannot see`).toEqual([]);
-        expect([row.totalSeen, row.rule], `${where}: the pooled value and its rule can be seen`).toEqual([true, want.rate !== null]);
-        // An n (%) metric shows its pooled count with the percent.
-        const countPct = metric.Display === 'count_pct' && want.rate !== null ? /^([\d,]+) \((\d+\.\d)%\)$/.exec(row.total) : null;
-        if (metric.Display === 'count_pct' && want.rate !== null) expect(countPct, where).not.toBeNull();
-        if (countPct) expect(countPct[1], where).toBe(countText(want.numerator));
-        const shown = countPct ? Number(countPct[2]) : readRate(metric, row.total);
-        if (want.rate === null) expect(shown, where).toBeNull();
-        else expect(Math.abs(/** @type {number} */ (shown) - displayed(metric, want.rate)), where).toBeLessThanOrEqual(tolerance(metric));
-      }
     }
   });
 });

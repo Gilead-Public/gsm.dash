@@ -88,12 +88,6 @@ test.describe('table columns and density', () => {
     await expect(page.locator('table.po')).toHaveClass(/condensed/);
   });
 
-  test('21.01: the column and density controls are disabled in Distribution, which has no table (#21)', async ({ app, page }) => {
-    await app.open('#view=distribution');
-    for (const column of ['name', 'enroll', 'status']) await expect(chip(page, column)).toHaveAttribute('disabled', '');
-    for (const value of ['roomy', 'condensed']) await expect(page.locator(`.sidebar button[data-seg="density"][data-value="${value}"]`)).toHaveAttribute('disabled', '');
-  });
-
   test('21.02: Enrolled reads n / expected for a study with a target, as a number or text, and the count alone otherwise (#21)', async ({ app, page }) => {
     const [a, b, c, d] = studies;
     await openWith(

@@ -1,19 +1,18 @@
 // @ts-check
-import { DIST_VIEW, TABLE_VIEWS, viewButton, viewNote } from '../app/portfolio-controls.js';
+import { TABLE_VIEWS, viewButton, viewNote } from '../app/portfolio-controls.js';
 
 /**
- * The portfolio's view switch: the table's Overview and Details, and the Distribution view.
+ * The portfolio's view switch: the table's Overview and Details.
  * @param {{ store: any }} props
  */
 export function ViewSwitch({ store }) {
   const { state } = store;
-  const dist = state.programView === 'distribution';
   const cats = store.metricCategories().map((/** @type {any} */ g) => g.category);
   const zoom = store.tableZoom(cats);
-  const note = viewNote(dist, zoom, cats.filter((/** @type {string} */ c) => !state.collapsedGroups.has(c)));
+  const note = viewNote(zoom, cats.filter((/** @type {string} */ c) => !state.collapsedGroups.has(c)));
   /** @param {string[]} view */
   const button = ([view, label, title]) => {
-    const { on, part } = viewButton(view, dist, zoom);
+    const { on, part } = viewButton(view, zoom);
     return (
       <button key={view} type="button" role="tab" data-view={view} className={`${on ? 'on' : ''} ${part ? 'part' : ''}`} aria-selected={on} title={title} onClick={() => store.setProgramView(view)}>
         {label}
@@ -28,7 +27,6 @@ export function ViewSwitch({ store }) {
             <span className="cap">Table</span>
             {TABLE_VIEWS.map(button)}
           </span>
-          <span className="tset">{button(DIST_VIEW)}</span>
         </div>
         <span className="zoomnote">
           {note.mixed ? (
@@ -39,16 +37,6 @@ export function ViewSwitch({ store }) {
             note.text
           )}
         </span>
-        {dist && (
-          <span className="legend">
-            <span className="lk">
-              <i className="pline"></i>portfolio
-            </span>
-            <span className="lk">
-              <i className="dmd"></i>highlighted study
-            </span>
-          </span>
-        )}
       </div>
     </div>
   );

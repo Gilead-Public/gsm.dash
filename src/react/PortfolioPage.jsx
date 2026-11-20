@@ -4,9 +4,8 @@ import { useStore } from './useStore.js';
 import { Sidebar } from './Sidebar.jsx';
 import { ViewSwitch } from './ViewSwitch.jsx';
 import { PortfolioTable } from './PortfolioTable.jsx';
-import { PortfolioDist } from './PortfolioDist.jsx';
 
-// The portfolio overview: the controls beside the view switch, the table and the Distribution view. It keeps the
+// The portfolio overview: the controls, the view switch and the table. It keeps the
 // markup of the original program page, each custom element becoming a div that carries its name as a class, so the
 // same tests and styles apply.
 
@@ -55,15 +54,13 @@ export function PortfolioPage({ store }) {
       /* storage unavailable */
     }
   };
-  const dist = store.state.programView === 'distribution';
   return (
     <div className={collapsed ? 'layout collapsed' : 'layout'}>
       <Sidebar store={store} collapsed={collapsed} onCollapse={collapse} />
       <div className="content">
         <CycleNotice cycle={store.cycle} />
         <ViewSwitch store={store} />
-        <PortfolioTable store={store} hidden={dist} />
-        <PortfolioDist store={store} hidden={!dist} />
+        <PortfolioTable store={store} />
       </div>
     </div>
   );

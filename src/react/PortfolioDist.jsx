@@ -1,4 +1,8 @@
 // @ts-check
+// Not rendered: the 19 Nov 2026 design review removed the Distribution view, and it's kept here, unwired, in case it's
+// wanted again. Wiring it back is a new requirement: render it from PortfolioPage, add its tab, carry it in the address
+// and add PortfolioDist.css to the stylesheet.
+import { useState } from 'react';
 import { metricUnit } from '../util/format.js';
 import { distRow, distShowing, distStudies } from '../app/portfolio-dist.js';
 import { metricTip } from '../app/tooltip.js';
@@ -6,12 +10,19 @@ import { StatusPill, studyHref, useHoverTooltip } from './parts.jsx';
 
 /**
  * The Distribution view: one strip per metric, a dot per study at its latest snapshot, the pooled portfolio value as a
- * rule and the highlighted study as a labelled diamond. The highlighted study's name above the view opens its report. Categories fold independently of the table's bands.
+ * rule and the highlighted study as a labelled diamond. The highlighted study's name above the view opens its report.
+ * Categories fold independently of the table's bands.
  * @param {{ store: any, hidden: boolean }} props
  */
 export function PortfolioDist({ store, hidden }) {
   const ref = useHoverTooltip();
-  const { state } = store;
+  const [folded, setFolded] = useState(() => new Set());
+  const toggle = (/** @type {string} */ category) =>
+    setFolded((prev) => {
+      const next = new Set(prev);
+      next.has(category) ? next.delete(category) : next.add(category);
+      return next;
+    });
   const plotted = distStudies(store);
   const { sel } = plotted;
   const selName = sel ? sel.params?.nickname ?? sel.StudyID : '';
@@ -19,7 +30,7 @@ export function PortfolioDist({ store, hidden }) {
   const onClick = (/** @type {import('react').MouseEvent} */ e) => {
     const target = /** @type {Element} */ (e.target);
     const cat = target.closest('[data-dfold]');
-    if (cat instanceof HTMLElement) return store.toggleDistGroup(cat.dataset.dfold);
+    if (cat instanceof HTMLElement) return toggle(cat.dataset.dfold ?? '');
     const pt = target.closest('[data-pick]');
     if (pt instanceof HTMLElement) store.highlight(pt.dataset.pick);
   };
@@ -85,16 +96,16 @@ export function PortfolioDist({ store, hidden }) {
       <div className="dist">
         {categories.length ? (
           categories.map((/** @type {any} */ g) => {
-            const folded = state.distCollapsed.has(g.category);
+            const isFolded = folded.has(g.category);
             const n = g.metrics.length;
             return [
-              <div key={g.category} className={`dcols dcat ${folded ? 'folded' : ''}`} data-dfold={g.category} data-band={g.category} role="button" aria-expanded={!folded}>
+              <div key={g.category} className={`dcols dcat ${isFolded ? 'folded' : ''}`} data-dfold={g.category} data-band={g.category} role="button" aria-expanded={!isFolded}>
                 <h4>
-                  <span className="tog">{folded ? '+' : '−'}</span>
+                  <span className="tog">{isFolded ? '+' : '−'}</span>
                   {g.category}
                   <small>{`${n} metric${n === 1 ? '' : 's'}`}</small>
                 </h4>
-                {folded ? (
+                {isFolded ? (
                   <span className="dfold">{`${g.metrics.map((/** @type {any} */ m) => m.Abbreviation).join(' · ')} · click to open`}</span>
                 ) : (
                   <>
@@ -103,7 +114,7 @@ export function PortfolioDist({ store, hidden }) {
                   </>
                 )}
               </div>,
-              ...(folded ? [] : g.metrics.map(metricRow)),
+              ...(isFolded ? [] : g.metrics.map(metricRow)),
             ];
           })
         ) : (

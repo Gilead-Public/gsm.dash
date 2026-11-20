@@ -16,9 +16,9 @@ const LINK_HINT = 'Open the detailed report in a new tab';
  * headline tile per metric (Overview); an open one shows full cells (Details). Clicking a study's name opens its
  * report, and its cells and tiles open their metric's detailed report in a new tab (#25); clicking elsewhere on its row
  * highlights it in every view.
- * @param {{ store: any, hidden: boolean }} props
+ * @param {{ store: any }} props
  */
-export function PortfolioTable({ store, hidden }) {
+export function PortfolioTable({ store }) {
   const ref = useHoverTooltip();
   const { state } = store;
   const { sort, heatmap } = state;
@@ -315,7 +315,7 @@ export function PortfolioTable({ store, hidden }) {
 
   const showing = tableShowing(store, filtered, metrics, store.tableZoom(groups.map((/** @type {any} */ g) => g.category)));
   return (
-    <div className="portfolio-table" hidden={hidden} ref={ref} onClick={onClick}>
+    <div className="portfolio-table" ref={ref} onClick={onClick}>
       <div className="showing">
         {showing.lead}
         {showing.highlight && (

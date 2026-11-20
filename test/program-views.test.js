@@ -3,9 +3,7 @@ import { PortfolioStore } from '../src/data/store.js';
 import { enrollTarget } from '../src/app/portfolio-table.js';
 import { generatePortfolio } from '../scripts/generate-example-data.mjs';
 
-// Unified program views (design iteration 2): Overview and Details are two
-// zoom levels of one table, derived from the category folds; Distribution is
-// a separate view. All three share the store's highlight and filters.
+// Overview and Details are two zoom levels of one table, derived from the category folds.
 
 let store;
 const portfolio = generatePortfolio();
@@ -16,7 +14,6 @@ const cats = () => store.metricCategories().map((g) => g.category);
 
 describe('table zoom', () => {
   it('lands on Overview with every category folded', () => {
-    expect(store.state.programView).toBe('table');
     expect(store.tableZoom()).toBe('overview');
   });
 
@@ -27,13 +24,6 @@ describe('table zoom', () => {
     expect(store.tableZoom()).toBe('mixed');
     store.setProgramView('overview');
     expect(store.tableZoom()).toBe('overview');
-  });
-
-  it('keeps the table folds when switching to Distribution and back', () => {
-    store.toggleGroup(cats()[1]);
-    store.setProgramView('distribution');
-    expect(store.state.programView).toBe('distribution');
-    expect(store.tableZoom()).toBe('mixed');
   });
 });
 
@@ -50,30 +40,32 @@ describe('highlight study', () => {
 });
 
 describe('URL params', () => {
-  it('round-trips view, open bands, highlight and distribution folds', () => {
-    const [a, b] = cats();
+  it('round-trips view, open bands and highlight', () => {
+    const [a] = cats();
     store.toggleGroup(a);
     store.highlight(store.studies[0].StudyID);
-    store.toggleDistGroup(b);
-    store.setProgramView('distribution');
     const params = store.programParams();
-    expect(params.get('view')).toBe('distribution');
+    expect(params.get('view')).toBe('mixed');
     expect(params.get('open')).toBe(a);
 
     const other = new PortfolioStore(portfolio);
     other.applyProgramParams(new URLSearchParams(params.toString()));
-    expect(other.state.programView).toBe('distribution');
     expect(other.tableZoom()).toBe('mixed');
     expect(other.state.collapsedGroups.has(a)).toBe(false);
     expect(other.state.highlightStudy).toBe(store.studies[0].StudyID);
-    expect([...other.state.distCollapsed]).toEqual([b]);
   });
 
   it('accepts a hand-written ?view=details and ignores unknown ids', () => {
-    store.applyProgramParams(new URLSearchParams('view=details&study=NOPE&dfold=Nope'));
+    store.applyProgramParams(new URLSearchParams('view=details&study=NOPE'));
     expect(store.tableZoom()).toBe('details');
     expect(store.state.highlightStudy).toBeNull();
-    expect(store.state.distCollapsed.size).toBe(0);
+  });
+
+  it('ignores an address from the retired Distribution view', () => {
+    const [a] = cats();
+    store.applyProgramParams(new URLSearchParams(`view=distribution&dfold=${a}`));
+    expect(viewState(store)).toEqual(viewState(new PortfolioStore(portfolio)));
+    expect(store.programParams().toString()).toBe('');
   });
 
   it('27.05: writes no params for the default view, and no params restore every default (#27)', () => {
@@ -107,7 +99,7 @@ describe('URL params', () => {
 
   it('27.05: drops unknown values, keeping the defaults (#27)', () => {
     const junk = [
-      'view=nope', 'open=Nope', 'dfold=Nope', 'study=NOPE', 'group=nickname', 'expand=Oncology', 'sort=Nope', 'dir=desc',
+      'view=nope', 'open=Nope', 'study=NOPE', 'group=nickname', 'expand=Oncology', 'sort=Nope', 'dir=desc',
       'cell=nope', 'show=nope', 'heatmap=nope', 'ramp=red', 'filter.phase=P9', 'filter.nope=1', 'statuses=Nope', 'hide=Nope',
     ];
     store.applyProgramParams(new URLSearchParams(junk.join('&')));
@@ -257,9 +249,7 @@ function viewState(s) {
   const { state } = s;
   const sorted = (set) => [...set].map(String).sort();
   return {
-    programView: state.programView,
     collapsedGroups: sorted(state.collapsedGroups),
-    distCollapsed: sorted(state.distCollapsed),
     groupBy: state.groupBy,
     expanded: sorted(state.expanded),
     sort: state.sort,
@@ -277,10 +267,8 @@ function viewState(s) {
 
 /** Moves every setting viewState() reads away from its default, through the store's own setters. */
 function changeEveryField(s) {
-  const [a, b] = s.metricCategories().map((g) => g.category);
+  const [a] = s.metricCategories().map((g) => g.category);
   s.toggleGroup(a);
-  s.toggleDistGroup(b);
-  s.setProgramView('distribution');
   s.set('groupBy', 'therapeutic_area');
   s.toggleExpanded('Oncology');
   s.toggleSort(s.supportedMetrics()[0].MetricID);

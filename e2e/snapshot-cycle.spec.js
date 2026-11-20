@@ -64,7 +64,7 @@ test.describe('the snapshot cycle', () => {
     expect(offLatest).toBeDefined();
   });
 
-  test('14.01: a study off cycle is left out of the table, the study filter and Distribution, and named with its latest snapshot (#14)', async ({ app, page }) => {
+  test('14.01: a study off cycle is left out of the table and the study filter, and named with its latest snapshot (#14)', async ({ app, page }) => {
     await app.open('', offCycle);
     const notice = page.locator('.cycle-notice');
     await expect(notice).toBeVisible();
@@ -73,13 +73,9 @@ test.describe('the snapshot cycle', () => {
     await expect(page.locator(`tbody tr[data-hl="${off.StudyID}"]`)).toHaveCount(0);
     await expect(page.locator('.sidebar input[data-filter="study"]')).toHaveCount(studies.length - 1);
     await expect(page.locator(`.sidebar input[data-filter="study"][data-value="${off.StudyID}"]`)).toHaveCount(0);
-    await page.locator('button[data-view="distribution"]').click();
-    await expect(page.locator('.pt[data-pick]').first()).toBeVisible();
-    await expect(page.locator(`.pt[data-pick="${off.StudyID}"]`)).toHaveCount(0);
-    await expect(notice).toBeVisible();
   });
 
-  test('14.03: with every study in cycle, the portfolio renders as its recorded baseline in Overview, Details, grouped and Distribution (#14)', async ({ app, page }) => {
+  test('14.03: with every study in cycle, the portfolio renders as its recorded baseline in Overview, Details and grouped (#14)', async ({ app, page }) => {
     await app.open();
     const expectAsRecorded = async (/** @type {string} */ name) => expect.soft((await capturePortfolio(page, name)).text, name).toBe(recorded(name));
     await expectAsRecorded('table-overview');
@@ -88,18 +84,12 @@ test.describe('the snapshot cycle', () => {
     await app.open();
     await page.locator('.sidebar select[data-groupby]').selectOption('phase');
     await expectAsRecorded('rows-grouped');
-    await app.open();
-    await page.locator('button[data-view="distribution"]').click();
-    await expectAsRecorded('distribution');
   });
 
   test('14.03: with every study in cycle, no study is left out and no notice shows (#14)', async ({ app, page }) => {
     await app.open();
     await expect(page.locator('tbody tr[data-hl]')).toHaveCount(studies.length);
     await expect(page.locator('.sidebar input[data-filter="study"]')).toHaveCount(studies.length);
-    await expect(page.locator('.cycle-notice')).toHaveCount(0);
-    await page.locator('button[data-view="distribution"]').click();
-    for (const s of studies) await expect(page.locator(`.pt[data-pick="${s.StudyID}"]`).first()).toBeAttached();
     await expect(page.locator('.cycle-notice')).toHaveCount(0);
   });
 

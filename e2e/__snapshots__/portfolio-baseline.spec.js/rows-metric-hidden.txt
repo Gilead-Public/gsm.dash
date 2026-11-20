@@ -1,25 +1,8 @@
 state: rows-metric-hidden
-canonical dom: sha256 ba591564ac26b01e96fad14f599011b4ac8df34f34135633edff1fa4cbaa849d (110450 characters)
-computed styles: sha256 bd2222ecf1e6a0a9df89ea025e1016918df5264fc1268c34db5bb3f640312bc5 (716 elements)
+canonical dom: sha256 0e49e9cffdc3dee1a4806d3b1ddf6008b3d6715cd9c38e08569a8f184af1e967 (66645 characters)
+computed styles: sha256 b75959bc1fb764813e2021adf381b528552f5e5264dd4479386dd8e25e71ec56 (443 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×3 | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
-distribution marks:
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
-  pt[STUDY001]@n/a hidden pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden
 sparklines:
   none
 accessibility:
@@ -34,7 +17,7 @@ accessibility:
       - option "STUDY001 · ATLAS-1"
       - option "STUDY008 · HARBOR-2"
       - option "STUDY012 · LUMEN-1"
-    - paragraph: Marks the study in every view. Click a row or a dot to pick one.
+    - paragraph: Marks the study in the table. Click a row to pick one.
     - text: Cell display
     - group [disabled]:
       - button "As defined" [disabled]
@@ -157,7 +140,6 @@ accessibility:
     - text: Table
     - tab "Overview" [selected]
     - tab "Details"
-    - tab "Distribution"
   - text: Every category folded to headline values · click a band to open it Showing 3 / 12 studies · 16 / 21 site-level metrics (7 released · 9 planned) · one headline value per metric · each study at its own latest snapshot
   - table:
     - rowgroup:

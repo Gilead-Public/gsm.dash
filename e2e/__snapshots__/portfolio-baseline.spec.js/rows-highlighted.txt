@@ -1,25 +1,8 @@
 state: rows-highlighted
-canonical dom: sha256 6ee22ec76118bda1d795ad371e8e50c6ea9c8b678e02a03702bf68fec8df148b (113480 characters)
-computed styles: sha256 c89d42de4c9f98ecd797c5de768ecacc7aadb6d656e98c8497d894d194f85098 (767 elements)
+canonical dom: sha256 ed80d3deea566b72451a58f3dad299f1e5f9a8ddf45c56288b58f82ce6435b15 (66727 characters)
+computed styles: sha256 bf3a5f9bdceee5756f45c7aa8234d8aba103ae312f17951fbd58462e91c21cfc (444 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×3 | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) | rgb(237, 240, 238) | rgb(255, 255, 255) ×4 | rgb(224, 238, 236) ×3 | rgb(237, 240, 238) ×5 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) ×3 | rgb(224, 238, 236) | rgb(237, 240, 238) | rgb(224, 238, 236) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
-distribution marks:
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
-  pt[STUDY008]@n/a hidden pt[STUDY012]@n/a hidden ptot@n/a hidden psel[STUDY001]@n/a hidden lsel@n/a hidden
 sparklines:
   none
 accessibility:
@@ -34,7 +17,7 @@ accessibility:
       - option "STUDY001 · ATLAS-1" [selected]
       - option "STUDY008 · HARBOR-2"
       - option "STUDY012 · LUMEN-1"
-    - paragraph: Marks the study in every view. Click a row or a dot to pick one.
+    - paragraph: Marks the study in the table. Click a row to pick one.
     - text: Cell display
     - group [disabled]:
       - button "As defined" [disabled]
@@ -157,7 +140,6 @@ accessibility:
     - text: Table
     - tab "Overview" [selected]
     - tab "Details"
-    - tab "Distribution"
   - text: Every category folded to headline values · click a band to open it Showing 3 / 12 studies · 16 / 21 site-level metrics (7 released · 9 planned) · one headline value per metric · each study at its own latest snapshot · highlighting STUDY001 ATLAS-1
   - table:
     - rowgroup:
