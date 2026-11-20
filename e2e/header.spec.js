@@ -3,6 +3,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { expectSeen, visibleLines } from './fixtures/visible.js';
 import { shownMetrics } from '../test/qual/pooling.js';
+import { chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 const portfolio = readData('portfolio.json');
@@ -10,8 +11,6 @@ const portfolio = readData('portfolio.json');
 const studies = portfolio.studies;
 const metrics = shownMetrics(portfolio.metrics);
 
-/** @param {Page} page */
-const sidebar = (page) => page.locator('.sidebar');
 
 /**
  * What a report's header shows: its visible text, one entry per line, and whether its logo is drawn from data inside the
@@ -52,7 +51,7 @@ test('24.02: each report\'s header shows the logo and the document\'s title, or 
   for (const [title, shown] of /** @type {const} */ ([[undefined, 'gsm.dash'], ['CtQ Dashboard', 'CtQ Dashboard']])) {
     await openTitled(app, page, 'portfolio', title);
     await page.locator('#app > .layout').waitFor();
-    expect(await header(page), `portfolio, title ${title}`).toEqual({ text: [shown], logo });
+    expect(await header(page), `portfolio, title ${title}`).toEqual({ text: [shown, 'Filters', 'Config', 'Reset'], logo });
     expect(await page.title(), `portfolio tab, title ${title}`).toBe(shown);
     await openTitled(app, page, study, title);
     await page.locator('#app .tile').first().waitFor();
@@ -68,7 +67,7 @@ test('24.03: a document with a 60-character title shows it in full, in the portf
   for (const name of ['portfolio', studies[0].StudyID]) {
     await openTitled(app, page, name, title);
     await expect(page.getByRole('alert'), name).toHaveCount(0);
-    expect((await header(page)).text, name).toEqual([title]);
+    expect((await header(page)).text[0], name).toBe(title);
   }
 });
 
@@ -115,11 +114,11 @@ test('24.02: the status line sits below the table and reads the studies and metr
   const phase = studies[0].params.phase;
   const kept = studies.filter((s) => s.params.phase === phase);
   const target = kept[0];
-  await sidebar(page).locator(`button[data-filter="phase"][data-value="${phase}"]`).click();
-  await sidebar(page).locator(`input[data-metric="${metrics[0].MetricID}"]`).uncheck();
-  await sidebar(page).locator('select[data-highlight]').selectOption(target.StudyID);
+  await control(page, `button[data-filter="phase"][data-value="${phase}"]`).click();
+  await control(page, `input[data-metric="${metrics[0].MetricID}"]`).uncheck();
+  await control(page, 'select[data-highlight]').selectOption(target.StudyID);
   const sortBy = metrics[1];
-  await page.locator('.sidebar button[data-seg="view"][data-value="details"]').click();
+  await chooseView(page, 'details');
   await page.locator(`th[data-sort="${sortBy.MetricID}"]`).click();
   const { text, below } = await statusLine(page);
   expect(below).toBe(true);
@@ -132,8 +131,7 @@ test('24.02: the status line sits below the table and reads the studies and metr
 
 test('24.02: the status line names every active sort and its direction, marking a sort whose column is hidden (#24)', async ({ app, page }) => {
   await app.open();
-  await page.locator('.sidebar button[data-seg="view"][data-value="details"]').click();
-  const box = sidebar(page);
+  await chooseView(page, 'details');
   const [shown, other] = metrics;
   /** The sort the status line names, or null. */
   const named = async () => (await statusLine(page)).text.split(' · sorted by ')[1] ?? null;
@@ -158,22 +156,22 @@ test('24.02: the status line names every active sort and its direction, marking 
   await sortBy('label', 'Study');
   await sortBy('label', 'Study');
   await sortBy('pop:screened', 'Screened');
-  await box.locator('button[data-column="enroll"]').click();
+  await control(page, 'button[data-column="enroll"]').click();
   let dir = await sortBy('enroll', 'Enrolled');
-  await box.locator('button[data-column="enroll"]').click();
+  await control(page, 'button[data-column="enroll"]').click();
   expect(await named(), 'Enrolled hidden').toBe(`Enrolled (hidden) ${dir}`);
 
   await sortBy(shown.MetricID, `${shown.Abbreviation} rate`);
-  await box.locator('select[data-heatmap]').selectOption('num');
+  await control(page, 'select[data-heatmap]').selectOption('num');
   dir = await arrow(shown.MetricID);
   expect(await named(), 'heatmap Numerator').toBe(`${shown.Abbreviation} numerator ${dir}`);
-  await box.locator(`input[data-metric="${shown.MetricID}"]`).uncheck();
+  await control(page, `input[data-metric="${shown.MetricID}"]`).uncheck();
   expect(await named(), 'metric hidden').toBe(`${shown.Abbreviation} numerator (hidden) ${dir}`);
   await sortBy(other.MetricID, `${other.Abbreviation} numerator`);
 
-  await box.locator('select[data-groupby]').selectOption('phase');
+  await control(page, 'select[data-groupby]').selectOption('phase');
   await sortBy('label', 'Group');
   dir = await sortBy('meta', 'Studies');
-  await box.locator('select[data-groupby]').selectOption('none');
+  await control(page, 'select[data-groupby]').selectOption('none');
   expect(await named(), 'ungrouped').toBe(`Studies (hidden) ${dir}`);
 });

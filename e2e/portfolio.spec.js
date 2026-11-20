@@ -5,6 +5,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { expectSeen } from './fixtures/visible.js';
 import { countText, displayed, pooled, population, readRate, shownMetrics, snapshotAsOf, studiesBy, tolerance } from '../test/qual/pooling.js';
+import { control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
 /** @typedef {import('../test/qual/pooling.js').MetricMeta} MetricMeta */
@@ -126,7 +127,7 @@ async function expectRow(page, table, label, members) {
  */
 async function openEnrolled(app, page) {
   await app.open();
-  await page.locator('.sidebar button[data-column="enroll"]').click();
+  await control(page, 'button[data-column="enroll"]').click();
 }
 
 test.describe('portfolio view numbers', () => {
@@ -149,7 +150,7 @@ test.describe('portfolio view numbers', () => {
 
   test('11.03: grouping pools each group of studies (#11)', async ({ app, page }) => {
     await openEnrolled(app, page);
-    await page.locator('select[data-groupby]').selectOption('phase');
+    await control(page, 'select[data-groupby]').selectOption('phase');
     await expect(page.locator('.portfolio-table tr.bucket').first()).toBeVisible();
     const table = await shownTable(page);
     await expectHeadings(page, table);
@@ -171,7 +172,7 @@ test.describe('portfolio view numbers', () => {
     expect(kept.length, 'the filter keeps more than one study and drops some').toBeGreaterThan(1);
     expect(kept.length).toBeLessThan(studies.length);
     await openEnrolled(app, page);
-    await page.locator(`button[data-filter="therapeutic_area"][data-value="${area}"]`).click();
+    await control(page, `button[data-filter="therapeutic_area"][data-value="${area}"]`).click();
     await expect(page.locator('.portfolio-table tr.study')).toHaveCount(kept.length);
     const table = await shownTable(page);
     await expectHeadings(page, table);
@@ -190,8 +191,8 @@ test.describe('portfolio view numbers', () => {
     const cases = [['alone', selected, false], ['with a phase filter', selected.filter((s) => s.params.phase === phase), true]];
     for (const [what, members, withPhase] of cases) {
       await openEnrolled(app, page);
-      for (const s of selected) await page.locator(`input[data-filter="study"][data-value="${s.StudyID}"]`).check();
-      if (withPhase) await page.locator(`button[data-filter="phase"][data-value="${phase}"]`).click();
+      for (const s of selected) await control(page, `input[data-filter="study"][data-value="${s.StudyID}"]`).check();
+      if (withPhase) await control(page, `button[data-filter="phase"][data-value="${phase}"]`).click();
       const ids = members.map((s) => s.StudyID);
 
       await expect(page.locator('.portfolio-table tr.study'), what).toHaveCount(members.length);
@@ -203,7 +204,7 @@ test.describe('portfolio view numbers', () => {
       const labels = [...groups.keys()].sort((a, b) => a.localeCompare(b));
       const open = labels[0];
       const inGroup = (/** @type {string} */ label) => /** @type {StudyEntry[]} */ (groups.get(label));
-      await page.locator('select[data-groupby]').selectOption('phase');
+      await control(page, 'select[data-groupby]').selectOption('phase');
       await page.locator(`tr[data-bucket="${open}"] td.grp`).click();
       await expect(page.locator('.portfolio-table tr.study'), what).toHaveCount(inGroup(open).length);
       table = await shownTable(page);
@@ -217,7 +218,7 @@ test.describe('portfolio view numbers', () => {
         await expectRow(page, table, label, inGroup(label));
       }
 
-      const menu = await page.locator('select[data-highlight] option').evaluateAll((os) => os.map((o) => /** @type {HTMLOptionElement} */ (o).value).filter(Boolean));
+      const menu = await control(page, 'select[data-highlight] option').locator.evaluateAll((os) => os.map((o) => /** @type {HTMLOptionElement} */ (o).value).filter(Boolean));
       expect(menu, `${what}: highlight menu`).toEqual(ids);
 
     }

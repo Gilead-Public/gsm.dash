@@ -4,7 +4,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { pageAllTo, tile } from './fixtures/tiles.js';
 import { visibleLines } from './fixtures/visible.js';
-import { chooseView } from './fixtures/controls.js';
+import { chooseView, control } from './fixtures/controls.js';
 import { capturePortfolio } from './fixtures/baseline.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
@@ -256,11 +256,12 @@ test('35.07: CTQ tiles have no Charts button or panel, and each standard-KRI wid
 
 test('35.08: the portfolio\'s Metrics section has no All / None or per-category all / none controls, and each metric\'s checkbox still hides and shows it (#35)', async ({ app, page }) => {
   await app.open();
-  const sidebar = page.locator('.sidebar');
-  await expect(sidebar.getByRole('button', { name: /^(all|none)$/i })).toHaveCount(0);
-  await expect(sidebar.locator('[data-metrics-all], [data-group-metrics]')).toHaveCount(0);
+  const controls = page.locator('#header-controls');
+  await page.locator('#header-controls [data-open="config"]').click();
+  await expect(controls.getByRole('button', { name: /^(all|none)$/i })).toHaveCount(0);
+  await expect(controls.locator('[data-metrics-all], [data-group-metrics]')).toHaveCount(0);
   await chooseView(page, 'details');
-  const box = sidebar.locator('input[data-metric="Analysis_kri0012"]');
+  const box = control(page, 'input[data-metric="Analysis_kri0012"]');
   const column = page.locator('.portfolio-table th[data-sort="Analysis_kri0012"]');
   await expect(column).toHaveCount(1);
   await box.uncheck();

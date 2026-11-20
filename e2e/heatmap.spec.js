@@ -3,7 +3,7 @@
 // ungrouped table.
 import { expect, readData, test } from './fixtures/app.js';
 import { capturePortfolio } from './fixtures/baseline.js';
-import { chooseView } from './fixtures/controls.js';
+import { chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 test.describe.configure({ timeout: 120_000 });
@@ -21,8 +21,6 @@ const RAMP = {
   dark: ['rgb(26, 34, 48)', 'rgb(34, 48, 74)', 'rgb(45, 68, 104)', 'rgb(59, 92, 140)'],
 };
 
-/** @param {Page} page */
-const sidebar = (page) => page.locator('.sidebar');
 /** @param {Page} page */
 const address = (page) => new URLSearchParams(new URL(page.url()).hash.slice(1));
 
@@ -90,10 +88,10 @@ for (const [configuration, config] of /** @type {const} */ ([['the built-in defa
     await settled(page);
     const freshUrl = page.url();
     const fresh = await capturePortfolio(page, 'fresh load');
-    const heatmap = sidebar(page).locator('select[data-heatmap]');
+    const heatmap = control(page, 'select[data-heatmap]').locator;
     await expect(heatmap).toHaveValue(config?.heatmap ?? 'none');
 
-    await heatmap.selectOption('num');
+    await control(page, 'select[data-heatmap]').selectOption('num');
     await settled(page);
     const set = await capturePortfolio(page, 'heatmap set');
     /** @param {string} after */
@@ -102,8 +100,8 @@ for (const [configuration, config] of /** @type {const} */ ([['the built-in defa
       expect(address(page).get('heatmap'), `${after}: the address`).toBe('num');
     };
 
-    const filters = await sidebar(page)
-      .locator('[data-filter], button[data-status]')
+    const filters = await control(page, '[data-filter], button[data-status]')
+      .locator
       .evaluateAll((els) =>
         els.map((e) => {
           const status = e.getAttribute('data-status');
@@ -113,14 +111,14 @@ for (const [configuration, config] of /** @type {const} */ ([['the built-in defa
       );
     expect([...new Set(filters.map((f) => f.kind))].sort(), 'every kind of filter').toEqual(['metric status', 'phase', 'status', 'study', 'therapeutic_area']);
     for (const { selector: filter } of filters) {
-      await sidebar(page).locator(filter).click();
+      await control(page, filter).click();
       await expectKept(`${filter} changed`);
-      await sidebar(page).locator(filter).click();
+      await control(page, filter).click();
       await expectKept(`${filter} changed back`);
     }
-    await sidebar(page).locator('[data-filter="phase"][data-value="P2"]').click();
-    await sidebar(page).locator(`[data-filter="study"][data-value="${study}"]`).click();
-    await sidebar(page).locator('[data-clear]').click();
+    await control(page, '[data-filter="phase"][data-value="P2"]').click();
+    await control(page, `[data-filter="study"][data-value="${study}"]`).click();
+    await control(page, '[data-clear]').click();
     await expectKept('filters cleared');
     await settled(page);
     expect((await capturePortfolio(page, 'heatmap set')).text, 'the page after the filter changes').toBe(set.text);
@@ -142,7 +140,7 @@ for (const [configuration, config] of /** @type {const} */ ([['the built-in defa
     expect(page.url(), 'back link').toBe(left);
     expect((await capturePortfolio(page, 'heatmap set')).text, 'the page after a study report and back').toBe(set.text);
 
-    await sidebar(page).locator('[data-reset]').click();
+    await control(page, '[data-reset]').click();
     await settled(page);
     await expect(heatmap, 'Reset').toHaveValue(config?.heatmap ?? 'none');
     expect(page.url(), 'Reset: the address').toBe(freshUrl);
@@ -153,11 +151,12 @@ for (const [configuration, config] of /** @type {const} */ ([['the built-in defa
 test('23.03: the Controls panel offers no heatmap colour choice (#23)', async ({ app, page }) => {
   for (const heatmap of ['none', 'rate']) {
     await openAt(page, app, tableHash({ heatmap }));
-    const box = sidebar(page);
-    const labels = await box.locator('[data-sec="config"] .ctl > label').allTextContents();
-    expect(labels, `heatmap ${heatmap}: the Config controls`).toEqual(['View', 'Highlight study', 'Cell display', 'Also show', 'Heatmap (also drives column sort)', 'Columns', 'Group rows by']);
+    await page.locator('#header-controls [data-open="config"]').click();
+    const box = page.locator('#header-controls [data-pop="config"]');
+    const labels = await box.locator('.ctl > label').allTextContents();
+    expect(labels, `heatmap ${heatmap}: the Config controls`).toEqual(['Table', 'Highlight study', 'Cell display', 'Also show', 'Heatmap (also drives column sort)', 'Columns', 'Group rows by', 'Metrics']);
     expect(await box.innerText(), `heatmap ${heatmap}: the panel's text`).not.toMatch(/colou?r|palette|\b(blue|teal|purple|gr[ae]y)\b/i);
-    await expect(box.locator('[data-seg="ramp"], [data-ramp]'), `heatmap ${heatmap}: old markup`).toHaveCount(0);
+    await expect(control(page, '[data-seg="ramp"], [data-ramp]').locator, `heatmap ${heatmap}: old markup`).toHaveCount(0);
     await expect(page.locator('[data-ramp]'), `heatmap ${heatmap}: no palette on the page`).toHaveCount(0);
   }
 });
@@ -171,25 +170,24 @@ test('23.03: the address never carries ramp, whatever the settings, and an addre
     const links = await page.locator('#app a[data-study]').evaluateAll((els) => els.map((a) => a.getAttribute('href') ?? ''));
     for (const href of links) expect(new URLSearchParams(href.split('#')[1] ?? '').has('ramp'), `${after}: ${href}`).toBe(false);
   };
-  const box = sidebar(page);
   /** @type {Array<[string, () => Promise<unknown>]>} */
   const steps = [
-    ['heatmap Numerator', () => box.locator('select[data-heatmap]').selectOption('num')],
-    ['heatmap Denominator', () => box.locator('select[data-heatmap]').selectOption('den')],
-    ['heatmap Rate', () => box.locator('select[data-heatmap]').selectOption('rate')],
+    ['heatmap Numerator', () => control(page, 'select[data-heatmap]').selectOption('num')],
+    ['heatmap Denominator', () => control(page, 'select[data-heatmap]').selectOption('den')],
+    ['heatmap Rate', () => control(page, 'select[data-heatmap]').selectOption('rate')],
     ['Details', () => chooseView(page, 'details')],
-    ['grouped by phase', () => box.locator('select[data-groupby]').selectOption('phase')],
+    ['grouped by phase', () => control(page, 'select[data-groupby]').selectOption('phase')],
     ['a group open', () => page.locator('tr[data-bucket="P2"] td.grp').click()],
     ['sorted', () => page.locator('th[data-sort="Analysis_kri0008"]').click()],
-    ['custom cells', () => box.locator('button[data-seg="cellMode"][data-value="custom"]').click()],
-    ['a filter', () => box.locator('button[data-filter="phase"][data-value="P2"]').click()],
-    ['a metric hidden', () => box.locator('input[data-metric="Analysis_kri0005"]').uncheck()],
-    ['a study highlighted', () => box.locator('select[data-highlight]').selectOption(study)],
+    ['custom cells', () => control(page, 'button[data-seg="cellMode"][data-value="custom"]').click()],
+    ['a filter', () => control(page, 'button[data-filter="phase"][data-value="P2"]').click()],
+    ['a metric hidden', () => control(page, 'input[data-metric="Analysis_kri0005"]').uncheck()],
+    ['a study highlighted', () => control(page, 'select[data-highlight]').selectOption(study)],
     ['heatmap None', async () => {
       await chooseView(page, 'overview');
-      await box.locator('select[data-heatmap]').selectOption('none');
+      await control(page, 'select[data-heatmap]').selectOption('none');
     }],
-    ['Reset', () => box.locator('[data-reset]').click()],
+    ['Reset', () => control(page, '[data-reset]').click()],
   ];
   await expectNoRamp('opened');
   for (const [name, step] of steps) {

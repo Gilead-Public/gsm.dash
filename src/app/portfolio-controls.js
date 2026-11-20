@@ -1,6 +1,5 @@
 // @ts-check
-// The portfolio's controls: the sidebar's options and when each control applies, and the view switch's views and
-// note.
+// The portfolio's controls: their options, and when each control applies.
 
 export const GROUP_BY_OPTIONS = [
   ['none', 'None — one row per study'],
@@ -41,11 +40,11 @@ export const HIGHLIGHT_HINT = 'Marks the study in the table. Click a row to pick
 export const studyLabel = (study) => `${study.StudyID}${study.params?.nickname ? ` · ${study.params.nickname}` : ''}`;
 
 /**
- * One sidebar drives every portfolio view. A control that doesn't apply to the current view stays visible but
- * disabled: a non-empty value here disables it, and its text, once trimmed, is the reason shown under it.
+ * A control that doesn't apply to the current view stays visible but disabled: a non-empty value here disables it,
+ * and its text, once trimmed, is the reason shown under it.
  * @param {any} store
  */
 export function controlStates(store) {
-  const cells = store.state.view === 'overview' ? 'Overview tiles show one headline value per metric. Switch View to Details for full cells.' : '';
+  const cells = store.state.view === 'overview' ? 'Overview tiles show one headline value per metric. Expand all for full cells.' : '';
   return { cellMode: cells, show: cells ? ' ' : '' };
 }

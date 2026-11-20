@@ -6,7 +6,7 @@ import { expect, readData, test } from './fixtures/app.js';
 import { capturePortfolio } from './fixtures/baseline.js';
 import { visibleLines } from './fixtures/visible.js';
 import { latestSnapshot, pooled, pooledTrend, shownMetrics } from '../test/qual/pooling.js';
-import { chooseView } from './fixtures/controls.js';
+import { chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').MetricMeta} MetricMeta */
 
@@ -72,8 +72,8 @@ test.describe('the snapshot cycle', () => {
     expect(await visibleLines(notice)).toEqual([heading, `${off.StudyID}: off cycle, latest snapshot ${offLatest}`]);
     await expect(page.locator('tbody tr[data-hl]')).toHaveCount(studies.length - 1);
     await expect(page.locator(`tbody tr[data-hl="${off.StudyID}"]`)).toHaveCount(0);
-    await expect(page.locator('.sidebar input[data-filter="study"]')).toHaveCount(studies.length - 1);
-    await expect(page.locator(`.sidebar input[data-filter="study"][data-value="${off.StudyID}"]`)).toHaveCount(0);
+    await expect(control(page, 'input[data-filter="study"]').locator).toHaveCount(studies.length - 1);
+    await expect(control(page, `input[data-filter="study"][data-value="${off.StudyID}"]`).locator).toHaveCount(0);
   });
 
   test('14.03: with every study in cycle, the portfolio renders as its recorded baseline in Overview, Details and grouped (#14)', async ({ app, page }) => {
@@ -83,21 +83,21 @@ test.describe('the snapshot cycle', () => {
     await chooseView(page, 'details');
     await expectAsRecorded('table-details');
     await app.open();
-    await page.locator('.sidebar select[data-groupby]').selectOption('phase');
+    await control(page, 'select[data-groupby]').selectOption('phase');
     await expectAsRecorded('rows-grouped');
   });
 
   test('14.03: with every study in cycle, no study is left out and no notice shows (#14)', async ({ app, page }) => {
     await app.open();
     await expect(page.locator('tbody tr[data-hl]')).toHaveCount(studies.length);
-    await expect(page.locator('.sidebar input[data-filter="study"]')).toHaveCount(studies.length);
+    await expect(control(page, 'input[data-filter="study"]').locator).toHaveCount(studies.length);
     await expect(page.locator('.cycle-notice')).toHaveCount(0);
   });
 
   test('14.02: with a study off cycle, each Portfolio total trend keeps that study\'s history before the cycle date and ends on the in-cycle total (#14)', async ({ app, page }) => {
     await app.open('', offCycle);
     await chooseView(page, 'details');
-    await page.locator('.sidebar button[data-show="trend"]').click();
+    await control(page, 'button[data-show="trend"]').click();
     const history = studies.map((s) => (s === off ? { ...s, snapshots: s.snapshots.filter((d) => d !== cycle.SnapshotDate) } : s));
     const inCycle = studies.filter((s) => s !== off);
     let distinct = 0;

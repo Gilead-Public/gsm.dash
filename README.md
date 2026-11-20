@@ -69,10 +69,12 @@ To share a build for feedback without releasing it: every CI run that passes als
 - `src/pages/`, `src/react/` — the reports: an Astro page each for the
   portfolio and a study, with one React root rendering it from one injected
   document (gsm.viz inlined into study reports). Hovering a metric's header
-  shows its definition from `Reporting_Metrics` (#20). The Controls panel
-  sets the portfolio table's View, Overview (each category as headline tiles)
-  or Details, and its optional columns (study name, **Enrolled**, Status;
-  #21); Enrolled is the summary's
+  shows its definition from `Reporting_Metrics` (#20). The portfolio's
+  controls sit in its header (#22, #24): **Filters**, a chip bar collapsed on
+  load with the study filter first; **Config**, with Collapse all / Expand all
+  (the table's View, Overview or Details), the display settings, the optional
+  columns (study name, **Enrolled**, Status; #21) and each metric's checkbox;
+  and **Reset**. Enrolled is the summary's
   `ParticipantCount`, summed over the row's studies. The study page composes
   its view from widgets. Links
   between reports are relative and carry the portfolio's view in the hash.
@@ -152,7 +154,7 @@ hidden metrics (`metrics`, MetricIDs), optional table columns (`columns`: `name`
 The Enrolled column shows a study's count against its `ParticipantTarget` parameter when
 the study has one. It travels in the portfolio
 document, so one template serves any configuration. Its values are checked against the
-Controls panel's choices and the catalog when the document is built and when the report
+controls' choices and the catalog when the document is built and when the report
 loads. A setting in the address's hash overrides its configured default.
 
 Snapshot cycle (#14): the summary's `cycle` names one snapshot date and every study taking

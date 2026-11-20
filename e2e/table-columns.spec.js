@@ -3,7 +3,7 @@
 // Overview or Details, which replaced the row density. Defaults come from the configuration (#16); choices travel in the
 // address and Reset restores them.
 import { expect, readData, test } from './fixtures/app.js';
-import { chooseView } from './fixtures/controls.js';
+import { chooseView, control } from './fixtures/controls.js';
 import { visibleLines } from './fixtures/visible.js';
 import { countText } from '../test/qual/pooling.js';
 /** @typedef {import('@playwright/test').Page} Page */
@@ -16,7 +16,7 @@ const counted = readData('summary.json').studies;
 const enrolled = (/** @type {string} */ id) => /** @type {number} */ (counted.find((s) => s.StudyID === id)?.ParticipantCount);
 
 /** @param {Page} page */
-const chip = (page, /** @type {string} */ column) => page.locator(`.sidebar button[data-column="${column}"]`);
+const chip = (page, /** @type {string} */ column) => control(page, `button[data-column="${column}"]`);
 const seenText = async (/** @type {Locator} */ el) => (await visibleLines(el)).join(' ');
 /** @param {Page} page */
 const headers = async (page) =>
@@ -53,7 +53,7 @@ async function shownView(page) {
 }
 
 /** @param {Page} page */
-const viewControl = (page) => page.locator('.sidebar button[data-seg="view"].on').getAttribute('data-value');
+const viewControl = async (page) => ((await control(page, 'button[data-view-toggle]').getAttribute('aria-pressed')) === 'true' ? 'details' : 'overview');
 
 /**
  * Opens the portfolio with its document changed, then waits for the table.
@@ -72,7 +72,7 @@ test.describe('table columns and view', () => {
     await app.open();
     const [first] = studies;
     expect(await headers(page)).toEqual(['Scr.n']);
-    for (const [column, pressed] of [['name', 'true'], ['enroll', 'false'], ['status', 'false']]) await expect(chip(page, column)).toHaveAttribute('aria-pressed', pressed);
+    for (const [column, pressed] of [['name', 'true'], ['enroll', 'false'], ['status', 'false']]) await expect(chip(page, column).locator).toHaveAttribute('aria-pressed', pressed);
     expect(await rowParts(page, first.StudyID)).toEqual({ name: first.params.nickname, status: null, pop: [expect.any(String)] });
 
     await chip(page, 'enroll').click();
@@ -89,7 +89,7 @@ test.describe('table columns and view', () => {
     expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
     expect((await rowParts(page, first.StudyID)).name).toBeNull();
 
-    await page.locator('.sidebar [data-reset]').click();
+    await control(page, '[data-reset]').click();
     expect(await headers(page)).toEqual(['Scr.n']);
     expect((await rowParts(page, first.StudyID)).name).toBe(first.params.nickname);
     expect(new URL(page.url()).hash).toBe('');
@@ -103,7 +103,7 @@ test.describe('table columns and view', () => {
     await page.reload();
     await page.locator('#app > .layout').waitFor();
     expect([await viewControl(page), await shownView(page)]).toEqual(['details', 'details']);
-    await page.locator('.sidebar [data-reset]').click();
+    await control(page, '[data-reset]').click();
     expect([await viewControl(page), await shownView(page)]).toEqual(['overview', 'overview']);
     expect(new URL(page.url()).hash).toBe('');
   });
@@ -117,7 +117,7 @@ test.describe('table columns and view', () => {
     await chooseView(page, 'overview');
     expect(await headers(page)).toEqual(['Scr.n', 'Enr.n']);
     expect(await shownView(page)).toBe('overview');
-    await page.locator('.sidebar [data-reset]').click();
+    await control(page, '[data-reset]').click();
     expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
     expect([await viewControl(page), await shownView(page)]).toEqual(['details', 'details']);
   });
@@ -145,12 +145,15 @@ test.describe('table columns and view', () => {
     expect(await seenText(page.locator('tbody tr.total td.pop').nth(1))).toBe(countText(total));
   });
 
-  test('21.03: the table in Overview and in Details, with the View control, for visual comparison (#21)', async ({ app, page, evidence }) => {
+  test('21.03: the table collapsed and expanded, and the Config popover with its toggle and metric checkboxes, for visual comparison (#21)', async ({ app, page, evidence }) => {
     await app.open();
     expect(await shownView(page)).toBe('overview');
-    await evidence.shot(page, 'overview');
+    await evidence.shot(page, 'collapsed');
     await chooseView(page, 'details');
     expect(await shownView(page)).toBe('details');
-    await evidence.shot(page, 'details');
+    await evidence.shot(page, 'expanded');
+    await page.locator('#header-controls [data-open="config"]').click();
+    await expect(page.locator('#header-controls [data-pop="config"]')).toBeVisible();
+    await evidence.shot(page, 'Config open');
   });
 });

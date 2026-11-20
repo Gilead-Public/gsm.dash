@@ -4,7 +4,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { expectSeen, visibleLines } from './fixtures/visible.js';
 import { countText, latestSnapshot, pooled, shownMetrics } from '../test/qual/pooling.js';
-import { chooseView } from './fixtures/controls.js';
+import { chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
 
@@ -28,7 +28,7 @@ const VIEWS = {
   },
   'Details, grouped with a group open': async (page) => {
     await chooseView(page, 'details');
-    await page.locator('select[data-groupby]').selectOption('phase');
+    await control(page, 'select[data-groupby]').selectOption('phase');
     await page.locator('tr[data-bucket] td.grp').first().click();
     await expect(page.locator('.portfolio-table tr.study').first()).toBeVisible();
   },
@@ -186,7 +186,7 @@ test('20.05: ungrouped, the table has no Snapshot column in Overview or Details;
     await expect(table.locator('tbody tr.study'), view).toHaveCount(studies.length);
   }
 
-  await page.locator('select[data-groupby]').selectOption('phase');
+  await control(page, 'select[data-groupby]').selectOption('phase');
   const counts = new Map();
   for (const s of studies) counts.set(s.params.phase, (counts.get(s.params.phase) ?? 0) + 1);
   const open = [...counts.keys()].sort()[0];

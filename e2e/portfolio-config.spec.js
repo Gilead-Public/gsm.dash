@@ -3,7 +3,7 @@
 // view survives a reload and the trip to a study report and back under any configuration.
 import { expect, readData, test } from './fixtures/app.js';
 import { canonicalDom, capturePortfolio } from './fixtures/baseline.js';
-import { chooseView } from './fixtures/controls.js';
+import { chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 test.describe.configure({ timeout: 120_000 });
@@ -21,8 +21,6 @@ const studyParams = /** @type {{ params: Record<string, string> }} */ (studies.f
 /** @param {unknown} config */
 const configured = (config) => ({ document: (/** @type {any} */ doc) => void (doc.config = config), beside: [study] });
 
-/** @param {Page} page */
-const sidebar = (page) => page.locator('.sidebar');
 
 /**
  * The table's markup in the baseline's canonical form, which writes each study link without the hash it carries.
@@ -32,13 +30,12 @@ const tableMarkup = (page) => page.locator('.portfolio-table table.po').evaluate
 
 /** @param {Page} page */
 async function controls(page) {
-  const box = sidebar(page);
   return {
-    view: await box.locator('button[data-seg="view"].on').getAttribute('data-value'),
-    groupBy: await box.locator('select[data-groupby]').inputValue(),
-    heatmap: await box.locator('select[data-heatmap]').inputValue(),
-    hidden: (await box.locator('input[data-metric]:not(:checked)').evaluateAll((els) => els.map((e) => e.getAttribute('data-metric')))).sort(),
-    shown: (await box.locator('input[data-metric]:checked').evaluateAll((els) => els.map((e) => e.getAttribute('data-metric')))).sort(),
+    view: (await control(page, 'button[data-view-toggle]').getAttribute('aria-pressed')) === 'true' ? 'details' : 'overview',
+    groupBy: await control(page, 'select[data-groupby]').inputValue(),
+    heatmap: await control(page, 'select[data-heatmap]').inputValue(),
+    hidden: (await control(page, 'input[data-metric]:not(:checked)').locator.evaluateAll((els) => els.map((e) => e.getAttribute('data-metric')))).sort(),
+    shown: (await control(page, 'input[data-metric]:checked').locator.evaluateAll((els) => els.map((e) => e.getAttribute('data-metric')))).sort(),
   };
 }
 
@@ -63,25 +60,24 @@ async function bothViews(page) {
  * @param {Page} page
  */
 async function customChips(page) {
-  const box = sidebar(page);
-  const was = await box.locator('button[data-seg="cellMode"].on').getAttribute('data-value');
-  await box.locator('button[data-seg="cellMode"][data-value="custom"]').click();
-  const chips = await box.locator('button[data-show]').evaluateAll((els) => els.map((e) => [e.getAttribute('data-show'), e.getAttribute('aria-pressed')]));
-  if (was !== 'custom') await box.locator(`button[data-seg="cellMode"][data-value="${was}"]`).click();
+  const was = await control(page, 'button[data-seg="cellMode"].on').getAttribute('data-value');
+  await control(page, 'button[data-seg="cellMode"][data-value="custom"]').click();
+  const chips = await control(page, 'button[data-show]').locator.evaluateAll((els) => els.map((e) => [e.getAttribute('data-show'), e.getAttribute('aria-pressed')]));
+  if (was !== 'custom') await control(page, `button[data-seg="cellMode"][data-value="${was}"]`).click();
   return Object.fromEntries(chips);
 }
 
 test('16.01: with every setting configured away from its built-in default, the portfolio opens on the configured view (#16)', async ({ app, page }) => {
   // The same view reached through the controls, without configuration.
   await app.openReport('portfolio');
-  await sidebar(page).locator('select[data-groupby]').selectOption('phase');
-  await sidebar(page).locator('select[data-heatmap]').selectOption('rate');
+  await control(page, 'select[data-groupby]').selectOption('phase');
+  await control(page, 'select[data-heatmap]').selectOption('rate');
   await chooseView(page, 'details');
-  await sidebar(page).locator('button[data-seg="cellMode"][data-value="custom"]').click();
-  for (const part of ['num', 'rate', 'den', 'trend']) await sidebar(page).locator(`button[data-show="${part}"]`).click();
-  await sidebar(page).locator('button[data-seg="cellMode"][data-value="defined"]').click();
+  await control(page, 'button[data-seg="cellMode"][data-value="custom"]').click();
+  for (const part of ['num', 'rate', 'den', 'trend']) await control(page, `button[data-show="${part}"]`).click();
+  await control(page, 'button[data-seg="cellMode"][data-value="defined"]').click();
   await chooseView(page, 'overview');
-  for (const id of CONFIG.metrics) await sidebar(page).locator(`input[data-metric="${id}"]`).uncheck();
+  for (const id of CONFIG.metrics) await control(page, `input[data-metric="${id}"]`).uncheck();
   const reference = await bothViews(page);
 
   await app.openReport('portfolio', configured(CONFIG));
@@ -122,21 +118,21 @@ test('16.01: with every setting configured away from its built-in default, the p
 const CHANGES = {
   'as configured': async () => {},
   'changed to other values': async (page) => {
-    await sidebar(page).locator('select[data-groupby]').selectOption('status');
-    await sidebar(page).locator('select[data-heatmap]').selectOption('num');
-    await sidebar(page).locator('button[data-seg="cellMode"][data-value="custom"]').click();
-    for (const part of ['den', 'num']) await sidebar(page).locator(`button[data-show="${part}"]`).click();
-    await sidebar(page).locator('input[data-metric="Analysis_kri0003"]').check();
-    await sidebar(page).locator('input[data-metric="Analysis_kri0005"]').uncheck();
+    await control(page, 'select[data-groupby]').selectOption('status');
+    await control(page, 'select[data-heatmap]').selectOption('num');
+    await control(page, 'button[data-seg="cellMode"][data-value="custom"]').click();
+    for (const part of ['den', 'num']) await control(page, `button[data-show="${part}"]`).click();
+    await control(page, 'input[data-metric="Analysis_kri0003"]').check();
+    await control(page, 'input[data-metric="Analysis_kri0005"]').uncheck();
     await chooseView(page, 'overview');
   },
   'changed back to the built-in defaults': async (page) => {
-    await sidebar(page).locator('select[data-groupby]').selectOption('none');
-    await sidebar(page).locator('select[data-heatmap]').selectOption('none');
-    await sidebar(page).locator('button[data-seg="cellMode"][data-value="custom"]').click();
-    for (const part of ['den', 'trend', 'num', 'rate']) await sidebar(page).locator(`button[data-show="${part}"]`).click();
-    await sidebar(page).locator('button[data-seg="cellMode"][data-value="defined"]').click();
-    for (const id of CONFIG.metrics) await sidebar(page).locator(`input[data-metric="${id}"]`).check();
+    await control(page, 'select[data-groupby]').selectOption('none');
+    await control(page, 'select[data-heatmap]').selectOption('none');
+    await control(page, 'button[data-seg="cellMode"][data-value="custom"]').click();
+    for (const part of ['den', 'trend', 'num', 'rate']) await control(page, `button[data-show="${part}"]`).click();
+    await control(page, 'button[data-seg="cellMode"][data-value="defined"]').click();
+    for (const id of CONFIG.metrics) await control(page, `input[data-metric="${id}"]`).check();
     await chooseView(page, 'overview');
   },
 };
@@ -145,7 +141,7 @@ test('16.03: under a configuration, the portfolio comes back as it was left afte
   for (const [what, change] of Object.entries(CHANGES)) {
     await app.openReport('portfolio', configured(CONFIG));
     await change(page);
-    const groupBy = await sidebar(page).locator('select[data-groupby]').inputValue();
+    const groupBy = await control(page, 'select[data-groupby]').inputValue();
     if (groupBy !== 'none') await page.locator(`tr[data-bucket="${studyParams[groupBy]}"] td.grp`).click();
     await page.mouse.move(0, 0);
     const left = page.url();

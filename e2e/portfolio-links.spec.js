@@ -4,7 +4,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { expectSeen } from './fixtures/visible.js';
 import { shownMetrics } from '../test/qual/pooling.js';
-import { chooseView } from './fixtures/controls.js';
+import { chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('@playwright/test').Locator} Locator */
 /** @typedef {import('./fixtures/app.js').App} App */
@@ -167,7 +167,7 @@ test('25.01: in Details and Overview, ungrouped and with a group open, every stu
     await expectTableLinks(page, ROWS.none, view, `${view}, ungrouped`);
   }
 
-  await page.locator('select[data-groupby]').selectOption('phase');
+  await control(page, 'select[data-groupby]').selectOption('phase');
   await page.locator(`tr[data-bucket="${open}"] td.grp`).click();
   for (const view of /** @type {const} */ (['details', 'overview'])) {
     await showView(page, view);
@@ -177,7 +177,7 @@ test('25.01: in Details and Overview, ungrouped and with a group open, every stu
   await showView(page, 'details');
   const child = children[0].slice(6);
   await follow(page, page.locator(`tr.study.child[data-hl="${child}"] a.cell[href$="/tdsc.html"]`));
-  await page.locator('select[data-groupby]').selectOption('none');
+  await control(page, 'select[data-groupby]').selectOption('none');
   await follow(page, page.locator(`tr.study[data-hl="${ids[1]}"] a.cell[href$="/${ids[1]}.html"]`));
   await showView(page, 'overview');
   await follow(page, page.locator(`tr.study[data-hl="${ids[2]}"] a.otile[href$="/tdsc.html"]`));
@@ -189,7 +189,7 @@ test('25.02: no cell or tile links when its metric has no report link, or its li
   for (const view of /** @type {const} */ (['details', 'overview'])) {
     await showView(page, view);
     for (const group of /** @type {const} */ (['none', 'phase'])) {
-      await page.locator('select[data-groupby]').selectOption(group);
+      await control(page, 'select[data-groupby]').selectOption(group);
       if (group === 'phase') await page.locator(`tr[data-bucket="${open}"] td.grp`).click();
       const found = Object.fromEntries(await tableLinks(page));
       for (const [row, cells] of Object.entries(expectedLinks(ROWS[group], view))) {

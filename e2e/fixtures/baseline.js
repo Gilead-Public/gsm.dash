@@ -243,15 +243,25 @@ export function canonicalDom(root) {
 }
 
 /**
- * The portfolio as the 11.03 baseline records it: its canonical DOM and computed styles (by hash), every sparkline's
- * points, its accessibility tree, every table cell's background and any open tooltip.
+ * The portfolio as the 11.03 baseline records it, the header's controls included: its canonical DOM and computed styles
+ * (by hash), every sparkline's points, its accessibility tree, every table cell's background and any open tooltip.
  * @param {import('@playwright/test').Page} page
  * @param {string} name
  */
 export async function capturePortfolio(page, name) {
-  const dom = await page.locator('#app').evaluate((el) => el.innerHTML);
-  const canonical = await page.locator('#app').evaluate(canonicalDom);
-  const aria = ariaStudyLinks(await page.locator('#app').ariaSnapshot());
+  // The page's own root, and the header's controls (#22, #24), whose values are part of the view. Whether a popover or
+  // the Filters bar is open isn't, so both are closed first.
+  if (await page.locator('#header-controls [aria-expanded="true"]').count()) {
+    await page.keyboard.press('Escape');
+    const filters = page.locator('#header-controls [data-open="filters"]');
+    if ((await filters.getAttribute('aria-expanded')) === 'true') await filters.click();
+    await page.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur());
+  }
+  const roots = [page.locator('#header-controls'), page.locator('#app')];
+  const each = (/** @type {(root: import('@playwright/test').Locator) => Promise<string>} */ read) => Promise.all(roots.map(read)).then((parts) => parts.join('\n'));
+  const dom = await each((r) => r.evaluate((el) => el.innerHTML));
+  const canonical = await each((r) => r.evaluate(canonicalDom));
+  const aria = ariaStudyLinks(await each((r) => r.ariaSnapshot()));
   const rendered = await page.evaluate(() => {
     const visible = (/** @type {Element} */ el) => el.checkVisibility({ opacityProperty: true, visibilityProperty: true });
     const cells = [...document.querySelectorAll('#app td, #app .otile')].map((el) => getComputedStyle(el).backgroundColor);
@@ -266,7 +276,7 @@ export async function capturePortfolio(page, name) {
   // and once transitions end: React keeps elements across renders, so CSS transitions run on them.
   await page.mouse.move(0, 0);
   await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished)));
-  const styles = await page.locator('#app').evaluate(computedStyles);
+  const styles = await each((r) => r.evaluate(computedStyles));
   const text = [
     `state: ${name}`,
     canonicalLine(canonical),

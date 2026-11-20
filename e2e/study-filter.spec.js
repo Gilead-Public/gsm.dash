@@ -1,8 +1,10 @@
 // @ts-check
-// #22: the study filter and Reset. Reset returns the page and its address to a fresh load under the configured
-// defaults (#16); the study filter is kept in the address like the other filters.
+// #22: the study filter, the header's filter bar and Reset. Reset returns the page and its address to a fresh load
+// under the configured defaults (#16); the study filter is kept in the address like the other filters.
 import { expect, readData, test } from './fixtures/app.js';
 import { capturePortfolio } from './fixtures/baseline.js';
+import { chooseView, control } from './fixtures/controls.js';
+import { visibleLines } from './fixtures/visible.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 test.describe.configure({ timeout: 90_000 });
@@ -15,8 +17,6 @@ const CONFIG = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metr
 /** Every setting the address holds, besides one `filter.<param>` per filter the Controls panel offers. */
 const VIEW_KEYS = ['cell', 'dir', 'expand', 'group', 'heatmap', 'hide', 'show', 'sort', 'statuses', 'study', 'view'];
 
-/** @param {Page} page */
-const sidebar = (page) => page.locator('.sidebar');
 
 /** @param {Page} page */
 const hashKeys = (page) => [...new Set(new URLSearchParams(new URL(page.url()).hash.slice(1)).keys())].sort();
@@ -26,22 +26,21 @@ const hashKeys = (page) => [...new Set(new URLSearchParams(new URL(page.url()).h
  * @param {Page} page
  */
 async function changeEverySetting(page) {
-  const box = sidebar(page);
-  await box.locator('button[data-filter="therapeutic_area"][data-value="Cardiology"]').click();
-  await box.locator('button[data-filter="phase"][data-value="P2"]').click();
-  for (const status of ['Active', 'Enrolling']) await box.locator(`button[data-filter="status"][data-value="${status}"]`).click();
-  await box.locator(`input[data-filter="study"][data-value="${study}"]`).check();
-  await box.locator('button[data-status="Planned"]').click();
-  await box.locator(`input[data-metric="${hidden}"]`).uncheck();
-  await box.locator('select[data-groupby]').selectOption('therapeutic_area');
-  await box.locator('button[data-seg="view"][data-value="details"]').click();
+  await control(page, 'button[data-filter="therapeutic_area"][data-value="Cardiology"]').click();
+  await control(page, 'button[data-filter="phase"][data-value="P2"]').click();
+  for (const status of ['Active', 'Enrolling']) await control(page, `button[data-filter="status"][data-value="${status}"]`).click();
+  await control(page, `input[data-filter="study"][data-value="${study}"]`).check();
+  await control(page, 'button[data-status="Planned"]').click();
+  await control(page, `input[data-metric="${hidden}"]`).uncheck();
+  await control(page, 'select[data-groupby]').selectOption('therapeutic_area');
+  await chooseView(page, 'details');
   await page.locator('tr[data-bucket="Cardiology"] td.grp').click();
   await page.locator('th[data-sort="Analysis_kri0008"]').click();
-  await box.locator('button[data-seg="cellMode"][data-value="custom"]').click();
-  await box.locator('button[data-show="den"]').click();
-  await box.locator('button[data-show="num"]').click();
-  await box.locator('select[data-heatmap]').selectOption('num');
-  await box.locator('select[data-highlight]').selectOption(study);
+  await control(page, 'button[data-seg="cellMode"][data-value="custom"]').click();
+  await control(page, 'button[data-show="den"]').click();
+  await control(page, 'button[data-show="num"]').click();
+  await control(page, 'select[data-heatmap]').selectOption('num');
+  await control(page, 'select[data-highlight]').selectOption(study);
 }
 
 /** @param {Page} page */
@@ -60,11 +59,11 @@ for (const [configuration, config] of /** @type {const} */ ([['the default confi
     const fresh = await capturePortfolio(page, 'fresh load');
 
     await changeEverySetting(page);
-    const filters = await sidebar(page).locator('[data-filter]').evaluateAll((els) => els.map((e) => `filter.${e.getAttribute('data-filter')}`));
+    const filters = await control(page, '[data-filter]').locator.evaluateAll((els) => els.map((e) => `filter.${e.getAttribute('data-filter')}`));
     expect([...new Set(filters)].sort(), 'the filters the Controls panel offers').toEqual(['filter.phase', 'filter.status', 'filter.study', 'filter.therapeutic_area']);
     expect(hashKeys(page), 'every setting moved from its default').toEqual([...VIEW_KEYS, ...new Set(filters)].sort());
 
-    await sidebar(page).locator('[data-reset]').click();
+    await control(page, '[data-reset]').click();
     await settled(page);
     expect(page.url(), 'the address').toBe(freshUrl);
     expect((await capturePortfolio(page, 'fresh load')).text, 'the page, with the Controls panel').toBe(fresh.text);
@@ -73,18 +72,19 @@ for (const [configuration, config] of /** @type {const} */ ([['the default confi
 
 test('22.03: the study filter, with studies selected, and the Reset control, for visual comparison with this issue\'s Scope (#22)', async ({ app, page }) => {
   await app.open();
-  for (const id of [study, 'STUDY008']) await sidebar(page).locator(`input[data-filter="study"][data-value="${id}"]`).check();
-  const options = sidebar(page).locator('input[data-filter="study"]');
+  for (const id of [study, 'STUDY008']) await control(page, `input[data-filter="study"][data-value="${id}"]`).check();
+  const options = control(page, 'input[data-filter="study"]').locator;
   await expect(options).toHaveCount(studies.length);
-  await expect(sidebar(page).locator('[data-reset]')).toBeVisible();
+  await expect(control(page, '[data-reset]').locator).toBeVisible();
+  await page.locator('#header-controls [data-open="filter:study"]').click();
+  await expect(options.first()).toBeVisible();
   await settled(page);
 });
 
 test('22.04: a study-filter selection survives a reload and a study link with its back link, and Clear filters clears it with the other filters (#22)', async ({ app, page }) => {
   await app.open();
-  const box = sidebar(page);
-  for (const id of [study, 'STUDY008']) await box.locator(`input[data-filter="study"][data-value="${id}"]`).check();
-  await box.locator('button[data-filter="phase"][data-value="P2"]').click();
+  for (const id of [study, 'STUDY008']) await control(page, `input[data-filter="study"][data-value="${id}"]`).check();
+  await control(page, 'button[data-filter="phase"][data-value="P2"]').click();
   const kept = studies.filter((s) => [study, 'STUDY008'].includes(s.StudyID) && s.params.phase === 'P2').map((s) => s.StudyID);
   expect(kept, 'the selection and the phase filter keep the linked study').toContain(study);
   await expect(page.locator('.portfolio-table tr.study')).toHaveCount(kept.length);
@@ -107,8 +107,63 @@ test('22.04: a study-filter selection survives a reload and a study link with it
   expect(page.url(), 'back link').toBe(left);
   expect((await capturePortfolio(page, 'filtered')).text, 'back link').toBe(before.text);
 
-  await box.locator('[data-clear]').click();
-  await expect(box.locator('input[data-filter="study"]:checked, button[data-filter].on')).toHaveCount(0);
+  await control(page, '[data-clear]').click();
+  await expect(control(page, 'input[data-filter="study"]:checked, button[data-filter].on').locator).toHaveCount(0);
   await expect(page.locator('.portfolio-table tr.study')).toHaveCount(studies.length);
   expect(hashKeys(page).filter((k) => k.startsWith('filter.')), 'no filter left in the address').toEqual([]);
+});
+
+test('22.05: the filters are collapsed on load, after a reload and after a study report\'s back link; Filters shows the number of active filters; opened, a chip per filter, the study filter first, opens its choices and shows how many are selected (#22)', async ({ app, page }) => {
+  await app.open();
+  const host = page.locator('#header-controls');
+  const filters = host.locator('[data-open="filters"]');
+  const bar = host.locator('.filter-bar');
+  /** @param {string} what @param {string} count */
+  const collapsed = async (what, count) => {
+    await expect(filters, what).toHaveAttribute('aria-expanded', 'false');
+    await expect(bar, what).toBeHidden();
+    expect(await visibleLines(filters), `${what}: the Filters button`).toEqual(count ? ['Filters', count] : ['Filters']);
+  };
+  await collapsed('on load', '');
+
+  await filters.click();
+  await expect(bar).toBeVisible();
+  const chips = bar.locator('[data-open^="filter:"]');
+  expect(await chips.evaluateAll((els) => els.map((e) => e.getAttribute('data-open'))), 'the chips, in order').toEqual(['filter:study', 'filter:therapeutic_area', 'filter:phase', 'filter:status']);
+  expect(await Promise.all((await chips.all()).map((c) => visibleLines(c).then((l) => l.join(' ')))), 'their labels').toEqual(['Study', 'Therapeutic area', 'Phase', 'Status']);
+  /** Every value each filter offers, from the data. @type {Record<string, string[]>} */
+  const values = {
+    study: studies.map((s) => s.StudyID),
+    therapeutic_area: [...new Set(studies.map((s) => s.params.therapeutic_area))],
+    phase: [...new Set(studies.map((s) => s.params.phase))],
+    status: [...new Set(studies.map((s) => s.params.status))],
+  };
+  for (const [param, want] of Object.entries(values)) {
+    await bar.locator(`[data-open="filter:${param}"]`).click();
+    const pop = host.locator(`[data-pop="filter:${param}"]`);
+    await expect(pop, param).toBeVisible();
+    const offered = await pop.locator('[data-filter]').evaluateAll((els) => els.filter((e) => e.checkVisibility()).map((e) => e.getAttribute('data-value') ?? ''));
+    expect(offered.sort(), `${param}: every value, visible`).toEqual([...want].sort());
+    await page.keyboard.press('Escape');
+    await expect(pop, `${param}: closed by Escape`).toBeHidden();
+  }
+
+  const [a, b] = studies;
+  await control(page, `input[data-filter="study"][data-value="${a.StudyID}"]`).check();
+  await control(page, `input[data-filter="study"][data-value="${b.StudyID}"]`).check();
+  await control(page, `button[data-filter="phase"][data-value="${a.params.phase}"]`).click();
+  const count = (/** @type {string} */ param) => bar.locator(`[data-open="filter:${param}"] .cnt`);
+  await expect(count('study')).toHaveText('2');
+  await expect(count('phase')).toHaveText('1');
+  await expect(count('status')).toHaveCount(0);
+  await expect(filters.locator('.badge')).toHaveText('3');
+
+  await page.reload();
+  await page.locator('#app > .layout').waitFor();
+  await collapsed('after a reload', '3');
+  await page.locator(`#app .portfolio-table a[data-study="${a.StudyID}"]`).first().click();
+  await page.locator(`#app > [data-study="${a.StudyID}"] .tile`).first().waitFor();
+  await page.locator('#app a.back').click();
+  await page.locator('#app > .layout').waitFor();
+  await collapsed('after the back link', '3');
 });

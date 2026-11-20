@@ -3,6 +3,7 @@
 // and under a sub-path, and the portfolio's view travels with those links to a study report and back.
 import { expect, readData, test } from './fixtures/app.js';
 import { capturePortfolio } from './fixtures/baseline.js';
+import { chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 test.describe.configure({ timeout: 90_000 });
@@ -13,8 +14,6 @@ const studies = portfolio.studies;
 /** @type {Array<{ MetricID: string, GroupLevel: string, Status?: string, Active?: boolean, Category: string }>} */
 const catalog = portfolio.metrics;
 
-/** @param {Page} page */
-const sidebar = (page) => page.locator('.sidebar');
 
 const study = 'STUDY004';
 const hidden = 'Analysis_kri0005';
@@ -26,8 +25,8 @@ const allowed = catalog
 
 /** @param {Page} page */
 async function filterMetrics(page) {
-  await sidebar(page).locator('button[data-status="Planned"]').click();
-  await sidebar(page).locator(`input[data-metric="${hidden}"]`).uncheck();
+  await control(page, 'button[data-status="Planned"]').click();
+  await control(page, `input[data-metric="${hidden}"]`).uncheck();
 }
 
 /**
@@ -91,18 +90,18 @@ test('27.05: the table view carries over to a study report, which applies its me
   await page.locator('#app > .layout').waitFor();
 
   // Every setting 27.05 lists, through the controls a user would use.
-  await sidebar(page).locator('button[data-filter="phase"][data-value="P2"]').click();
-  for (const status of ['Active', 'Enrolling']) await sidebar(page).locator(`button[data-filter="status"][data-value="${status}"]`).click();
+  await control(page, 'button[data-filter="phase"][data-value="P2"]').click();
+  for (const status of ['Active', 'Enrolling']) await control(page, `button[data-filter="status"][data-value="${status}"]`).click();
   await filterMetrics(page);
-  await sidebar(page).locator('select[data-groupby]').selectOption('therapeutic_area');
-  await sidebar(page).locator('button[data-seg="view"][data-value="details"]').click();
+  await control(page, 'select[data-groupby]').selectOption('therapeutic_area');
+  await chooseView(page, 'details');
   await page.locator('tr[data-bucket="Cardiology"] td.grp').click();
   await page.locator('th[data-sort="Analysis_kri0008"]').click();
-  await sidebar(page).locator('button[data-seg="cellMode"][data-value="custom"]').click();
-  await sidebar(page).locator('button[data-show="den"]').click();
-  await sidebar(page).locator('button[data-show="num"]').click();
-  await sidebar(page).locator('select[data-heatmap]').selectOption('rate');
-  await sidebar(page).locator('select[data-highlight]').selectOption(study);
+  await control(page, 'button[data-seg="cellMode"][data-value="custom"]').click();
+  await control(page, 'button[data-show="den"]').click();
+  await control(page, 'button[data-show="num"]').click();
+  await control(page, 'select[data-heatmap]').selectOption('rate');
+  await control(page, 'select[data-highlight]').selectOption(study);
 
   const keys = [...new Set(new URLSearchParams(new URL(page.url()).hash.slice(1)).keys())].sort();
   expect(keys, 'every setting moved from its default').toEqual(
