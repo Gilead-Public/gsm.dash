@@ -19,7 +19,7 @@ describe('table view', () => {
   });
 });
 
-describe('highlight study', () => {
+describe('highlight study (unwired, kept for a possible enhanced version)', () => {
   it('toggles: selecting the highlighted study again clears it', () => {
     const id = store.studies[2].StudyID;
     store.highlight(id);
@@ -32,16 +32,16 @@ describe('highlight study', () => {
 });
 
 describe('URL params', () => {
-  it('round-trips the view and the highlight', () => {
+  it('round-trips the view, and leaves a highlight out of the address', () => {
     store.set('view', 'details');
     store.highlight(store.studies[0].StudyID);
     const params = store.programParams();
-    expect(params.get('view')).toBe('details');
+    expect([...params.keys()]).toEqual(['view']);
 
     const other = new PortfolioStore(portfolio);
     other.applyProgramParams(new URLSearchParams(params.toString()));
     expect(other.state.view).toBe('details');
-    expect(other.state.highlightStudy).toBe(store.studies[0].StudyID);
+    expect(other.state.highlightStudy).toBeNull();
   });
 
   it('accepts a hand-written ?view=details and ignores unknown ids', () => {
@@ -50,9 +50,9 @@ describe('URL params', () => {
     expect(store.state.highlightStudy).toBeNull();
   });
 
-  it('ignores the retired settings in an old address: the Distribution view, its folds, open bands and row density', () => {
+  it('ignores the retired settings in an old address: the Distribution view, its folds, open bands, row density and the highlighted study', () => {
     const [a, b] = cats();
-    for (const old of [`view=distribution&dfold=${a}`, `view=mixed&open=${a}&open=${b}`, 'open=all', 'density=condensed']) {
+    for (const old of [`view=distribution&dfold=${a}`, `view=mixed&open=${a}&open=${b}`, 'open=all', 'density=condensed', `study=${store.studies[0].StudyID}`]) {
       const s = new PortfolioStore(portfolio);
       s.applyProgramParams(new URLSearchParams(old));
       expect(viewState(s), old).toEqual(viewState(new PortfolioStore(portfolio)));
@@ -252,7 +252,6 @@ function viewState(s) {
     filters: Object.fromEntries(Object.entries(state.filters).map(([k, v]) => [k, sorted(v)])),
     statuses: sorted(state.statuses),
     hiddenMetrics: sorted(state.hiddenMetrics),
-    highlightStudy: state.highlightStudy,
     columns: sorted(state.columns),
   };
 }
@@ -273,7 +272,6 @@ function changeEveryField(s) {
   s.toggleFilter('study', s.studies[2].StudyID);
   s.toggleStatus('Planned');
   s.toggleMetric(s.supportedMetrics()[1].MetricID);
-  s.highlight(s.studies[1].StudyID);
   s.toggleColumn('name');
   s.toggleColumn('status');
 }

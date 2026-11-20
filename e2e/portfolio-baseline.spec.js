@@ -1,12 +1,12 @@
 // @ts-check
 // 11.03 regression evidence: the portfolio as it rendered before #11's changes, recorded state by state in
 // e2e/__snapshots__/portfolio-baseline.spec.js/, at 69b2240; re-recorded when the Distribution view was removed (#35),
-// when View replaced the category folds and row density, when the status line moved below the table (#24), and when the
-// controls moved into the header (#22), each time with every tooltip, cell background, sparkline and table row
-// unchanged. Each state is reached through the UI and recorded, with the header's controls, as its canonical DOM and
-// computed styles (by hash), every sparkline's points, its accessibility tree (which leaves out hidden elements) and
-// what CSS colours: every table cell's background, and any open tooltip. The canonical DOM lets the React page be
-// compared with the same records.
+// when View replaced the category folds and row density, when the status line moved below the table (#24), when the
+// controls moved into the header (#22), and when the study highlight was unwired (#35), each time with every tooltip,
+// cell background, sparkline and table row unchanged. Each state is reached through the UI and recorded, with the
+// header's controls, as its canonical DOM and computed styles (by hash), every sparkline's points, its accessibility
+// tree (which leaves out hidden elements) and what CSS colours: every table cell's background, and any open tooltip.
+// The canonical DOM lets the React page be compared with the same records.
 import { readData, test } from './fixtures/app.js';
 import { capturePortfolio as capture, expectRecorded } from './fixtures/baseline.js';
 import { chooseView, control } from './fixtures/controls.js';
@@ -48,7 +48,7 @@ test.describe('the portfolio against its recorded baseline', () => {
     await expectState(page, testInfo, 'table-custom-cells');
   });
 
-  test('11.03: the table matches its baseline grouped with a group open, filtered, with a status and a metric hidden, and with a study highlighted (#11)', async ({ app, page }, testInfo) => {
+  test('11.03: the table matches its baseline grouped with a group open, filtered, and with a status and a metric hidden (#11)', async ({ app, page }, testInfo) => {
     await app.open();
     await control(page, 'select[data-groupby]').selectOption('phase');
     await expectState(page, testInfo, 'rows-grouped');
@@ -63,8 +63,6 @@ test.describe('the portfolio against its recorded baseline', () => {
     const first = await control(page, 'input[type="checkbox"][data-metric]').locator.first().getAttribute('data-metric');
     await control(page, `input[data-metric="${first}"]`).uncheck();
     await expectState(page, testInfo, 'rows-metric-hidden');
-    await control(page, 'select[data-highlight]').selectOption(studies[0].StudyID);
-    await expectState(page, testInfo, 'rows-highlighted');
   });
 
   test('11.03: tooltips on the table match their baseline (#11)', async ({ app, page }, testInfo) => {

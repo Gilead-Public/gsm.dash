@@ -45,7 +45,7 @@ A full study tile pages through Details, Trend over time, the metric's own views
 study configures them, the flag views (#11).
 
 These were uncovered in the audit, but a requirement now covers them:
-- row-click highlight (25.05);
+- row-click highlight (25.05), since unwired with the Highlight study control by the 19 Nov design review (35.11);
 - Clear filters (22.04);
 - the Controls panel's collapse and sections (#22), since replaced by the header's Filters bar and Config popover;
 - Overview tiles and Details cells (#20, #25);

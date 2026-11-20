@@ -181,7 +181,7 @@ test.describe('portfolio view numbers', () => {
     for (const study of kept) await expectRow(page, table, study.StudyID, [study]);
   });
 
-  test('22.01: the study filter, alone and with a phase filter, limits the table and the highlight menu to the selected studies that pass the other filters, and its totals pool exactly those studies (#22)', async ({ app, page }) => {
+  test('22.01: the study filter, alone and with a phase filter, limits the table to the selected studies that pass the other filters, and its totals pool exactly those studies (#22)', async ({ app, page }) => {
     test.setTimeout(180_000);
     const [[phase, inPhase], [, other]] = [...studiesBy(studies, 'phase')].sort((a, b) => b[1].length - a[1].length);
     expect(inPhase.length, 'the largest phase has more than one study').toBeGreaterThan(1);
@@ -218,8 +218,6 @@ test.describe('portfolio view numbers', () => {
         await expectRow(page, table, label, inGroup(label));
       }
 
-      const menu = await control(page, 'select[data-highlight] option').locator.evaluateAll((os) => os.map((o) => /** @type {HTMLOptionElement} */ (o).value).filter(Boolean));
-      expect(menu, `${what}: highlight menu`).toEqual(ids);
 
     }
   });

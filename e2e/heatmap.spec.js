@@ -154,7 +154,7 @@ test('23.03: the Controls panel offers no heatmap colour choice (#23)', async ({
     await page.locator('#header-controls [data-open="config"]').click();
     const box = page.locator('#header-controls [data-pop="config"]');
     const labels = await box.locator('.ctl > label').allTextContents();
-    expect(labels, `heatmap ${heatmap}: the Config controls`).toEqual(['Table', 'Highlight study', 'Cell display', 'Also show', 'Heatmap (also drives column sort)', 'Columns', 'Group rows by', 'Metrics']);
+    expect(labels, `heatmap ${heatmap}: the Config controls`).toEqual(['Table', 'Cell display', 'Also show', 'Heatmap (also drives column sort)', 'Columns', 'Group rows by', 'Metrics']);
     expect(await box.innerText(), `heatmap ${heatmap}: the panel's text`).not.toMatch(/colou?r|palette|\b(blue|teal|purple|gr[ae]y)\b/i);
     await expect(control(page, '[data-seg="ramp"], [data-ramp]').locator, `heatmap ${heatmap}: old markup`).toHaveCount(0);
     await expect(page.locator('[data-ramp]'), `heatmap ${heatmap}: no palette on the page`).toHaveCount(0);
@@ -182,7 +182,6 @@ test('23.03: the address never carries ramp, whatever the settings, and an addre
     ['custom cells', () => control(page, 'button[data-seg="cellMode"][data-value="custom"]').click()],
     ['a filter', () => control(page, 'button[data-filter="phase"][data-value="P2"]').click()],
     ['a metric hidden', () => control(page, 'input[data-metric="Analysis_kri0005"]').uncheck()],
-    ['a study highlighted', () => control(page, 'select[data-highlight]').selectOption(study)],
     ['heatmap None', async () => {
       await chooseView(page, 'overview');
       await control(page, 'select[data-heatmap]').selectOption('none');

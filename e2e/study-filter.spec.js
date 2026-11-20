@@ -15,7 +15,7 @@ const study = 'STUDY004';
 const hidden = 'Analysis_kri0005';
 const CONFIG = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'] };
 /** Every setting the address holds, besides one `filter.<param>` per filter the Controls panel offers. */
-const VIEW_KEYS = ['cell', 'dir', 'expand', 'group', 'heatmap', 'hide', 'show', 'sort', 'statuses', 'study', 'view'];
+const VIEW_KEYS = ['cell', 'dir', 'expand', 'group', 'heatmap', 'hide', 'show', 'sort', 'statuses', 'view'];
 
 
 /** @param {Page} page */
@@ -40,7 +40,6 @@ async function changeEverySetting(page) {
   await control(page, 'button[data-show="den"]').click();
   await control(page, 'button[data-show="num"]').click();
   await control(page, 'select[data-heatmap]').selectOption('num');
-  await control(page, 'select[data-highlight]').selectOption(study);
 }
 
 /** @param {Page} page */
@@ -63,7 +62,16 @@ for (const [configuration, config] of /** @type {const} */ ([['the default confi
     expect([...new Set(filters)].sort(), 'the filters the Controls panel offers').toEqual(['filter.phase', 'filter.status', 'filter.study', 'filter.therapeutic_area']);
     expect(hashKeys(page), 'every setting moved from its default').toEqual([...VIEW_KEYS, ...new Set(filters)].sort());
 
-    await control(page, '[data-reset]').click();
+    // Reset leaves Filters and Config as they were: their open state isn't part of the view (Scope).
+    const host = page.locator('#header-controls');
+    const opened = () => host.locator('[data-open="filters"], [data-open="config"]').evaluateAll((els) => els.map((e) => [e.getAttribute('data-open'), e.getAttribute('aria-expanded')]));
+    if ((await host.locator('[data-open="filters"]').getAttribute('aria-expanded')) !== 'true') await host.locator('[data-open="filters"]').click();
+    await host.locator('[data-open="config"]').click();
+    expect(await opened(), 'before Reset').toEqual([['filters', 'true'], ['config', 'true']]);
+    await host.locator('[data-reset]').click();
+    expect(await opened(), 'Reset leaves Filters and Config open').toEqual([['filters', 'true'], ['config', 'true']]);
+    await expect(host.locator('.filter-bar'), 'the filter bar, after Reset').toBeVisible();
+    await expect(host.locator('[data-pop="config"]'), 'Config, after Reset').toBeVisible();
     await settled(page);
     expect(page.url(), 'the address').toBe(freshUrl);
     expect((await capturePortfolio(page, 'fresh load')).text, 'the page, with the Controls panel').toBe(fresh.text);
@@ -131,19 +139,20 @@ test('22.05: the filters are collapsed on load, after a reload and after a study
   const chips = bar.locator('[data-open^="filter:"]');
   expect(await chips.evaluateAll((els) => els.map((e) => e.getAttribute('data-open'))), 'the chips, in order').toEqual(['filter:study', 'filter:therapeutic_area', 'filter:phase', 'filter:status']);
   expect(await Promise.all((await chips.all()).map((c) => visibleLines(c).then((l) => l.join(' ')))), 'their labels').toEqual(['Study', 'Therapeutic area', 'Phase', 'Status']);
-  /** Every value each filter offers, from the data. @type {Record<string, string[]>} */
-  const values = {
-    study: studies.map((s) => s.StudyID),
+  /** What each filter's choices read, from the data: a study's ID and nickname, or the value. @type {Record<string, string[]>} */
+  const labels = {
+    study: studies.map((s) => `${s.StudyID} ${s.params.nickname}`),
     therapeutic_area: [...new Set(studies.map((s) => s.params.therapeutic_area))],
     phase: [...new Set(studies.map((s) => s.params.phase))],
     status: [...new Set(studies.map((s) => s.params.status))],
   };
-  for (const [param, want] of Object.entries(values)) {
+  for (const [param, want] of Object.entries(labels)) {
     await bar.locator(`[data-open="filter:${param}"]`).click();
     const pop = host.locator(`[data-pop="filter:${param}"]`);
     await expect(pop, param).toBeVisible();
-    const offered = await pop.locator('[data-filter]').evaluateAll((els) => els.filter((e) => e.checkVisibility()).map((e) => e.getAttribute('data-value') ?? ''));
-    expect(offered.sort(), `${param}: every value, visible`).toEqual([...want].sort());
+    const choices = await pop.locator(param === 'study' ? 'label.study-opt' : 'button[data-filter]').all();
+    const read = await Promise.all(choices.map((c) => visibleLines(c).then((l) => l.join(' '))));
+    expect(read.sort(), `${param}: every choice, readable`).toEqual([...want].sort());
     await page.keyboard.press('Escape');
     await expect(pop, `${param}: closed by Escape`).toBeHidden();
   }
@@ -152,11 +161,11 @@ test('22.05: the filters are collapsed on load, after a reload and after a study
   await control(page, `input[data-filter="study"][data-value="${a.StudyID}"]`).check();
   await control(page, `input[data-filter="study"][data-value="${b.StudyID}"]`).check();
   await control(page, `button[data-filter="phase"][data-value="${a.params.phase}"]`).click();
-  const count = (/** @type {string} */ param) => bar.locator(`[data-open="filter:${param}"] .cnt`);
-  await expect(count('study')).toHaveText('2');
-  await expect(count('phase')).toHaveText('1');
-  await expect(count('status')).toHaveCount(0);
-  await expect(filters.locator('.badge')).toHaveText('3');
+  const chip = (/** @type {string} */ param) => visibleLines(bar.locator(`[data-open="filter:${param}"]`));
+  expect(await chip('study'), 'the study chip').toEqual(['Study', '2']);
+  expect(await chip('phase'), 'the phase chip').toEqual(['Phase', '1']);
+  expect(await chip('status'), 'the status chip').toEqual(['Status']);
+  expect(await visibleLines(filters), 'the Filters button').toEqual(['Filters', '3']);
 
   await page.reload();
   await page.locator('#app > .layout').waitFor();

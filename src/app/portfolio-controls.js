@@ -31,10 +31,9 @@ export const showLabel = (defined) => (defined ? 'Also show' : 'Show in each cel
 export const cellModeHint = (defined) =>
   defined ? 'Each metric as its glossary defines it: n (%), per 28 days, or %.' : 'The same numbers stacked in every cell.';
 
-export const HIGHLIGHT_HINT = 'Marks the study in the table. Click a row to pick one.';
 
 /**
- * A study as the highlight menu names it.
+ * A study as its ID and nickname.
  * @param {any} study
  */
 export const studyLabel = (study) => `${study.StudyID}${study.params?.nickname ? ` · ${study.params.nickname}` : ''}`;

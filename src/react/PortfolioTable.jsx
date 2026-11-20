@@ -14,8 +14,7 @@ const LINK_HINT = 'Open the detailed report in a new tab';
 /**
  * The portfolio table: the portfolio total, then a row per study or per group-by bucket. A folded category shows one
  * headline tile per metric (Overview); an open one shows full cells (Details). Clicking a study's name opens its
- * report, and its cells and tiles open their metric's detailed report in a new tab (#25); clicking elsewhere on its row
- * highlights it in every view.
+ * report, and its cells and tiles open their metric's detailed report in a new tab (#25).
  * @param {{ store: any }} props
  */
 export function PortfolioTable({ store }) {
@@ -40,8 +39,6 @@ export function PortfolioTable({ store }) {
     if (bucketCell) return store.toggleExpanded(/** @type {HTMLElement} */ (bucketCell.parentElement).dataset.bucket);
     const th = target.closest('th[data-sort]');
     if (th instanceof HTMLElement) return store.toggleSort(th.dataset.sort, { numeric: th.dataset.sort !== 'label' });
-    const row = target.closest('tr[data-hl]');
-    if (row instanceof HTMLElement) store.highlight(row.dataset.hl);
   };
 
   /**
@@ -253,7 +250,7 @@ export function PortfolioTable({ store }) {
     const nick = study.params?.nickname;
     const tip = studyTip(study, date);
     return (
-      <tr key={`study ${study.StudyID}`} className={`study ${child ? 'child' : ''} ${state.highlightStudy === study.StudyID ? 'sel' : ''}`} data-hl={study.StudyID} title="Click to highlight in every view">
+      <tr key={`study ${study.StudyID}`} className={`study ${child ? 'child' : ''} ${state.highlightStudy === study.StudyID ? 'sel' : ''}`} data-hl={study.StudyID}>
         <td className="grp">
           <a href={studyHref(store, study.StudyID)} data-study={study.StudyID} className="mono" data-tip={tip}>
             {study.StudyID}

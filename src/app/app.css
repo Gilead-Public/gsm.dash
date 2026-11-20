@@ -427,9 +427,7 @@ tr.total .otile { font-weight: 700; background: var(--panel); }
 table.po .tlab { font: 600 9px "IBM Plex Mono", monospace; letter-spacing: 0; color: var(--ink-2); cursor: help; overflow: hidden; text-overflow: ellipsis; }
 table.po td.cat { text-align: left; padding: 6px 9px; }
 
-/* highlighted study */
-tr.study[data-hl] { cursor: pointer; }
-tr.study[data-hl]:hover td { box-shadow: inset 0 1px 0 var(--line-2), inset 0 -1px 0 var(--line-2); }
+/* a highlighted study (unwired, #35) */
 tr.study.sel td { background-color: var(--accent-soft); box-shadow: inset 0 1.5px 0 var(--accent), inset 0 -1.5px 0 var(--accent); }
 tr.study.sel td.grp { box-shadow: inset 4px 0 0 var(--accent), inset 0 1.5px 0 var(--accent), inset 0 -1.5px 0 var(--accent); }
 

@@ -101,11 +101,10 @@ test('27.05: the table view carries over to a study report, which applies its me
   await control(page, 'button[data-show="den"]').click();
   await control(page, 'button[data-show="num"]').click();
   await control(page, 'select[data-heatmap]').selectOption('rate');
-  await control(page, 'select[data-highlight]').selectOption(study);
 
   const keys = [...new Set(new URLSearchParams(new URL(page.url()).hash.slice(1)).keys())].sort();
   expect(keys, 'every setting moved from its default').toEqual(
-    ['cell', 'dir', 'expand', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'show', 'sort', 'statuses', 'study', 'view'].sort(),
+    ['cell', 'dir', 'expand', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'show', 'sort', 'statuses', 'view'].sort(),
   );
   await roundTrip(page, page.locator(`#app .portfolio-table a[data-study="${study}"]`));
 });

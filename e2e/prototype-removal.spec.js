@@ -4,7 +4,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { pageAllTo, tile } from './fixtures/tiles.js';
 import { visibleLines } from './fixtures/visible.js';
-import { chooseView, control } from './fixtures/controls.js';
+import { chooseView, closeControls, control } from './fixtures/controls.js';
 import { capturePortfolio } from './fixtures/baseline.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
@@ -323,4 +323,50 @@ test('35.10: the portfolio has no Distribution view, view tabs or hint, or categ
   await settled();
   expect(new URL(page.url()).hash, 'supported settings beside retired ones').toBe('#view=details&heatmap=rate');
   expect((await capturePortfolio(page, 'supported settings')).text, 'supported settings beside retired ones').toBe(supported.text);
+});
+
+test('35.11: the portfolio has no study highlight: no Highlight study control and no marked row, clicking a study row outside its links changes nothing, and an address\'s study parameter is ignored and removed (#35)', async ({ app, page }) => {
+  await app.open();
+  const controls = page.locator('#header-controls');
+  await controls.locator('[data-open="config"]').click();
+  await expect(controls.locator('select[data-highlight]')).toHaveCount(0);
+  expect(await controls.innerText(), 'the header controls, Config open').not.toMatch(/highlight/i);
+  await closeControls(page);
+  // No instruction to highlight is left anywhere: the page's text, native titles and hover tips, collapsed and expanded.
+  for (const view of ['overview', 'details']) {
+    await chooseView(page, view);
+    const cues = await page.evaluate(() => [
+      document.body.innerText,
+      ...[...document.querySelectorAll('[title], [data-tip]')].flatMap((el) => [el.getAttribute('title') ?? '', el.getAttribute('data-tip') ?? '']),
+    ].filter((t) => /highlight/i.test(t)));
+    expect(cues, `${view}: highlight instructions`).toEqual([]);
+  }
+  await chooseView(page, 'overview');
+  await closeControls(page);
+  const fresh = await capturePortfolio(page, 'fresh load');
+
+  for (const { StudyID } of studies.slice(0, 3)) {
+    const row = page.locator(`.portfolio-table tr.study[data-hl="${StudyID}"]`);
+    const name = row.locator('td.grp');
+    const box = /** @type {{ width: number, height: number }} */ (await name.boundingBox());
+    for (const [what, click] of /** @type {Array<[string, () => Promise<void>]>} */ ([
+      ['the name cell outside its link', () => name.click({ position: { x: box.width - 3, y: box.height / 2 } })],
+      ['a population cell', () => row.locator('td.pop').first().click()],
+    ])) {
+      await click();
+      await page.mouse.move(0, 0);
+      expect(new URL(page.url()).hash, `${StudyID}, ${what}: the address`).toBe('');
+      await expect(page.locator('.portfolio-table tr.sel'), `${StudyID}, ${what}: a marked row`).toHaveCount(0);
+      expect((await capturePortfolio(page, 'fresh load')).text, `${StudyID}, ${what}: the page`).toBe(fresh.text);
+    }
+  }
+
+  for (const [hash, kept] of [[`#study=${studies[0].StudyID}`, ''], [`#study=${studies[0].StudyID}&heatmap=rate`, '#heatmap=rate']]) {
+    await page.goto('about:blank');
+    await app.open(hash);
+    await page.mouse.move(0, 0);
+    expect(new URL(page.url()).hash, hash).toBe(kept);
+    await expect(page.locator('.portfolio-table tr.sel'), `${hash}: a marked row`).toHaveCount(0);
+    if (!kept) expect((await capturePortfolio(page, 'fresh load')).text, hash).toBe(fresh.text);
+  }
 });

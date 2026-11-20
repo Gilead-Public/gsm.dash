@@ -107,16 +107,14 @@ async function statusLine(page) {
   };
 }
 
-test('24.02: the status line sits below the table and reads the studies and metrics shown, then the highlighted study and the sort where set (#24)', async ({ app, page }) => {
+test('24.02: the status line sits below the table and reads the studies and metrics shown, then the sort where set (#24)', async ({ app, page }) => {
   await app.open();
   expect(await statusLine(page)).toEqual({ text: `${studies.length} / ${studies.length} studies · ${metrics.length} / ${metrics.length} metrics`, below: true });
 
   const phase = studies[0].params.phase;
   const kept = studies.filter((s) => s.params.phase === phase);
-  const target = kept[0];
   await control(page, `button[data-filter="phase"][data-value="${phase}"]`).click();
   await control(page, `input[data-metric="${metrics[0].MetricID}"]`).uncheck();
-  await control(page, 'select[data-highlight]').selectOption(target.StudyID);
   const sortBy = metrics[1];
   await chooseView(page, 'details');
   await page.locator(`th[data-sort="${sortBy.MetricID}"]`).click();
@@ -124,7 +122,7 @@ test('24.02: the status line sits below the table and reads the studies and metr
   expect(below).toBe(true);
   expect(text).toMatch(
     new RegExp(
-      `^${kept.length} / ${studies.length} studies · ${metrics.length - 1} / ${metrics.length} metrics · highlighting ${target.StudyID} ${target.params.nickname} · sorted by ${sortBy.Abbreviation} \\S+ [↑↓]$`,
+      `^${kept.length} / ${studies.length} studies · ${metrics.length - 1} / ${metrics.length} metrics · sorted by ${sortBy.Abbreviation} \\S+ [↑↓]$`,
     ),
   );
 });

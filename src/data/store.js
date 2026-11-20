@@ -93,7 +93,9 @@ export class PortfolioStore extends EventTarget {
       asOf: null, // view the portfolio as of this date; the study page's visit scrubber drives it
       cellMode: this.#defaults.cellMode, // 'defined' — each metric shows its glossary display rule | 'custom' — the `show` stack for every metric
       statuses: new Set(STATUS_ORDER), // glossary Status values to show (Released | New | Planned)
-      highlightStudy: null, // StudyID marked in the table
+      // StudyID marked in the table. Unwired since the 19 Nov 2026 design review (#35): nothing sets it, and the address
+      // doesn't carry it; kept for a possible enhanced version of the page.
+      highlightStudy: null,
     };
   }
 
@@ -164,7 +166,6 @@ export class PortfolioStore extends EventTarget {
     const add = (key, values) => values.forEach((v) => params.append(key, v));
     // A set that can be emptied writes an empty value, so that it differs from the default.
     const addSet = (key, values) => (values.length ? add(key, values) : params.set(key, ''));
-    if (state.highlightStudy) params.set('study', state.highlightStudy);
     for (const [key, field] of SCALARS) if (state[field] !== this.#defaults[field]) params.set(key, state[field]);
     if (state.groupBy !== 'none') add('expand', this.#bucketValues().filter((v) => state.expanded.has(v)));
     if (state.sort.key && state.sort.dir) {
@@ -187,8 +188,6 @@ export class PortfolioStore extends EventTarget {
   applyProgramParams(params) {
     const { state } = this;
     const known = (values, options) => values.filter((v) => options.includes(v));
-    const study = params.get('study');
-    state.highlightStudy = this.studies.some((st) => st.StudyID === study) ? study : null;
     for (const [key, field, choices] of SCALARS) {
       const v = params.get(key);
       state[field] = choices.some(([choice]) => choice === v) ? v : this.#defaults[field];

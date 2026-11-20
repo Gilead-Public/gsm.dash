@@ -66,10 +66,11 @@ export async function chooseView(page, view) {
 }
 
 /**
- * Closes any open popover and moves the pointer off the page.
+ * Closes any open popover, takes focus off the control that opened it, and moves the pointer off the page.
  * @param {Page} page
  */
 export async function closeControls(page) {
   await page.keyboard.press('Escape');
+  await page.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur());
   await page.mouse.move(0, 0);
 }

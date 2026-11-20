@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { STATUS_ORDER } from '../data/catalog.js';
 import {
-  CELL_MODES, COLUMN_OPTIONS, FILTER_LABELS, GROUP_BY_OPTIONS, HEATMAPS, HIGHLIGHT_HINT, cellModeHint, controlStates,
-  showLabel, showOptions, studyLabel,
+  CELL_MODES, COLUMN_OPTIONS, FILTER_LABELS, GROUP_BY_OPTIONS, HEATMAPS, cellModeHint, controlStates, showLabel,
+  showOptions,
 } from '../app/portfolio-controls.js';
 import { StatusPill } from './parts.jsx';
 
@@ -62,8 +62,6 @@ function ConfigPanel({ store }) {
   const { state } = store;
   const na = controlStates(store);
   const defined = state.cellMode === 'defined';
-  const studies = store.filteredStudies();
-  const hl = studies.some((/** @type {any} */ st) => st.StudyID === state.highlightStudy) ? state.highlightStudy : '';
   const supported = store.supportedMetrics();
   const statusCount = (/** @type {string} */ st) => supported.filter((/** @type {any} */ m) => (m.Status ?? 'Released') === st).length;
   const collapsed = state.view === 'overview';
@@ -88,18 +86,6 @@ function ConfigPanel({ store }) {
           <button type="button" className="chip view-toggle" data-view-toggle="" aria-pressed={!collapsed} onClick={() => store.set('view', collapsed ? 'details' : 'overview')}>
             {collapsed ? 'Expand all' : 'Collapse all'}
           </button>
-        </Control>
-        <Control>
-          <label>Highlight study</label>
-          <select data-highlight="" value={hl} onChange={(e) => store.highlight(e.target.value || null)}>
-            <option value="">None</option>
-            {studies.map((/** @type {any} */ st) => (
-              <option key={st.StudyID} value={st.StudyID}>
-                {studyLabel(st)}
-              </option>
-            ))}
-          </select>
-          <p className="sb-hint">{HIGHLIGHT_HINT}</p>
         </Control>
         <Control na={na.cellMode}>
           <label>Cell display</label>

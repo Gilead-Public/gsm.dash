@@ -3,6 +3,7 @@
 // the browser resolved them (the anchor's href property) and compared with addresses written out here.
 import { expect, readData, test } from './fixtures/app.js';
 import { expectSeen } from './fixtures/visible.js';
+import { capturePortfolio } from './fixtures/baseline.js';
 import { shownMetrics } from '../test/qual/pooling.js';
 import { chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
@@ -128,12 +129,6 @@ async function expectTableLinks(page, rows, view, what) {
 
 /** @param {Page} page @param {'overview' | 'details'} view */
 const showView = (page, view) => chooseView(page, view);
-
-/** @param {Page} page */
-const highlighted = async (page) => ({
-  rows: await page.locator('.portfolio-table tr.study.sel').evaluateAll((trs) => trs.map((t) => t.getAttribute('data-hl'))),
-  address: new URLSearchParams(new URL(page.url()).hash.slice(1)).get('study'),
-});
 
 /**
  * Follows a link: its report opens in a new tab, and the portfolio's tab keeps its address.
@@ -264,44 +259,29 @@ test('25.04: a report link with {StudyID} gives each study its own address in th
   }
 });
 
-test('25.05: clicking a linked cell or tile leaves the highlight as it was; clicking the name cell outside its link, a population cell or an unlinked cell highlights the study, and a second click clears it (#25)', async ({ app, page }) => {
+test('25.05: clicking a linked cell or tile opens its report and changes nothing else on the page; clicking a study row\'s name cell outside its link, a population cell or an unlinked cell changes nothing (#25)', async ({ app, page }) => {
   await openWithLinks(app, page);
-  await showView(page, 'details');
-  const [x, y] = [ids[3], ids[7]];
-  const row = (/** @type {string} */ id) => page.locator(`.portfolio-table tr.study[data-hl="${id}"]`);
-  const none = { rows: [], address: null };
-  const on = (/** @type {string} */ id) => ({ rows: [id], address: id });
-
-  /** @param {Locator} target @param {{ rows: string[], address: string | null }} want @param {string} what */
-  const click = async (target, want, what) => {
-    await target.click();
-    await expect.poll(() => highlighted(page), what).toEqual(want);
-  };
-  /** @param {Locator} link @param {{ rows: string[], address: string | null }} want @param {string} what */
-  const clickLink = async (link, want, what) => {
-    await follow(page, link);
-    expect(await highlighted(page), what).toEqual(want);
-  };
-
-  await clickLink(row(x).locator('a.cell').first(), none, 'a linked cell, nothing highlighted');
-  const name = row(x).locator('td.grp');
-  const box = /** @type {{ width: number, height: number }} */ (await name.boundingBox());
-  const outside = { position: { x: box.width - 3, y: box.height / 2 } };
-  await name.click(outside);
-  await expect.poll(() => highlighted(page), 'the name cell outside its link').toEqual(on(x));
-  await clickLink(row(x).locator('a.cell').first(), on(x), 'its own linked cell');
-  await clickLink(row(y).locator('a.cell').first(), on(x), "another study's linked cell");
-  await name.click(outside);
-  await expect.poll(() => highlighted(page), 'the name cell again').toEqual(none);
-
-  await click(row(x).locator('td.pop').first(), on(x), 'a population cell');
-  await click(row(x).locator('td.pop').first(), none, 'the population cell again');
-  const unlinked = row(x).locator('td:not(.grp):not(.pop):not(:has(a))').first();
-  await click(unlinked, on(x), 'an unlinked cell');
-  await click(unlinked, none, 'the unlinked cell again');
-
-  await showView(page, 'overview');
-  await click(row(y).locator('span.otile').first(), on(y), 'an unlinked tile');
-  await clickLink(row(x).locator('a.otile').first(), on(y), 'a linked tile');
-  await click(row(y).locator('span.otile').first(), none, 'the unlinked tile again');
+  const row = page.locator(`.portfolio-table tr.study[data-hl="${ids[3]}"]`);
+  for (const [view, link] of /** @type {const} */ ([['details', 'a.cell'], ['overview', 'a.otile']])) {
+    await showView(page, view);
+    await page.mouse.move(0, 0);
+    const url = page.url();
+    const before = await capturePortfolio(page, 'before');
+    /** @param {string} what */
+    const unchanged = async (what) => {
+      await page.mouse.move(0, 0);
+      expect(page.url(), `${view}: ${what}`).toBe(url);
+      expect((await capturePortfolio(page, 'before')).text, `${view}: ${what}`).toBe(before.text);
+    };
+    await follow(page, row.locator(link).first());
+    await unchanged(`a linked ${link === 'a.cell' ? 'cell' : 'tile'}`);
+    const name = row.locator('td.grp');
+    const box = /** @type {{ width: number, height: number }} */ (await name.boundingBox());
+    await name.click({ position: { x: box.width - 3, y: box.height / 2 } });
+    await unchanged('the name cell outside its link');
+    await row.locator('td.pop').first().click();
+    await unchanged('a population cell');
+    await row.locator('td:not(.grp):not(.pop):not(.status-col):not(:has(a))').first().click();
+    await unchanged('an unlinked cell');
+  }
 });
