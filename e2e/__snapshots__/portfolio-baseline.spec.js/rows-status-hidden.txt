@@ -1,6 +1,6 @@
 state: rows-status-hidden
-canonical dom: sha256 b482aac9fb9d8d57a42485a20203e0f06e4f04402364c9952a88a58c5fe71d01 (66561 characters)
-computed styles: sha256 82c5a35d579b22e63df83b02c5f26f7c82c74ec36f82d3834775703f589a51be (435 elements)
+canonical dom: sha256 27688f0dd7c64cf0daa328bcec0d9bb1bbdfd352ae86643864f3fd46e4be5c03 (66445 characters)
+computed styles: sha256 0f467549fe29819b7507da823068a04ec0d328ca0cb2fac8b44257efb0d5f3a8 (435 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×3 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 sparklines:
@@ -136,7 +136,6 @@ accessibility:
     - checkbox "STUDY012 LUMEN-1"
     - text: STUDY012 LUMEN-1
     - button "Clear filters"
-  - text: Showing 3 / 12 studies · 17 / 21 site-level metrics (8 released · 9 planned) · one headline value per metric · each study at its own latest snapshot
   - table:
     - rowgroup:
       - row "Study Population Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU Early events 3 metrics Planned DTH30 DTH90 IPNS Eligibility & integrity 3 metrics Planned IE STRAT PFSC Safety & deviations 1 metric LB Data quality 4 metrics QRY OQRY ODAT CDAT":
@@ -203,3 +202,4 @@ accessibility:
         - cell "5.2% 1.8% 2.1%"
         - cell "4.3%"
         - cell "6.8% 9.5% 11.8% 2.8%"
+  - text: 3 / 12 studies · 17 / 21 metrics

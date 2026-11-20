@@ -307,6 +307,15 @@ export function PortfolioTable({ store }) {
   const showing = tableShowing(store, filtered, metrics);
   return (
     <div className="portfolio-table" ref={ref} onClick={onClick}>
+      <div className="tblwrap">
+        <table className="po">
+          <thead>
+            {bandRow}
+            {colRow}
+          </thead>
+          <tbody>{body}</tbody>
+        </table>
+      </div>
       <div className="showing">
         {showing.lead}
         {showing.highlight && (
@@ -316,15 +325,6 @@ export function PortfolioTable({ store }) {
           </>
         )}
         {showing.sortNote}
-      </div>
-      <div className="tblwrap">
-        <table className="po">
-          <thead>
-            {bandRow}
-            {colRow}
-          </thead>
-          <tbody>{body}</tbody>
-        </table>
       </div>
     </div>
   );

@@ -241,7 +241,8 @@ export const popHeadTip = ({ long, param }) =>
   `<b>${long}</b> participants — Reporting_Groups ${param}, summed over the studies in the row at their latest snapshots. Click to sort.`;
 
 /**
- * The line above the table. `highlight` names the highlighted study, shown in bold.
+ * The status line under the table. `highlight` names the highlighted study, shown in bold. `sortNote` names any active
+ * sort and its direction, marking a sort whose column isn't shown, such as a hidden metric's, as hidden.
  * @param {any} store
  * @param {any[]} filtered
  * @param {any[]} metrics
@@ -249,20 +250,21 @@ export const popHeadTip = ({ long, param }) =>
  */
 export function tableShowing(store, filtered, metrics) {
   const { state } = store;
-  const statusCounts = ['Released', 'New', 'Planned']
-    .map((st) => /** @type {[string, number]} */ ([st, metrics.filter((m) => (m.Status ?? 'Released') === st).length]))
-    .filter(([, n]) => n)
-    .map(([st, n]) => `${n} ${st.toLowerCase()}`)
-    .join(' · ');
-  const mode =
-    state.view === 'overview' ? 'one headline value per metric' : state.cellMode === 'defined' ? 'cells as defined in the glossary' : 'custom cell contents';
   const hl = filtered.find((s) => s.StudyID === state.highlightStudy);
-  const sorted = metrics.find((m) => m.MetricID === state.sort.key);
+  const { key, dir } = state.sort;
+  const flat = state.groupBy === 'none';
+  const pop = POP_COLUMNS.find((c) => c.key === key);
+  const metric = store.metrics.find((/** @type {any} */ m) => m.MetricID === key);
+  /** @type {[string, boolean] | null} */
+  const sortedBy =
+    key === 'label' ? [flat ? 'Study' : 'Group', true]
+    : key === 'meta' ? ['Studies', !flat]
+    : pop ? [pop.long, pop.key !== 'enroll' || state.columns.has('enroll')]
+    : metric ? [`${metric.Abbreviation} ${MEASURE_LABELS[sortMeasure(state.heatmap)]}`, metrics.includes(metric)]
+    : null;
   return {
-    lead: `Showing ${filtered.length} / ${store.studies.length} studies · ${metrics.length} / ${
-      store.supportedMetrics().length
-    } site-level metrics (${statusCounts}) · ${mode} · each study at its own latest snapshot`,
+    lead: `${filtered.length} / ${store.studies.length} studies · ${metrics.length} / ${store.supportedMetrics().length} metrics`,
     highlight: hl ? `${hl.StudyID}${hl.params?.nickname ? ` ${hl.params.nickname}` : ''}` : null,
-    sortNote: sorted ? ` · sorted by ${sorted.Abbreviation} ${MEASURE_LABELS[sortMeasure(state.heatmap)]} ${state.sort.dir === 'asc' ? '↑' : '↓'}` : '',
+    sortNote: sortedBy && dir ? ` · sorted by ${sortedBy[0]}${sortedBy[1] ? '' : ' (hidden)'} ${dir === 'asc' ? '↑' : '↓'}` : '',
   };
 }

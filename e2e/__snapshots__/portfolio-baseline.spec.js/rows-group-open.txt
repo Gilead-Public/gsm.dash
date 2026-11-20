@@ -1,6 +1,6 @@
 state: rows-group-open
-canonical dom: sha256 6795fb7c25f7c045eced6b6fb363cfb64e820b788def25938fa77b6908073b0d (110880 characters)
-computed styles: sha256 cff44d34a4384b75a937436579508e707ff01d41f80aa1835382bdd400651612 (611 elements)
+canonical dom: sha256 9f0a87fbb735c977185f715b2d800401d96be68ce2a11c79810a5864278371e2 (110756 characters)
+computed styles: sha256 67c9947d2976e8ff72afb05b74dc03388ad9df3b2b106bc4832ffdc58454c5bd (611 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×4 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(246, 247, 246) ×2 | color(srgb 0.968235 0.973529 0.97) | rgb(246, 247, 246) | rgb(237, 240, 238) ×6 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×5 | rgb(246, 247, 246) | rgb(237, 240, 238) ×4 | rgb(246, 247, 246) ×2 | color(srgb 0.968235 0.973529 0.97) | rgb(246, 247, 246) | rgb(237, 240, 238) ×6 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×5 | rgb(246, 247, 246) | rgb(237, 240, 238) ×4 | rgb(246, 247, 246) ×2 | color(srgb 0.968235 0.973529 0.97) | rgb(246, 247, 246) | rgb(237, 240, 238) ×6 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×5 | rgb(246, 247, 246) | rgb(237, 240, 238) ×4 | rgb(246, 247, 246) ×2 | color(srgb 0.968235 0.973529 0.97) | rgb(246, 247, 246) | rgb(237, 240, 238) ×6 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×3 | rgb(246, 247, 246) | rgb(237, 240, 238) ×5 | rgb(246, 247, 246) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | rgba(0, 0, 0, 0) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 sparklines:
@@ -144,7 +144,6 @@ accessibility:
     - text: STUDY011 KESTREL-3
     - checkbox "STUDY012 LUMEN-1"
     - text: STUDY012 LUMEN-1
-  - text: Showing 12 / 12 studies · 21 / 21 site-level metrics (8 released · 4 new · 9 planned) · one headline value per metric · each study at its own latest snapshot
   - table:
     - rowgroup:
       - row "Group Studies Population Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU Early events 3 metrics Planned DTH30 DTH90 IPNS Eligibility & integrity 3 metrics Planned IE STRAT PFSC Safety & deviations 5 metrics AE SAE PD IPD LB Data quality 4 metrics QRY OQRY ODAT CDAT":
@@ -259,3 +258,4 @@ accessibility:
         - cell "2.8% 2.8% 2.0%"
         - cell "1.24 0.09 0.24 0.02 2.2%"
         - cell "6.8% 13.4% 12.2% 3.5%"
+  - text: 12 / 12 studies · 21 / 21 metrics

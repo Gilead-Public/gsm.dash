@@ -1,6 +1,6 @@
 state: tooltip-table-header
-canonical dom: sha256 27dbc04144cead85033a88e26fe607b9e0e559b6b5c856b68cfde14e2360b9fe (213448 characters)
-computed styles: sha256 63e7ac14fb8270546dd5025ec0e615f35ec1da268583dd9a0047c3b70091b2c7 (1384 elements)
+canonical dom: sha256 d92f40a4930ac0964a2e1ff6b2766643592f661dbcfbbdb508963e9d3edfd831 (213321 characters)
+computed styles: sha256 644573e9154ae86db1f9c587ebdb0ec22c48985b2ec7e191bfae4b76f22acf47 (1384 elements)
 tooltip: <b>Screen Failure Rate</b><br><span class="tip-muted mono">SF · Disposition</span><dl class="tip-dl"><dt>Definition</dt><dd><span class="tip-muted">not yet supplied (Q2)</span></dd><dt>Numerator</dt><dd>Number of screen failed participants</dd><dt>Denominator</dt><dd>Total screened participants</dd><dt>Displayed as</dt><dd>percent (n ÷ d)</dd><dt>Note</dt><dd>The tracker also lists a Planned "Screen Failure" divided by all enrolled (open question Q1).</dd></dl><span class="tip-muted">Click to sort by rate.</span>
 cell backgrounds: rgb(237, 240, 238) ×23 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21
 sparklines:
@@ -144,7 +144,6 @@ accessibility:
     - text: STUDY011 KESTREL-3
     - checkbox "STUDY012 LUMEN-1"
     - text: STUDY012 LUMEN-1
-  - text: Showing 12 / 12 studies · 21 / 21 site-level metrics (8 released · 4 new · 9 planned) · cells as defined in the glossary · each study at its own latest snapshot
   - table:
     - rowgroup:
       - row "Study Population Disposition6 Early events3 Eligibility & integrity3 Safety & deviations5 Data quality4":
@@ -551,3 +550,4 @@ accessibility:
         - cell "9.5%"
         - cell "11.8%"
         - cell "2.8%"
+  - text: 12 / 12 studies · 21 / 21 metrics
