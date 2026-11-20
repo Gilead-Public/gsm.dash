@@ -91,26 +91,15 @@ div:where(.sidebar).collapsed { padding: 6px; display: flex; justify-content: ce
 .content { min-width: 0; }
 header.app {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 14px;
   flex-wrap: wrap;
   padding: 18px 0 14px;
   border-bottom: 1px solid var(--line);
   margin-bottom: 18px;
 }
+header.app .logo { display: block; height: 32px; width: auto; margin-right: -4px; }
 header.app h1 { font-family: "Archivo", "Segoe UI", system-ui, sans-serif; font-size: 22px; font-weight: 700; margin: 0; }
-header.app .tag {
-  font-family: "Archivo", sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: var(--accent);
-  background: var(--accent-soft);
-  border-radius: 5px;
-  padding: 2px 8px;
-}
-#meta { margin-left: auto; font-size: 12.5px; color: var(--ink-3); }
 .muted { color: var(--ink-2); }
 .mono, code { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.9em; }
 

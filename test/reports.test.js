@@ -45,6 +45,33 @@ function portfolioValidator() {
   return ajv.compile(schema('portfolio-document'));
 }
 
+describe('the dashboard title (#24)', () => {
+  const titled = () => {
+    const { StudyID } = data.manifest.studies[0];
+    return [
+      ['study', schemaValidator(), (title) => buildStudyDocument({ ...data, title }, StudyID)],
+      ['portfolio', portfolioValidator(), (title) => buildPortfolioDocument({ ...data, title })],
+    ];
+  };
+
+  it('24.02: both documents carry the render step\'s title when it gives one, and none otherwise (#24)', () => {
+    for (const [what, validate, build] of titled()) {
+      expect(build(undefined), what).not.toHaveProperty('title');
+      const doc = build('CtQ Dashboard');
+      expect(doc.title, what).toBe('CtQ Dashboard');
+      expect(validate(doc), `${what}: ${JSON.stringify(validate.errors?.slice(0, 3))}`).toBe(true);
+    }
+  });
+
+  it('24.03: both schemas accept a title of 1 to 60 characters that isn\'t blank, and refuse any other value (#24)', () => {
+    for (const [what, validate, build] of titled()) {
+      const doc = build(undefined);
+      for (const title of ['x', 'CtQ Dashboard', 'a'.repeat(60)]) expect(validate({ ...doc, title }), `${what}: ${title}`).toBe(true);
+      for (const title of ['', '   ', 'a'.repeat(61), 3, null, ['CtQ']]) expect(validate({ ...doc, title }), `${what}: ${JSON.stringify(title)}`).toBe(false);
+    }
+  });
+});
+
 describe('the study document', () => {
   it('13.02: each study report carries the manifest\'s report base, so its links resolve against the configured base (#13)', () => {
     const validate = schemaValidator();

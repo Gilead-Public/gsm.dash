@@ -224,13 +224,10 @@ test.describe('portfolio view numbers', () => {
   });
 });
 
-test('the portfolio sits in the app shell: brand, Program overview tag, study count and export date, inside the page margins', async ({ app, page }) => {
+test('the portfolio sits in the app shell: brand, inside the page margins', async ({ app, page }) => {
   await app.open();
   const header = page.locator('header.app');
   await expect(header.locator('h1')).toHaveText('gsm.dash');
-  await expect(header.locator('#page-tag')).toHaveText('Program overview');
-  const active = portfolio.metrics.filter((/** @type {{ Active?: boolean }} */ m) => m.Active !== false).length;
-  await expect(header.locator('#meta')).toHaveText(`${studies.length} studies · ${active} metrics · exported ${portfolio.generated}`);
   const shell = await header.boundingBox();
   const content = await page.locator('#app > .layout').boundingBox();
   expect(shell && content, 'header and portfolio both laid out').toBeTruthy();

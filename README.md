@@ -141,7 +141,9 @@ To share a build for feedback without releasing it: every CI run that passes als
 Each report carries its data as one injected document (`<script type="application/json"
 id="gsm-data">`), checked against its schema when it loads. The portfolio's holds the
 catalog, the studies, the counts-only summary and its configuration, if any. A study's
-holds the catalog, the study's manifest entry and all its snapshots.
+holds the catalog, the study's manifest entry and all its snapshots. Either may carry a
+`title` (#24), which the render step sets; the header and the browser tab show it, and
+"gsm.dash" when there is none.
 
 Portfolio defaults (#16): an optional `config.json` beside `portfolio.json` sets the
 portfolio's initial grouping (`groupBy`), heatmap (`heatmap`), cell values (`show`),
@@ -154,8 +156,8 @@ Controls panel's choices and the catalog when the document is built and when the
 loads. A setting in the address's hash overrides its configured default.
 
 Snapshot cycle (#14): the summary's `cycle` names one snapshot date and every study taking
-part. A study whose latest snapshot is on another date is left out of the table, the totals
-and Distribution, and a notice names it with its latest snapshot; a listed study with no
+part. A study whose latest snapshot is on another date is left out of the table and the
+totals, and a notice names it with its latest snapshot; a listed study with no
 data is named as missing. Trends keep every study's history before the cycle date; their
 point on the cycle date, like the totals, leaves off-cycle studies out, and they end there. A
 summary holding a study its cycle doesn't list is refused.

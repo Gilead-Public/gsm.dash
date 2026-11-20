@@ -9,6 +9,7 @@ import { configProblems } from '../data/portfolio-config.js';
  * @property {string} schemaVersion
  * @property {string} generated
  * @property {string} [reportBase]
+ * @property {string} [title]
  * @property {any[]} metrics
  * @property {{ StudyID: string, params: Record<string, string | number>, snapshots: string[] }} study
  * @property {any[]} snapshots
@@ -19,6 +20,7 @@ import { configProblems } from '../data/portfolio-config.js';
  * @property {string} schemaVersion
  * @property {string} generated
  * @property {string} [reportBase]
+ * @property {string} [title]
  * @property {any[]} metrics
  * @property {Array<{ StudyID: string, params: Record<string, string | number>, snapshots: string[] }>} studies
  * @property {any} summary

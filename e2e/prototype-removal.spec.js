@@ -281,7 +281,7 @@ test('35.09: a study with one snapshot shows "Extract: <date>" with that date, i
   await expect(page.locator('input[type="range"][data-visit]')).toHaveCount(0);
 });
 
-test('the portfolio has no Distribution view, view tabs or hint, or category folding; an address\'s retired settings are ignored and removed, and its supported ones keep their effect', async ({ app, page }) => {
+test('35.10: the portfolio has no Distribution view, view tabs or hint, or category folding; an address\'s retired settings are ignored and removed, and its supported ones keep their effect (#35)', async ({ app, page }) => {
   const settled = async () => {
     await page.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur());
     await page.mouse.move(0, 0);
