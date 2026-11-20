@@ -55,7 +55,8 @@ function FilterChoices({ store, param, values }) {
 }
 
 /**
- * Config: the table's Collapse all / Expand all toggle, the display settings, and which metrics are shown.
+ * Config: the table's Collapse all / Expand all toggle, a chip per metric group showing or hiding its band, the display
+ * settings, and which metrics are shown.
  * @param {{ store: any }} props
  */
 function ConfigPanel({ store }) {
@@ -86,6 +87,19 @@ function ConfigPanel({ store }) {
           <button type="button" className="chip view-toggle" data-view-toggle="" aria-pressed={!collapsed} onClick={() => store.set('view', collapsed ? 'details' : 'overview')}>
             {collapsed ? 'Expand all' : 'Collapse all'}
           </button>
+        </Control>
+        <Control>
+          <label>Groups</label>
+          <div className="chips">
+            {store.groupNames().map((/** @type {string} */ name) => {
+              const shown = !state.hiddenGroups.has(name);
+              return (
+                <button key={name} type="button" className={`chip ${shown ? 'on' : ''}`} data-group={name} aria-pressed={shown} onClick={() => store.toggleGroupHidden(name)}>
+                  {name}
+                </button>
+              );
+            })}
+          </div>
         </Control>
         <Control na={na.cellMode}>
           <label>Cell display</label>

@@ -185,7 +185,7 @@ describe('the portfolio document', () => {
     const inactive = metrics.find((m) => m.Active === false && m.GroupLevel === 'Site')?.MetricID;
     const studyLevel = metrics.find((m) => m.Active !== false && m.GroupLevel === 'Study')?.MetricID;
     expect([inactive, studyLevel].every(Boolean), 'the catalog has an inactive and a study-level metric').toBe(true);
-    const settings = ['groupBy', 'heatmap', 'show', 'metrics', 'columns', 'view'];
+    const settings = ['groupBy', 'heatmap', 'show', 'metrics', 'columns', 'view', 'groups'];
     const groupBy = ['none', 'therapeutic_area', 'protocol_indication', 'phase', 'status', 'product'];
     const show = ['num', 'den', 'rate', 'trend'];
     const refused = [
@@ -216,6 +216,40 @@ describe('the portfolio document', () => {
       expect(line?.split('allowed: ')[1]?.split(', ').sort(), 'names the allowed values').toEqual([...allowed].sort());
     }
     expect(() => buildPortfolioDocument({ ...data, config: { groupBy: 'phase', heatmap: 'rate', show, metrics: eligible } })).not.toThrow();
+  });
+
+  it('16.02: a `groups` configuration that isn\'t a list of { name, metrics, hidden }, repeats a name, uses the reserved name Other, lists a metric twice or names an ineligible MetricID is refused, naming the place and the value (#16)', () => {
+    const { metrics } = data.manifest;
+    const eligible = metrics.filter((m) => m.Active !== false && m.GroupLevel === 'Site').map((m) => m.MetricID);
+    const inactive = metrics.find((m) => m.Active === false && m.GroupLevel === 'Site')?.MetricID;
+    const studyLevel = metrics.find((m) => m.Active !== false && m.GroupLevel === 'Study')?.MetricID;
+    const [a, b] = eligible;
+    const refused = [
+      [{ name: 'A', metrics: [a] }, 'config.groups:', '{"name":"A","metrics":'],
+      [['A'], 'config.groups[0]:', '"A"'],
+      [[{ name: 'A', metrics: [a], colour: 'red' }], 'config.groups[0].colour:', '"red"'],
+      [[{ name: ' ', metrics: [a] }], 'config.groups[0].name:', '" "'],
+      [[{ name: 'A', metrics: [a] }, { name: 'A', metrics: [b] }], 'config.groups[1].name:', '"A"'],
+      [[{ name: 'A', metrics: [a] }, { name: 'B', metrics: [a] }], 'config.groups[1].metrics:', JSON.stringify(a)],
+      [[{ name: 'A', metrics: 'all' }], 'config.groups[0].metrics:', '"all"'],
+      [[{ name: 'A', metrics: ['Analysis_nope'] }], 'config.groups[0].metrics:', '"Analysis_nope"'],
+      [[{ name: 'A', metrics: [inactive] }], 'config.groups[0].metrics:', JSON.stringify(inactive)],
+      [[{ name: 'A', metrics: [studyLevel] }], 'config.groups[0].metrics:', JSON.stringify(studyLevel)],
+      [[{ name: 'A', metrics: [a], hidden: 'yes' }], 'config.groups[0].hidden:', '"yes"'],
+      [[{ name: 'Other', metrics: [a] }], 'config.groups[0].name:', '"Other"'],
+    ];
+    for (const [groups, place, value] of refused) {
+      let message = '';
+      try {
+        buildPortfolioDocument({ ...data, config: { groups } });
+      } catch (e) {
+        message = e.message;
+      }
+      const line = message.split('\n').find((l) => l.includes(place));
+      expect(line, JSON.stringify(groups)).toBeDefined();
+      expect(line, 'names the value').toContain(value);
+    }
+    expect(() => buildPortfolioDocument({ ...data, config: { groups: [{ name: 'A', metrics: [a], hidden: true }, { name: 'B', metrics: [b] }] } })).not.toThrow();
   });
 
   it('16.01: the portfolio report\'s document is written with the configuration from config.json in the data folder, and without one when there is none (#16)', () => {

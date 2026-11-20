@@ -1,6 +1,6 @@
 state: table-details
-canonical dom: sha256 84c0230316329bbb5a0e8f56cd00bcb6f9c957e7503950489d531e686bd0467a (211299 characters)
-computed styles: sha256 28a2d8c3d4e3af99c5c3fdc01bab6f4c7a4871fd72526aba0e5c372636d8310f (1363 elements)
+canonical dom: sha256 e0b801e8471b50f2b1ee9b1b9396cf6778a6d328c30f33d4a6e8678442f854dc (212219 characters)
+computed styles: sha256 3ec2f52cf5613b9b3c54b49881c2b21597590a06d39c5b58129bf46a20aab1ba (1371 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×23 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21
 sparklines:

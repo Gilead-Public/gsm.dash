@@ -42,8 +42,9 @@ async function studyReport(page, studyId) {
  * allowed tiles, and the portfolio comes back as it was left.
  * @param {Page} page
  * @param {import('@playwright/test').Locator} link
+ * @param {string[]} [tiles] The tiles the report shows, when not `allowed`.
  */
-async function roundTrip(page, link) {
+async function roundTrip(page, link, tiles = allowed) {
   const left = new URL(page.url());
   const dir = left.href.slice(0, left.href.lastIndexOf('/') + 1);
   expect(await link.getAttribute('href')).toBe(`./${study}.html${left.hash}`);
@@ -54,7 +55,7 @@ async function roundTrip(page, link) {
   await studyReport(page, study);
   expect(page.url()).toBe(`${dir}${study}.html${left.hash}`);
   const shown = await page.locator('#app .tile[data-metric-id]').evaluateAll((els) => els.map((t) => t.getAttribute('data-metric-id')));
-  expect(shown.sort()).toEqual(allowed);
+  expect(shown.sort()).toEqual(tiles);
 
   const back = page.locator('#app a.back');
   expect(await back.getAttribute('href')).toBe(`./portfolio.html${left.hash}`);
@@ -101,10 +102,14 @@ test('27.05: the table view carries over to a study report, which applies its me
   await control(page, 'button[data-show="den"]').click();
   await control(page, 'button[data-show="num"]').click();
   await control(page, 'select[data-heatmap]').selectOption('rate');
+  await control(page, 'button[data-group="Data quality"]').click();
 
   const keys = [...new Set(new URLSearchParams(new URL(page.url()).hash.slice(1)).keys())].sort();
   expect(keys, 'every setting moved from its default').toEqual(
-    ['cell', 'dir', 'expand', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'show', 'sort', 'statuses', 'view'].sort(),
+    ['cell', 'dir', 'expand', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'hidebygroup', 'hidegroup', 'show', 'sort', 'statuses', 'view'].sort(),
   );
-  await roundTrip(page, page.locator(`#app .portfolio-table a[data-study="${study}"]`));
+  // The study report also leaves out the hidden group's metrics (16.03).
+  const dataQuality = catalog.filter((/** @type {any} */ m) => m.Category === 'Data quality').map((/** @type {any} */ m) => m.MetricID);
+  expect(dataQuality.length).toBeGreaterThan(0);
+  await roundTrip(page, page.locator(`#app .portfolio-table a[data-study="${study}"]`), allowed.filter((id) => !dataQuality.includes(id)));
 });

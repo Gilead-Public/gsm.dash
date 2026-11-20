@@ -5,7 +5,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { chooseView, control } from './fixtures/controls.js';
 import { visibleLines } from './fixtures/visible.js';
-import { countText } from '../test/qual/pooling.js';
+import { countText, shownMetrics } from '../test/qual/pooling.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('@playwright/test').Locator} Locator */
 
@@ -156,4 +156,60 @@ test.describe('table columns and view', () => {
     await expect(page.locator('#header-controls [data-pop="config"]')).toBeVisible();
     await evidence.shot(page, 'Config open');
   });
+});
+
+test('21.04: each group chip hides and shows its whole band and nothing else, a metric unchecked in Config stays hidden when its group is shown again, a group configured hidden starts hidden, and the choice survives a reload and a study report\'s back link until Reset restores the configured defaults (#21)', async ({ app, page }) => {
+  /** @type {any[]} */
+  const catalog = readData('portfolio.json').metrics;
+  const shown = shownMetrics(catalog);
+  const ids = shown.map((m) => m.MetricID);
+  const groups = [{ name: 'Alpha', metrics: ids.slice(0, 4) }, { name: 'Beta', metrics: ids.slice(4, 8), hidden: true }, { name: 'Gamma', metrics: ids.slice(8, 12) }];
+  await app.openReport('portfolio', { document: (/** @type {any} */ doc) => void (doc.config = { groups }), beside: [studies[0].StudyID] });
+  await page.locator('#app > .layout').waitFor();
+  const bands = async () => {
+    const out = [];
+    for (const th of await page.locator('.portfolio-table thead th.bandh[data-band]').all()) {
+      const [name] = await visibleLines(th);
+      out.push([name, await Promise.all((await th.locator('.tlab').all()).map((t) => visibleLines(t).then((l) => l.join(' '))))]);
+    }
+    return out;
+  };
+  const abbr = (/** @type {string} */ id) => /** @type {any} */ (catalog.find((m) => m.MetricID === id)).Abbreviation;
+  const band = (/** @type {string} */ name, /** @type {string[]} */ list) => [name, list.map(abbr)];
+  const rest = ids.slice(12);
+  const chip = (/** @type {string} */ name) => control(page, `button[data-group="${name}"]`);
+
+  expect(await bands(), 'Beta configured hidden').toEqual([band('Alpha', ids.slice(0, 4)), band('Gamma', ids.slice(8, 12)), band('Other', rest)]);
+  expect(await chip('Beta').getAttribute('aria-pressed')).toBe('false');
+  await page.locator('#header-controls [data-open="config"]').click();
+  const chipsSeen = await Promise.all((await page.locator('#header-controls button[data-group]').all()).map((c) => visibleLines(c).then((l) => l.join(' '))));
+  expect(chipsSeen, 'the group chips, readable').toEqual(['Alpha', 'Beta', 'Gamma', 'Other']);
+  await page.keyboard.press('Escape');
+
+  await chip('Gamma').click();
+  expect(await bands(), 'Gamma hidden: only its band goes').toEqual([band('Alpha', ids.slice(0, 4)), band('Other', rest)]);
+  expect(await chip('Gamma').getAttribute('aria-pressed')).toBe('false');
+  await control(page, `input[data-metric="${ids[9]}"]`).uncheck();
+  await chip('Gamma').click();
+  expect(await bands(), 'Gamma shown again, without the metric unchecked').toEqual([band('Alpha', ids.slice(0, 4)), band('Gamma', [ids[8], ids[10], ids[11]]), band('Other', rest)]);
+  await chip('Beta').click();
+  await chip('Alpha').click();
+  const left = [band('Beta', ids.slice(4, 8)), band('Gamma', [ids[8], ids[10], ids[11]]), band('Other', rest)];
+  expect(await bands(), 'Beta shown, Alpha hidden').toEqual(left);
+
+  await page.reload();
+  await page.locator('#app > .layout').waitFor();
+  expect(await bands(), 'after a reload').toEqual(left);
+  const first = studies[0].StudyID;
+  await page.locator(`#app .portfolio-table a[data-study="${first}"]`).first().click();
+  await page.locator(`#app > [data-study="${first}"] .tile`).first().waitFor();
+  const tiles = await page.locator('#app .tile[data-metric-id]').evaluateAll((els) => els.map((t) => t.getAttribute('data-metric-id')));
+  expect(tiles.sort(), 'the study report shows exactly the portfolio\'s metrics (16.03)').toEqual([...ids.slice(4, 8), ids[8], ids[10], ids[11], ...rest].sort());
+  await page.locator('#app a.back').click();
+  await page.locator('#app > .layout').waitFor();
+  expect(await bands(), 'after a study report and its back link').toEqual(left);
+
+  await page.locator('#header-controls [data-reset]').click();
+  expect(await bands(), 'after Reset').toEqual([band('Alpha', ids.slice(0, 4)), band('Gamma', ids.slice(8, 12)), band('Other', rest)]);
+  expect(await chip('Beta').getAttribute('aria-pressed')).toBe('false');
 });

@@ -3,7 +3,9 @@
 // view survives a reload and the trip to a study report and back under any configuration.
 import { expect, readData, test } from './fixtures/app.js';
 import { canonicalDom, capturePortfolio } from './fixtures/baseline.js';
-import { chooseView, control } from './fixtures/controls.js';
+import { chooseView, closeControls, control } from './fixtures/controls.js';
+import { visibleLines } from './fixtures/visible.js';
+import { shownMetrics } from '../test/qual/pooling.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 test.describe.configure({ timeout: 120_000 });
@@ -189,3 +191,66 @@ for (const [what, config, key] of REFUSED) {
     await expect(page.locator('#app .layout')).toHaveCount(0);
   });
 }
+
+/**
+ * The table's bands as a user reads them (Overview): each band's visible name and its metrics' visible labels.
+ * @param {Page} page
+ */
+async function bandsSeen(page) {
+  const bands = [];
+  for (const th of await page.locator('.portfolio-table thead th.bandh[data-band]').all()) {
+    const [name] = await visibleLines(th);
+    const labels = await Promise.all((await th.locator('.tlab').all()).map((t) => visibleLines(t).then((l) => l.join(' '))));
+    bands.push([name, labels]);
+  }
+  return bands;
+}
+
+/**
+ * What the page shows of the groups, as a user reads them: the bands, Config's chips (with whether each is on) and
+ * Config's metric list by group.
+ * @param {Page} page
+ */
+async function groupsShown(page) {
+  const bands = await bandsSeen(page);
+  const host = page.locator('#header-controls');
+  await host.locator('[data-open="config"]').click();
+  const chips = await Promise.all((await host.locator('button[data-group]').all()).map(async (c) => [(await visibleLines(c)).join(' '), await c.getAttribute('aria-pressed')]));
+  const list = [];
+  for (const g of await host.locator('.metric-list .mgroup').all()) {
+    const [name] = await visibleLines(g.locator('.mgroup-head'));
+    list.push([name, await g.locator('input[data-metric]').evaluateAll((els) => els.map((i) => i.getAttribute('data-metric')))]);
+  }
+  await closeControls(page);
+  return { bands, chips, list };
+}
+
+test('16.05: the table\'s bands and Config\'s group chips and metric list follow the configured groups, a group configured hidden starts hidden, unlisted metrics trail in Other, and without groups the catalog\'s Category groups apply (#16)', async ({ app, page }) => {
+  /** @type {any[]} */
+  const shown = shownMetrics(portfolio.metrics);
+  const abbr = (/** @type {string} */ id) => /** @type {any} */ (catalog.find((m) => m.MetricID === id)).Abbreviation;
+  const [a, b, c, d, e] = [shown[6].MetricID, shown[1].MetricID, shown[12].MetricID, shown[3].MetricID, shown[0].MetricID];
+  const groups = [{ name: 'Safety first', metrics: [a, b] }, { name: 'Parked', metrics: [c, d], hidden: true }, { name: 'Lone', metrics: [e] }];
+  const rest = shown.map((m) => m.MetricID).filter((id) => ![a, b, c, d, e].includes(id));
+
+  await app.openReport('portfolio');
+  /** @type {Array<[string, string[]]>} */
+  const byCategory = [];
+  for (const m of shown) {
+    const last = byCategory.at(-1);
+    if (last && last[0] === m.Category) last[1].push(m.MetricID);
+    else byCategory.push([m.Category, [m.MetricID]]);
+  }
+  expect(await groupsShown(page)).toEqual({
+    bands: byCategory.map(([name, ids]) => [name, ids.map(abbr)]),
+    chips: byCategory.map(([name]) => [name, 'true']),
+    list: byCategory,
+  });
+
+  await app.openReport('portfolio', configured({ groups }));
+  expect(await groupsShown(page)).toEqual({
+    bands: [['Safety first', [a, b].map(abbr)], ['Lone', [e].map(abbr)], ['Other', rest.map(abbr)]],
+    chips: [['Safety first', 'true'], ['Parked', 'false'], ['Lone', 'true'], ['Other', 'true']],
+    list: [['Safety first', [a, b]], ['Parked', [c, d]], ['Lone', [e]], ['Other', rest]],
+  });
+});

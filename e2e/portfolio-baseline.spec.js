@@ -2,11 +2,11 @@
 // 11.03 regression evidence: the portfolio as it rendered before #11's changes, recorded state by state in
 // e2e/__snapshots__/portfolio-baseline.spec.js/, at 69b2240; re-recorded when the Distribution view was removed (#35),
 // when View replaced the category folds and row density, when the status line moved below the table (#24), when the
-// controls moved into the header (#22), and when the study highlight was unwired (#35), each time with every tooltip,
-// cell background, sparkline and table row unchanged. Each state is reached through the UI and recorded, with the
-// header's controls, as its canonical DOM and computed styles (by hash), every sparkline's points, its accessibility
-// tree (which leaves out hidden elements) and what CSS colours: every table cell's background, and any open tooltip.
-// The canonical DOM lets the React page be compared with the same records.
+// controls moved into the header (#22), when the study highlight was unwired (#35), and when Config gained the group
+// chips (#21), each time with every tooltip, cell background, sparkline and table row unchanged. Each state is reached
+// through the UI and recorded, with the header's controls, as its canonical DOM and computed styles (by hash), every
+// sparkline's points, its accessibility tree (which leaves out hidden elements) and what CSS colours: every table
+// cell's background, and any open tooltip. The canonical DOM lets the React page be compared with the same records.
 import { readData, test } from './fixtures/app.js';
 import { capturePortfolio as capture, expectRecorded } from './fixtures/baseline.js';
 import { chooseView, control } from './fixtures/controls.js';

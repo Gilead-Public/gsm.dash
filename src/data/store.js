@@ -2,7 +2,7 @@ import { orderMetrics, normalizeMetric, pivotGroups, indexResults } from './norm
 import { selectLatestSnapshots, poolResults, bucketStudies, filterStudies } from './rollup.js';
 import { indexSummary, poolSummary, POPULATIONS } from './summary.js';
 import { nextSort } from './sort.js';
-import { STATUS_ORDER, CATEGORY_ORDER, groupByCategory } from './catalog.js';
+import { STATUS_ORDER, CATEGORY_ORDER, groupAsConfigured, groupByCategory } from './catalog.js';
 import { CELL_MODES, COLUMN_OPTIONS, GROUP_BY_OPTIONS, HEATMAPS, VIEWS, showOptions } from '../app/portfolio-controls.js';
 import { POP_COLUMNS } from '../app/portfolio-table.js';
 import { portfolioDefaults } from './portfolio-config.js';
@@ -85,6 +85,7 @@ export class PortfolioStore extends EventTarget {
       groupBy: this.#defaults.groupBy, // 'none' (one row per study) | a study param
       filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set(), study: new Set() },
       hiddenMetrics: new Set(this.#defaults.metrics), // MetricIDs the user has switched off
+      hiddenGroups: new Set(this.#hiddenGroupDefaults()), // metric groups whose band is hidden (#21), independent of hiddenMetrics
       expanded: new Set(),
       sort: { key: null, dir: null }, // key: 'label' | 'meta' | a MetricID
       detail: { metricId: null, tab: 'viz-bar' }, // study-page drill-in panel (W4)
@@ -131,16 +132,37 @@ export class PortfolioStore extends EventTarget {
     return this.metrics.filter((m) => m.GroupLevel === 'Site');
   }
 
-  /** Supported catalog minus user-hidden metrics — what views should render. */
+  /** Supported catalog minus user-hidden metrics and the metrics of hidden groups — what views should render. */
   visibleMetrics() {
+    const hiddenGroup = new Set(
+      this.metricCategories(this.supportedMetrics())
+        .filter((g) => this.state.hiddenGroups.has(g.category))
+        .flatMap((g) => g.metrics.map((m) => m.MetricID)),
+    );
     return this.supportedMetrics().filter(
-      (m) => !this.state.hiddenMetrics.has(m.MetricID) && this.state.statuses.has(m.Status ?? 'Released')
+      (m) => !this.state.hiddenMetrics.has(m.MetricID) && !hiddenGroup.has(m.MetricID) && this.state.statuses.has(m.Status ?? 'Released')
     );
   }
 
-  /** Visible metrics banded by glossary Category, in catalog category order. */
+  /** Metrics banded into groups: as configured (#16's `groups`), or by glossary Category in catalog category order. */
   metricCategories(metrics = this.visibleMetrics()) {
-    return groupByCategory(metrics, CATEGORY_ORDER);
+    return this.#defaults.groups ? groupAsConfigured(metrics, this.#defaults.groups) : groupByCategory(metrics, CATEGORY_ORDER);
+  }
+
+  /** Every group's name, in order, whatever is hidden. */
+  groupNames() {
+    return this.metricCategories(this.supportedMetrics()).map((g) => g.category);
+  }
+
+  #hiddenGroupDefaults() {
+    return (this.#defaults.groups ?? []).filter((g) => g.hidden).map((g) => g.name);
+  }
+
+  /** Show or hide one group's band; its metrics' own checkboxes are left as they are. */
+  toggleGroupHidden(name) {
+    const set = this.state.hiddenGroups;
+    set.has(name) ? set.delete(name) : set.add(name);
+    this.#emit();
   }
 
   toggleStatus(status) {
@@ -181,6 +203,17 @@ export class PortfolioStore extends EventTarget {
     // Written even when it equals the configured default: a study report has no configuration, and takes the hidden
     // metrics from the link.
     if (hidden.length || this.#defaults.metrics.length) addSet('hide', hidden);
+    const groups = this.groupNames();
+    const hiddenGroups = groups.filter((g) => state.hiddenGroups.has(g));
+    const defaultHidden = this.#hiddenGroupDefaults();
+    if (groups.some((g) => state.hiddenGroups.has(g) !== defaultHidden.includes(g))) addSet('hidegroup', hiddenGroups);
+    // A study report has no groups or configuration: it takes the metrics a hidden group hides as a list of its own,
+    // written even at the configured default and apart from `hide`, so the portfolio's checkboxes keep their own state
+    // (16.03).
+    const groupHidden = this.metricCategories(this.supportedMetrics())
+      .filter((g) => state.hiddenGroups.has(g.category))
+      .flatMap((g) => g.metrics.map((m) => m.MetricID));
+    add('hidebygroup', groupHidden);
     return params;
   }
 
@@ -200,13 +233,19 @@ export class PortfolioStore extends EventTarget {
     state.columns = new Set(chosen(params, 'cols', COLUMN_PARTS, this.#defaults.columns));
     const options = this.filterOptions();
     for (const param of Object.keys(state.filters)) state.filters[param] = new Set(known(params.getAll(`filter.${param}`), options[param]));
+    state.hiddenGroups = new Set(chosen(params, 'hidegroup', this.groupNames(), this.#hiddenGroupDefaults()));
     this.#applyMetricParams(params);
     this.#emit();
   }
 
-  /** What a study report takes from the portfolio's params: the metric-status filters and hidden metrics. One 'change'. */
+  /**
+   * What a study report takes from the portfolio's params: the metric-status filters, and the hidden metrics, those its
+   * hidden groups hide included. One 'change'.
+   */
   applyMetricParams(params) {
     this.#applyMetricParams(params);
+    const ids = this.metrics.map((m) => m.MetricID);
+    for (const id of params.getAll('hidebygroup')) if (ids.includes(id)) this.state.hiddenMetrics.add(id);
     this.#emit();
   }
 

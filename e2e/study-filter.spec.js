@@ -15,7 +15,7 @@ const study = 'STUDY004';
 const hidden = 'Analysis_kri0005';
 const CONFIG = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'] };
 /** Every setting the address holds, besides one `filter.<param>` per filter the Controls panel offers. */
-const VIEW_KEYS = ['cell', 'dir', 'expand', 'group', 'heatmap', 'hide', 'show', 'sort', 'statuses', 'view'];
+const VIEW_KEYS = ['cell', 'dir', 'expand', 'group', 'heatmap', 'hide', 'show', 'sort', 'statuses', 'view', 'hidegroup', 'hidebygroup'];
 
 
 /** @param {Page} page */
@@ -40,6 +40,7 @@ async function changeEverySetting(page) {
   await control(page, 'button[data-show="den"]').click();
   await control(page, 'button[data-show="num"]').click();
   await control(page, 'select[data-heatmap]').selectOption('num');
+  await control(page, 'button[data-group="Data quality"]').click();
 }
 
 /** @param {Page} page */

@@ -150,7 +150,11 @@ holds the catalog, the study's manifest entry and all its snapshots. Either may 
 Portfolio defaults (#16): an optional `config.json` beside `portfolio.json` sets the
 portfolio's initial grouping (`groupBy`), heatmap (`heatmap`), cell values (`show`),
 hidden metrics (`metrics`, MetricIDs), optional table columns (`columns`: `name`, `enroll`,
-`status`; #21) and view (`view`: `overview` or `details`); every key is optional.
+`status`; #21), view (`view`: `overview` or `details`) and metric groups (`groups`: an
+ordered list of `{ "name", "metrics", "hidden" }`, each metric in one group; metrics no group
+lists trail in an "Other" group, a reserved name; without it, the catalog's `Category` groups
+apply; #21's Config chips show or hide each group, and a study report opened from the
+portfolio leaves out the metrics a hidden group hides); every key is optional.
 The Enrolled column shows a study's count against its `ParticipantTarget` parameter when
 the study has one. It travels in the portfolio
 document, so one template serves any configuration. Its values are checked against the
