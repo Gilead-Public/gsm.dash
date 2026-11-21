@@ -6,6 +6,7 @@ import { canonicalDom, capturePortfolio } from './fixtures/baseline.js';
 import { chooseView, closeControls, control } from './fixtures/controls.js';
 import { visibleLines } from './fixtures/visible.js';
 import { shownMetrics } from '../test/qual/pooling.js';
+import { cardMetrics, withCards } from './fixtures/tiles.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 test.describe.configure({ timeout: 120_000 });
@@ -161,9 +162,8 @@ test('16.03: under a configuration, the portfolio comes back as it was left afte
     expect((await capturePortfolio(page, 'before leaving')).text, `${what}: reload`).toBe(before.text);
 
     await page.locator(`#app .portfolio-table a[data-study="${study}"]`).first().click();
-    await page.locator(`#app > [data-study="${study}"] .tile`).first().waitFor();
-    const tiles = await page.locator('#app .tile[data-metric-id]').evaluateAll((els) => els.map((t) => t.getAttribute('data-metric-id')));
-    expect(tiles.sort(), `${what}: the study report's metrics`).toEqual(shown);
+    await page.locator(`#app > [data-study="${study}"] .card`).first().waitFor();
+    expect(await cardMetrics(page), `${what}: the study report's metrics`).toEqual(withCards(shown, catalog));
 
     await page.locator('#app a.back').click();
     await page.locator('#app > .layout').waitFor();

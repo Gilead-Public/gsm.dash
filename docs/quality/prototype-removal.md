@@ -33,16 +33,23 @@ Second pass, 17 Nov, after checking each kept feature for a business source in g
 | R13 | Site highlight across charts, and its chip, including in the flag views and the Charts panel | No business source | `src/react/StudyPage.jsx`, `src/widgets/` |
 | R14 | Charts button and panel on CTQ tiles; the standard-KRI widgets keep theirs (#32) | No business source; #625's drill-through goes to the detailed report (#13) | `src/react/StudyPage.jsx` |
 
+Third pass, study page, 20 Nov, from the design review of 2026-11-19 and its minutes (one fixed-size card per requested
+widget, no toggling inside it, ordered by layout only):
+
+| ID | Feature | Why | Code |
+|---|---|---|---|
+| R15 | The tile pager and its views: Details, Trend over time, a metric's extra views (`Widgets`, Report link) and the flag views (#11) | Each card shows one widget (#32); a catalog entry naming one is listed in the notice (#12) | `src/widgets/`, `src/app/tile-views.js`, `src/config/study-views.js` |
+| R16 | Tiles of metrics without a widget in the tracker (gsm.roadmap#617) | The study page shows the tracker's widgets; those metrics stay in the portfolio | `src/react/StudyPage.jsx` |
+| R17 | The "i" icon on tiles and in the Charts panel | The card's title gives the definition on hover | `src/react/parts.jsx` |
+| R18 | Group by category and the grouped layout, with the KRI group headings | "Resize/group/sort/stack" come later; its code stays, unwired | `src/react/StudyGroupedCards.jsx` |
+
 ## Kept
 
 | ID | Feature | Decision |
 |---|---|---|
 | K1 | Page tags "Program overview" / "Study view" | Removed by #24 (design review 2026-11-19): the header shows the logo and the dashboard's title |
 | K3 | "Extract: <date>" on a single-snapshot study | Kept, and required by 35.09. Source: gsm.roadmap#625 (the view is generated from the scheduled study snapshot) |
-| K4 | Trend over time tile view | Kept, and required by 35.05. Source: gsm.roadmap#618 and #625 (the study view presents CTQ trends) |
-
-A full study tile pages through Details, Trend over time, the metric's own views (Breakdowns, Report link) and, where a
-study configures them, the flag views (#11).
+| K4 | Trend over time tile view | Kept in the second pass (gsm.roadmap#618 and #625: the study view presents CTQ trends); the third pass moves the trend into each card's header as a sparkline (#32) and removes the view (R15) |
 
 These were uncovered in the audit, but a requirement now covers them:
 - row-click highlight (25.05), since unwired with the Highlight study control by the 19 Nov design review (35.11);

@@ -2,7 +2,7 @@
 // #35: prototype features no requirement backs are gone from both reports. Each check looks for the feature both by
 // what a user sees (its text or accessible name) and by its old markup, so a renamed copy can't slip through.
 import { expect, readData, test } from './fixtures/app.js';
-import { pageAllTo, tile } from './fixtures/tiles.js';
+import { shownCards, tile, TRACKER_CARDS } from './fixtures/tiles.js';
 import { visibleLines } from './fixtures/visible.js';
 import { chooseView, closeControls, control } from './fixtures/controls.js';
 import { capturePortfolio } from './fixtures/baseline.js';
@@ -65,7 +65,7 @@ test('35.01: the portfolio has no change log link and no "not site-level" note; 
   await expectFollowsSystem(page, () => app.openStudy(study.StudyID), 'study');
 });
 
-test('35.02: the study report has no Randomize or play button, no STANDARD / CUSTOM badge on tiles or in the Charts panel, no metadata line and no comparison line (#35)', async ({ app, page }) => {
+test('35.02: the study report has no Randomize or play button, no STANDARD / CUSTOM badge on cards or in the Charts panel, no metadata line and no comparison line (#35)', async ({ app, page }) => {
   for (const id of [study.StudyID, 'STUDY006']) {
     await app.openStudy(id);
     await expect(page.getByRole('button', { name: /randomi[sz]e/i }), `${id}: Randomize`).toHaveCount(0);
@@ -80,13 +80,10 @@ test('35.02: the study report has no Randomize or play button, no STANDARD / CUS
         /** @type {HTMLInputElement} */ (el).value = String(i);
         el.dispatchEvent(new Event('change', { bubbles: true }));
       }, at);
-      for (const view of ['Details', 'Trend over time']) {
-        await pageAllTo(page, view);
-        const text = await page.locator('.study-page').innerText();
-        const where = `${id}, visit ${at + 1}, ${view}`;
-        expect(text, `${where}: comparison line`).not.toMatch(/this study|^portfolio /im);
-        expect(text, `${where}: badge`).not.toMatch(/^(standard|custom)$/im);
-      }
+      const text = await page.locator('.study-page').innerText();
+      const where = `${id}, visit ${at + 1}`;
+      expect(text, `${where}: comparison line`).not.toMatch(/this study|^portfolio /im);
+      expect(text, `${where}: badge`).not.toMatch(/^(standard|custom)$/im);
     }
 
     await tile(page, KRI).locator('button[data-detail-metric]').click();
@@ -107,48 +104,30 @@ test('35.04: both reports without the removed features, for visual comparison wi
   await evidence.shot(page, 'study, Charts panel open');
 });
 
-/** @type {Record<string, string>} */
-const OWN_VIEWS = { 'distribution-bar': 'Breakdowns', 'link-out': 'Report link' };
 const FLAGGED = 'STUDY006';
 
-/**
- * A tile's views in paging order, read by paging it once around.
- * @param {Page} page
- * @param {string} metricId
- */
-async function pagedViews(page, metricId) {
-  const name = tile(page, metricId).locator('.view-name');
-  const parse = async () => /** @type {RegExpExecArray} */ (/^(.*) (\d+)\/(\d+)$/.exec(((await name.textContent()) ?? '').trim()));
-  const [, , , total] = await parse();
-  /** @type {string[]} */
-  const views = [];
-  for (let k = 0; k < Number(total); k++) {
-    const [, label, at] = await parse();
-    views[Number(at) - 1] = label;
-    await tile(page, metricId).locator('button[data-view-step="1"]').click();
-  }
-  return views;
-}
-
-test('35.05: each full study tile pages through exactly Details, Trend over time, its own views and, where configured, the flag views; no Overview, Scatter or Numerator by site view, and no All tiles menu (#35)', async ({ app, page }) => {
-  /** @type {Array<{ MetricID: string, Widget?: string, Widgets?: string[] }>} */
-  const metrics = portfolio.metrics;
+test('35.05: no study card has a view pager or an "i" icon, and each shows one widget; there is no All tiles menu and no Group by category control, and only the tracker\'s widgets have cards (#35)', async ({ app, page }) => {
   for (const id of [study.StudyID, FLAGGED]) {
     await app.openStudy(id);
-    await expect(page.locator('select[data-all-views]'), `${id}: menu`).toHaveCount(0);
-    expect(await page.locator('.study-page').innerText(), `${id}: menu label`).not.toMatch(/all tiles/i);
-    const ids = await page.locator('.tile:not(.kri)[data-metric-id]').evaluateAll((els) => els.map((e) => e.getAttribute('data-metric-id') ?? ''));
-    expect(ids.length).toBeGreaterThan(10);
-    for (const metricId of ids) {
-      const m = /** @type {{ Widget?: string, Widgets?: string[] }} */ (metrics.find((x) => x.MetricID === metricId));
-      const own = [m.Widget, ...(m.Widgets ?? [])].filter((w) => w !== undefined).map((w) => OWN_VIEWS[/** @type {string} */ (w)]);
-      const flags = id === FLAGGED ? ['Outlier sites', 'Flag distribution'] : [];
-      expect(await pagedViews(page, metricId), `${id} · ${metricId}`).toEqual(['Details', 'Trend over time', ...own, ...flags]);
-    }
+    const cards = page.locator('.card');
+    expect(await shownCards(page), `${id}: the tracker's cards only`).toEqual(
+      TRACKER_CARDS.map((c) => {
+        const m = portfolio.metrics.find((/** @type {any} */ x) => x.ID === c.metric);
+        return [c.id, c.title || m.Metric, m.MetricID];
+      }),
+    );
+    await expect(page.locator('.vbtn, .view-name, [data-view-step], select[data-all-views], input[data-group-cat], .info'), `${id}: pager, menu, grouping or icon`).toHaveCount(0);
+    await expect(page.getByRole('img', { name: /definition/i }), `${id}: "i" icon`).toHaveCount(0);
+    expect(await page.locator('.study-page').innerText(), `${id}: their labels`).not.toMatch(/all tiles|group by category/i);
+    expect(await page.locator('.cards').innerText(), `${id}: a pager's labels`).not.toMatch(/\b\d+\/\d+\b|^(details|trend over time|outlier sites|flag distribution|breakdowns|report link)$/im);
+    const bodies = await cards.locator('.tile-body').evaluateAll((els) => els.map((el) => [...el.children].map((c) => c.className)));
+    for (const [i, kids] of bodies.entries()) expect(kids, `${id}: card ${i + 1} shows one widget`).toHaveLength(1);
   }
 });
 
 test('35.06: clicking a site in a chart highlights nothing: no site chip, and no chart, flag view or Charts panel changes (#35)', async ({ app, page }) => {
+  // Each click is compared with a fresh copy of the whole page and every chart, which takes over 20 s under a full run.
+  test.setTimeout(60_000);
   await page.addInitScript(() => {
     /** @type {any[]} */
     const made = [];
@@ -173,7 +152,6 @@ test('35.06: clicking a site in a chart highlights nothing: no site chip, and no
     /** @type {any} */ (window).__charts = made;
   });
   await app.openStudy(FLAGGED);
-  await pageAllTo(page, 'Outlier sites');
   // gsm.viz sets its canvas's cursor as the pointer passes over marks; that hover cue is not a selection.
   const state = () =>
     page.evaluate(() => ({
@@ -209,10 +187,6 @@ test('35.06: clicking a site in a chart highlights nothing: no site chip, and no
     expect(await settle(), what).toEqual(hovered);
   };
 
-  const rows = page.locator('.tile [data-site]');
-  expect(await rows.count(), 'flag views show site rows to click').toBeGreaterThan(3);
-  for (const i of [0, 1]) await clickChangesNothing(rows.nth(i), undefined, `flag-view site ${i + 1}`);
-
   await tile(page, KRI).locator('button[data-detail-metric]').click();
   for (const tab of ['Bar chart', 'Scatter plot', 'Over time']) {
     await page.locator('.detail').getByRole('tab', { name: tab }).click();
@@ -234,13 +208,13 @@ test('35.06: clicking a site in a chart highlights nothing: no site chip, and no
   await expect(page.locator('.sitechip, [data-clear-site], .is-sel, .is-dim')).toHaveCount(0);
 });
 
-test('35.07: CTQ tiles have no Charts button or panel, and each standard-KRI widget keeps its Charts drill-in (#35)', async ({ app, page }) => {
+test('35.07: CTQ cards have no Charts button or panel, and each standard KRI\'s card keeps its Charts drill-in (#35)', async ({ app, page }) => {
   await app.openStudy(study.StudyID);
-  const ctq = page.locator('.tile:not(.kri)[data-metric-id]');
-  expect(await ctq.count()).toBeGreaterThan(10);
+  const ctq = page.locator('.card:not(.kri)');
+  expect(await ctq.count()).toBe(TRACKER_CARDS.filter((c) => c.kind !== 'kri').length);
   await expect(ctq.locator('button[data-detail-metric]')).toHaveCount(0);
   await expect(ctq.getByRole('button', { name: /charts/i })).toHaveCount(0);
-  const kri = page.locator('.tile.kri[data-metric-id]');
+  const kri = page.locator('.card.kri');
   const count = await kri.count();
   expect(count).toBeGreaterThan(5);
   await expect(kri.getByRole('button', { name: /charts/i })).toHaveCount(count);
@@ -248,7 +222,7 @@ test('35.07: CTQ tiles have no Charts button or panel, and each standard-KRI wid
     const widget = kri.nth(i);
     await widget.getByRole('button', { name: /charts/i }).click();
     await expect(page.locator('.detail')).toBeVisible();
-    await expect(page.locator('.detail .detail-title')).toHaveText(/** @type {string} */ (await widget.locator('.name').textContent()));
+    await expect(page.locator('.detail .detail-title')).toHaveText(/** @type {string} */ (await widget.locator('.tile-head .name').textContent()));
     await widget.getByRole('button', { name: /charts/i }).click();
     await expect(page.locator('.detail')).toHaveCount(0);
   }

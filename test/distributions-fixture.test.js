@@ -109,6 +109,32 @@ describe('simulated distributions for the #617 metrics', () => {
     }
   });
 
+  it('9.06: the combined death columns agree with the separate ones at every site (#9)', () => {
+    const total = (/** @type {{ Count: number }[]} */ rows) => rows.reduce((a, r) => a + r.Count, 0);
+    let checked = 0;
+    for (const snap of latest) {
+      const bySite = Map.groupBy(snap.distributions.filter((d) => d.MetricID === 'Analysis_kri0015'), (d) => d.GroupID);
+      for (const [site, rows] of bySite) {
+        const categories = (variable) => rows.filter((r) => r.Variable === variable && r.Category !== null);
+        const windows = categories('death_window');
+        for (const [combined, part] of [['window_eligibility', 'eligibility_status'], ['window_treatment_related', 'treatment_related']]) {
+          const cells = categories(combined).map((r) => {
+            const [window, status] = r.Category.split(' | ');
+            return { window, status, Count: r.Count };
+          });
+          const statuses = categories(part);
+          const where = `${snap.StudyID} ${site} ${combined}`;
+          expect(new Set(cells.map((c) => `${c.window} | ${c.status}`)), where).toEqual(new Set(windows.flatMap((w) => statuses.map((s) => `${w.Category} | ${s.Category}`))));
+          for (const w of windows) expect(total(cells.filter((c) => c.window === w.Category)), `${where} ${w.Category}`).toBe(w.Count);
+          for (const s of statuses) expect(total(cells.filter((c) => c.status === s.Category)), `${where} ${s.Category}`).toBe(s.Count);
+          checked++;
+        }
+      }
+    }
+    expect(checked).toBeGreaterThan(0);
+    expect(latest.some((snap) => snap.distributions.some((d) => d.Variable === 'window_eligibility' && d.Category?.startsWith('≤30') && d.Count > 0))).toBe(true);
+  });
+
   it('the fixture covers multi-value variables, blank categories and zero rows', () => {
     const rows = latest.flatMap((s) => s.distributions);
     expect(rows.some((r) => r.Category === null && r.Count > 0)).toBe(true);
@@ -118,33 +144,29 @@ describe('simulated distributions for the #617 metrics', () => {
   });
 
   it('every status variable uses exactly the labels agreed in the design review, each populated', () => {
-    // Copied from issue #9 (design review 2026-11-09), not from the generator, so a dropped or renamed category fails here.
+    // Copied from issue #9 (gsm.roadmap#617's names), not from the generator, so a dropped or renamed category fails here.
     const AGREED = {
       'Analysis_kri0014|eligibility_status': ['Eligible', 'Potentially Ineligible', 'Ineligible'],
-      'Analysis_kri0019|ipns_status': [
-        'Dosed – ongoing', 'Dosed – treatment complete', 'Dosed – premature treatment discontinuation',
-        'Potential Non-Starter – within window', 'Potential Non-Starter – outside window', 'Confirmed Non-Starter',
-      ],
-      'Analysis_kri0006|disposition': ['Withdrawal by Participant', 'Lost to Follow-Up', 'Study Discontinuation: Other', 'Death', 'Study Completion', 'Ongoing'],
-      'Analysis_kri0012|screening_status': ['Screen Failure', 'In Screening', 'Enrolled'],
+      'Analysis_kri0019|drv_ip_nonstarter_status': ['Dosed', 'Potential Non-Starter – within window', 'Potential Non-Starter – outside window', 'Confirmed Non-Starter'],
+      'Analysis_kri0007-2|drv_drg_completion': ['Dosed – ongoing', 'Dosed – treatment complete', 'Dosed – premature treatment discontinuation'],
+      'Analysis_kri0006|drv_study_disposition': ['Withdrawal by Participant', 'Lost to Follow-Up', 'Study Discontinuation: Other', 'Death', 'Study Completion', 'Ongoing'],
+      'Analysis_kri0012|drv_study_disposition': ['Screen Failure', 'Enrolled'],
+      'Analysis_kri0015|death_window': ['≤30 days', '31–90 days'],
+      'Analysis_kri0015|eligibility_status': ['Eligible', 'Ineligible'],
+      'Analysis_kri0015|treatment_related': ['Yes', 'No', 'Unknown'],
     };
-    // The metric's denominator (screened) excludes anyone still in screening, so this stays 0 until #617 answers.
-    const ALWAYS_ZERO = new Set(['Analysis_kri0012|screening_status|In Screening']);
     const rows = latest.flatMap((snap) => snap.distributions);
     for (const [key, labels] of Object.entries(AGREED)) {
       const [metricId, variable] = key.split('|');
       const mine = rows.filter((r) => r.MetricID === metricId && r.Variable === variable);
       expect(new Set(mine.filter((r) => r.Category !== null).map((r) => r.Category)), key).toEqual(new Set(labels));
-      for (const label of labels) {
-        if (ALWAYS_ZERO.has(`${key}|${label}`)) continue;
-        expect(mine.some((r) => r.Category === label && r.Count > 0), `${key} ${label}`).toBe(true);
-      }
+      for (const label of labels) expect(mine.some((r) => r.Category === label && r.Count > 0), `${key} ${label}`).toBe(true);
     }
   });
 
   it('uses the production metric IDs from the pipeline requirement', () => {
     const ids = new Set(METRICS.map((m) => m.ID));
-    for (const id of ['kri0019', 'strat0001', 'kri0007-2']) expect(ids.has(id), id).toBe(true);
+    for (const id of ['kri0019', 'kri0007-2']) expect(ids.has(id), id).toBe(true);
     for (const id of ['ctq0004', 'ctq0005']) expect(ids.has(id), id).toBe(false);
     for (const spec of DISTRIBUTION_SPECS) expect(ids.has(spec.id), spec.id).toBe(true);
   });

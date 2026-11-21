@@ -3,6 +3,7 @@
 // and under a sub-path, and the portfolio's view travels with those links to a study report and back.
 import { expect, readData, test } from './fixtures/app.js';
 import { capturePortfolio } from './fixtures/baseline.js';
+import { cardMetrics, withCards } from './fixtures/tiles.js';
 import { chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
@@ -34,12 +35,12 @@ async function filterMetrics(page) {
  * @param {string} studyId
  */
 async function studyReport(page, studyId) {
-  await page.locator(`#app > [data-study="${studyId}"] .tile`).first().waitFor();
+  await page.locator(`#app > [data-study="${studyId}"] .card`).first().waitFor();
 }
 
 /**
- * Follows a link from the portfolio to `study`'s report and that report's back link. The report shows exactly the
- * allowed tiles, and the portfolio comes back as it was left.
+ * Follows a link from the portfolio to `study`'s report and that report's back link. The report's cards show exactly
+ * the allowed metrics that have a card (#32), and the portfolio comes back as it was left.
  * @param {Page} page
  * @param {import('@playwright/test').Locator} link
  * @param {string[]} [tiles] The tiles the report shows, when not `allowed`.
@@ -54,8 +55,7 @@ async function roundTrip(page, link, tiles = allowed) {
   await link.click();
   await studyReport(page, study);
   expect(page.url()).toBe(`${dir}${study}.html${left.hash}`);
-  const shown = await page.locator('#app .tile[data-metric-id]').evaluateAll((els) => els.map((t) => t.getAttribute('data-metric-id')));
-  expect(shown.sort()).toEqual(tiles);
+  expect(await cardMetrics(page)).toEqual(withCards([...tiles].sort(), catalog));
 
   const back = page.locator('#app a.back');
   expect(await back.getAttribute('href')).toBe(`./portfolio.html${left.hash}`);

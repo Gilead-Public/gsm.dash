@@ -1,23 +1,62 @@
 // @ts-check
-// Study-report tile helpers shared by the browser tests.
-import { expect } from './app.js';
+// Study-report card helpers shared by the browser tests.
 /** @typedef {import('@playwright/test').Page} Page */
 
 /**
+ * A card by its id in the card list (src/config/study-cards.js).
+ * @param {Page} page
+ * @param {string} id
+ */
+export const card = (page, id) => page.locator(`.card[data-card="${id}"]`);
+
+/**
+ * A metric's cards: one for a standard KRI, one per breakdown it shows otherwise.
  * @param {Page} page
  * @param {string} metricId
  */
-export const tile = (page, metricId) => page.locator(`.tile[data-metric-id="${metricId}"]`);
+export const tile = (page, metricId) => page.locator(`.card[data-metric-id="${metricId}"]`);
 
 /**
- * Pages every full tile forward until it shows the named view.
- * @param {Page} page
- * @param {string} view The view's label, e.g. "Trend over time".
+ * The cards the tracker requests, in its order (gsm.roadmap#617, as #10 and #32 specify them): written out here rather
+ * than read from the card list, so a change to the list fails the tests. `kind` is what the card's body shows, and
+ * `section` the breakdown it shows ('Source:Variable'; a joint table's column sections, space-separated).
+ * @type {Array<{ id: string, title: string, metric: string, kind: 'bars' | 'joint' | 'kri', section: string }>}
  */
-export async function pageAllTo(page, view) {
-  for (const id of await page.locator('.tile:not(.kri)[data-metric-id]').evaluateAll((els) => els.map((e) => e.getAttribute('data-metric-id') ?? ''))) {
-    const name = tile(page, id).locator('.view-name');
-    for (let i = 0; i < 12 && !(await name.textContent())?.trim().startsWith(view); i++) await tile(page, id).locator('button[data-view-step="1"]').click();
-    await expect(name).toHaveText(new RegExp(`^${view} `));
-  }
-}
+export const TRACKER_CARDS = [
+  { id: 'eligibility-status', title: 'Eligibility Status', metric: 'kri0014', kind: 'bars', section: 'Denominator:eligibility_status' },
+  { id: 'ie-criteria', title: 'Eligibility I/E Criteria', metric: 'kri0014', kind: 'bars', section: 'Numerator:ietestcd_concat' },
+  { id: 'premature-deaths', title: 'Premature Death Summary', metric: 'kri0015', kind: 'joint', section: 'Numerator:window_eligibility Numerator:window_treatment_related' },
+  { id: 'ip-status', title: 'IP Status', metric: 'kri0019', kind: 'bars', section: 'Denominator:drv_ip_nonstarter_status' },
+  { id: 'treatment-disposition', title: 'Treatment Disposition', metric: 'kri0007-2', kind: 'bars', section: 'Denominator:drv_drg_completion' },
+  { id: 'treatment-discontinuation-reasons', title: 'Premature Treatment Discontinuation Reasons', metric: 'kri0007-2', kind: 'bars', section: 'Numerator:drv_premature_discontinuation_reason' },
+  { id: 'study-disposition', title: 'Study Disposition – Enrolled', metric: 'kri0006', kind: 'bars', section: 'Denominator:drv_study_disposition' },
+  { id: 'screening-disposition', title: 'Study Disposition – Screening', metric: 'kri0012', kind: 'bars', section: 'Denominator:drv_study_disposition' },
+  { id: 'screen-failure-reasons', title: 'Screen Failure Reasons', metric: 'kri0012', kind: 'bars', section: 'Numerator:sf_reason' },
+  ...['kri0004', 'kri0003', 'kri0002', 'kri0001', 'kri0005', 'kri0008', 'kri0009', 'kri0010', 'kri0011'].map((metric) => ({ id: metric, title: '', metric, kind: /** @type {const} */ ('kri'), section: '' })),
+];
+
+/**
+ * The cards shown, in page order: id, title and metric ID.
+ * @param {Page} page
+ */
+export const shownCards = (page) =>
+  page.locator('.card').evaluateAll((els) =>
+    els.map((c) => [c.getAttribute('data-card'), (c.querySelector('.tile-head .name')?.textContent ?? '').trim(), c.getAttribute('data-metric-id')]),
+  );
+
+/**
+ * The metrics the study page's cards show, each once, sorted by MetricID.
+ * @param {Page} page
+ */
+export const cardMetrics = async (page) =>
+  [...new Set(await page.locator('#app .card[data-metric-id]').evaluateAll((els) => els.map((t) => t.getAttribute('data-metric-id') ?? '')))].sort();
+
+/**
+ * Of the given metrics, those the tracker gives a card: what a study report can show of them (#32).
+ * @param {Array<string | null>} metricIds
+ * @param {any[]} catalog
+ */
+export const withCards = (metricIds, catalog) => {
+  const carded = new Set(TRACKER_CARDS.map((c) => catalog.find((m) => m.ID === c.metric)?.MetricID));
+  return metricIds.filter((id) => carded.has(id));
+};

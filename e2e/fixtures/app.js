@@ -156,7 +156,7 @@ export const test = base.extend(/** @type {import('@playwright/test').Fixtures<{
       },
       async openStudy(studyId, overrides, hash = '') {
         await this.openReport(studyId, overrides && asReportOverrides(overrides), hash);
-        await page.locator('#app .tile').first().waitFor();
+        await page.locator('#app > .study-page .cards > *').first().waitFor();
       },
       async openReport(name, overrides, hash = '') {
         const file = join(REPORTS_DIR, `${name}.html`);

@@ -5,6 +5,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { chooseView, control } from './fixtures/controls.js';
 import { visibleLines } from './fixtures/visible.js';
+import { cardMetrics, withCards } from './fixtures/tiles.js';
 import { countText, shownMetrics } from '../test/qual/pooling.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('@playwright/test').Locator} Locator */
@@ -202,9 +203,8 @@ test('21.04: each group chip hides and shows its whole band and nothing else, a 
   expect(await bands(), 'after a reload').toEqual(left);
   const first = studies[0].StudyID;
   await page.locator(`#app .portfolio-table a[data-study="${first}"]`).first().click();
-  await page.locator(`#app > [data-study="${first}"] .tile`).first().waitFor();
-  const tiles = await page.locator('#app .tile[data-metric-id]').evaluateAll((els) => els.map((t) => t.getAttribute('data-metric-id')));
-  expect(tiles.sort(), 'the study report shows exactly the portfolio\'s metrics (16.03)').toEqual([...ids.slice(4, 8), ids[8], ids[10], ids[11], ...rest].sort());
+  await page.locator(`#app > [data-study="${first}"] .card`).first().waitFor();
+  expect(await cardMetrics(page), 'the study report\'s cards show exactly the portfolio\'s metrics that have one (16.03)').toEqual(withCards([...ids.slice(4, 8), ids[8], ids[10], ids[11], ...rest].sort(), catalog));
   await page.locator('#app a.back').click();
   await page.locator('#app > .layout').waitFor();
   expect(await bands(), 'after a study report and its back link').toEqual(left);
