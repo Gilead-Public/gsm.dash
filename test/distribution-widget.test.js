@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { generatePortfolio, METRICS } from '../scripts/generate-example-data.mjs';
 import { buildDistributionModel, NEUTRAL_COLOUR, NOT_RECORDED, sumSitesToStudy } from '../src/data/distributions.js';
 import { DISTRIBUTION_CONFIG, distributionConfig } from '../src/config/distributions.js';
+import { renderDistribution } from '../src/widgets/distribution-bar.js';
 import { categoryName, expectedView, jointRecount, studyTotals } from './qual/distributions.js';
 
 const { manifest, snapshots, records } = generatePortfolio();
@@ -298,5 +299,63 @@ describe('a card\'s one breakdown (#10)', () => {
     });
     const clean = rows.filter((r) => r.Category !== null);
     expect(buildDistributionModel({ rows: clean, metric, study: null, config, joint: { rows: 'Numerator:death_window', columns: ['Numerator:window_x'] } }).joint.footnotes).toEqual([]);
+  });
+});
+
+describe('a breakdown that fits its card (#32)', () => {
+  const ie = METRICS.find((m) => m.ID === 'kri0014');
+  const only = ['Numerator:ietestcd_concat'];
+  const criteria = ['IN01', 'IN02', 'IN03', 'IN04', 'EX01', 'EX02', 'EX03', 'EX04'];
+  const rows = criteria
+    .map((c, i) => site('A', c, 20 - i, 50, { MetricID: ie.MetricID, Variable: 'ietestcd_concat' }))
+    .concat(site('A', null, 2, 50, { MetricID: ie.MetricID, Variable: 'ietestcd_concat' }));
+  const data = { metric: ie, distributions: rows, study: { Numerator: 10, Denominator: 50 }, siteRows: [] };
+  const shown = (el) => [...el.innerHTML.matchAll(/<span class="lbl">([^<]*)<\/span>/g)].map((m) => m[1]);
+  // A laid-out box whose content is 20 px per bar row.
+  const box = (clientHeight, isConnected = true) => ({
+    dataset: {},
+    attributes: new Set(),
+    toggleAttribute(name, on) {
+      if (on) this.attributes.add(name);
+      else this.attributes.delete(name);
+    },
+    innerHTML: '',
+    isConnected,
+    clientHeight,
+    get scrollHeight() {
+      return (this.innerHTML.match(/class="dist-row /g) ?? []).length * 20;
+    },
+  });
+
+  it('32.08: maxBars caps a section below its top-N, the rest going into "+ k more" before "Not recorded" (#32)', () => {
+    const build = (maxBars) => buildDistributionModel({ rows, metric: ie, study: null, config: distributionConfig(ie), only, maxBars }).sections[0];
+    expect(labels(build(Infinity))).toEqual(['IN01', 'IN02', 'IN03', 'IN04', 'EX01', '+ 3 more', NOT_RECORDED]);
+    expect(labels(build(2))).toEqual(['IN01', 'IN02', '+ 6 more', NOT_RECORDED]);
+    expect(build(2).bars[2]).toMatchObject({ kind: 'more', count: 18 + 17 + 16 + 15 + 14 + 13 });
+  });
+
+  it('32.08: the widget shows one bar fewer until the breakdown fits its box, down to one bar, marking a breakdown that fits, and shows its top-N when it fits or has no box (#32)', () => {
+    const roomy = box(400);
+    renderDistribution(roomy, data, { only });
+    expect(shown(roomy)).toEqual(['IN01', 'IN02', 'IN03', 'IN04', 'EX01', '+ 3 more', NOT_RECORDED]);
+    const five = box(100);
+    renderDistribution(five, data, { only });
+    expect(shown(five)).toEqual(['IN01', 'IN02', 'IN03', '+ 5 more', NOT_RECORDED]);
+    expect(five.attributes.has('data-fits')).toBe(true);
+    const tiny = box(20);
+    renderDistribution(tiny, data, { only });
+    expect(shown(tiny)).toEqual(['IN01', '+ 7 more', NOT_RECORDED]);
+    expect(tiny.attributes.has('data-fits'), 'still too long at one bar, so the host makes room').toBe(false);
+    for (const el of [box(20, false), box(0)]) {
+      renderDistribution(el, data, { only });
+      expect(shown(el)).toEqual(['IN01', 'IN02', 'IN03', 'IN04', 'EX01', '+ 3 more', NOT_RECORDED]);
+    }
+  });
+
+  it('10.05: the widget has no header of its own: the card\'s header gives the value and n / N (#10)', () => {
+    const el = box(400);
+    renderDistribution(el, data, { only });
+    expect(el.innerHTML).not.toMatch(/dist-head|dist-pct|dist-nd/);
+    expect(el.innerHTML).not.toContain('10 / 50');
   });
 });

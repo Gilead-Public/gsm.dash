@@ -45,7 +45,7 @@ async function capture(page, name, artifact) {
     };
     const text = (/** @type {Element | null} */ e) => (e?.textContent ?? '').replace(/\s+/g, ' ').trim();
     /** @type {Record<string, string>} */
-    const marks = { points: 'circle', bars: 'rect', lines: 'path', breakdowns: '.dist-row', cells: '.dist-joint td', flags: '.kri-flags li .lbl', charts: '.viz canvas', empty: '.nd, .dist-nd' };
+    const marks = { points: 'circle', bars: 'rect', lines: 'path', breakdowns: '.dist-row', cells: '.dist-joint td', flags: '.kri-flags li .lbl', charts: '.viz canvas', empty: '.nd' };
     const drawn = (/** @type {Element} */ scope) =>
       Object.entries(marks)
         .map(([k, sel]) => [k, [...scope.querySelectorAll(sel)].filter(shown).length])

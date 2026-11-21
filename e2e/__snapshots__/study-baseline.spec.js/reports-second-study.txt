@@ -1,43 +1,43 @@
 state: second-study (reports)
-dom: sha256 83208117b3be1cafa884496b81ab3e8a6daa66a89e254f522203d663c3147fd1 (47483 characters)
+dom: sha256 5529af12a8d4e2b68c38ba32ca7d96ababb0580b96068023103edd40a97cf194 (56781 characters)
 tooltip: none
 drill-in: closed
 cards:
-  eligibility-status · Analysis_kri0014: breakdowns 3, empty 1
-  ie-criteria · Analysis_kri0014: breakdowns 6, empty 1
-  premature-deaths · Analysis_kri0015: cells 12, empty 1
-  ip-status · Analysis_kri0019: breakdowns 4, empty 1
-  treatment-disposition · Analysis_kri0007-2: breakdowns 3, empty 1
-  treatment-discontinuation-reasons · Analysis_kri0007-2: breakdowns 6, empty 1
-  study-disposition · Analysis_kri0006: breakdowns 7, empty 1
-  screening-disposition · Analysis_kri0012: breakdowns 2, empty 1
-  screen-failure-reasons · Analysis_kri0012: breakdowns 5, empty 1
-  kri0004 · Analysis_kri0004: flags 4
-  kri0003 · Analysis_kri0003: flags 4
-  kri0002 · Analysis_kri0002: flags 4
-  kri0001 · Analysis_kri0001: flags 4
-  kri0005 · Analysis_kri0005: flags 4
-  kri0008 · Analysis_kri0008: flags 4
-  kri0009 · Analysis_kri0009: flags 4
-  kri0010 · Analysis_kri0010: flags 4
-  kri0011 · Analysis_kri0011: flags 4
+  eligibility-status · Analysis_kri0014: points 1, lines 2, breakdowns 3
+  ie-criteria · Analysis_kri0014: points 1, lines 2, breakdowns 6
+  premature-deaths · Analysis_kri0015: points 1, lines 2, cells 12
+  ip-status · Analysis_kri0019: points 1, lines 2, breakdowns 4
+  treatment-disposition · Analysis_kri0007-2: points 1, lines 2, breakdowns 3
+  treatment-discontinuation-reasons · Analysis_kri0007-2: points 1, lines 2, breakdowns 5
+  study-disposition · Analysis_kri0006: points 1, lines 2, breakdowns 7
+  screening-disposition · Analysis_kri0012: points 1, lines 2, breakdowns 2
+  screen-failure-reasons · Analysis_kri0012: points 1, lines 2, breakdowns 5
+  kri0004 · Analysis_kri0004: points 1, lines 2, flags 4
+  kri0003 · Analysis_kri0003: points 1, lines 2, flags 4
+  kri0002 · Analysis_kri0002: points 1, lines 2, flags 4
+  kri0001 · Analysis_kri0001: points 1, lines 2, flags 4
+  kri0005 · Analysis_kri0005: points 1, lines 2, flags 4
+  kri0008 · Analysis_kri0008: points 1, lines 2, flags 4
+  kri0009 · Analysis_kri0009: points 1, lines 2, flags 4
+  kri0010 · Analysis_kri0010: points 1, lines 2, flags 4
+  kri0011 · Analysis_kri0011: points 1, lines 2, flags 4
 accessibility:
 - link "← Portfolio":
   - /url: ./portfolio.html
 - text: STUDY006 FALCON-2 Immunology · Respiratory · P1 · Enrolling · Product F
 - slider "Visit": "5"
-- text: Visit 6/6 · 2026-06-30 IE Eligibility Status Planned
+- text: Visit 6/6 · 2026-06-30 IE Eligibility Status Planned 3.5% 31 / 879
+- 'img "Eligibility Status trend: 6 snapshots, latest 3.5%"'
 - group "Eligibility breakdowns":
-  - text: 3.5% 31 / 879
   - region "Eligibility status":
     - text: Eligibility status
     - list:
       - 'listitem "Eligible: 96.5% of enrolled, 848 of 879"': Eligible 96.5%
       - 'listitem "Ineligible: 2.0% of enrolled, 18 of 879"': Ineligible 2.0%
       - 'listitem "Potentially Ineligible: 1.5% of enrolled, 13 of 879"': Potentially Ineligible 1.5%
-- text: IE Eligibility I/E Criteria Planned
+- text: IE Eligibility I/E Criteria Planned 3.5% 31 / 879
+- 'img "Eligibility I/E Criteria trend: 6 snapshots, latest 3.5%"'
 - group "Eligibility breakdowns":
-  - text: 3.5% 31 / 879
   - region "Top I/E criteria not met":
     - text: Top I/E criteria not met
     - list:
@@ -48,9 +48,9 @@ accessibility:
       - 'listitem "EX03: 5 of 31"': EX03 5
       - 'listitem "+ 3 more: 12 of 31"': + 3 more 12
     - paragraph: A participant can fall in more than one category, so the counts add up to more than 31.
-- text: DTH90 Premature Death Summary Planned
+- text: DTH90 Premature Death Summary Planned 2.6% 23 / 879
+- 'img "Premature Death Summary trend: 6 snapshots, latest 2.6%"'
 - group "Early Deaths (90 days) breakdowns":
-  - text: 2.6% 23 / 879
   - 'table "Early Deaths (90 days) by time from randomisation: Eligibility"':
     - caption: Eligibility
     - rowgroup:
@@ -89,9 +89,9 @@ accessibility:
         - cell "2"
         - cell "10"
         - cell "1"
-- text: IPNS IP Status Planned
+- text: IPNS IP Status Planned 1.6% 14 / 879
+- 'img "IP Status trend: 6 snapshots, latest 1.6%"'
 - group "IP Non-starters breakdowns":
-  - text: 1.6% 14 / 879
   - region "IP status":
     - text: IP status
     - list:
@@ -99,32 +99,31 @@ accessibility:
       - 'listitem "Potential Non-Starter – within window: 2.8% of enrolled, 25 of 879"': Potential Non-Starter – within window 2.8%
       - 'listitem "Potential Non-Starter – outside window: 1.7% of enrolled, 15 of 879"': Potential Non-Starter – outside window 1.7%
       - 'listitem "Confirmed Non-Starter: 1.6% of enrolled, 14 of 879"': Confirmed Non-Starter 1.6%
-- text: PTDSC Treatment Disposition Planned
+- text: PTDSC Treatment Disposition Planned 4.9% 42 / 865
+- 'img "Treatment Disposition trend: 6 snapshots, latest 4.9%"'
 - group "Premature Treatment Discontinuation Rate breakdowns":
-  - text: 4.9% 42 / 865
   - region "Treatment disposition":
     - text: Treatment disposition
     - list:
       - 'listitem "Dosed – treatment complete: 55.5% of dosed, 480 of 865"': Dosed – treatment complete 55.5%
       - 'listitem "Dosed – ongoing: 39.7% of dosed, 343 of 865"': Dosed – ongoing 39.7%
       - 'listitem "Dosed – premature treatment discontinuation: 4.9% of dosed, 42 of 865"': Dosed – premature treatment discontinuation 4.9%
-- text: PTDSC Premature Treatment Discontinuation Reasons Planned
+- text: PTDSC Premature Treatment Discontinuation Reasons Planned 4.9% 42 / 865
+- 'img "Premature Treatment Discontinuation Reasons trend: 6 snapshots, latest 4.9%"'
 - group "Premature Treatment Discontinuation Rate breakdowns":
-  - text: 4.9% 42 / 865
   - region "Reasons for treatment discontinuation":
     - text: Reasons for treatment discontinuation
     - list:
       - 'listitem "Physician Decision: 13 of 42"': Physician Decision 13
       - 'listitem "Other: 13 of 42"': Other 13
       - 'listitem "Progressive Disease: 11 of 42"': Progressive Disease 11
-      - 'listitem "Withdrawal by Participant: 8 of 42"': Withdrawal by Participant 8
-      - 'listitem "Adverse Event: 5 of 42"': Adverse Event 5
+      - 'listitem "+ 2 more: 13 of 42"': + 2 more 13
       - 'listitem "Not recorded: 2 of 42"': Not recorded 2
     - paragraph: A participant can fall in more than one category, so the counts add up to more than 42.
     - paragraph: "Not recorded: the source value was blank."
-- text: SDSC Study Disposition – Enrolled
+- text: SDSC Study Disposition – Enrolled 6.9% 61 / 879
+- 'img "Study Disposition – Enrolled trend: 6 snapshots, latest 6.9%"'
 - group "Study Discontinuation Rate breakdowns":
-  - text: 6.9% 61 / 879
   - region "Study disposition":
     - text: Study disposition
     - list:
@@ -136,17 +135,17 @@ accessibility:
       - 'listitem "Death: 1.0% of enrolled, 9 of 879"': Death 1.0%
       - 'listitem "Not recorded: 0.7% of enrolled, 6 of 879"': Not recorded 0.7%
     - paragraph: "Not recorded: the source value was blank."
-- text: SF Study Disposition – Screening
+- text: SF Study Disposition – Screening 14.1% 144 / 1,023
+- 'img "Study Disposition – Screening trend: 6 snapshots, latest 14.1%"'
 - group "Screen Failure Rate breakdowns":
-  - text: 14.1% 144 / 1,023
   - region "Screening status":
     - text: Screening status
     - list:
       - 'listitem "Enrolled: 85.9% of screened, 879 of 1,023"': Enrolled 85.9%
       - 'listitem "Screen Failure: 14.1% of screened, 144 of 1,023"': Screen Failure 14.1%
-- text: SF Screen Failure Reasons
+- text: SF Screen Failure Reasons 14.1% 144 / 1,023
+- 'img "Screen Failure Reasons trend: 6 snapshots, latest 14.1%"'
 - group "Screen Failure Rate breakdowns":
-  - text: 14.1% 144 / 1,023
   - region "Screen failure reasons":
     - text: Screen failure reasons
     - list:
@@ -157,6 +156,7 @@ accessibility:
       - 'listitem "Not recorded: 12 of 144"': Not recorded 12
     - paragraph: "Not recorded: the source value was blank."
 - text: IPD Important Protocol Deviation Rate New 0.06 per 28 days 380 / 5,928.3
+- 'img "Important Protocol Deviation Rate trend: 6 snapshots, latest 0.06 per 28 days"'
 - list "Sites by flag":
   - listitem: Red 0 0.0%
   - listitem: Amber 4 23.5%
@@ -164,6 +164,7 @@ accessibility:
   - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: PD Non-Important Protocol Deviation Rate New 0.52 per 28 days 3,055 / 5,928.3
+- 'img "Non-Important Protocol Deviation Rate trend: 6 snapshots, latest 0.52 per 28 days"'
 - list "Sites by flag":
   - listitem: Red 2 11.8%
   - listitem: Amber 0 0.0%
@@ -171,6 +172,7 @@ accessibility:
   - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: SAE SAE Reporting Rate New 0.09 per 28 days 551 / 5,928.3
+- 'img "SAE Reporting Rate trend: 6 snapshots, latest 0.09 per 28 days"'
 - list "Sites by flag":
   - listitem: Red 1 5.9%
   - listitem: Amber 4 23.5%
@@ -178,6 +180,7 @@ accessibility:
   - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: AE AE Reporting Rate New 1.34 per 28 days 7,967 / 5,928.3
+- 'img "AE Reporting Rate trend: 6 snapshots, latest 1.34 per 28 days"'
 - list "Sites by flag":
   - listitem: Red 0 0.0%
   - listitem: Amber 1 5.9%
@@ -185,6 +188,7 @@ accessibility:
   - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: LB G3+ Lab Abnormality Rate 3.7% 720 / 19,324
+- 'img "G3+ Lab Abnormality Rate trend: 6 snapshots, latest 3.7%"'
 - list "Sites by flag":
   - listitem: Red 0 0.0%
   - listitem: Amber 0 0.0%
@@ -192,6 +196,7 @@ accessibility:
   - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: QRY Query Rate 6.5% 17,103 / 261,148
+- 'img "Query Rate trend: 6 snapshots, latest 6.5%"'
 - list "Sites by flag":
   - listitem: Red 1 5.9%
   - listitem: Amber 1 5.9%
@@ -199,6 +204,7 @@ accessibility:
   - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: OQRY Delayed Query Resolution Rate 7.3% 1,256 / 17,103
+- 'img "Delayed Query Resolution Rate trend: 6 snapshots, latest 7.3%"'
 - list "Sites by flag":
   - listitem: Red 0 0.0%
   - listitem: Amber 0 0.0%
@@ -206,6 +212,7 @@ accessibility:
   - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: ODAT Delayed Data Entry Rate 10.8% 3,655 / 33,992
+- 'img "Delayed Data Entry Rate trend: 6 snapshots, latest 10.8%"'
 - list "Sites by flag":
   - listitem: Red 1 5.9%
   - listitem: Amber 5 29.4%
@@ -213,6 +220,7 @@ accessibility:
   - listitem: No flag 0 0.0%
 - button "Charts ▾"
 - text: CDAT Data Change Rate 4.4% 11,605 / 261,148
+- 'img "Data Change Rate trend: 6 snapshots, latest 4.4%"'
 - list "Sites by flag":
   - listitem: Red 1 5.9%
   - listitem: Amber 3 17.6%

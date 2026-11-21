@@ -400,14 +400,14 @@ export class PortfolioStore extends EventTarget {
     return study.snapshots.flatMap((date) => this.siteRows(studyId, date, metricId));
   }
 
-  /** Derived study rate across this study's own snapshots (tile trend). */
-  studyTrend(studyId, metricId) {
+  /** The study's pooled rate at each of its snapshots up to the visit shown (#32's sparkline). */
+  studyTrend(studyId, metricId, upTo = this.latestDate(studyId)) {
     const study = this.studies.find((s) => s.StudyID === studyId);
-    if (!study) return [];
-    return study.snapshots.map((date) => ({
-      date,
-      rate: this.studyRollup(studyId, date, metricId)?.Metric ?? null,
-    }));
+    if (!study || upTo == null) return [];
+    return [...study.snapshots]
+      .filter((date) => date <= upTo)
+      .sort()
+      .map((date) => ({ date, rate: this.studyRollup(studyId, date, metricId)?.Metric ?? null }));
   }
 
   siteRows(studyId, date, metricId) {

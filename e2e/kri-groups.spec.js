@@ -49,25 +49,28 @@ function expectedKri(m, of, asOf) {
     unit: per28 ? 'per 28 days' : null,
     nd: `${int(p.numerator)} / ${per28 ? one(p.denominator / 28) : int(p.denominator)}`,
     flags: flags.map(([key, label]) => [key, label, String(p.flags[key]), total ? pct(p.flags[key] / total) : '—']),
+    // The card's header gives the rate and n / N; its body only the flag counts.
+    body: [],
   };
 }
 
 /**
- * What one compact widget shows, read from visible elements only.
+ * What one KRI card shows, its header's value and its flag counts, read from visible elements only.
  * @param {Page} page
  * @param {string} metricId
  */
 async function readKri(page, metricId) {
-  const body = page.locator(`.card.kri[data-metric-id="${metricId}"] .tile-body`);
-  await expect(body).toBeVisible();
-  return body.evaluate((el) => {
+  const card = page.locator(`.card.kri[data-metric-id="${metricId}"]`);
+  await expect(card.locator('.tile-body')).toBeVisible();
+  return card.evaluate((el) => {
     const shownEl = (/** @type {Element | null} */ e) => Boolean(e?.checkVisibility({ opacityProperty: true, visibilityProperty: true }));
     const text = (/** @type {Element | null} */ e) => (shownEl(e) ? (e?.textContent?.trim() ?? null) : null);
     return {
-      rate: text(el.querySelector('.kri-rate .big')),
-      unit: text(el.querySelector('.kri-rate .unit')),
-      nd: text(el.querySelector('.kri-nd')),
+      rate: text(el.querySelector('.card-value .card-rate .big')),
+      unit: text(el.querySelector('.card-value .card-rate .unit')),
+      nd: text(el.querySelector('.card-value .card-nd')),
       flags: [...el.querySelectorAll('.kri-flags li')].map((li) => [li.getAttribute('data-flag'), ...['.lbl', '.v', '.p'].map((s) => text(li.querySelector(s)))]),
+      body: [...(el.querySelector('.tile-body')?.querySelectorAll('*') ?? [])].filter((e) => !e.closest('.kri-flags') && [...e.childNodes].some((c) => c.nodeType === 3 && c.textContent?.trim()) && shownEl(e)).map((e) => text(e)),
     };
   });
 }

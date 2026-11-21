@@ -59,37 +59,50 @@ function jointHtml(t, title) {
   return `${tables.join('')}${notes}`;
 }
 
+const shownBars = (model) => Math.max(0, ...(model.sections ?? []).map((s) => s.bars.filter((b) => b.kind === 'category').length));
+
+// Only a laid-out box can overflow: detached or unsized, the widget shows every bar its top-N allows.
+const overflows = (el) => el.isConnected && el.clientHeight > 0 && el.scrollHeight > el.clientHeight;
+
 /**
  * `config.only` (section keys) or `config.joint` choose what a card shows (#10); the rest is the metric's
- * distribution configuration, merged over the shipped one.
+ * distribution configuration, merged over the shipped one. The card's header carries the metric's value and n / N
+ * (#32). While the breakdown overflows its box, each section shows one bar fewer, the rest going into "+ k more",
+ * down to one bar. A breakdown that then fits is marked `data-fits`; the host grows the cards for anything else.
  */
 export function renderDistribution(el, data, config = {}) {
   const { only = null, joint = null, ...options } = /** @type {any} */ (config);
   const merged = distributionConfig(data.metric, options);
-  const model = buildDistributionModel({
-    rows: data.distributions,
-    metric: data.metric,
-    study: data.study,
-    siteRows: data.siteRows,
-    config: merged,
-    groupId: options.groupId ?? null,
-    only,
-    joint,
-  });
-  el.dataset.state = model.state;
-  if (model.state === 'missing') {
-    el.innerHTML = '<div class="dist"><div class="nd">No breakdowns are configured for this metric.</div></div>';
-    return;
-  }
-  const h = model.header;
-  const head = `<div class="dist-head"><span class="dist-name">${esc(h.name)}</span>
-    <b class="dist-pct">${fmtPct(h.percent)}</b><span class="dist-nd">${fmtInt(h.numerator)} / ${fmtInt(h.denominator)}</span></div>`;
+  const draw = (maxBars) => {
+    const model = buildDistributionModel({
+      rows: data.distributions,
+      metric: data.metric,
+      study: data.study,
+      siteRows: data.siteRows,
+      config: merged,
+      groupId: options.groupId ?? null,
+      only,
+      joint,
+      maxBars,
+    });
+    el.dataset.state = model.state;
+    el.innerHTML = html(model);
+    return model;
+  };
+  let model = draw(Infinity);
+  for (let bars = shownBars(model) - 1; bars >= 1 && overflows(el); bars--) model = draw(bars);
+  el.toggleAttribute('data-fits', Boolean(model.sections) && !overflows(el));
+}
+
+function html(model) {
+  if (model.state === 'missing') return '<div class="dist"><div class="nd">No breakdowns are configured for this metric.</div></div>';
+  const { name } = model.header;
   const body = model.state === 'empty'
     ? `<div class="nd" data-empty="${model.reason}">${EMPTY[model.reason]}</div>`
     : model.joint
-      ? jointHtml(model.joint, `${h.name} by ${model.joint.rowLabel.toLowerCase()}`)
+      ? jointHtml(model.joint, `${name} by ${model.joint.rowLabel.toLowerCase()}`)
       : model.sections.map(sectionHtml).join('');
-  el.innerHTML = `<div class="dist" role="group" aria-label="${esc(`${h.name} breakdowns`)}">${head}${body}</div>`;
+  return `<div class="dist" role="group" aria-label="${esc(`${name} breakdowns`)}">${body}</div>`;
 }
 
 registerWidget({
@@ -97,6 +110,7 @@ registerWidget({
   label: 'Breakdowns',
   version: '0.1.0',
   dataSpec: { results: 'self', distributions: 'self' },
+  fits: true,
   appliesTo: (metric, config) => (distributionConfig(metric, config) ? null : 'it has no breakdown configuration'),
   render: renderDistribution,
 });

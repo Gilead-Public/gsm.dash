@@ -1,6 +1,9 @@
 // @ts-check
 import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { attachHoverTooltip, metricTip } from '../app/tooltip.js';
+import { cardRate, cardValue } from '../app/card-value.js';
+import { sparkline } from '../charts/sparkline.js';
+import { esc } from '../util/format.js';
 import { StatusPill } from './parts.jsx';
 import { configProblems, problemText, resolveView } from '../app/references.js';
 import { reportLink } from '../app/report-links.js';
@@ -13,6 +16,33 @@ import { Widget } from './Widget.jsx';
 // gsm.viz charts under a standard KRI's card; and a visit scrubber.
 
 const PARAMS = ['therapeutic_area', 'protocol_indication', 'phase', 'status', 'product'];
+
+/** The grid width and page state each grid's shared card height was found for. */
+const fitScopes = new WeakMap();
+
+/**
+ * Every card has one height (#32): the configured one, or more while some card's content can't be shortened to fit
+ * it, such as widget 4's tables or a breakdown already down to one bar. A body whose widget fitted it is marked
+ * `data-fits` and left out. Until the page state or the grid's width changes the height only grows, so a breakdown
+ * given more room doesn't shrink it again.
+ * @param {HTMLElement} grid
+ * @param {string} state
+ */
+function fitCards(grid, state) {
+  const scope = `${state}|${grid.clientWidth}`;
+  if (fitScopes.get(grid) !== scope) {
+    fitScopes.set(grid, scope);
+    grid.style.removeProperty('--card-min');
+  }
+  const cards = /** @type {HTMLElement[]} */ ([...grid.querySelectorAll(':scope > .card')]);
+  let need = 0;
+  for (const c of cards) {
+    const body = c.querySelector(':scope > .tile-body');
+    if (!body || body.hasAttribute('data-fits')) continue;
+    need = Math.max(need, c.offsetHeight - body.clientHeight + body.scrollHeight);
+  }
+  if (cards.length && need > cards[0].offsetHeight) grid.style.setProperty('--card-min', `${need}px`);
+}
 
 /** @param {{ problem: import('../app/references.js').Problem, what: string }} props */
 function ProblemNote({ problem, what }) {
@@ -47,6 +77,9 @@ function ConfigNotice({ problems }) {
 export function StudyPage({ store, studyId, back }) {
   const version = useStore(store);
   const root = useRef(/** @type {HTMLDivElement | null} */ (null));
+  const grid = useRef(/** @type {HTMLDivElement | null} */ (null));
+  const fitState = useRef('');
+  const committing = useRef(false);
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
@@ -59,6 +92,29 @@ export function StudyPage({ store, studyId, back }) {
   const asOf = store.state.asOf;
   const found = asOf ? dates.lastIndexOf(asOf) : dates.length - 1;
   const visit = found < 0 ? dates.length - 1 : found;
+  fitState.current = `${studyId}|${visit}|${expanded}`;
+  committing.current = true;
+
+  // A widget redrawn on its own, or a grid that changes width, may change the height the cards need. Within the page's
+  // own render, the cards are measured once all of them are drawn.
+  useLayoutEffect(() => {
+    const el = grid.current;
+    if (!el) return;
+    const fit = () => {
+      if (!committing.current) fitCards(el, fitState.current);
+    };
+    el.addEventListener('widget-drawn', fit);
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(fit);
+    observer?.observe(el);
+    return () => {
+      el.removeEventListener('widget-drawn', fit);
+      observer?.disconnect();
+    };
+  }, [study]);
+  useLayoutEffect(() => {
+    committing.current = false;
+    if (grid.current) fitCards(grid.current, fitState.current);
+  });
 
   // The newest visit clears asOf rather than pinning it, so the page returns to "latest available".
   const goToVisit = useCallback(
@@ -106,7 +162,7 @@ export function StudyPage({ store, studyId, back }) {
         </span>
         <VisitScrubber dates={dates} visit={visit} date={date} goToVisit={goToVisit} />
       </div>
-      <div className="tiles cards">
+      <div className="tiles cards" ref={grid}>
         {shown.map((card, i) => {
           const open = card.kri && detail.metricId != null && detail.metricId === card.metric?.MetricID;
           return (
@@ -170,8 +226,39 @@ function VisitScrubber({ dates, visit, date, goToVisit }) {
 }
 
 /**
- * One card: its title (whose hover gives the metric's definition), its one widget or the reason it can't show it, and
- * a footer with the detailed-report link and, on a standard KRI, the Charts drill-in.
+ * The card's value at the visit shown, its n / N, and a sparkline of the value at each snapshot up to that visit
+ * (#32). The sparkline's hover gives what its accessible label gives.
+ * @param {{ metric: any, title: string, store: any, studyId: string }} props
+ */
+function CardValue({ metric, title, store, studyId }) {
+  const spark = useRef(/** @type {HTMLSpanElement | null} */ (null));
+  const date = store.latestDate(studyId);
+  const value = cardValue(metric, store.studyRollup(studyId, date, metric.MetricID));
+  useLayoutEffect(() => {
+    const el = spark.current;
+    if (!el) return;
+    sparkline(el, store.studyTrend(studyId, metric.MetricID, date), { width: 72, height: 24, label: `${title} trend`, format: (rate) => cardRate(metric, rate), gaps: true });
+    const label = el.querySelector('svg')?.getAttribute('aria-label');
+    if (label) el.dataset.tip = esc(label);
+    else delete el.dataset.tip;
+  });
+  return (
+    <div className="card-value">
+      <div className="card-figs">
+        <span className="card-rate">
+          <b className="big">{value.rate}</b>
+          {value.unit ? <span className="unit">{value.unit}</span> : null}
+        </span>
+        <span className="card-nd">{`${value.n} / ${value.N}`}</span>
+      </div>
+      <span className="spark" ref={spark} />
+    </div>
+  );
+}
+
+/**
+ * One card: its title (whose hover gives the metric's definition), its value, n / N and sparkline, its one widget or
+ * the reason it can't show it, and a footer with the detailed-report link and, on a standard KRI, the Charts drill-in.
  * @param {{ card: import('../app/study-cards.js').Card, open: boolean, store: any, studyId: string, version: number }} props
  */
 export function Card({ card, open, store, studyId, version }) {
@@ -187,6 +274,7 @@ export function Card({ card, open, store, studyId, version }) {
         </span>
         {metric ? <StatusPill metric={metric} /> : null}
       </div>
+      {def ? <CardValue metric={metric} title={card.title} store={store} studyId={studyId} /> : null}
       {def ? (
         <Widget className="tile-body" def={def} metricId={metric.MetricID} config={config} store={store} studyId={studyId} version={version} />
       ) : (

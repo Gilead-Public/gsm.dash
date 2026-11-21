@@ -176,10 +176,11 @@ async function renderedFor(page, m) {
       const content = node.textContent?.trim();
       const parent = node.parentElement;
       if (!content || !parent || !shown(parent)) continue;
-      if (!parent.closest('.dist-head, .sub-h, .dist-cols, .dist-row, .dist-note')) unexpected.push(content);
+      if (!parent.closest('.sub-h, .dist-cols, .dist-row, .dist-note')) unexpected.push(content);
     }
+    const head = el.closest('.card')?.querySelector('.card-value') ?? null;
     return {
-      header: { pct: visible(el.querySelector('.dist-pct'), 'header percentage'), nd: visible(el.querySelector('.dist-nd'), 'header counts') },
+      header: { pct: visible(head?.querySelector('.big') ?? null, 'header value'), nd: visible(head?.querySelector('.card-nd') ?? null, 'header counts') },
       sections,
       hidden,
       unexpected,
@@ -191,10 +192,27 @@ async function renderedFor(page, m) {
 const exactly = (value) => new RegExp(`^\\s*${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`);
 
 /**
+ * Opens the study with cards tall enough for every breakdown's configured top-N, so the values below are compared in
+ * full; how a breakdown fits a card of the shipped size is 32.08's (e2e/cards.spec.js).
  * @param {{ openStudy(studyId: string): Promise<void> }} app
  * @param {Page} page
  */
 async function openStudy(app, page) {
+  await page.addInitScript(() => {
+    const add = () => {
+      const style = document.createElement('style');
+      style.textContent = '.tiles.cards { --card-h: 1600px; }';
+      document.documentElement.append(style);
+    };
+    if (document.documentElement) add();
+    else {
+      new MutationObserver((_, observer) => {
+        if (!document.documentElement) return;
+        observer.disconnect();
+        add();
+      }).observe(document, { childList: true });
+    }
+  });
   await app.openStudy(study.StudyID);
   await expect(body(page, configured[0]).locator('.dist')).toBeVisible();
 }
@@ -279,10 +297,9 @@ test.describe('Layout A distribution widget', () => {
       const seen = await renderedFor(page, m);
       const want = expectedFor(m);
       expect(seen.sections.map((s) => s.rows.map((r) => r.label)), m.card).toEqual(want.sections.map((s) => s.rows.map((r) => r.label)));
-      expect(seen.unexpected, `${m.card}: visible content outside the header, titles, headings, rows and footnotes`).toEqual([]);
+      expect(seen.unexpected, `${m.card}: visible content outside the titles, headings, rows and footnotes`).toEqual([]);
       await expect(body(page, m).locator('.dist-total'), m.card).toHaveCount(0);
-      await expect(body(page, m).locator('.dist-nd'), m.card).toHaveCount(1);
-      await expect(body(page, m).locator('.dist-nd'), m.card).toHaveText(want.header.nd);
+      await expect(page.locator(`.card[data-card="${m.card}"] .card-nd`), m.card).toHaveText(want.header.nd);
     }
   });
 

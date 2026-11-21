@@ -76,8 +76,13 @@ To share a build for feedback without releasing it: every CI run that passes als
   columns (study name, **Enrolled**, Status; #21) and each metric's checkbox;
   and **Reset**. Enrolled is the summary's
   `ParticipantCount`, summed over the row's studies. The study page is one
-  grid of cards, one per widget the tracker requests, in its order (#32); its
-  back link reads "← Portfolio". Links
+  grid of same-size cards, one per widget the tracker requests, in its order
+  (#32). Each card's header gives the metric's value at the visit shown, its
+  n / N and a sparkline of that value at each snapshot up to the visit; a
+  breakdown longer than its card allows shows its top rows, then "+ k more",
+  and when a card's content can't be shortened (widget 4's tables), every
+  card grows to fit it, so nothing is clipped. Its back link reads
+  "← Portfolio". Links
   between reports are relative and carry the portfolio's view in the hash.
   `src/app/` holds the rules and text both pages share.
 - `src/widgets/` — the **widget framework** (see the Widget Framework
@@ -89,7 +94,7 @@ To share a build for feedback without releasing it: every CI run that passes als
   swapped for another: its card shows a placeholder naming it and the
   reason, and configuration no card can show is listed above the study
   page (`src/app/references.js`). Shipped set: `distribution-bar` (#10),
-  `kri-summary` (the standard KRIs, #32, configured in
+  `kri-summary` (a standard KRI's flag counts, #32, configured in
   `src/config/kri-groups.js`), and `threshold-list` (watch sites — its
   derivation is a pure, unit-tested export per the "widgets render, the
   pipeline computes" boundary).

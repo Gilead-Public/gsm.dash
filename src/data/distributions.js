@@ -62,10 +62,11 @@ export function scopeTotals({ study, siteRows, groupId = null }) {
  * variables, colours); without one the metric is "missing". With one but no rows it is "empty": either the
  * snapshot publishes no distributions at all (`rows` undefined; they cover the latest snapshot only), or none
  * for this metric or group. Header and percentages use the same scope as the rows (`groupId` or the study).
- * A card shows one section (`only`, a list of 'Source:Variable' keys) or a joint-count table (`joint`, #10).
- * @param {{ rows: any[] | undefined, metric: any, study: any, siteRows?: any[], config: any, groupId?: string | null, only?: string[] | null, joint?: { rows: string, columns: string[] } | null }} input
+ * A card shows one section (`only`, a list of 'Source:Variable' keys) or a joint-count table (`joint`, #10). `maxBars`
+ * caps each section's category bars below its top-N, so a breakdown fits its card (#32).
+ * @param {{ rows: any[] | undefined, metric: any, study: any, siteRows?: any[], config: any, groupId?: string | null, only?: string[] | null, joint?: { rows: string, columns: string[] } | null, maxBars?: number }} input
  */
-export function buildDistributionModel({ rows, metric, study, siteRows, config, groupId = null, only = null, joint = null }) {
+export function buildDistributionModel({ rows, metric, study, siteRows, config, groupId = null, only = null, joint = null, maxBars = Infinity }) {
   if (!config) return { state: 'missing' };
   const totals = scopeTotals({ study, siteRows, groupId });
   if (rows === undefined) return { state: 'empty', reason: 'not-published', header: header(metric, totals) };
@@ -78,7 +79,7 @@ export function buildDistributionModel({ rows, metric, study, siteRows, config, 
   return {
     state: 'ok',
     header: header(metric, totals),
-    sections: ordered.map((s) => section(s, { config })),
+    sections: ordered.map((s) => section(s, { config, maxBars })),
   };
 }
 
@@ -139,12 +140,12 @@ function header(metric, totals) {
 
 // Status sections (the metric's denominator) show each category's share of their population; reason sections (its
 // numerator) show counts (design follow-up, 2026-11-13).
-function section(s, { config }) {
+function section(s, { config, maxBars }) {
   const sc = config.sections?.[sectionKey(s.Source, s.Variable)] ?? {};
   const isStatus = (config.statusVariables ?? []).includes(s.Variable);
   const colours = config.colours ?? null;
   const display = s.Source === 'Denominator' ? 'percent' : 'count';
-  const { shown, rest, blank } = orderAndCollapse(s.categories, sc.topN ?? config.topN ?? Infinity);
+  const { shown, rest, blank } = orderAndCollapse(s.categories, Math.min(sc.topN ?? config.topN ?? Infinity, maxBars));
 
   const bar = (c, label, kind) => ({
     kind,

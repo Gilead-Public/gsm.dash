@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "ac17a838b89e865073bb03046f6cb2d0a1574a971e9518b396a3e14ef5399746",
+  "hash": "0bbe298cd0879483165dc77745a54b3a727a9f918901dda22469fc28286d6594",
   "issues": [
     {
       "number": 8,
@@ -759,70 +759,70 @@
       "title": "Show the study page as one grid of same-size cards",
       "parent": "Gilead-BioStats/gsm.roadmap#618",
       "userTest": true,
-      "scopeSection": "**In:**\n- **One grid of cards** in tracker order (gsm.roadmap#617's widget list): #10's distribution cards, then the standard KRIs (12–20). Every card has the same width and height. Widgets 2, 10 and 11 join when they are built.\n- **Card header:** the card's title (its hover gives the metric's definition, #20), the metric's value at the visit shown, n / N, and a sparkline.\n- **Sparkline:** one point per snapshot up to the visit selected in the scrubber. Each point is the value the card's header shows at that snapshot: Σ numerator ÷ Σ denominator over the metric's site rows, per 28 days where configured. It is scaled to the series' own minimum and maximum, with no axis. Its hover and accessible label give the latest value, formatted as the header formats it. With fewer than two points it shows \"—\".\n- **Card footer:** the detailed-report link (#13) where one is configured and, on a standard KRI's card, its Charts button; nothing else.\n- Each standard KRI's card shows, for the visit shown:\n  - its name;\n  - its rate: Σ numerator ÷ Σ denominator over the metric's site rows, displayed by the metric's display rule (per 28 days to two decimals; percentages to one decimal);\n  - n / N: Σ numerator and Σ denominator;\n  - how many of the metric's sites are red (|flag| 2), amber (|flag| 1), green (flag 0), or have no flag (they can't be evaluated), each with its percentage of all the metric's sites, to one decimal.\n- **Per 28 days:** for metrics displayed per 28 days (AE, SAE and both protocol-deviation rates), the rate is n ÷ exposure days × 28 and N is exposure days ÷ 28, to one decimal, both from unrounded inputs. The unit label comes from configuration; the factor stays 28.\n- Each standard KRI's card keeps the existing \"Charts\" drill-in, whose panel spans its row of the grid. No card has a view pager.\n- **Ordered by layout only:** the cards follow the configured order, and each card appears once. Configuration lists the standard KRIs.\n- **Hiding:**\n  - configuration lists KRIs hidden by default, one list for every study;\n  - one expand control, after the last KRI card, reveals every hidden KRI at once;\n  - by default, no KRI is hidden, so no expand control shows;\n  - a KRI hidden from the portfolio (a hidden metric or group, or a metric-status filter, #27) doesn't appear, even after expanding.\n- **Nothing clipped:** every label, value, footnote and empty or error message fits inside its card. A breakdown longer than its card allows shows its top rows, then \"+ k more\" (#10).\n\n**Out:** flag computation (owned by the metric workflows); the distribution breakdowns (#10); a user setting for which KRIs are hidden; grouping, sorting, resizing and stacking cards, which the review leaves for later. The grouped layout of the 13 Nov follow-up (CTQ widgets by category, then three KRI groups) is removed for now under #35, its code kept unused.",
+      "scopeSection": "**In:**\n- **One grid of cards** in tracker order (gsm.roadmap#617's widget list): #10's distribution cards, then the standard KRIs (12–20). Every card has the same width and height. Widgets 2, 10 and 11 join when they are built.\n- **Card header:** the card's title (its hover gives the metric's definition, #20), the metric's value at the visit shown, n / N, and a sparkline.\n- **Sparkline:** one place per snapshot up to the visit selected in the scrubber. Each point is the value the card's header shows at that snapshot: Σ numerator ÷ Σ denominator over the metric's site rows, per 28 days where configured. A snapshot without a value (no site rows, or a zero denominator) leaves a gap in the line, and a value with no neighbouring value shows as a dot. It is scaled to the series' own minimum and maximum, with no axis. Its hover and accessible label give the number of snapshots, how many have no value, and the value at the visit shown, formatted as the header formats it (\"—\" when it has none). With fewer than two values it shows \"—\".\n- **Card footer:** the detailed-report link (#13) where one is configured and, on a standard KRI's card, its Charts button; nothing else.\n- Each standard KRI's card shows, for the visit shown:\n  - its name;\n  - its rate: Σ numerator ÷ Σ denominator over the metric's site rows, displayed by the metric's display rule (per 28 days to two decimals; percentages to one decimal);\n  - n / N: Σ numerator and Σ denominator;\n  - how many of the metric's sites are red (|flag| 2), amber (|flag| 1), green (flag 0), or have no flag (they can't be evaluated), each with its percentage of all the metric's sites, to one decimal.\n- **Per 28 days:** for metrics displayed per 28 days (AE, SAE and both protocol-deviation rates), the rate is n ÷ exposure days × 28 and N is exposure days ÷ 28, to one decimal, both from unrounded inputs. The unit label comes from configuration; the factor stays 28.\n- Each standard KRI's card keeps the existing \"Charts\" drill-in, whose panel spans its row of the grid. No card has a view pager.\n- **Ordered by layout only:** the cards follow the configured order, and each card appears once. Configuration lists the standard KRIs.\n- **Hiding:**\n  - configuration lists KRIs hidden by default, one list for every study;\n  - one expand control, after the last KRI card, reveals every hidden KRI at once;\n  - by default, no KRI is hidden, so no expand control shows;\n  - a KRI hidden from the portfolio (a hidden metric or group, or a metric-status filter, #27) doesn't appear, even after expanding.\n- **Nothing clipped:** every label, value, footnote and empty or error message fits inside its card. A breakdown longer than its card allows shows its top rows, then \"+ k more\" (#10).\n\n**Out:** flag computation (owned by the metric workflows); the distribution breakdowns (#10); a user setting for which KRIs are hidden; grouping, sorting, resizing and stacking cards, which the review leaves for later. The grouped layout of the 13 Nov follow-up (CTQ widgets by category, then three KRI groups) is removed for now under #35, its code kept unused.",
       "criteria": [
         {
           "id": "32.01",
           "text": "Each compact widget's displayed rate, n / N, and site counts and percentages per flag equal values computed independently from the fixture's site rows, at the latest and an earlier visit (test).",
           "sha256": "795fdf246ed85c5232ed79f42d13535d6712b15a2ff2fb946dfb3560a983dc8f",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "32.02",
           "text": "For metrics displayed per 28 days, the displayed rate and N follow the per-28-day rule, and a configured unit label is shown (test).",
           "sha256": "b5eacee9237452a839e2a6170535bf25d7e9543d7ff72b60a2df3bd90a3acbdf",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "32.03",
           "text": "The cards follow tracker order: #10's distribution cards, then 12–20. Each card appears once, there is no control to group them, and KRIs hidden from the portfolio are left out (test).",
           "sha256": "ac9ff357352202dcd8180e3ecd72194c3631fb45a655e38822aa7acd2a881dc7",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "32.04",
           "text": "KRIs configured as hidden by default appear only after the expand control after the last KRI card is used, which reveals them all. KRIs hidden from the portfolio stay out, and with the default configuration no expand control shows (test).",
           "sha256": "ad251de9c9f7cbcf4819e039105d6ddb068759f722dae5002649bb9ea566419b",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "32.05",
           "text": "A user compares the card grid, with a KRI hidden by default, against this issue's Scope and accepts it (user acceptance).",
           "sha256": "a3af7ac5d4d001f7e98cc44a468071b5784ca5ac202fc7f6752d8c8bc515c0f7",
           "kind": "visual",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "32.06",
           "text": "Each compact widget keeps the Charts drill-in and, where configured, the detailed-report link, and has no view pager (test).",
           "sha256": "20f09eeac0a852dd1d795d3bcb885df54fa7e6231b71f7d591d22b070ce26f56",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "32.07",
           "text": "Pooling a metric's site rows into the study's value sits in one tested function, so it can be qualified as dashboard logic (gsm.roadmap#625).",
           "sha256": "0aebfd223ee080c9859d59f1e6ea94f0ad35a9bd201381d35e5717d57a13b8ba",
           "kind": "unit",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "32.08",
           "text": "Every card has the same width and height, and every label, value, footnote and empty or error message is visible inside its card: nothing is clipped (test).",
           "sha256": "ff034ca880e546d489d33c12b1ad3460e40dc655191998f6a61952f53eb3a107",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "32.09",
-          "text": "With at least two snapshots up to the selected visit, each card's sparkline draws exactly those points, equal to values pooled independently by `test/qual/pooling.js`, including per-28-day KRIs and at an earlier visit; with fewer, the card shows \"—\" and no trend line (test).",
-          "sha256": "6af852a493ae5fd7f8ab7a8341c76bce262d5bd4f7b1f1e33ac6e256aa992148",
+          "text": "With at least two values up to the selected visit, each card's sparkline has one place per snapshot up to that visit and draws exactly the values pooled independently by `test/qual/pooling.js`, including per-28-day KRIs and at an earlier visit. A snapshot without a value, between others or at the visit shown, leaves a gap, and the label reports it. With fewer than two values, the card shows \"—\" and no trend line (test).",
+          "sha256": "98e35be1519b1d938a341c2568b075f0be7fd5e674f3efa4d64b0257c3ea78c8",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         }
       ]
     },

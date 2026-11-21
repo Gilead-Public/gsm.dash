@@ -114,7 +114,7 @@ test.describe('the portfolio reads the counts-only summary', () => {
 
     await app.openStudy(changed.StudyID, overrides);
     expect(edited, "the study's file was edited before its report read it").toBeGreaterThan(0);
-    const big = (await page.locator(`.card[data-metric-id="${metric.MetricID}"] .kri-rate .big`).textContent())?.trim() ?? '';
+    const big = (await page.locator(`.card[data-metric-id="${metric.MetricID}"] .card-value .big`).textContent())?.trim() ?? '';
     const pct = /^(\d+\.\d)%$/.exec(big);
     expect(pct, `the card's value "${big}"`).toBeTruthy();
     expect(near(Number(pct?.[1]), editedOwn.rate), "the study's card uses its edited file").toBe(true);

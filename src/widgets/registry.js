@@ -3,6 +3,7 @@
 //   { name, version, dataSpec, render(el, data, config) -> {update?}, appliesTo? }
 // dataSpec keys name the contract layers the widget needs (resolve.js).
 // `appliesTo(metric, config)` returns why the widget can't show that metric, or null.
+// `fits: true` asks the host to redraw it whenever its box changes size, so it can fit what it shows to the box.
 // A widget that can't render is never swapped for another (#12): the host shows why.
 
 const widgets = new Map();
