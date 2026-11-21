@@ -60,3 +60,31 @@ export const withCards = (metricIds, catalog) => {
   const carded = new Set(TRACKER_CARDS.map((c) => catalog.find((m) => m.ID === c.metric)?.MetricID));
   return metricIds.filter((id) => carded.has(id));
 };
+
+/**
+ * Adds CSS to every page the test opens from now on, before the report renders.
+ * @param {Page} page
+ * @param {string} css
+ */
+export const styleFromStart = (page, css) =>
+  page.addInitScript((text) => {
+    const add = () => {
+      const style = document.createElement('style');
+      style.textContent = text;
+      document.documentElement.append(style);
+    };
+    if (document.documentElement) add();
+    else {
+      new MutationObserver((_, observer) => {
+        if (!document.documentElement) return;
+        observer.disconnect();
+        add();
+      }).observe(document, { childList: true });
+    }
+  }, css);
+
+/**
+ * Cards tall enough for every breakdown's configured top-N. How many bars fit a card of the shipped size depends on the
+ * platform's fonts, and is 32.08's to check.
+ */
+export const ROOM_FOR_EVERY_BAR = '.tiles.cards { --card-h: 1600px; }';

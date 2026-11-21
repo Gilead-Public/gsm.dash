@@ -5,7 +5,7 @@
 // panel with the series and values its gsm.viz chart draws, and any open tooltip. Chart contents are recorded from the
 // chart's data rather than its pixels, which differ by platform.
 import { readData, test } from './fixtures/app.js';
-import { card, tile } from './fixtures/tiles.js';
+import { card, ROOM_FOR_EVERY_BAR, styleFromStart, tile } from './fixtures/tiles.js';
 import { domLine, expectRecorded } from './fixtures/baseline.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('@playwright/test').TestInfo} TestInfo */
@@ -143,6 +143,9 @@ async function goToVisit(page, index) {
 }
 
 test.describe('the study page against its recorded baseline', () => {
+  // The records hold every bar, so they are the same whatever fonts the platform has.
+  test.beforeEach(({ page }) => styleFromStart(page, ROOM_FOR_EVERY_BAR));
+
   test('12.02: the study page matches its baseline at its defaults and with the drill-in panel on each tab (#12)', async ({ app, page }, testInfo) => {
     await app.openStudy(study.StudyID);
     await expectState(page, testInfo, app.artifact, 'default');

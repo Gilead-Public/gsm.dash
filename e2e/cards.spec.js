@@ -8,7 +8,7 @@ import { DISTRIBUTION_CONFIG } from '../src/config/distributions.js';
 import { expectedView } from '../test/qual/distributions.js';
 import { pooled } from '../test/qual/pooling.js';
 import { expect, readData, test } from './fixtures/app.js';
-import { card, TRACKER_CARDS } from './fixtures/tiles.js';
+import { card, styleFromStart, TRACKER_CARDS } from './fixtures/tiles.js';
 
 const portfolio = readData('portfolio.json');
 /** @type {StudyEntry[]} */
@@ -143,6 +143,41 @@ test.describe('cards of one size, with nothing clipped', () => {
       await page.setViewportSize({ width, height: 900 });
       await expect.poll(async () => (await layout(page)).outside, `${width} px`).toEqual([]);
       await expectFitted(page, `${width} px`);
+    }
+  });
+
+  test('32.08: widget 4\'s tables break their headings inside words exactly when they would otherwise overflow their card: never in a roomy card, always in a narrow one; and with wider text, as another platform\'s fonts give, no text is clipped at any width (#32)', async ({ app, page }) => {
+    const deaths = card(page, 'premature-deaths').locator('.tile-body');
+    // Whether the tables are tightened, and whether, measured without that, they would be wider than the card.
+    const tightness = () =>
+      deaths.evaluate((el) => {
+        const tight = el.hasAttribute('data-tight');
+        el.removeAttribute('data-tight');
+        const overflows = el.scrollWidth > el.clientWidth;
+        if (tight) el.setAttribute('data-tight', '');
+        return { tight, overflows };
+      });
+    /**
+     * @param {string} css
+     * @param {{ tight: boolean, overflows: boolean }} want
+     */
+    const withCards = async (css, want) => {
+      const style = await page.addStyleTag({ content: css });
+      await expect.poll(tightness, css).toEqual(want);
+      await expectFitted(page, css);
+      await style.evaluate((el) => /** @type {Element} */ (el).remove());
+    };
+    await app.openStudy(study.StudyID);
+    await withCards('.tiles.cards { grid-template-columns: repeat(auto-fill, 640px); }', { tight: false, overflows: false });
+    await withCards('.tiles.cards { grid-template-columns: repeat(auto-fill, 200px); }', { tight: true, overflows: true });
+    await styleFromStart(page, '.study-page { letter-spacing: 0.06em; }');
+    await app.openStudy(study.StudyID);
+    for (const width of [1400, 1280, 1000, 700, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect.poll(async () => (await layout(page)).outside, `wider text, ${width} px`).toEqual([]);
+      await expectFitted(page, `wider text, ${width} px`);
+      const seen = await tightness();
+      expect(seen.tight, `wider text, ${width} px: tightened exactly when the tables would overflow`).toBe(seen.overflows);
     }
   });
 
