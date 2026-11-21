@@ -41,7 +41,7 @@ test('27.01: every report, one per study and the portfolio, is one HTML file wit
   expect(inlineDocument('portfolio').studies.map((/** @type {{ StudyID: string }} */ s) => s.StudyID), 'portfolio: every study inline').toEqual(studies.map((s) => s.StudyID));
   requests.length = 0;
   const url = await app.openReport('portfolio');
-  await expect(page.locator('#meta')).toHaveText(`${studies.length} studies · ${manifest.metrics.filter((/** @type {{ Active?: boolean }} */ m) => m.Active !== false).length} metrics · exported ${manifest.generated}`);
+  await expect(page.locator('tbody tr[data-hl]')).toHaveCount(studies.length);
   await expect(page.getByRole('alert')).toHaveCount(0);
   expect(requests, 'portfolio: requests besides the report itself').toEqual([url]);
 });

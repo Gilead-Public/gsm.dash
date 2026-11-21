@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { generatePortfolio } from '../scripts/generate-example-data.mjs';
 import { poolResults } from '../src/data/rollup.js';
-import { kriLayout } from '../src/app/kri-groups.js';
-import { kriSummary } from '../src/widgets/kri-summary.js';
+import { studyCards } from '../src/app/study-cards.js';
+import '../src/widgets/index.js';
+import { cardRate, cardValue } from '../src/app/card-value.js';
+import { kriFlags } from '../src/widgets/kri-summary.js';
 import { pooled, shownMetrics } from './qual/pooling.js';
 
 const { manifest, snapshots } = generatePortfolio();
@@ -16,45 +18,28 @@ const withConfig = (configs) => shown.map((m) => (configs[m.ID] ? { ...m, Widget
 const KRIS = ['kri0001', 'kri0002', 'kri0005', 'kri0003', 'kri0004', 'kri0008', 'kri0009', 'kri0010', 'kri0011'];
 const siteRowsAt = (snapshot, metric) => snapshot.results.filter((r) => r.GroupLevel === 'Site' && r.MetricID === metric.MetricID);
 
-describe('KRI groups', () => {
-  it('32.03: by default the nine standard KRIs sit in their three groups in configured order, and every other metric stays a CTQ widget in catalog order (#32)', () => {
-    const { ctq, groups } = kriLayout(shown);
-    expect(groups.map((g) => [g.id, g.label, ids(g.shown), ids(g.hidden)])).toEqual([
-      ['safety', 'AE, SAE and labs', ['kri0001', 'kri0002', 'kri0005'], []],
-      ['deviations', 'Protocol deviations', ['kri0003', 'kri0004'], []],
-      ['data', 'EDC and query rates', ['kri0008', 'kri0009', 'kri0010', 'kri0011'], []],
+describe('the study page\'s cards in order (#32)', () => {
+  const inactive = manifest.metrics.filter((m) => m.Active === false);
+  const cards = (metrics) => studyCards({ metrics, inactive, visible: metrics });
+
+  it('32.03: by default the cards follow tracker order, the breakdowns then the nine standard KRIs, each once (#32)', () => {
+    const all = cards(shown);
+    expect(all.map((c) => c.spec.id)).toEqual([
+      'eligibility-status', 'ie-criteria', 'premature-deaths', 'ip-status', 'treatment-disposition',
+      'treatment-discontinuation-reasons', 'study-disposition', 'screening-disposition', 'screen-failure-reasons',
+      'kri0004', 'kri0003', 'kri0002', 'kri0001', 'kri0005', 'kri0008', 'kri0009', 'kri0010', 'kri0011',
     ]);
-    expect(ids(ctq)).toEqual(ids(shown).filter((id) => !KRIS.includes(id)));
+    expect(all.filter((c) => c.kri).map((c) => c.metric.ID).sort()).toEqual([...KRIS].sort());
   });
 
-  it('32.03: configuration moves a KRI into another group or out of every group, and sets its place in a group (#32)', () => {
-    const { ctq, groups } = kriLayout(withConfig({ kri0005: { group: 'deviations', order: -1 }, kri0001: { group: null }, kri0011: { order: 0 } }));
-    expect(groups.map((g) => ids(g.shown))).toEqual([['kri0002'], ['kri0005', 'kri0003', 'kri0004'], ['kri0008', 'kri0011', 'kri0009', 'kri0010']]);
-    expect(ids(ctq)).toEqual(ids(shown).filter((id) => !KRIS.includes(id) || id === 'kri0001'));
-  });
-
-  it('32.03: a group with no visible members is left out (#32)', () => {
-    const { groups } = kriLayout(shown.filter((m) => !['kri0003', 'kri0004'].includes(m.ID)));
-    expect(groups.map((g) => g.id)).toEqual(['safety', 'data']);
-  });
-
-  it('32.04: nothing is hidden by default, and a KRI configured as hidden moves to its own group\'s hidden list (#32)', () => {
-    expect(kriLayout(shown).groups.every((g) => g.hidden.length === 0)).toBe(true);
-    const { groups } = kriLayout(withConfig({ kri0002: { hidden: true }, kri0009: { hidden: true } }));
-    expect(groups.map((g) => [ids(g.shown), ids(g.hidden)])).toEqual([
-      [['kri0001', 'kri0005'], ['kri0002']],
-      [['kri0003', 'kri0004'], []],
-      [['kri0008', 'kri0010', 'kri0011'], ['kri0009']],
-    ]);
-    expect(groups.map((g) => ids(g.members)), 'an expanded group keeps the configured order').toEqual([
-      ['kri0001', 'kri0002', 'kri0005'],
-      ['kri0003', 'kri0004'],
-      ['kri0008', 'kri0009', 'kri0010', 'kri0011'],
-    ]);
+  it('32.04: nothing is hidden by default, and only the KRIs configured as hidden are marked (#32)', () => {
+    expect(cards(shown).some((c) => c.hidden)).toBe(false);
+    const marked = cards(withConfig({ kri0002: { hidden: true }, kri0009: { hidden: true } })).filter((c) => c.hidden);
+    expect(marked.map((c) => c.metric.ID)).toEqual(['kri0002', 'kri0009']);
   });
 });
 
-describe('the compact KRI summary', () => {
+describe('a KRI card\'s header value and flag counts', () => {
   const kris = KRIS.map((id) => manifest.metrics.find((m) => m.ID === id));
   const expected = (metric, p) => {
     const per28 = metric.Display === 'per_28d';
@@ -79,8 +64,8 @@ describe('the compact KRI summary', () => {
           const rows = siteRowsAt(snapshot, metric);
           if (!rows.length) continue;
           const { Numerator, Denominator, Rate } = poolResults(rows);
-          const summary = kriSummary(metric, { Numerator, Denominator, Metric: Rate }, rows);
-          expect(summary, `${study.StudyID} ${date} ${metric.ID}`).toEqual(expected(metric, pooled(read, [study], metric.MetricID, date)));
+          const shown = { ...cardValue(metric, { Numerator, Denominator, Metric: Rate }), flags: kriFlags(rows) };
+          expect(shown, `${study.StudyID} ${date} ${metric.ID}`).toEqual(expected(metric, pooled(read, [study], metric.MetricID, date)));
           compared++;
         }
       }
@@ -90,19 +75,23 @@ describe('the compact KRI summary', () => {
 
   it('32.01: sites without a flag count in every flag percentage (#32)', () => {
     const metric = kris[0];
-    const s = kriSummary(metric, null, [{ Flag: 2 }, { Flag: -1 }, { Flag: 0 }, { Flag: null }]);
-    expect(s.flags.map((f) => [f.key, f.count, f.percent])).toEqual([['red', 1, '25.0%'], ['amber', 1, '25.0%'], ['green', 1, '25.0%'], ['na', 1, '25.0%']]);
+    const flags = kriFlags([{ Flag: 2 }, { Flag: -1 }, { Flag: 0 }, { Flag: null }]);
+    expect(flags.map((f) => [f.key, f.count, f.percent])).toEqual([['red', 1, '25.0%'], ['amber', 1, '25.0%'], ['green', 1, '25.0%'], ['na', 1, '25.0%']]);
+    const s = cardValue(metric, null);
     expect([s.rate, s.n, s.N]).toEqual(['—', '—', '—']);
   });
 
   it('32.02: a rate per 28 days is n ÷ exposure days × 28 and its N is exposure days ÷ 28, both from the unrounded sums, with the configured unit label (#32)', () => {
     const metric = kris.find((m) => m.Display === 'per_28d');
-    const s = kriSummary(metric, { Numerator: 1, Denominator: 29, Metric: 1 / 29 }, []);
+    const s = cardValue(metric, { Numerator: 1, Denominator: 29, Metric: 1 / 29 });
     expect([s.rate, s.N, s.unit]).toEqual(['0.97', '1.0', 'per 28 days']);
+    expect(cardRate(metric, 1 / 29)).toBe('0.97 per 28 days');
     const relabelled = { ...metric, WidgetConfigs: { 'kri-summary': { unit: 'per 4 weeks' } } };
-    expect(kriSummary(relabelled, { Numerator: 1, Denominator: 29, Metric: 1 / 29 }, []).unit).toBe('per 4 weeks');
+    expect(cardValue(relabelled, { Numerator: 1, Denominator: 29, Metric: 1 / 29 }).unit).toBe('per 4 weeks');
+    expect(cardRate(relabelled, 1 / 29)).toBe('0.97 per 4 weeks');
     const pct = kris.find((m) => m.Display !== 'per_28d');
-    expect(kriSummary(pct, { Numerator: 1, Denominator: 29, Metric: 1 / 29 }, [])).toMatchObject({ rate: '3.4%', N: '29', unit: null });
+    expect(cardValue(pct, { Numerator: 1, Denominator: 29, Metric: 1 / 29 })).toMatchObject({ rate: '3.4%', N: '29', unit: null });
+    expect(cardRate(pct, 1 / 29)).toBe('3.4%');
   });
 });
 

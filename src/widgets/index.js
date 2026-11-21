@@ -1,13 +1,8 @@
 // Build-time registry: importing this module registers the shipped widget set.
-// Standard tile views (reporting layer only — free for every site-level metric):
-import './scalar-tile.js'; // "Details"
-import './views/bar-outliers.js';
-import './views/flag-dist.js';
-import './views/trend-mini.js';
+// The study page's cards (#32):
 import './distribution-bar.js';
 import './kri-summary.js';
-// Custom / page-level widgets:
-import './link-out.js';
+// Page-level widgets:
 import './threshold-list.js';
 // gsm.viz adapters — the standard KRI-report charts, wide format (drill-in panel).
 import './viz/viz-bar.js';

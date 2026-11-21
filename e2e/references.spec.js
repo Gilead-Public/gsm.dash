@@ -1,25 +1,28 @@
 // @ts-check
 // #12: an unknown or inapplicable reference in configuration shows a placeholder naming it and the reason, and logs
-// a warning; nothing is substituted. Every case is supplied through real configuration (the catalog).
+// a warning; nothing is substituted. Every case here is supplied through the catalog, as a deployment would supply
+// it; a misspelt widget or section in the card list itself is code, covered by the unit tests.
 import { expect, readData, test } from './fixtures/app.js';
-import { DISTRIBUTION_CONFIG } from '../src/config/distributions.js';
+import { card } from './fixtures/tiles.js';
 /** @typedef {import('@playwright/test').Page} Page */
-/** @typedef {{ MetricID: string, ID: string, Abbreviation: string, Widget?: string, Widgets?: string[], WidgetConfigs?: Record<string, object>, GroupLevel: string }} Meta */
+/** @typedef {{ MetricID: string, ID: string, Abbreviation: string, Metric: string, Active?: boolean, Widget?: string, Widgets?: string[], WidgetConfigs?: Record<string, object>, GroupLevel: string }} Meta */
 
 const portfolio = readData('portfolio.json');
 const study = portfolio.studies[0];
 /** @type {Meta[]} */
 const catalog = portfolio.metrics;
-// A metric with no view of its own and no breakdown configuration.
-const plain = /** @type {Meta} */ (catalog.find((m) => !m.Widget && !m.Widgets && !(m.ID in DISTRIBUTION_CONFIG) && m.GroupLevel === 'Site'));
-const configured = /** @type {Meta} */ (catalog.find((m) => m.ID in DISTRIBUTION_CONFIG));
-const STANDARD_VIEWS = 2;
+/** @param {string} id */
+const metricOf = (id) => /** @type {Meta} */ (catalog.find((m) => m.ID === id));
+// Shown metrics with no card: the notice is the only place their configuration can surface.
+const cardless = metricOf('ctq0002');
+const typo = metricOf('ctq0003');
+const unconfigured = metricOf('kri0007');
 
 /**
- * Opens the study with one change to the plain metric's catalog entry, collecting the page's warnings.
+ * Opens the study with a changed catalog, collecting the page's warnings.
  * @param {import('./fixtures/app.js').App} app
  * @param {Page} page
- * @param {(meta: Meta, catalog: Meta[]) => Meta[] | void} change
+ * @param {(metrics: Meta[]) => Meta[] | void} change
  */
 async function openWith(app, page, change) {
   /** @type {string[]} */
@@ -29,113 +32,91 @@ async function openWith(app, page, change) {
   });
   await app.openStudy(study.StudyID, {
     portfolio: (p) => {
-      const replaced = change(p.metrics.find((/** @type {Meta} */ m) => m.MetricID === plain.MetricID), p.metrics);
+      const replaced = change(p.metrics);
       if (replaced) p.metrics = replaced;
     },
   });
   return warnings;
 }
 
-/** @param {Page} page */
-const body = (page) => page.locator(`.tile[data-metric-id="${plain.MetricID}"] .tile-body`);
-
 /**
- * Pages the plain metric's tile forward to a view.
- * @param {Page} page
- * @param {string} view
- */
-async function pageTo(page, view) {
-  const name = page.locator(`.tile[data-metric-id="${plain.MetricID}"] .view-name`);
-  for (let i = 0; i < 12 && !(await name.textContent())?.trim().startsWith(view); i++) {
-    await page.locator(`.tile[data-metric-id="${plain.MetricID}"] button[data-view-step="1"]`).click();
-  }
-  await expect(name).toHaveText(new RegExp(`^${view} `));
-}
-
-/**
- * The tile shows only the placeholder, which names the widget, the metric and the reason, and the page warned.
+ * The card shows only the placeholder naming the bad reference, its footer has nothing to offer, and the page warned.
  * @param {Page} page
  * @param {string[]} warnings
- * @param {string} widget
- * @param {string} reason
+ * @param {string} id
+ * @param {string} text
  */
-async function expectPlaceholder(page, warnings, widget, reason) {
-  const text = `Widget "${widget}" for ${plain.Abbreviation} (${plain.MetricID}): ${reason}.`;
-  await expect(body(page).locator('.ref-problem')).toBeVisible();
-  await expect(body(page).locator('.ref-problem')).toHaveText(`Can't show this view. ${text}`);
-  expect(await body(page).evaluate((el) => [...el.children].map((c) => c.className)), 'nothing shown in its place').toEqual(['ref-problem']);
+async function expectPlaceholder(page, warnings, id, text) {
+  const body = card(page, id).locator('.tile-body');
+  await expect(body.locator('.ref-problem')).toBeVisible();
+  await expect(body.locator('.ref-problem')).toHaveText(`Can't show this card. ${text}`);
+  expect(await body.evaluate((el) => [...el.children].map((c) => c.className)), 'nothing shown in its place').toEqual(['ref-problem']);
+  await expect(card(page, id).locator('.tile-foot button')).toHaveCount(0);
   expect(warnings).toContain(`[gsm.dash] ${text}`);
 }
 
 test.describe('references that fail visibly', () => {
-  test('12.01: an unknown widget as a metric’s own view shows a placeholder naming it, in place of any other view, and logs a warning (#12)', async ({ app, page }) => {
-    const warnings = await openWith(app, page, (m) => {
-      m.Widget = 'distributon-bar';
+  test('12.01: a card whose metric the catalog lacks shows a placeholder naming it, and the notice lists it in the breakdowns and the card list (#12)', async ({ app, page }) => {
+    const ip = metricOf('kri0019');
+    const warnings = await openWith(app, page, (metrics) => metrics.filter((m) => m.ID !== ip.ID));
+    await expectPlaceholder(page, warnings, 'ip-status', `Metric "${ip.ID}" for the card "IP Status": it is not in the metric catalog.`);
+    const notice = [`Metric "${ip.ID}" in the breakdown configuration: it is not in the metric catalog.`, `Metric "${ip.ID}" in the study page's card list: it is not in the metric catalog.`];
+    await expect(page.locator('.config-notice li')).toHaveText(notice);
+    for (const text of notice) expect(warnings).toContain(`[gsm.dash] ${text}`);
+  });
+
+  test('12.01: a card whose metric is inactive shows a placeholder saying so (#12)', async ({ app, page }) => {
+    const ip = metricOf('kri0019');
+    const warnings = await openWith(app, page, (metrics) => {
+      /** @type {Meta} */ (metrics.find((m) => m.ID === ip.ID)).Active = false;
     });
-    await expect(page.locator(`.tile[data-metric-id="${plain.MetricID}"] .view-name`)).toHaveText(`"distributon-bar" ${STANDARD_VIEWS + 1}/${STANDARD_VIEWS + 1}`);
-    await expectPlaceholder(page, warnings, 'distributon-bar', 'it is not a registered widget');
+    await expectPlaceholder(page, warnings, 'ip-status', `Metric "${ip.ID}" for the card "IP Status": it is inactive.`);
     await expect(page.locator('.config-notice')).toHaveCount(0);
   });
 
-  test('12.01: an unknown widget among a metric’s extra views shows a placeholder naming it when paged to, and logs a warning (#12)', async ({ app, page }) => {
-    const warnings = await openWith(app, page, (m) => {
-      m.Widgets = ['trend-sparkle'];
+  test('12.01: a breakdown card whose metric declares another widget, or none, shows a placeholder naming both (#12)', async ({ app, page }) => {
+    const ie = metricOf('kri0014');
+    const where = `${ie.Abbreviation} (${ie.MetricID})`;
+    let warnings = await openWith(app, page, (metrics) => {
+      /** @type {Meta} */ (metrics.find((m) => m.ID === ie.ID)).Widget = 'distributon-bar';
     });
-    await expect(body(page).locator('.big')).toBeVisible();
-    await pageTo(page, '"trend-sparkle"');
-    await expectPlaceholder(page, warnings, 'trend-sparkle', 'it is not a registered widget');
+    await expectPlaceholder(page, warnings, 'eligibility-status', `Widget "distribution-bar" for the card "Eligibility Status": ${where} declares the widget "distributon-bar".`);
+    await expectPlaceholder(page, warnings, 'ie-criteria', `Widget "distribution-bar" for the card "Eligibility I/E Criteria": ${where} declares the widget "distributon-bar".`);
+    warnings = await openWith(app, page, (metrics) => {
+      delete (/** @type {Meta} */ (metrics.find((m) => m.ID === ie.ID)).Widget);
+    });
+    await expectPlaceholder(page, warnings, 'eligibility-status', `Widget "distribution-bar" for the card "Eligibility Status": ${where} declares no widget.`);
   });
 
-  test('12.01: an explicitly empty name as a metric’s own view shows a placeholder naming it, in place of any other view, and logs a warning (#12)', async ({ app, page }) => {
-    const warnings = await openWith(app, page, (m) => {
-      m.Widget = '';
+  test('12.01: a standard KRI\'s card whose metric the configuration takes out of every KRI group shows a placeholder saying so (#12)', async ({ app, page }) => {
+    const ae = metricOf('kri0001');
+    const warnings = await openWith(app, page, (metrics) => {
+      const m = /** @type {Meta} */ (metrics.find((x) => x.ID === ae.ID));
+      m.WidgetConfigs = { ...m.WidgetConfigs, 'kri-summary': { group: null } };
     });
-    await expect(page.locator(`.tile[data-metric-id="${plain.MetricID}"] .view-name`)).toHaveText(`"" ${STANDARD_VIEWS + 1}/${STANDARD_VIEWS + 1}`);
-    await expectPlaceholder(page, warnings, '', 'it is not a registered widget');
+    await expectPlaceholder(page, warnings, 'kri0001', `Widget "kri-summary" for the card "${ae.Metric}": ${ae.Abbreviation} (${ae.MetricID}) is not a standard KRI.`);
   });
 
-  test('12.01: an explicitly empty name among a metric’s extra views shows a placeholder naming it when paged to, and logs a warning (#12)', async ({ app, page }) => {
-    const warnings = await openWith(app, page, (m) => {
-      m.Widgets = [''];
+  test('12.01: a catalog widget that is unknown or doesn\'t apply, options for an unknown widget, and the catalog inputs the tile pager used, are listed in the notice above the study page, and log a warning (#12)', async ({ app, page }) => {
+    const warnings = await openWith(app, page, (metrics) => {
+      const m = /** @type {Meta} */ (metrics.find((x) => x.ID === cardless.ID));
+      Object.assign(m, { Widget: 'trend-mini', Widgets: ['link-out'], WidgetConfigs: { 'scalar-tyle': { flags: true }, 'link-out': { label: 'report' } } });
+      /** @type {Meta} */ (metrics.find((x) => x.ID === typo.ID)).Widget = 'distributon-bar';
+      /** @type {Meta} */ (metrics.find((x) => x.ID === unconfigured.ID)).Widget = 'distribution-bar';
     });
-    await expect(body(page).locator('.big')).toBeVisible();
-    await pageTo(page, '""');
-    await expectPlaceholder(page, warnings, '', 'it is not a registered widget');
-  });
-
-  test('12.01: a breakdown widget on a metric with no breakdown configuration shows a placeholder naming both and the reason, and logs a warning (#12)', async ({ app, page }) => {
-    const warnings = await openWith(app, page, (m) => {
-      m.Widget = 'distribution-bar';
-    });
-    await expectPlaceholder(page, warnings, 'distribution-bar', 'it has no breakdown configuration');
-  });
-
-  test('12.01: a report-link widget on a metric with no configured link shows a placeholder naming both and the reason, and logs a warning (#12)', async ({ app, page }) => {
-    const warnings = await openWith(app, page, (m) => {
-      m.Widgets = ['link-out'];
-    });
-    await pageTo(page, 'Report link');
-    await expectPlaceholder(page, warnings, 'link-out', 'no report link is configured for it');
-  });
-
-  test('12.01: view options for an unknown widget are listed in the notice above the study page, and log a warning (#12)', async ({ app, page }) => {
-    const warnings = await openWith(app, page, (m) => {
-      m.WidgetConfigs = { 'scalar-tyle': { flags: true } };
-    });
-    const text = `Widget "scalar-tyle" in the view options of ${plain.Abbreviation} (${plain.MetricID}): it is not a registered widget.`;
-    await expect(page.locator('.config-notice')).toBeVisible();
-    await expect(page.locator('.config-notice li')).toHaveText([text]);
-    expect(warnings).toContain(`[gsm.dash] ${text}`);
-    await expect(body(page).locator('.big')).toBeVisible();
-    await expect(body(page).locator('.flags')).toHaveCount(0);
-  });
-
-  test('12.01: a metric the breakdown configuration names but the catalog lacks is listed in the notice above the study page, and logs a warning (#12)', async ({ app, page }) => {
-    const warnings = await openWith(app, page, (_m, metrics) => metrics.filter((m) => m.MetricID !== configured.MetricID));
-    const text = `Metric "${configured.ID}" in the breakdown configuration: it is not in the metric catalog.`;
-    await expect(page.locator('.config-notice')).toBeVisible();
-    await expect(page.locator('.config-notice li')).toHaveText([text]);
-    expect(warnings).toContain(`[gsm.dash] ${text}`);
-    await expect(page.locator(`.tile[data-metric-id="${configured.MetricID}"]`)).toHaveCount(0);
+    const where = `${cardless.Abbreviation} (${cardless.MetricID})`;
+    const retired = 'tile views are retired, and each card shows one widget.';
+    const texts = [
+      `Widget "distribution-bar" in the catalog entry of ${unconfigured.Abbreviation} (${unconfigured.MetricID}): it has no breakdown configuration.`,
+      `Widget "distributon-bar" in the catalog entry of ${typo.Abbreviation} (${typo.MetricID}): it is not a registered widget.`,
+      `Widget "scalar-tyle" in the view options of ${where}: it is not a registered widget.`,
+      `Views "link-out" in the catalog entry of ${where}: ${retired}`,
+      `Widget "trend-mini" in the catalog entry of ${where}: ${retired}`,
+      `View options for "link-out" in the catalog entry of ${where}: ${retired}`,
+    ];
+    await expect(page.locator('.config-notice li')).toHaveText(texts);
+    for (const text of texts) expect(warnings).toContain(`[gsm.dash] ${text}`);
+    await expect(page.locator(`.card[data-metric-id="${cardless.MetricID}"]`)).toHaveCount(0);
+    await expect(page.locator('.ref-problem')).toHaveCount(0);
   });
 });

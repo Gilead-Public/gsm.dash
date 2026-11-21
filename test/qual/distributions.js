@@ -107,3 +107,30 @@ export function expectedView(allRows, config) {
     return { Source, Variable, title: sc.title ?? Variable, Total: t.Total, display, bars, notes: { multi: counted > t.Total, notRecorded: blank > 0 } };
   });
 }
+
+/**
+ * Independent joint count of numerator records by two of their single-value variables, for a joint-count table
+ * (#10, widget 4): how many records have each pair of values, and how many each first value, over every record
+ * set given (one per site). A blank first value counts under `null`; a record with either value blank is left out of
+ * the pairs.
+ * @param {Array<Array<{ inNumerator: boolean, values: Record<string, unknown> }>>} recordSets
+ * @param {string} rowVariable
+ * @param {string} columnVariable
+ * @returns {{ rows: Map<string | null, number>, pairs: Map<string, number> }} pairs keyed "row\u0000column"
+ */
+export function jointRecount(recordSets, rowVariable, columnVariable) {
+  const rows = new Map();
+  const pairs = new Map();
+  for (const records of recordSets) {
+    for (const r of records) {
+      if (!r.inNumerator) continue;
+      const row = r.values[rowVariable] ?? null;
+      const column = r.values[columnVariable];
+      rows.set(row, (rows.get(row) ?? 0) + 1);
+      if (row === null || column == null) continue;
+      const k = `${row}\u0000${column}`;
+      pairs.set(k, (pairs.get(k) ?? 0) + 1);
+    }
+  }
+  return { rows, pairs };
+}

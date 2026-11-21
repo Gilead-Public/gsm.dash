@@ -46,16 +46,19 @@ export function mount(el) {
   const root = createRoot(el);
   const result = page === 'study' ? readStudyDocument(text) : readPortfolioDocument(text);
   if (!result.ok) return root.render(<ErrorState errors={result.errors} kind={page} />);
+  const title = /** @type {{ title?: string }} */ (result.doc).title ?? 'gsm.dash';
+  const heading = document.querySelector('header.app h1');
+  if (heading) heading.textContent = title;
   if (page === 'portfolio') {
     const store = portfolioStoreFor(/** @type {import('./document.js').PortfolioDocument} */ (result.doc));
-    /** @type {HTMLElement} */ (document.getElementById('meta')).textContent = `${store.studies.length} studies · ${store.metrics.length} metrics · exported ${store.generated}`;
+    document.title = title;
     syncHash(store);
     return root.render(<PortfolioPage store={store} />);
   }
   const doc = /** @type {import('./document.js').StudyDocument} */ (result.doc);
   const { StudyID } = doc.study;
   const store = storeFor(doc);
-  document.title = `${StudyID} · gsm.dash`;
+  document.title = `${StudyID} · ${title}`;
   store.applyMetricParams(new URLSearchParams(location.hash.slice(1)));
   root.render(<StudyPage store={store} studyId={StudyID} back={`./portfolio.html${location.hash}`} />);
 }

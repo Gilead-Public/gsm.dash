@@ -8,13 +8,13 @@ import '../app/app.css';
 interface Props {
   page: 'study' | 'portfolio';
   title: string;
-  tag: string;
   viz?: boolean;
 }
-const { page, title, tag, viz = false } = Astro.props;
+const { page, title, viz = false } = Astro.props;
 const vendor = (file: string) => readFileSync(`public/vendor/gsm.viz-2.3.0/${file}`, 'utf8');
 const vizCss = viz ? vendor('main.css') : '';
 const vizJs = viz ? vendor('index.js').replace(/<\/script/gi, '<\\/script') : '';
+const logo = `data:image/png;base64,${readFileSync('src/assets/gismo-logo.png').toString('base64')}`;
 ---
 <html lang="en">
   <head>
@@ -27,8 +27,8 @@ const vizJs = viz ? vendor('index.js').replace(/<\/script/gi, '<\\/script') : ''
     <script is:inline type="application/json" id="gsm-data">__GSM_DATA__</script>
     <div class="wrap">
       <header class="app">
+        <img class="logo" src={logo} alt="gismo" width="35" height="32" />
         <h1>gsm.dash</h1>
-        <span class="tag" id="page-tag">{tag}</span>
         <slot name="header" />
       </header>
       <main id="app"></main>

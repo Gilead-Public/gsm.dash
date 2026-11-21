@@ -22,7 +22,9 @@ export const SHIPPED = 'reports';
 export const SPEC_ARTIFACTS = {
   'e2e/cross-report.spec.js': ['reports'],
   'e2e/delivery.spec.js': ['reports'],
+  'e2e/cards.spec.js': ['reports'],
   'e2e/distribution.spec.js': ['reports'],
+  'e2e/header.spec.js': ['reports'],
   'e2e/heatmap.spec.js': ['reports'],
   'e2e/kri-groups.spec.js': ['reports'],
   'e2e/portfolio-config.spec.js': ['reports'],

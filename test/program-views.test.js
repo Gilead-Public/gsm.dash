@@ -3,9 +3,7 @@ import { PortfolioStore } from '../src/data/store.js';
 import { enrollTarget } from '../src/app/portfolio-table.js';
 import { generatePortfolio } from '../scripts/generate-example-data.mjs';
 
-// Unified program views (design iteration 2): Overview and Details are two
-// zoom levels of one table, derived from the category folds; Distribution is
-// a separate view. All three share the store's highlight and filters.
+// Overview and Details are the table's two views: every category folded to headline tiles, or every category open.
 
 let store;
 const portfolio = generatePortfolio();
@@ -14,30 +12,14 @@ beforeEach(() => {
 });
 const cats = () => store.metricCategories().map((g) => g.category);
 
-describe('table zoom', () => {
-  it('lands on Overview with every category folded', () => {
-    expect(store.state.programView).toBe('table');
-    expect(store.tableZoom()).toBe('overview');
-  });
-
-  it('derives details / mixed from the folds', () => {
-    store.setProgramView('details');
-    expect(store.tableZoom()).toBe('details');
-    store.toggleGroup(cats()[0]);
-    expect(store.tableZoom()).toBe('mixed');
-    store.setProgramView('overview');
-    expect(store.tableZoom()).toBe('overview');
-  });
-
-  it('keeps the table folds when switching to Distribution and back', () => {
-    store.toggleGroup(cats()[1]);
-    store.setProgramView('distribution');
-    expect(store.state.programView).toBe('distribution');
-    expect(store.tableZoom()).toBe('mixed');
+describe('table view', () => {
+  it('lands on Overview, or on the configured view', () => {
+    expect(store.state.view).toBe('overview');
+    expect(new PortfolioStore({ ...portfolio, config: { view: 'details' } }).state.view).toBe('details');
   });
 });
 
-describe('highlight study', () => {
+describe('highlight study (unwired, kept for a possible enhanced version)', () => {
   it('toggles: selecting the highlighted study again clears it', () => {
     const id = store.studies[2].StudyID;
     store.highlight(id);
@@ -50,30 +32,32 @@ describe('highlight study', () => {
 });
 
 describe('URL params', () => {
-  it('round-trips view, open bands, highlight and distribution folds', () => {
-    const [a, b] = cats();
-    store.toggleGroup(a);
+  it('round-trips the view, and leaves a highlight out of the address', () => {
+    store.set('view', 'details');
     store.highlight(store.studies[0].StudyID);
-    store.toggleDistGroup(b);
-    store.setProgramView('distribution');
     const params = store.programParams();
-    expect(params.get('view')).toBe('distribution');
-    expect(params.get('open')).toBe(a);
+    expect([...params.keys()]).toEqual(['view']);
 
     const other = new PortfolioStore(portfolio);
     other.applyProgramParams(new URLSearchParams(params.toString()));
-    expect(other.state.programView).toBe('distribution');
-    expect(other.tableZoom()).toBe('mixed');
-    expect(other.state.collapsedGroups.has(a)).toBe(false);
-    expect(other.state.highlightStudy).toBe(store.studies[0].StudyID);
-    expect([...other.state.distCollapsed]).toEqual([b]);
+    expect(other.state.view).toBe('details');
+    expect(other.state.highlightStudy).toBeNull();
   });
 
   it('accepts a hand-written ?view=details and ignores unknown ids', () => {
-    store.applyProgramParams(new URLSearchParams('view=details&study=NOPE&dfold=Nope'));
-    expect(store.tableZoom()).toBe('details');
+    store.applyProgramParams(new URLSearchParams('view=details&study=NOPE'));
+    expect(store.state.view).toBe('details');
     expect(store.state.highlightStudy).toBeNull();
-    expect(store.state.distCollapsed.size).toBe(0);
+  });
+
+  it('ignores the retired settings in an old address: the Distribution view, its folds, open bands, row density and the highlighted study', () => {
+    const [a, b] = cats();
+    for (const old of [`view=distribution&dfold=${a}`, `view=mixed&open=${a}&open=${b}`, 'open=all', 'density=condensed', `study=${store.studies[0].StudyID}`]) {
+      const s = new PortfolioStore(portfolio);
+      s.applyProgramParams(new URLSearchParams(old));
+      expect(viewState(s), old).toEqual(viewState(new PortfolioStore(portfolio)));
+      expect(s.programParams().toString(), old).toBe('');
+    }
   });
 
   it('27.05: writes no params for the default view, and no params restore every default (#27)', () => {
@@ -107,7 +91,7 @@ describe('URL params', () => {
 
   it('27.05: drops unknown values, keeping the defaults (#27)', () => {
     const junk = [
-      'view=nope', 'open=Nope', 'dfold=Nope', 'study=NOPE', 'group=nickname', 'expand=Oncology', 'sort=Nope', 'dir=desc',
+      'view=nope', 'open=Nope', 'study=NOPE', 'group=nickname', 'expand=Oncology', 'sort=Nope', 'dir=desc',
       'cell=nope', 'show=nope', 'heatmap=nope', 'ramp=red', 'filter.phase=P9', 'filter.nope=1', 'statuses=Nope', 'hide=Nope',
     ];
     store.applyProgramParams(new URLSearchParams(junk.join('&')));
@@ -131,23 +115,42 @@ describe('URL params', () => {
     expect([...b.state.filters.therapeutic_area]).toEqual(['Cardiology, Renal']);
   });
 
-  it('27.05: a study report takes only the metric-status filters and hidden metrics (#27)', () => {
+  it('27.05: a study report takes only the metric-status filters and hidden metrics, those its hidden groups hide included (#27)', () => {
     changeEveryField(store);
     const study = new PortfolioStore(portfolio);
     study.applyMetricParams(store.programParams());
     const { statuses, hiddenMetrics } = viewState(store);
-    expect(viewState(study)).toEqual({ ...viewState(new PortfolioStore(portfolio)), statuses, hiddenMetrics });
+    const byGroup = store.metricCategories(store.supportedMetrics()).filter((g) => store.state.hiddenGroups.has(g.category)).flatMap((g) => g.metrics.map((m) => m.MetricID));
+    expect(byGroup.length).toBeGreaterThan(0);
+    expect(viewState(study)).toEqual({ ...viewState(new PortfolioStore(portfolio)), statuses, hiddenMetrics: [...new Set([...hiddenMetrics, ...byGroup])].sort() });
+  });
+
+  it('16.03: a study report shows exactly the metrics the portfolio shows, with groups hidden, while the portfolio keeps its checkboxes as they were (#16)', () => {
+    const groups = [{ name: 'One', metrics: store.supportedMetrics().slice(0, 3).map((m) => m.MetricID), hidden: true }];
+    const s = new PortfolioStore({ ...portfolio, config: { groups } });
+    s.toggleMetric(s.supportedMetrics()[5].MetricID);
+    s.toggleGroupHidden('Other');
+    s.toggleGroupHidden('One');
+    s.toggleGroupHidden('One');
+    const params = s.programParams();
+    const study = new PortfolioStore(portfolio);
+    study.applyMetricParams(new URLSearchParams(params.toString()));
+    expect(study.visibleMetrics().map((m) => m.MetricID)).toEqual(s.visibleMetrics().map((m) => m.MetricID));
+    const back = new PortfolioStore({ ...portfolio, config: { groups } });
+    back.applyProgramParams(new URLSearchParams(params.toString()));
+    expect([...back.state.hiddenMetrics], 'the portfolio\'s checkboxes').toEqual([s.supportedMetrics()[5].MetricID]);
+    expect(back.visibleMetrics().map((m) => m.MetricID)).toEqual(s.visibleMetrics().map((m) => m.MetricID));
   });
 });
 
 /** Every view setting 27.05 lists, sets as sorted arrays. */
 describe('configured defaults (#16)', () => {
-  const config = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'] };
+  const config = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'], view: 'details' };
   const configured = () => new PortfolioStore({ ...portfolio, config });
 
   it('opens with the configured view, and an empty hash restores it', () => {
     const s = configured();
-    expect([s.state.groupBy, s.state.heatmap, [...s.state.show].sort(), [...s.state.hiddenMetrics].sort()]).toEqual(['phase', 'rate', ['den', 'trend'], config.metrics]);
+    expect([s.state.groupBy, s.state.heatmap, [...s.state.show].sort(), [...s.state.hiddenMetrics].sort(), s.state.view]).toEqual(['phase', 'rate', ['den', 'trend'], config.metrics, 'details']);
     const fresh = viewState(s);
     changeEveryField(s);
     s.applyProgramParams(new URLSearchParams());
@@ -158,6 +161,7 @@ describe('configured defaults (#16)', () => {
     const s = configured();
     s.set('groupBy', 'none');
     s.set('heatmap', 'none');
+    s.set('view', 'overview');
     s.toggleShow('den');
     s.toggleShow('trend');
     s.toggleShow('num');
@@ -203,7 +207,7 @@ describe('the study filter and Reset (#22)', () => {
   });
 
   it('Reset returns every setting the address holds to a fresh load, under the default and a configured view', () => {
-    const config = { groupBy: 'phase', heatmap: 'rate', show: ['den'], metrics: ['Analysis_kri0003'] };
+    const config = { groupBy: 'phase', heatmap: 'rate', show: ['den'], metrics: ['Analysis_kri0003'], view: 'details' };
     for (const data of [portfolio, { ...portfolio, config }]) {
       const s = new PortfolioStore(data);
       const fresh = new PortfolioStore(data);
@@ -216,33 +220,33 @@ describe('the study filter and Reset (#22)', () => {
   });
 });
 
-describe('table columns and density (#21)', () => {
-  it('21.01: by default the table shows the study name, without Enrolled or Status, at roomy density; a configuration sets both (#21)', () => {
-    expect([[...store.state.columns], store.state.density]).toEqual([['name'], 'roomy']);
+describe('table columns and view (#21)', () => {
+  it('21.01: by default the table shows the study name, without Enrolled or Status, in Overview; a configuration sets both (#21)', () => {
+    expect([[...store.state.columns], store.state.view]).toEqual([['name'], 'overview']);
     expect(store.programParams().toString()).toBe('');
-    const s = new PortfolioStore({ ...portfolio, config: { columns: ['enroll', 'status'], density: 'condensed' } });
-    expect([[...s.state.columns].sort(), s.state.density]).toEqual([['enroll', 'status'], 'condensed']);
+    const s = new PortfolioStore({ ...portfolio, config: { columns: ['enroll', 'status'], view: 'details' } });
+    expect([[...s.state.columns].sort(), s.state.view]).toEqual([['enroll', 'status'], 'details']);
     expect(s.programParams().toString()).toBe('');
   });
 
-  it('21.01: the columns and density travel in the address, an emptied choice included, and unknown values are dropped (#21)', () => {
+  it('21.01: the columns and view travel in the address, an emptied choice included, and unknown values are dropped (#21)', () => {
     store.toggleColumn('enroll');
     store.toggleColumn('status');
-    store.set('density', 'condensed');
+    store.set('view', 'details');
     const params = store.programParams();
     expect(params.getAll('cols')).toEqual(['name', 'enroll', 'status']);
-    expect(params.get('density')).toBe('condensed');
+    expect(params.get('view')).toBe('details');
     const other = new PortfolioStore(portfolio);
     other.applyProgramParams(new URLSearchParams(params.toString()));
-    expect([[...other.state.columns].sort(), other.state.density]).toEqual([['enroll', 'name', 'status'], 'condensed']);
+    expect([[...other.state.columns].sort(), other.state.view]).toEqual([['enroll', 'name', 'status'], 'details']);
     other.toggleColumn('name');
     other.toggleColumn('enroll');
     other.toggleColumn('status');
     const empty = new PortfolioStore(portfolio);
     empty.applyProgramParams(new URLSearchParams(other.programParams().toString()));
     expect([...empty.state.columns]).toEqual([]);
-    empty.applyProgramParams(new URLSearchParams('cols=site&density=tight'));
-    expect([[...empty.state.columns], empty.state.density]).toEqual([['name'], 'roomy']);
+    empty.applyProgramParams(new URLSearchParams('cols=site&view=mixed'));
+    expect([[...empty.state.columns], empty.state.view]).toEqual([['name'], 'overview']);
   });
 
   it('21.02: a study\'s enrollment target is its ParticipantTarget above zero, as a number or as text, and none otherwise (#21)', () => {
@@ -257,9 +261,7 @@ function viewState(s) {
   const { state } = s;
   const sorted = (set) => [...set].map(String).sort();
   return {
-    programView: state.programView,
-    collapsedGroups: sorted(state.collapsedGroups),
-    distCollapsed: sorted(state.distCollapsed),
+    view: state.view,
     groupBy: state.groupBy,
     expanded: sorted(state.expanded),
     sort: state.sort,
@@ -269,18 +271,14 @@ function viewState(s) {
     filters: Object.fromEntries(Object.entries(state.filters).map(([k, v]) => [k, sorted(v)])),
     statuses: sorted(state.statuses),
     hiddenMetrics: sorted(state.hiddenMetrics),
-    highlightStudy: state.highlightStudy,
+    hiddenGroups: sorted(state.hiddenGroups),
     columns: sorted(state.columns),
-    density: state.density,
   };
 }
 
 /** Moves every setting viewState() reads away from its default, through the store's own setters. */
 function changeEveryField(s) {
-  const [a, b] = s.metricCategories().map((g) => g.category);
-  s.toggleGroup(a);
-  s.toggleDistGroup(b);
-  s.setProgramView('distribution');
+  s.set('view', s.state.view === 'details' ? 'overview' : 'details');
   s.set('groupBy', 'therapeutic_area');
   s.toggleExpanded('Oncology');
   s.toggleSort(s.supportedMetrics()[0].MetricID);
@@ -294,8 +292,58 @@ function changeEveryField(s) {
   s.toggleFilter('study', s.studies[2].StudyID);
   s.toggleStatus('Planned');
   s.toggleMetric(s.supportedMetrics()[1].MetricID);
-  s.highlight(s.studies[1].StudyID);
+  s.toggleGroupHidden(s.groupNames().at(-1));
   s.toggleColumn('name');
   s.toggleColumn('status');
-  s.set('density', 'condensed');
 }
+
+describe('metric groups (#16, #21)', () => {
+  const ids = (/** @type {any[]} */ groups) => groups.map((g) => [g.category, g.metrics.map((/** @type {any} */ m) => m.MetricID)]);
+
+  it('16.05: without `groups`, the groups are the catalog\'s Category groups, in the catalog\'s category order (#16)', () => {
+    const want = [];
+    for (const m of store.supportedMetrics()) {
+      const last = want.at(-1);
+      if (last && last[0] === m.Category) last[1].push(m.MetricID);
+      else want.push([m.Category, [m.MetricID]]);
+    }
+    expect(ids(store.metricCategories(store.supportedMetrics()))).toEqual(want);
+  });
+
+  it('16.05: with `groups`, each group holds its metrics in its order, unlisted metrics trail in an Other group, and a hidden group starts hidden (#16)', () => {
+    const all = new PortfolioStore(portfolio).supportedMetrics().map((m) => m.MetricID);
+    const [a, b, c, d] = [all[5], all[0], all[9], all[2]];
+    const groups = [{ name: 'Second', metrics: [a, b] }, { name: 'First', metrics: [c], hidden: true }, { name: 'Third', metrics: [d] }];
+    const s = new PortfolioStore({ ...portfolio, config: { groups } });
+    const rest = all.filter((id) => ![a, b, c, d].includes(id));
+    expect(ids(s.metricCategories(s.supportedMetrics()))).toEqual([['Second', [a, b]], ['First', [c]], ['Third', [d]], ['Other', rest]]);
+    expect([...s.state.hiddenGroups]).toEqual(['First']);
+    expect(s.visibleMetrics().map((m) => m.MetricID)).not.toContain(c);
+    // A study report has no configuration, so the address names the metrics a hidden group hides even at the default.
+    expect([...s.programParams()]).toEqual([['hidebygroup', c]]);
+  });
+
+  it('21.04: a hidden group hides its metrics from the table without touching their checkboxes, travels in the address, and Reset restores the configured default (#21)', () => {
+    const groups = [{ name: 'One', metrics: store.supportedMetrics().slice(0, 3).map((m) => m.MetricID), hidden: true }];
+    const s = new PortfolioStore({ ...portfolio, config: { groups } });
+    const [x, y] = groups[0].metrics;
+    s.toggleGroupHidden('One');
+    s.toggleMetric(x);
+    expect(s.visibleMetrics().map((m) => m.MetricID)).toEqual(expect.arrayContaining([y]));
+    expect(s.visibleMetrics().map((m) => m.MetricID)).not.toContain(x);
+    s.toggleGroupHidden('Other');
+    expect(s.visibleMetrics().map((m) => m.MetricID)).toEqual(groups[0].metrics.filter((id) => id !== x));
+    expect([...s.state.hiddenMetrics]).toEqual([x]);
+    const params = s.programParams();
+    expect(params.getAll('hidegroup')).toEqual(['Other']);
+    const other = new PortfolioStore({ ...portfolio, config: { groups } });
+    other.applyProgramParams(new URLSearchParams(params.toString()));
+    expect([...other.state.hiddenGroups]).toEqual(['Other']);
+    other.applyProgramParams(new URLSearchParams('hidegroup=Nope'));
+    expect([...other.state.hiddenGroups], 'unknown names are dropped').toEqual(['One']);
+    s.reset();
+    expect([...s.state.hiddenGroups]).toEqual(['One']);
+    expect([...s.programParams()]).toEqual(groups[0].metrics.map((id) => ['hidebygroup', id]));
+  });
+});
+

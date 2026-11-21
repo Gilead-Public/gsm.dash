@@ -1,193 +1,106 @@
 state: earlier-visit (reports)
-dom: sha256 d3b19f6a80c5784601e9306992fd523c584af51a65a6d1a9865e3151af9964ea (42193 characters)
+dom: sha256 8faa32af2671aaeab49fc3185c4bacfcec305e253b6b021cdca29888a9ff3e0a (31402 characters)
 tooltip: none
 drill-in: closed
-tiles:
-  Analysis_kri0012 · Breakdowns 3/3: empty 2
-  Analysis_kri0006 · Breakdowns 3/3: empty 2
-  Analysis_kri0007 · Details 1/2: points 1, lines 2, empty 1
-  Analysis_kri0007-2 · Breakdowns 3/3: empty 2
-  Analysis_ctq0001 · Details 1/2: points 1, lines 2, empty 1
-  Analysis_ctq0002 · Details 1/2: points 1, lines 2, empty 1
-  Analysis_ctq0003 · Details 1/2: points 1, lines 2, empty 1
-  Analysis_kri0015 · Breakdowns 3/4: empty 2
-  Analysis_kri0019 · Breakdowns 3/3: empty 2
-  Analysis_kri0014 · Breakdowns 3/3: empty 2
-  Analysis_strat0001 · Breakdowns 3/3: empty 2
-  Analysis_ctq0006 · Details 1/2: points 1, lines 2, empty 1
-  Analysis_kri0001 · -: no marks
-  Analysis_kri0002 · -: no marks
-  Analysis_kri0005 · -: no marks
-  Analysis_kri0003 · -: no marks
-  Analysis_kri0004 · -: no marks
-  Analysis_kri0008 · -: no marks
-  Analysis_kri0009 · -: no marks
-  Analysis_kri0010 · -: no marks
-  Analysis_kri0011 · -: no marks
+cards:
+  eligibility-status · Analysis_kri0014: empty 1
+  ie-criteria · Analysis_kri0014: empty 1
+  premature-deaths · Analysis_kri0015: empty 1
+  ip-status · Analysis_kri0019: empty 1
+  treatment-disposition · Analysis_kri0007-2: empty 1
+  treatment-discontinuation-reasons · Analysis_kri0007-2: empty 1
+  study-disposition · Analysis_kri0006: empty 1
+  screening-disposition · Analysis_kri0012: empty 1
+  screen-failure-reasons · Analysis_kri0012: empty 1
+  kri0004 · Analysis_kri0004: flags 4
+  kri0003 · Analysis_kri0003: flags 4
+  kri0002 · Analysis_kri0002: flags 4
+  kri0001 · Analysis_kri0001: flags 4
+  kri0005 · Analysis_kri0005: flags 4
+  kri0008 · Analysis_kri0008: flags 4
+  kri0009 · Analysis_kri0009: flags 4
+  kri0010 · Analysis_kri0010: flags 4
+  kri0011 · Analysis_kri0011: flags 4
 accessibility:
-- link "← Program overview":
+- link "← Portfolio":
   - /url: ./portfolio.html
 - text: STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A
 - slider "Visit": "0"
-- text: Visit 1/5 · 2026-02-28
-- checkbox "Group by category" [checked]
-- text: Group by category Disposition · 6 SF Screen Failure Rate
-- img "Screen Failure Rate definition": i
-- group "Screen Failure Rate breakdowns": 24.1% 188 / 779 Breakdowns are published for the latest snapshot only.
-- button "Previous view": ‹
-- text: Breakdowns 3/3
-- button "Next view": ›
-- text: SDSC Study Discontinuation Rate
-- img "Study Discontinuation Rate definition": i
-- group "Study Discontinuation Rate breakdowns": 6.4% 38 / 591 Breakdowns are published for the latest snapshot only.
-- button "Previous view": ‹
-- text: Breakdowns 3/3
-- button "Next view": ›
-- text: TDSC Treatment Discontinuation Rate
-- img "Treatment Discontinuation Rate definition": i
-- text: 87 (14.9%) of 584 dosed
-- 'img "TDSC study trend: 5 snapshots, latest 12.2%"'
-- button "Previous view": ‹
-- text: Details 1/2
-- button "Next view": ›
-- text: PTDSC Premature Treatment Discontinuation Rate
-- img "Premature Treatment Discontinuation Rate definition": i
-- text: Planned
-- group "Premature Treatment Discontinuation Rate breakdowns": 6.3% 37 / 584 Breakdowns are published for the latest snapshot only.
-- button "Previous view": ‹
-- text: Breakdowns 3/3
-- button "Next view": ›
-- text: WC Withdrawal of Consent
-- img "Withdrawal of Consent definition": i
-- text: Planned 19 (3.2%) of 591 enrolled
-- 'img "WC study trend: 5 snapshots, latest 2.5%"'
-- button "Previous view": ‹
-- text: Details 1/2
-- button "Next view": ›
-- text: LTFU Lost to Follow Up
-- img "Lost to Follow Up definition": i
-- text: Planned 8 (1.4%) of 591 enrolled
-- 'img "LTFU study trend: 5 snapshots, latest 2.6%"'
-- button "Previous view": ‹
-- text: Details 1/2
-- button "Next view": ›
-- text: Early events · 3 DTH30 Early Deaths (30 days)
-- img "Early Deaths (30 days) definition": i
-- text: Planned 6 (1.0%) of 591 enrolled
-- 'img "DTH30 study trend: 5 snapshots, latest 0.6%"'
-- button "Previous view": ‹
-- text: Details 1/2
-- button "Next view": ›
-- text: DTH90 Early Deaths (90 days)
-- img "Early Deaths (90 days) definition": i
-- text: Planned
-- group "Early Deaths (90 days) breakdowns": 2.0% 12 / 591 Breakdowns are published for the latest snapshot only.
-- button "Previous view": ‹
-- text: Breakdowns 3/4
-- button "Next view": ›
-- text: IPNS IP Non-starters
-- img "IP Non-starters definition": i
-- text: Planned
-- group "IP Non-starters breakdowns": 1.2% 7 / 591 Breakdowns are published for the latest snapshot only.
-- button "Previous view": ‹
-- text: Breakdowns 3/3
-- button "Next view": ›
-- text: Eligibility & integrity · 3 IE Eligibility
-- img "Eligibility definition": i
-- text: Planned
-- group "Eligibility breakdowns": 5.1% 30 / 591 Breakdowns are published for the latest snapshot only.
-- button "Previous view": ‹
-- text: Breakdowns 3/3
-- button "Next view": ›
-- text: STRAT Stratification
-- img "Stratification definition": i
-- text: Planned
-- group "Stratification breakdowns": 2.9% 17 / 591 Breakdowns are published for the latest snapshot only.
-- button "Previous view": ‹
-- text: Breakdowns 3/3
-- button "Next view": ›
-- text: PFSC Premature Censoring for PFS
-- img "Premature Censoring for PFS definition": i
-- text: Planned 17 (2.9%) of 591 enrolled
-- 'img "PFSC study trend: 5 snapshots, latest 3.2%"'
-- button "Previous view": ‹
-- text: Details 1/2
-- button "Next view": ›
-- text: AE, SAE and labs · 3 AE AE Reporting Rate
-- img "AE Reporting Rate definition": i
-- text: New 0.87 per 28 days 1,072 / 1,227.4
+- text: Visit 1/5 · 2026-02-28 IE Eligibility Status Planned 5.1% 30 / 591 —
+- group "Eligibility breakdowns": Breakdowns are published for the latest snapshot only.
+- text: IE Eligibility I/E Criteria Planned 5.1% 30 / 591 —
+- group "Eligibility breakdowns": Breakdowns are published for the latest snapshot only.
+- text: DTH90 Premature Death Summary Planned 2.0% 12 / 591 —
+- group "Early Deaths (90 days) breakdowns": Breakdowns are published for the latest snapshot only.
+- text: IPNS IP Status Planned 1.2% 7 / 591 —
+- group "IP Non-starters breakdowns": Breakdowns are published for the latest snapshot only.
+- text: PTDSC Treatment Disposition Planned 6.3% 37 / 584 —
+- group "Premature Treatment Discontinuation Rate breakdowns": Breakdowns are published for the latest snapshot only.
+- text: PTDSC Premature Treatment Discontinuation Reasons Planned 6.3% 37 / 584 —
+- group "Premature Treatment Discontinuation Rate breakdowns": Breakdowns are published for the latest snapshot only.
+- text: SDSC Study Disposition – Enrolled 6.4% 38 / 591 —
+- group "Study Discontinuation Rate breakdowns": Breakdowns are published for the latest snapshot only.
+- text: SF Study Disposition – Screening 24.1% 188 / 779 —
+- group "Screen Failure Rate breakdowns": Breakdowns are published for the latest snapshot only.
+- text: SF Screen Failure Reasons 24.1% 188 / 779 —
+- group "Screen Failure Rate breakdowns": Breakdowns are published for the latest snapshot only.
+- text: IPD Important Protocol Deviation Rate New 0.07 per 28 days 84 / 1,227.4 —
 - list "Sites by flag":
-  - listitem: Red 0 0.0%
+  - listitem: Red 1 5.9%
   - listitem: Amber 2 11.8%
-  - listitem: Green 13 76.5%
+  - listitem: Green 12 70.6%
   - listitem: No flag 2 11.8%
 - button "Charts ▾"
-- text: SAE SAE Reporting Rate
-- img "SAE Reporting Rate definition": i
-- text: New 0.13 per 28 days 155 / 1,227.4
+- text: PD Non-Important Protocol Deviation Rate New 0.41 per 28 days 506 / 1,227.4 —
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 1 5.9%
+  - listitem: Green 14 82.4%
+  - listitem: No flag 2 11.8%
+- button "Charts ▾"
+- text: SAE SAE Reporting Rate New 0.13 per 28 days 155 / 1,227.4 —
 - list "Sites by flag":
   - listitem: Red 2 11.8%
   - listitem: Amber 2 11.8%
   - listitem: Green 11 64.7%
   - listitem: No flag 2 11.8%
 - button "Charts ▾"
-- text: LB G3+ Lab Abnormality Rate
-- img "G3+ Lab Abnormality Rate definition": i
-- text: 5.1% 209 / 4,115
+- text: AE AE Reporting Rate New 0.87 per 28 days 1,072 / 1,227.4 —
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 2 11.8%
+  - listitem: Green 13 76.5%
+  - listitem: No flag 2 11.8%
+- button "Charts ▾"
+- text: LB G3+ Lab Abnormality Rate 5.1% 209 / 4,115 —
 - list "Sites by flag":
   - listitem: Red 1 5.9%
   - listitem: Amber 0 0.0%
   - listitem: Green 14 82.4%
   - listitem: No flag 2 11.8%
 - button "Charts ▾"
-- text: Protocol deviations · 2 PD Non-Important Protocol Deviation Rate
-- img "Non-Important Protocol Deviation Rate definition": i
-- text: New 0.41 per 28 days 506 / 1,227.4
-- list "Sites by flag":
-  - listitem: Red 0 0.0%
-  - listitem: Amber 1 5.9%
-  - listitem: Green 14 82.4%
-  - listitem: No flag 2 11.8%
-- button "Charts ▾"
-- text: IPD Important Protocol Deviation Rate
-- img "Important Protocol Deviation Rate definition": i
-- text: New 0.07 per 28 days 84 / 1,227.4
-- list "Sites by flag":
-  - listitem: Red 1 5.9%
-  - listitem: Amber 2 11.8%
-  - listitem: Green 12 70.6%
-  - listitem: No flag 2 11.8%
-- button "Charts ▾"
-- text: EDC and query rates · 4 QRY Query Rate
-- img "Query Rate definition": i
-- text: 4.5% 2,736 / 60,752
+- text: QRY Query Rate 4.5% 2,736 / 60,752 —
 - list "Sites by flag":
   - listitem: Red 1 5.9%
   - listitem: Amber 1 5.9%
   - listitem: Green 13 76.5%
   - listitem: No flag 2 11.8%
 - button "Charts ▾"
-- text: OQRY Delayed Query Resolution Rate
-- img "Delayed Query Resolution Rate definition": i
-- text: 5.2% 143 / 2,736
+- text: OQRY Delayed Query Resolution Rate 5.2% 143 / 2,736 —
 - list "Sites by flag":
   - listitem: Red 0 0.0%
   - listitem: Amber 4 23.5%
   - listitem: Green 11 64.7%
   - listitem: No flag 2 11.8%
 - button "Charts ▾"
-- text: ODAT Delayed Data Entry Rate
-- img "Delayed Data Entry Rate definition": i
-- text: 11.3% 863 / 7,616
+- text: ODAT Delayed Data Entry Rate 11.3% 863 / 7,616 —
 - list "Sites by flag":
   - listitem: Red 0 0.0%
   - listitem: Amber 3 17.6%
   - listitem: Green 12 70.6%
   - listitem: No flag 2 11.8%
 - button "Charts ▾"
-- text: CDAT Data Change Rate
-- img "Data Change Rate definition": i
-- text: 2.2% 1,365 / 60,752
+- text: CDAT Data Change Rate 2.2% 1,365 / 60,752 —
 - list "Sites by flag":
   - listitem: Red 0 0.0%
   - listitem: Amber 0 0.0%

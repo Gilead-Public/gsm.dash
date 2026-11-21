@@ -1,9 +1,12 @@
 // @ts-check
-// #21: the portfolio table's optional columns (study name, Enrolled, Status), Enrolled against its target, and the row
-// density. Defaults come from the configuration (#16); choices travel in the address and Reset restores them.
+// #21: the portfolio table's optional columns (study name, Enrolled, Status), Enrolled against its target, and its View,
+// Overview or Details, which replaced the row density. Defaults come from the configuration (#16); choices travel in the
+// address and Reset restores them.
 import { expect, readData, test } from './fixtures/app.js';
+import { chooseView, control } from './fixtures/controls.js';
 import { visibleLines } from './fixtures/visible.js';
-import { countText } from '../test/qual/pooling.js';
+import { cardMetrics, withCards } from './fixtures/tiles.js';
+import { countText, shownMetrics } from '../test/qual/pooling.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('@playwright/test').Locator} Locator */
 
@@ -14,7 +17,7 @@ const counted = readData('summary.json').studies;
 const enrolled = (/** @type {string} */ id) => /** @type {number} */ (counted.find((s) => s.StudyID === id)?.ParticipantCount);
 
 /** @param {Page} page */
-const chip = (page, /** @type {string} */ column) => page.locator(`.sidebar button[data-column="${column}"]`);
+const chip = (page, /** @type {string} */ column) => control(page, `button[data-column="${column}"]`);
 const seenText = async (/** @type {Locator} */ el) => (await visibleLines(el)).join(' ');
 /** @param {Page} page */
 const headers = async (page) =>
@@ -36,6 +39,24 @@ async function rowParts(page, id) {
 }
 
 /**
+ * Which View the table shows, read from the table itself: Overview folds every category to headline tiles; Details
+ * opens them all, with a header per metric. Null when it is neither.
+ * @param {Page} page
+ */
+async function shownView(page) {
+  const table = page.locator('table.po');
+  const [tiles, closed, open, heads] = await Promise.all(
+    ['.otile', 'thead th.bandh.closed', 'thead th.bandh.open', 'thead th[data-sort^="Analysis_"]'].map((s) => table.locator(s).count()),
+  );
+  if (tiles && closed && !open && !heads) return 'overview';
+  if (!tiles && !closed && open && heads) return 'details';
+  return null;
+}
+
+/** @param {Page} page */
+const viewControl = async (page) => ((await control(page, 'button[data-view-toggle]').getAttribute('aria-pressed')) === 'true' ? 'details' : 'overview');
+
+/**
  * Opens the portfolio with its document changed, then waits for the table.
  * @param {any} app
  * @param {Page} page
@@ -47,12 +68,12 @@ async function openWith(app, page, change, hash = '') {
   await page.locator('#app > .layout').waitFor();
 }
 
-test.describe('table columns and density', () => {
+test.describe('table columns and view', () => {
   test('21.01: each optional column toggles, the built-in defaults apply, and the choice survives a reload until Reset (#21)', async ({ app, page }) => {
     await app.open();
     const [first] = studies;
     expect(await headers(page)).toEqual(['Scr.n']);
-    for (const [column, pressed] of [['name', 'true'], ['enroll', 'false'], ['status', 'false']]) await expect(chip(page, column)).toHaveAttribute('aria-pressed', pressed);
+    for (const [column, pressed] of [['name', 'true'], ['enroll', 'false'], ['status', 'false']]) await expect(chip(page, column).locator).toHaveAttribute('aria-pressed', pressed);
     expect(await rowParts(page, first.StudyID)).toEqual({ name: first.params.nickname, status: null, pop: [expect.any(String)] });
 
     await chip(page, 'enroll').click();
@@ -69,29 +90,37 @@ test.describe('table columns and density', () => {
     expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
     expect((await rowParts(page, first.StudyID)).name).toBeNull();
 
-    await page.locator('.sidebar [data-reset]').click();
+    await control(page, '[data-reset]').click();
     expect(await headers(page)).toEqual(['Scr.n']);
     expect((await rowParts(page, first.StudyID)).name).toBe(first.params.nickname);
     expect(new URL(page.url()).hash).toBe('');
   });
 
-  test('21.01: configured columns and density are the defaults, and Reset returns to them (#21)', async ({ app, page }) => {
-    await openWith(app, page, (doc) => void (doc.config = { columns: ['enroll', 'status'], density: 'condensed' }));
-    expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
-    expect((await rowParts(page, studies[0].StudyID)).name).toBeNull();
-    await expect(page.locator('table.po')).toHaveClass(/condensed/);
-    await chip(page, 'status').click();
-    await page.locator('.sidebar button[data-seg="density"][data-value="roomy"]').click();
-    expect(await headers(page)).toEqual(['Scr.n', 'Enr.n']);
-    await page.locator('.sidebar [data-reset]').click();
-    expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
-    await expect(page.locator('table.po')).toHaveClass(/condensed/);
+  test('21.01: the View shows the table in Overview by default and in Details when chosen, and the choice survives a reload until Reset (#21)', async ({ app, page }) => {
+    await app.open();
+    expect([await viewControl(page), await shownView(page)]).toEqual(['overview', 'overview']);
+    await chooseView(page, 'details');
+    expect([await viewControl(page), await shownView(page)]).toEqual(['details', 'details']);
+    await page.reload();
+    await page.locator('#app > .layout').waitFor();
+    expect([await viewControl(page), await shownView(page)]).toEqual(['details', 'details']);
+    await control(page, '[data-reset]').click();
+    expect([await viewControl(page), await shownView(page)]).toEqual(['overview', 'overview']);
+    expect(new URL(page.url()).hash).toBe('');
   });
 
-  test('21.01: the column and density controls are disabled in Distribution, which has no table (#21)', async ({ app, page }) => {
-    await app.open('#view=distribution');
-    for (const column of ['name', 'enroll', 'status']) await expect(chip(page, column)).toHaveAttribute('disabled', '');
-    for (const value of ['roomy', 'condensed']) await expect(page.locator(`.sidebar button[data-seg="density"][data-value="${value}"]`)).toHaveAttribute('disabled', '');
+  test('21.01: configured columns and View are the defaults, and Reset returns to them (#21)', async ({ app, page }) => {
+    await openWith(app, page, (doc) => void (doc.config = { columns: ['enroll', 'status'], view: 'details' }));
+    expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
+    expect((await rowParts(page, studies[0].StudyID)).name).toBeNull();
+    expect([await viewControl(page), await shownView(page)]).toEqual(['details', 'details']);
+    await chip(page, 'status').click();
+    await chooseView(page, 'overview');
+    expect(await headers(page)).toEqual(['Scr.n', 'Enr.n']);
+    expect(await shownView(page)).toBe('overview');
+    await control(page, '[data-reset]').click();
+    expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
+    expect([await viewControl(page), await shownView(page)]).toEqual(['details', 'details']);
   });
 
   test('21.02: Enrolled reads n / expected for a study with a target, as a number or text, and the count alone otherwise (#21)', async ({ app, page }) => {
@@ -117,14 +146,70 @@ test.describe('table columns and density', () => {
     expect(await seenText(page.locator('tbody tr.total td.pop').nth(1))).toBe(countText(total));
   });
 
-  test('21.03: the table at roomy and condensed density, for visual comparison; condensed rows are shorter (#21)', async ({ app, page, evidence }) => {
-    await app.open('#view=details');
-    const height = () => page.locator('tbody tr.study').first().evaluate((tr) => tr.getBoundingClientRect().height);
-    await evidence.shot(page, 'roomy');
-    const roomy = await height();
-    await page.locator('.sidebar button[data-seg="density"][data-value="condensed"]').click();
-    await expect(page.locator('table.po')).toHaveClass(/condensed/);
-    await evidence.shot(page, 'condensed');
-    expect(await height()).toBeLessThan(roomy);
+  test('21.03: the table collapsed and expanded, and the Config popover with its toggle and metric checkboxes, for visual comparison (#21)', async ({ app, page, evidence }) => {
+    await app.open();
+    expect(await shownView(page)).toBe('overview');
+    await evidence.shot(page, 'collapsed');
+    await chooseView(page, 'details');
+    expect(await shownView(page)).toBe('details');
+    await evidence.shot(page, 'expanded');
+    await page.locator('#header-controls [data-open="config"]').click();
+    await expect(page.locator('#header-controls [data-pop="config"]')).toBeVisible();
+    await evidence.shot(page, 'Config open');
   });
+});
+
+test('21.04: each group chip hides and shows its whole band and nothing else, a metric unchecked in Config stays hidden when its group is shown again, a group configured hidden starts hidden, and the choice survives a reload and a study report\'s back link until Reset restores the configured defaults (#21)', async ({ app, page }) => {
+  /** @type {any[]} */
+  const catalog = readData('portfolio.json').metrics;
+  const shown = shownMetrics(catalog);
+  const ids = shown.map((m) => m.MetricID);
+  const groups = [{ name: 'Alpha', metrics: ids.slice(0, 4) }, { name: 'Beta', metrics: ids.slice(4, 8), hidden: true }, { name: 'Gamma', metrics: ids.slice(8, 12) }];
+  await app.openReport('portfolio', { document: (/** @type {any} */ doc) => void (doc.config = { groups }), beside: [studies[0].StudyID] });
+  await page.locator('#app > .layout').waitFor();
+  const bands = async () => {
+    const out = [];
+    for (const th of await page.locator('.portfolio-table thead th.bandh[data-band]').all()) {
+      const [name] = await visibleLines(th);
+      out.push([name, await Promise.all((await th.locator('.tlab').all()).map((t) => visibleLines(t).then((l) => l.join(' '))))]);
+    }
+    return out;
+  };
+  const abbr = (/** @type {string} */ id) => /** @type {any} */ (catalog.find((m) => m.MetricID === id)).Abbreviation;
+  const band = (/** @type {string} */ name, /** @type {string[]} */ list) => [name, list.map(abbr)];
+  const rest = ids.slice(12);
+  const chip = (/** @type {string} */ name) => control(page, `button[data-group="${name}"]`);
+
+  expect(await bands(), 'Beta configured hidden').toEqual([band('Alpha', ids.slice(0, 4)), band('Gamma', ids.slice(8, 12)), band('Other', rest)]);
+  expect(await chip('Beta').getAttribute('aria-pressed')).toBe('false');
+  await page.locator('#header-controls [data-open="config"]').click();
+  const chipsSeen = await Promise.all((await page.locator('#header-controls button[data-group]').all()).map((c) => visibleLines(c).then((l) => l.join(' '))));
+  expect(chipsSeen, 'the group chips, readable').toEqual(['Alpha', 'Beta', 'Gamma', 'Other']);
+  await page.keyboard.press('Escape');
+
+  await chip('Gamma').click();
+  expect(await bands(), 'Gamma hidden: only its band goes').toEqual([band('Alpha', ids.slice(0, 4)), band('Other', rest)]);
+  expect(await chip('Gamma').getAttribute('aria-pressed')).toBe('false');
+  await control(page, `input[data-metric="${ids[9]}"]`).uncheck();
+  await chip('Gamma').click();
+  expect(await bands(), 'Gamma shown again, without the metric unchecked').toEqual([band('Alpha', ids.slice(0, 4)), band('Gamma', [ids[8], ids[10], ids[11]]), band('Other', rest)]);
+  await chip('Beta').click();
+  await chip('Alpha').click();
+  const left = [band('Beta', ids.slice(4, 8)), band('Gamma', [ids[8], ids[10], ids[11]]), band('Other', rest)];
+  expect(await bands(), 'Beta shown, Alpha hidden').toEqual(left);
+
+  await page.reload();
+  await page.locator('#app > .layout').waitFor();
+  expect(await bands(), 'after a reload').toEqual(left);
+  const first = studies[0].StudyID;
+  await page.locator(`#app .portfolio-table a[data-study="${first}"]`).first().click();
+  await page.locator(`#app > [data-study="${first}"] .card`).first().waitFor();
+  expect(await cardMetrics(page), 'the study report\'s cards show exactly the portfolio\'s metrics that have one (16.03)').toEqual(withCards([...ids.slice(4, 8), ids[8], ids[10], ids[11], ...rest].sort(), catalog));
+  await page.locator('#app a.back').click();
+  await page.locator('#app > .layout').waitFor();
+  expect(await bands(), 'after a study report and its back link').toEqual(left);
+
+  await page.locator('#header-controls [data-reset]').click();
+  expect(await bands(), 'after Reset').toEqual([band('Alpha', ids.slice(0, 4)), band('Gamma', ids.slice(8, 12)), band('Other', rest)]);
+  expect(await chip('Beta').getAttribute('aria-pressed')).toBe('false');
 });

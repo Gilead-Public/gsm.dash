@@ -7,12 +7,14 @@
 
 const NR = null;
 
-const DISCONTINUATION_REASONS = ['Withdrawal by Participant', 'Lost to Follow-Up', 'Death', 'Study Discontinuation: Other'];
+const DISCONTINUATION_REASONS = ['Withdrawal by Participant', 'Lost to Follow-Up', 'Study Discontinuation: Other', 'Death'];
 const TREATMENT_REASONS = ['Adverse Event', 'Progressive Disease', 'Physician Decision', 'Withdrawal by Participant', 'Other'];
 const IE_CRITERIA = ['IN01', 'IN02', 'IN04', 'IN07', 'EX01', 'EX03', 'EX06', 'EX09'];
-const STRAT_FACTORS = ['Region', 'Disease Stage', 'Prior Therapy', 'Age Group'];
 const SF_REASONS = ['Inclusion Criteria Not Met', 'Exclusion Criteria Met', 'Withdrawal by Participant', 'Other'];
 const DOSED_STATUSES = ['Dosed – ongoing', 'Dosed – treatment complete', 'Dosed – premature treatment discontinuation'];
+const DEATH_WINDOWS = ['≤30 days', '31–90 days'];
+const ELIGIBILITY = ['Eligible', 'Ineligible'];
+const RELATEDNESS = ['Yes', 'No', 'Unknown'];
 const PD_CATEGORIES = ['Informed Consent', 'Eligibility Criteria', 'Investigational Product', 'Study Procedures', 'Visit Schedule', 'Safety Reporting', 'Other'];
 
 function weighted(rand, entries) {
@@ -24,6 +26,8 @@ function weighted(rand, entries) {
   }
   return entries[entries.length - 1][0];
 }
+
+const joint = (as, bs) => as.flatMap((a) => bs.map((b) => `${a} | ${b}`));
 
 /** One to `max` distinct values, or a blank with probability `blank`. */
 function several(rand, values, weights, blank) {
@@ -40,23 +44,21 @@ const completion = (ctx, rand, done, ongoing) => (rand() < 0.1 + 0.5 * ctx.progr
 /**
  * Per metric: which population the records are (`unit`), the variables with their full category grids, and
  * how one record's categories are drawn. `inNumerator` is fixed before `assign` runs, so totals always reconcile.
- * Variable names follow #617's category columns; `disposition`, `eligibility_status`, `screening_status` and
- * `dvdecod` follow the 2026-11-09 design review and await #617's confirmation.
+ * Variables are #617's category columns. Widgets 4 and 7 simulate #617's current proposal, an interim
+ * assumption, and screening sits on kri0012 until the study page shows ctq0001, a study-level metric (#9).
  */
 export const DISTRIBUTION_SPECS = [
   {
     id: 'kri0006',
     unit: 'participant',
     variables: [
-      { Source: 'Numerator', Variable: 'compreas', categories: [...DISCONTINUATION_REASONS, NR] },
-      { Source: 'Denominator', Variable: 'disposition', categories: [...DISCONTINUATION_REASONS, 'Study Completion', 'Ongoing', NR] },
+      { Source: 'Denominator', Variable: 'drv_study_disposition', categories: [...DISCONTINUATION_REASONS, 'Study Completion', 'Ongoing', NR] },
     ],
     assign(rec, rand, ctx) {
       if (rec.inNumerator) {
-        const reason = weighted(rand, [[DISCONTINUATION_REASONS[0], 35], [DISCONTINUATION_REASONS[1], 20], [DISCONTINUATION_REASONS[2], 15], [DISCONTINUATION_REASONS[3], 22], [NR, 8]]);
-        return { compreas: reason, disposition: reason };
+        return { drv_study_disposition: weighted(rand, [[DISCONTINUATION_REASONS[0], 35], [DISCONTINUATION_REASONS[1], 20], [DISCONTINUATION_REASONS[2], 22], [DISCONTINUATION_REASONS[3], 15], [NR, 8]]) };
       }
-      return { disposition: completion(ctx, rand, 'Study Completion', 'Ongoing') };
+      return { drv_study_disposition: completion(ctx, rand, 'Study Completion', 'Ongoing') };
     },
   },
   {
@@ -79,17 +81,13 @@ export const DISTRIBUTION_SPECS = [
   {
     id: 'kri0019',
     unit: 'participant',
-    // One combined IP status: the three treatment statuses of dosed participants plus the non-starter statuses
-    // (design review 2026-11-09). Whether #617 emits them as one variable is still open.
+    // The 19 Nov design review split IP status from treatment disposition, which is kri0007-2's denominator (#9).
     variables: [
-      { Source: 'Denominator', Variable: 'ipns_status', categories: [...DOSED_STATUSES, 'Potential Non-Starter – within window', 'Potential Non-Starter – outside window', 'Confirmed Non-Starter', NR] },
+      { Source: 'Denominator', Variable: 'drv_ip_nonstarter_status', categories: ['Dosed', 'Potential Non-Starter – within window', 'Potential Non-Starter – outside window', 'Confirmed Non-Starter', NR] },
     ],
-    assign(rec, rand, ctx) {
-      if (rec.inNumerator) return { ipns_status: 'Confirmed Non-Starter' };
-      const status = weighted(rand, [['dosed', 955], ['Potential Non-Starter – within window', 30], ['Potential Non-Starter – outside window', 15]]);
-      if (status !== 'dosed') return { ipns_status: status };
-      if (rand() < 0.09) return { ipns_status: DOSED_STATUSES[2] };
-      return { ipns_status: completion(ctx, rand, DOSED_STATUSES[1], DOSED_STATUSES[0]) };
+    assign(rec, rand) {
+      if (rec.inNumerator) return { drv_ip_nonstarter_status: 'Confirmed Non-Starter' };
+      return { drv_ip_nonstarter_status: weighted(rand, [['Dosed', 955], ['Potential Non-Starter – within window', 30], ['Potential Non-Starter – outside window', 15]]) };
     },
   },
   {
@@ -113,30 +111,24 @@ export const DISTRIBUTION_SPECS = [
     id: 'kri0015',
     unit: 'participant',
     variables: [
-      { Source: 'Numerator', Variable: 'death_window', categories: ['Day 1–30', 'Day 31–90', NR] },
-      { Source: 'Numerator', Variable: 'ineligible_flag', categories: ['Eligible', 'Ineligible', NR] },
-      // Relatedness has no mapped source yet (#617, data requirement R5/R6).
-      { Source: 'Numerator', Variable: 'treatment_related', categories: ['Related', 'Not related', NR] },
+      { Source: 'Numerator', Variable: 'death_window', categories: [...DEATH_WINDOWS, NR] },
+      { Source: 'Numerator', Variable: 'eligibility_status', categories: [...ELIGIBILITY, NR] },
+      { Source: 'Numerator', Variable: 'treatment_related', categories: [...RELATEDNESS, NR] },
+      { Source: 'Numerator', Variable: 'window_eligibility', categories: [...joint(DEATH_WINDOWS, ELIGIBILITY), NR] },
+      { Source: 'Numerator', Variable: 'window_treatment_related', categories: [...joint(DEATH_WINDOWS, RELATEDNESS), NR] },
     ],
     assign(rec, rand, ctx) {
       if (!rec.inNumerator) return {};
+      const window = rec.index < ctx.early ? DEATH_WINDOWS[0] : DEATH_WINDOWS[1];
+      const eligibility = rand() < 0.12 ? 'Ineligible' : 'Eligible';
+      const related = weighted(rand, [['Yes', 30], ['No', 60], ['Unknown', 10]]);
       return {
-        death_window: rec.index < ctx.early ? 'Day 1–30' : 'Day 31–90',
-        ineligible_flag: rand() < 0.12 ? 'Ineligible' : 'Eligible',
-        treatment_related: weighted(rand, [['Related', 30], ['Not related', 60], [NR, 10]]),
+        death_window: window,
+        eligibility_status: eligibility,
+        treatment_related: related,
+        window_eligibility: `${window} | ${eligibility}`,
+        window_treatment_related: `${window} | ${related}`,
       };
-    },
-  },
-  {
-    id: 'strat0001',
-    unit: 'participant',
-    variables: [
-      { Source: 'Numerator', Variable: 'factor_names', categories: [...STRAT_FACTORS, NR], multi: true },
-      { Source: 'Denominator', Variable: 'strat_status', categories: ['Correctly Stratified', 'Mis-stratified', NR] },
-    ],
-    assign(rec, rand) {
-      if (rec.inNumerator) return { factor_names: several(rand, STRAT_FACTORS, [[1, 75], [2, 25]], 0), strat_status: 'Mis-stratified' };
-      return { strat_status: rand() < 0.02 ? NR : 'Correctly Stratified' };
     },
   },
   {
@@ -144,15 +136,14 @@ export const DISTRIBUTION_SPECS = [
     unit: 'participant',
     variables: [
       { Source: 'Numerator', Variable: 'sf_reason', categories: [...SF_REASONS, NR] },
-      // The metric's denominator (screened) excludes anyone still in screening, so "In Screening" stays 0 until
-      // #617 says whether the all-participants population is available.
-      { Source: 'Denominator', Variable: 'screening_status', categories: ['Screen Failure', 'In Screening', 'Enrolled', NR] },
+      // The metric's denominator is participants who finished screening, so there is no "In Screening" (#9).
+      { Source: 'Denominator', Variable: 'drv_study_disposition', categories: ['Screen Failure', 'Enrolled', NR] },
     ],
     assign(rec, rand) {
       if (rec.inNumerator) {
-        return { sf_reason: weighted(rand, [[SF_REASONS[0], 40], [SF_REASONS[1], 30], [SF_REASONS[2], 15], [SF_REASONS[3], 10], [NR, 5]]), screening_status: 'Screen Failure' };
+        return { sf_reason: weighted(rand, [[SF_REASONS[0], 40], [SF_REASONS[1], 30], [SF_REASONS[2], 15], [SF_REASONS[3], 10], [NR, 5]]), drv_study_disposition: 'Screen Failure' };
       }
-      return { screening_status: 'Enrolled' };
+      return { drv_study_disposition: 'Enrolled' };
     },
   },
   {
