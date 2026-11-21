@@ -1,14 +1,14 @@
 state: breakdown-no-rows (reports)
-dom: sha256 dd641385f3f2c580c7021f0d73528624f4821eb64bfed8e357379b2a8d8b481e (53322 characters)
+dom: sha256 01829be37db106648b9d8a84400f85bd18f1ac519dc50934bbd43609546dab22 (54042 characters)
 tooltip: none
 drill-in: closed
 cards:
   eligibility-status · Analysis_kri0014: points 1, lines 2, breakdowns 3
-  ie-criteria · Analysis_kri0014: points 1, lines 2, breakdowns 6
+  ie-criteria · Analysis_kri0014: points 1, lines 2, breakdowns 7
   premature-deaths · Analysis_kri0015: points 1, lines 2, cells 12
   ip-status · Analysis_kri0019: points 1, lines 2, breakdowns 4
   treatment-disposition · Analysis_kri0007-2: points 1, lines 2, breakdowns 3
-  treatment-discontinuation-reasons · Analysis_kri0007-2: points 1, lines 2, breakdowns 5
+  treatment-discontinuation-reasons · Analysis_kri0007-2: points 1, lines 2, breakdowns 6
   study-disposition · Analysis_kri0006: points 1, lines 2, breakdowns 7
   screening-disposition · Analysis_kri0012: points 1, lines 2, empty 1
   screen-failure-reasons · Analysis_kri0012: points 1, lines 2, empty 1
@@ -45,7 +45,8 @@ accessibility:
       - 'listitem "IN04: 9 of 37"': IN04 9
       - 'listitem "EX09: 9 of 37"': EX09 9
       - 'listitem "IN07: 5 of 37"': IN07 5
-      - 'listitem "+ 4 more: 13 of 37"': + 4 more 13
+      - 'listitem "IN02: 4 of 37"': IN02 4
+      - 'listitem "+ 3 more: 9 of 37"': + 3 more 9
       - 'listitem "Not recorded: 5 of 37"': Not recorded 5
     - paragraph: A participant can fall in more than one category, so the counts add up to more than 37.
     - paragraph: "Not recorded: the source value was blank."
@@ -118,7 +119,8 @@ accessibility:
       - 'listitem "Adverse Event: 26 of 84"': Adverse Event 26
       - 'listitem "Other: 26 of 84"': Other 26
       - 'listitem "Withdrawal by Participant: 24 of 84"': Withdrawal by Participant 24
-      - 'listitem "+ 2 more: 34 of 84"': + 2 more 34
+      - 'listitem "Progressive Disease: 19 of 84"': Progressive Disease 19
+      - 'listitem "Physician Decision: 15 of 84"': Physician Decision 15
       - 'listitem "Not recorded: 3 of 84"': Not recorded 3
     - paragraph: A participant can fall in more than one category, so the counts add up to more than 84.
     - paragraph: "Not recorded: the source value was blank."

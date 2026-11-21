@@ -5,7 +5,7 @@ import { DISTRIBUTION_CONFIG } from '../src/config/distributions.js';
 import { expectedView, jointRecount } from '../test/qual/distributions.js';
 import { generatePortfolio } from '../scripts/generate-example-data.mjs';
 import { expect, readData, test } from './fixtures/app.js';
-import { TRACKER_CARDS } from './fixtures/tiles.js';
+import { ROOM_FOR_EVERY_BAR, styleFromStart, TRACKER_CARDS } from './fixtures/tiles.js';
 
 /**
  * @typedef {object} Metric A breakdown card: its metric's fields, the card's id and the one section it shows (#10).
@@ -198,21 +198,7 @@ const exactly = (value) => new RegExp(`^\\s*${value.replace(/[.*+?^${}()|[\]\\]/
  * @param {Page} page
  */
 async function openStudy(app, page) {
-  await page.addInitScript(() => {
-    const add = () => {
-      const style = document.createElement('style');
-      style.textContent = '.tiles.cards { --card-h: 1600px; }';
-      document.documentElement.append(style);
-    };
-    if (document.documentElement) add();
-    else {
-      new MutationObserver((_, observer) => {
-        if (!document.documentElement) return;
-        observer.disconnect();
-        add();
-      }).observe(document, { childList: true });
-    }
-  });
+  await styleFromStart(page, ROOM_FOR_EVERY_BAR);
   await app.openStudy(study.StudyID);
   await expect(body(page, configured[0]).locator('.dist')).toBeVisible();
 }

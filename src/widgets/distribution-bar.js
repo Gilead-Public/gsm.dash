@@ -63,6 +63,7 @@ const shownBars = (model) => Math.max(0, ...(model.sections ?? []).map((s) => s.
 
 // Only a laid-out box can overflow: detached or unsized, the widget shows every bar its top-N allows.
 const overflows = (el) => el.isConnected && el.clientHeight > 0 && el.scrollHeight > el.clientHeight;
+const overflowsAcross = (el) => el.isConnected && el.clientWidth > 0 && el.scrollWidth > el.clientWidth;
 
 /**
  * `config.only` (section keys) or `config.joint` choose what a card shows (#10); the rest is the metric's
@@ -89,8 +90,11 @@ export function renderDistribution(el, data, config = {}) {
     el.innerHTML = html(model);
     return model;
   };
+  el.removeAttribute('data-tight');
   let model = draw(Infinity);
   for (let bars = shownBars(model) - 1; bars >= 1 && overflows(el); bars--) model = draw(bars);
+  // Joint tables wider than the card may break their headings inside words, which they otherwise keep whole.
+  if (model.joint && overflowsAcross(el)) el.toggleAttribute('data-tight', true);
   el.toggleAttribute('data-fits', Boolean(model.sections) && !overflows(el));
 }
 

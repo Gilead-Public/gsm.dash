@@ -1,5 +1,5 @@
 state: tooltip-definition (reports)
-dom: sha256 5529af12a8d4e2b68c38ba32ca7d96ababb0580b96068023103edd40a97cf194 (56781 characters)
+dom: sha256 2ff752341e081e51d6ddf3bcf0edebb4b13f3073fdb7b3359a40b2de56b9559d (57198 characters)
 tooltip: <b>Screen Failure Rate</b><br><span class="tip-muted mono">SF · kri0012 · Disposition</span><dl class="tip-dl"><dt>Definition</dt><dd><span class="tip-muted">not yet supplied (Q2)</span></dd><dt>Numerator</dt><dd>Number of screen failed participants</dd><dt>Denominator</dt><dd>Total screened participants</dd><dt>Displayed as</dt><dd>percent (n ÷ d)</dd><dt>Flagging</dt><dd>Adjusted Z-Score · thresholds -2, -1, 2, 3</dd><dt>Note</dt><dd>The tracker also lists a Planned "Screen Failure" divided by all enrolled (open question Q1).</dd></dl>
 drill-in: closed
 cards:
@@ -8,7 +8,7 @@ cards:
   premature-deaths · Analysis_kri0015: points 1, lines 2, cells 12
   ip-status · Analysis_kri0019: points 1, lines 2, breakdowns 4
   treatment-disposition · Analysis_kri0007-2: points 1, lines 2, breakdowns 3
-  treatment-discontinuation-reasons · Analysis_kri0007-2: points 1, lines 2, breakdowns 5
+  treatment-discontinuation-reasons · Analysis_kri0007-2: points 1, lines 2, breakdowns 6
   study-disposition · Analysis_kri0006: points 1, lines 2, breakdowns 7
   screening-disposition · Analysis_kri0012: points 1, lines 2, breakdowns 2
   screen-failure-reasons · Analysis_kri0012: points 1, lines 2, breakdowns 5
@@ -117,7 +117,8 @@ accessibility:
       - 'listitem "Physician Decision: 13 of 42"': Physician Decision 13
       - 'listitem "Other: 13 of 42"': Other 13
       - 'listitem "Progressive Disease: 11 of 42"': Progressive Disease 11
-      - 'listitem "+ 2 more: 13 of 42"': + 2 more 13
+      - 'listitem "Withdrawal by Participant: 8 of 42"': Withdrawal by Participant 8
+      - 'listitem "Adverse Event: 5 of 42"': Adverse Event 5
       - 'listitem "Not recorded: 2 of 42"': Not recorded 2
     - paragraph: A participant can fall in more than one category, so the counts add up to more than 42.
     - paragraph: "Not recorded: the source value was blank."

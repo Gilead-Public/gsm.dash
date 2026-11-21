@@ -315,6 +315,9 @@ describe('a breakdown that fits its card (#32)', () => {
   const box = (clientHeight, isConnected = true) => ({
     dataset: {},
     attributes: new Set(),
+    removeAttribute(name) {
+      this.attributes.delete(name);
+    },
     toggleAttribute(name, on) {
       if (on) this.attributes.add(name);
       else this.attributes.delete(name);

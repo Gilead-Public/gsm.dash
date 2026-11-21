@@ -1,5 +1,5 @@
 state: drill-in-scatter-plot (reports)
-dom: sha256 26af93a64909715497ec5d26a9898f33fee8946c4eac62b4e537fe1a494dfadb (58064 characters)
+dom: sha256 dfbdaa5a5d9c017183758d9a9bf8d5f9411f3e818e88e3f8516bdae5c895e410 (58784 characters)
 tooltip: none
 drill-in: AE · Scatter plot · gsm.viz · scatterPlot · AE: charts 1
   type undefined; labels: 
@@ -33,11 +33,11 @@ drill-in: AE · Scatter plot · gsm.viz · scatterPlot · AE: charts 1
       data: Threshold=3 stratum=3 x=2225 y=92.43; Threshold=3 stratum=3 x=2543 y=103.84; Threshold=3 stratum=3 x=2906 y=116.74; Threshold=3 stratum=3 x=3321 y=131.36; Threshold=3 stratum=3 x=3795 y=147.91; Threshold=3 stratum=3 x=4337 y=166.69; Threshold=3 stratum=3 x=4956 y=187.97; Threshold=3 stratum=3 x=5664 y=212.14; Threshold=3 stratum=3 x=6473 y=239.57; Threshold=3 stratum=3 x=7398 y=270.73; Threshold=3 stratum=3 x=8454 y=306.1; Threshold=3 stratum=3 x=9661 y=346.3; Threshold=3 stratum=3 x=11041 y=392.02; Threshold=3 stratum=3 x=12618 y=444
 cards:
   eligibility-status · Analysis_kri0014: points 1, lines 2, breakdowns 3
-  ie-criteria · Analysis_kri0014: points 1, lines 2, breakdowns 6
+  ie-criteria · Analysis_kri0014: points 1, lines 2, breakdowns 7
   premature-deaths · Analysis_kri0015: points 1, lines 2, cells 12
   ip-status · Analysis_kri0019: points 1, lines 2, breakdowns 4
   treatment-disposition · Analysis_kri0007-2: points 1, lines 2, breakdowns 3
-  treatment-discontinuation-reasons · Analysis_kri0007-2: points 1, lines 2, breakdowns 5
+  treatment-discontinuation-reasons · Analysis_kri0007-2: points 1, lines 2, breakdowns 6
   study-disposition · Analysis_kri0006: points 1, lines 2, breakdowns 7
   screening-disposition · Analysis_kri0012: points 1, lines 2, breakdowns 2
   screen-failure-reasons · Analysis_kri0012: points 1, lines 2, breakdowns 5
@@ -74,7 +74,8 @@ accessibility:
       - 'listitem "IN04: 9 of 37"': IN04 9
       - 'listitem "EX09: 9 of 37"': EX09 9
       - 'listitem "IN07: 5 of 37"': IN07 5
-      - 'listitem "+ 4 more: 13 of 37"': + 4 more 13
+      - 'listitem "IN02: 4 of 37"': IN02 4
+      - 'listitem "+ 3 more: 9 of 37"': + 3 more 9
       - 'listitem "Not recorded: 5 of 37"': Not recorded 5
     - paragraph: A participant can fall in more than one category, so the counts add up to more than 37.
     - paragraph: "Not recorded: the source value was blank."
@@ -147,7 +148,8 @@ accessibility:
       - 'listitem "Adverse Event: 26 of 84"': Adverse Event 26
       - 'listitem "Other: 26 of 84"': Other 26
       - 'listitem "Withdrawal by Participant: 24 of 84"': Withdrawal by Participant 24
-      - 'listitem "+ 2 more: 34 of 84"': + 2 more 34
+      - 'listitem "Progressive Disease: 19 of 84"': Progressive Disease 19
+      - 'listitem "Physician Decision: 15 of 84"': Physician Decision 15
       - 'listitem "Not recorded: 3 of 84"': Not recorded 3
     - paragraph: A participant can fall in more than one category, so the counts add up to more than 84.
     - paragraph: "Not recorded: the source value was blank."
