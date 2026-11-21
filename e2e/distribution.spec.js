@@ -384,9 +384,12 @@ test.describe('Layout A distribution widget', () => {
     await expect(message).toHaveText('Breakdowns are published for the latest snapshot only.');
   });
 
-  test('10.08: the rendered widgets are captured for comparison with the Layout A design (visual comparison) (#10)', async ({ app, page, evidence }) => {
-    await openStudy(app, page);
+  test('10.08: the rendered widgets, at the shipped card size, are captured for comparison with the Layout A design (visual comparison) (#10)', async ({ app, page, evidence }) => {
+    // Not openStudy: the evidence shows what a user sees, not the room for every bar the value checks need.
+    await app.openStudy(study.StudyID);
     for (const m of configured) await expect(body(page, m).locator('.dist')).toBeVisible();
+    const cardHeight = await page.locator('.tiles.cards').evaluate((g) => getComputedStyle(g).getPropertyValue('--card-h').trim());
+    expect(cardHeight, 'the card height in src/app/app.css').toBe('400px');
     await evidence.shot(page, 'study view with distribution widgets');
   });
 
