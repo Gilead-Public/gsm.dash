@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "0bbe298cd0879483165dc77745a54b3a727a9f918901dda22469fc28286d6594",
+  "hash": "9a04751b530c7a927ae962c2ba74096f972a5c45d3c6a4f23e379b31f47e23ea",
   "issues": [
     {
       "number": 8,
@@ -766,63 +766,63 @@
           "text": "Each compact widget's displayed rate, n / N, and site counts and percentages per flag equal values computed independently from the fixture's site rows, at the latest and an earlier visit (test).",
           "sha256": "795fdf246ed85c5232ed79f42d13535d6712b15a2ff2fb946dfb3560a983dc8f",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "32.02",
           "text": "For metrics displayed per 28 days, the displayed rate and N follow the per-28-day rule, and a configured unit label is shown (test).",
           "sha256": "b5eacee9237452a839e2a6170535bf25d7e9543d7ff72b60a2df3bd90a3acbdf",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "32.03",
           "text": "The cards follow tracker order: #10's distribution cards, then 12–20. Each card appears once, there is no control to group them, and KRIs hidden from the portfolio are left out (test).",
           "sha256": "ac9ff357352202dcd8180e3ecd72194c3631fb45a655e38822aa7acd2a881dc7",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "32.04",
           "text": "KRIs configured as hidden by default appear only after the expand control after the last KRI card is used, which reveals them all. KRIs hidden from the portfolio stay out, and with the default configuration no expand control shows (test).",
           "sha256": "ad251de9c9f7cbcf4819e039105d6ddb068759f722dae5002649bb9ea566419b",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "32.05",
           "text": "A user compares the card grid, with a KRI hidden by default, against this issue's Scope and accepts it (user acceptance).",
           "sha256": "a3af7ac5d4d001f7e98cc44a468071b5784ca5ac202fc7f6752d8c8bc515c0f7",
           "kind": "visual",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "32.06",
           "text": "Each compact widget keeps the Charts drill-in and, where configured, the detailed-report link, and has no view pager (test).",
           "sha256": "20f09eeac0a852dd1d795d3bcb885df54fa7e6231b71f7d591d22b070ce26f56",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "32.07",
           "text": "Pooling a metric's site rows into the study's value sits in one tested function, so it can be qualified as dashboard logic (gsm.roadmap#625).",
           "sha256": "0aebfd223ee080c9859d59f1e6ea94f0ad35a9bd201381d35e5717d57a13b8ba",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "32.08",
           "text": "Every card has the same width and height, and every label, value, footnote and empty or error message is visible inside its card: nothing is clipped (test).",
           "sha256": "ff034ca880e546d489d33c12b1ad3460e40dc655191998f6a61952f53eb3a107",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "32.09",
           "text": "With at least two values up to the selected visit, each card's sparkline has one place per snapshot up to that visit and draws exactly the values pooled independently by `test/qual/pooling.js`, including per-28-day KRIs and at an earlier visit. A snapshot without a value, between others or at the visit shown, leaves a gap, and the label reports it. With fewer than two values, the card shows \"—\" and no trend line (test).",
           "sha256": "98e35be1519b1d938a341c2568b075f0be7fd5e674f3efa4d64b0257c3ea78c8",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         }
       ]
     },
