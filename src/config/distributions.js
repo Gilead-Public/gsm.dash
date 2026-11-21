@@ -1,7 +1,8 @@
 // @ts-check
 // Distribution widget configuration per metric (keyed by gsm metric ID): business labels for each
 // Source × Variable section (a denominator section's `percentLabel` names its population), which variables are
-// statuses (coloured) rather than reasons (uncoloured), and top-N collapsing. In a joint-count table (#10), a section's
+// statuses (coloured) rather than reasons (uncoloured), and top-N collapsing. `keepTopN` shows the top N however small
+// the card, and `ties: 'alphabetical'` orders equal counts by name (#19). In a joint-count table (#10), a section's
 // `label` heads its rows or column group, and the rows' section's `total` heads their counts.
 // Labels never say "Numerator" or "Denominator". Status colours stay empty until the colour map is agreed (#18).
 
@@ -40,6 +41,18 @@ export const DISTRIBUTION_CONFIG = {
       'Numerator:treatment_related': { title: 'Deaths by relatedness to treatment' },
       'Numerator:window_eligibility': { title: 'Deaths by time and eligibility', label: 'Eligibility' },
       'Numerator:window_treatment_related': { title: 'Deaths by time and relatedness to treatment', label: 'Related to treatment' },
+    },
+  },
+  kri0004: {
+    statusVariables: [],
+    sections: {
+      'Numerator:dvdecod': { title: 'Top 5 categories', topN: 5, keepTopN: true, ties: 'alphabetical' },
+    },
+  },
+  kri0003: {
+    statusVariables: [],
+    sections: {
+      'Numerator:dvdecod': { title: 'Top 5 categories', topN: 5, keepTopN: true, ties: 'alphabetical' },
     },
   },
   kri0012: {

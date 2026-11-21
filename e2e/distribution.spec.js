@@ -2,7 +2,7 @@
 /** @typedef {import('@playwright/test').Locator} Locator */
 /** @typedef {import('@playwright/test').Page} Page */
 import { DISTRIBUTION_CONFIG } from '../src/config/distributions.js';
-import { expectedView, jointRecount } from '../test/qual/distributions.js';
+import { countBy, expectedView } from '../test/qual/distributions.js';
 import { generatePortfolio } from '../scripts/generate-example-data.mjs';
 import { expect, readData, test } from './fixtures/app.js';
 import { ROOM_FOR_EVERY_BAR, styleFromStart, TRACKER_CARDS } from './fixtures/tiles.js';
@@ -13,6 +13,7 @@ import { ROOM_FOR_EVERY_BAR, styleFromStart, TRACKER_CARDS } from './fixtures/ti
  * @property {string} ID
  * @property {string} Metric
  * @property {string} [Population]
+ * @property {string} [Display]
  * @property {string} card
  * @property {string} section
  */
@@ -93,8 +94,12 @@ function expectedFor(m) {
   /** @type {Row[]} */
   const rows = snapshot.distributions.filter((d) => d.MetricID === m.MetricID && `${d.Source}:${d.Variable}` === m.section);
   const sections = /** @type {Section[]} */ (expectedView(rows, config));
+  // Per 28 days (the PD cards' metrics), the rate is n ÷ exposure days × 28 and N is exposure days ÷ 28 (#32).
+  const per28 = m.Display === 'per_28d';
   return {
-    header: { pct: pct(totals.Numerator / totals.Denominator), nd: `${int(totals.Numerator)} / ${int(totals.Denominator)}` },
+    header: per28
+      ? { pct: ((totals.Numerator / totals.Denominator) * 28).toFixed(2), nd: `${int(totals.Numerator)} / ${(totals.Denominator / 28).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}` }
+      : { pct: pct(totals.Numerator / totals.Denominator), nd: `${int(totals.Numerator)} / ${int(totals.Denominator)}` },
     sections: sections.map((s) => {
       // The one column heading is the population's business label for a status section, or "n" for a reason section.
       const heading = s.display === 'percent' ? (config.sections?.[`${s.Source}:${s.Variable}`]?.percentLabel ?? config.percentLabel ?? '%') : 'n';
@@ -214,12 +219,6 @@ test.describe('Layout A distribution widget', () => {
       expect(seen.sections.map((s) => s.title), m.card).toEqual(expectedFor(m).sections.map((s) => s.title));
       for (const s of seen.sections) expect(s.rows.length, `${m.card} ${s.title}`).toBeGreaterThan(0);
     }
-    const joint = body(page, /** @type {Metric} */ ({ card: 'premature-deaths' }));
-    await expect(joint, 'widget 4').toHaveAttribute('data-state', 'ok');
-    for (const t of await joint.locator('table.dist-joint').all()) {
-      await expect(t, 'widget 4').toBeVisible();
-      expect(await t.locator('tbody tr').count(), 'widget 4 rows').toBeGreaterThan(0);
-    }
   });
 
   test('10.02: every displayed label, percentage, count and hover value, collapsed bars and header included, equals the independent expectation (#10)', async ({ app, page }) => {
@@ -268,7 +267,7 @@ test.describe('Layout A distribution widget', () => {
 
   test('10.04: no user-facing text says Numerator or Denominator (#10)', async ({ app, page }) => {
     await openStudy(app, page);
-    for (const m of [...configured, /** @type {Metric} */ ({ card: 'premature-deaths' })]) {
+    for (const m of configured) {
       const text = await body(page, m).evaluate((el) => {
         const attrs = [...el.querySelectorAll('*')].flatMap((e) => [e.getAttribute('title'), e.getAttribute('aria-label')]);
         return [/** @type {HTMLElement} */ (el).innerText, el.getAttribute('aria-label'), ...attrs].filter(Boolean).join('\n');
@@ -388,63 +387,43 @@ test.describe('Layout A distribution widget', () => {
   test('10.08: the rendered widgets are captured for comparison with the Layout A design (visual comparison) (#10)', async ({ app, page, evidence }) => {
     await openStudy(app, page);
     for (const m of configured) await expect(body(page, m).locator('.dist')).toBeVisible();
-    await expect(page.locator('.card[data-card="premature-deaths"] table.dist-joint')).toHaveCount(2);
     await evidence.shot(page, 'study view with distribution widgets');
   });
 
-  test('10.10: each card in Scope appears once with its specified breakdown; widget 5 gives IP status then treatment disposition; widget 4 shows both joint-count breakdowns (#10)', async ({ app, page }) => {
+  test('10.10: each card in Scope appears once with its specified breakdown; widget 5 gives IP status then treatment disposition; widget 4 gives time window, eligibility then relatedness (#10)', async ({ app, page }) => {
     await openStudy(app, page);
     const order = await page.locator('.card').evaluateAll((els) => els.map((e) => [e.getAttribute('data-card'), e.getAttribute('data-metric-id')]));
     for (const c of TRACKER_CARDS.filter((x) => x.kind !== 'kri')) {
       expect(order.filter(([id]) => id === c.id), c.id).toHaveLength(1);
       const shown = page.locator(`.card[data-card="${c.id}"] .tile-body`);
-      if (c.kind === 'bars') {
-        expect(await shown.locator('.dist-sec').evaluateAll((els) => els.map((e) => `${e.getAttribute('data-source')}:${e.getAttribute('data-variable')}`)), c.id).toEqual([c.section]);
-        await expect(shown.locator('.dist-sec'), c.id).toBeVisible();
-      } else {
-        const tables = shown.locator('table.dist-joint');
-        expect(await tables.evaluateAll((els) => els.map((e) => e.getAttribute('data-section'))), c.id).toEqual(c.section.split(' '));
-        for (const t of await tables.all()) await expect(t, c.id).toBeVisible();
-        await expect(shown.locator('.dist-sec'), c.id).toHaveCount(0);
-      }
+      expect(await shown.locator('.dist-sec').evaluateAll((els) => els.map((e) => `${e.getAttribute('data-source')}:${e.getAttribute('data-variable')}`)), c.id).toEqual([c.section]);
+      await expect(shown.locator('.dist-sec'), c.id).toBeVisible();
+      await expect(shown.locator('table.dist-joint'), c.id).toHaveCount(0);
     }
     const at = (/** @type {string} */ id) => order.findIndex(([x]) => x === id);
     expect(at('treatment-disposition'), 'widget 5: IP status, then treatment disposition').toBe(at('ip-status') + 1);
     expect([order[at('ip-status')][1], order[at('treatment-disposition')][1]]).toEqual(['Analysis_kri0019', 'Analysis_kri0007-2']);
+    const deaths = ['premature-deaths-window', 'premature-deaths-eligibility', 'premature-deaths-related'];
+    expect(deaths.map(at), 'widget 4: time window, eligibility, then relatedness').toEqual([0, 1, 2].map((i) => at(deaths[0]) + i));
+    expect(deaths.map((id) => order[at(id)][1])).toEqual(deaths.map(() => 'Analysis_kri0015'));
   });
 
-  test('10.11: widget 4\'s joint counts equal an independent recount of the fixture\'s simulated death records (#10)', async ({ app, page }) => {
+  test('10.11: the counts on each of widget 4\'s three cards equal an independent recount of the fixture\'s simulated death records (#10)', async ({ app, page }) => {
     await openStudy(app, page);
     const { records } = generatePortfolio();
     const latest = `${study.StudyID}|${study.snapshots.at(-1)}|`;
     const sets = [...records].filter(([k]) => k.startsWith(latest) && k.endsWith('|Analysis_kri0015')).map(([, v]) => v.records);
     expect(sets.length, 'the study has sites with death records').toBeGreaterThan(0);
-    const tables = await page.locator('.card[data-card="premature-deaths"] table.dist-joint').evaluateAll((els) =>
-      els.map((t) => {
-        const read = (/** @type {Element} */ e) => (e.checkVisibility({ opacityProperty: true, visibilityProperty: true }) ? (e.textContent ?? '').trim() : '(hidden)');
-        return {
-          caption: read(/** @type {Element} */ (t.querySelector('caption'))),
-          heads: [...t.querySelectorAll('thead th')].map(read),
-          rows: [...t.querySelectorAll('tbody tr')].map((tr) => [...tr.children].map(read)),
-        };
-      }),
-    );
-    expect(tables.map((t) => t.caption)).toEqual(['Eligibility', 'Related to treatment']);
-    let cells = 0;
-    for (const [i, variable] of ['eligibility_status', 'treatment_related'].entries()) {
-      const want = jointRecount(sets, 'death_window', variable);
-      const { caption, heads, rows } = tables[i];
-      expect(rows.map((r) => r[0]).sort(), caption).toEqual([...want.rows.keys()].map((k) => k ?? 'Not recorded').sort());
-      for (const [label, ...values] of rows) {
-        heads.slice(1).forEach((head, j) => {
-          const count = head === 'Deaths' ? want.rows.get(label === 'Not recorded' ? null : label) : (want.pairs.get(`${label}\u0000${head}`) ?? 0);
-          expect(values[j], `${caption}: ${label}, ${head}`).toBe(int(/** @type {number} */ (count)));
-          cells++;
-        });
-      }
-      const recounted = new Set([...want.pairs.keys()].map((k) => k.split('\u0000')[1]));
-      for (const column of recounted) expect(heads, `${caption}: a column for ${column}`).toContain(column);
+    let bars = 0;
+    for (const [id, variable] of [['premature-deaths-window', 'death_window'], ['premature-deaths-eligibility', 'eligibility_status'], ['premature-deaths-related', 'treatment_related']]) {
+      const seen = await renderedFor(page, cardById(id));
+      expect(seen.hidden, id).toEqual([]);
+      expect(seen.sections, id).toHaveLength(1);
+      const shown = seen.sections[0].rows.map((r) => [r.label, Object.values(r.values)[0]]).filter(([, n]) => n !== '0');
+      const want = [...countBy(sets, variable)].map(([category, n]) => [category ?? 'Not recorded', int(n)]);
+      expect(Object.fromEntries(shown), id).toEqual(Object.fromEntries(want));
+      bars += shown.length;
     }
-    expect(cells).toBeGreaterThan(10);
+    expect(bars).toBeGreaterThan(5);
   });
 });

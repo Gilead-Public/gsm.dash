@@ -8,7 +8,7 @@ import { DISTRIBUTION_CONFIG } from '../src/config/distributions.js';
 import { expectedView } from '../test/qual/distributions.js';
 import { pooled } from '../test/qual/pooling.js';
 import { expect, readData, test } from './fixtures/app.js';
-import { card, styleFromStart, TRACKER_CARDS } from './fixtures/tiles.js';
+import { card, TRACKER_CARDS } from './fixtures/tiles.js';
 
 const portfolio = readData('portfolio.json');
 /** @type {StudyEntry[]} */
@@ -146,41 +146,6 @@ test.describe('cards of one size, with nothing clipped', () => {
     }
   });
 
-  test('32.08: widget 4\'s tables break their headings inside words exactly when they would otherwise overflow their card: never in a roomy card, always in a narrow one; and with wider text, as another platform\'s fonts give, no text is clipped at any width (#32)', async ({ app, page }) => {
-    const deaths = card(page, 'premature-deaths').locator('.tile-body');
-    // Whether the tables are tightened, and whether, measured without that, they would be wider than the card.
-    const tightness = () =>
-      deaths.evaluate((el) => {
-        const tight = el.hasAttribute('data-tight');
-        el.removeAttribute('data-tight');
-        const overflows = el.scrollWidth > el.clientWidth;
-        if (tight) el.setAttribute('data-tight', '');
-        return { tight, overflows };
-      });
-    /**
-     * @param {string} css
-     * @param {{ tight: boolean, overflows: boolean }} want
-     */
-    const withCards = async (css, want) => {
-      const style = await page.addStyleTag({ content: css });
-      await expect.poll(tightness, css).toEqual(want);
-      await expectFitted(page, css);
-      await style.evaluate((el) => /** @type {Element} */ (el).remove());
-    };
-    await app.openStudy(study.StudyID);
-    await withCards('.tiles.cards { grid-template-columns: repeat(auto-fill, 640px); }', { tight: false, overflows: false });
-    await withCards('.tiles.cards { grid-template-columns: repeat(auto-fill, 200px); }', { tight: true, overflows: true });
-    await styleFromStart(page, '.study-page { letter-spacing: 0.06em; }');
-    await app.openStudy(study.StudyID);
-    for (const width of [1400, 1280, 1000, 700, 1920]) {
-      await page.setViewportSize({ width, height: 900 });
-      await expect.poll(async () => (await layout(page)).outside, `wider text, ${width} px`).toEqual([]);
-      await expectFitted(page, `wider text, ${width} px`);
-      const seen = await tightness();
-      expect(seen.tight, `wider text, ${width} px: tightened exactly when the tables would overflow`).toBe(seen.overflows);
-    }
-  });
-
   test('32.08: at earlier visits, with breakdowns\' empty messages and sparklines of one point, and in another study, no text is clipped (#32)', async ({ app, page }) => {
     await app.openStudy(study.StudyID);
     for (const index of [1, 0]) {
@@ -204,19 +169,19 @@ test.describe('cards of one size, with nothing clipped', () => {
     expect((await layout(page)).parts.find((p) => p.id === 'ip-status')?.problem).toBe(true);
   });
 
-  test('32.08: when a card can\'t shorten its content to fit, as widget 4 with a blank death window, every card grows with it, at any width, and returns to its size when no card needs more (#32)', async ({ app, page }) => {
-    const deaths = metricOf('kri0015').MetricID;
+  test('32.08: when a card can\'t shorten its content to fit, as the important-PD card with long category labels, every card grows with it, at any width, and returns to its size when no card needs more (#32)', async ({ app, page }) => {
+    const pd = metricOf('kri0004').MetricID;
+    const long = ' — a long description of the deviation category that wraps over several lines in a card of the shipped size';
     await app.openStudy(study.StudyID, {
       snapshot: (/** @type {any} */ snap) => {
-        const blank = (snap.distributions ?? []).filter((/** @type {any} */ r) => r.MetricID === deaths && r.Category === null && /^(death_window|window_)/.test(r.Variable));
-        for (const r of blank.filter((/** @type {any} */ r) => r.GroupID === blank[0].GroupID)) r.Count = 2;
+        for (const r of snap.distributions ?? []) if (r.MetricID === pd && r.Variable === 'dvdecod' && r.Category !== null) r.Category += long;
       },
     });
-    await expect(card(page, 'premature-deaths').locator('tr[data-category="Not recorded"]')).toHaveCount(2);
+    await expect(card(page, 'important-pd-categories').locator('.dist-row[data-kind="category"]')).toHaveCount(5);
     const configured = Number.parseFloat(await page.locator('.tiles.cards').evaluate((g) => getComputedStyle(g).getPropertyValue('--card-h')));
     const height = () => card(page, 'kri0001').evaluate((c) => c.getBoundingClientRect().height);
     expect(configured).toBeGreaterThan(0);
-    await expectFitted(page, 'with a blank death window');
+    await expectFitted(page, 'with long category labels');
     expect(await height(), 'every card grew').toBeGreaterThan(configured + 1);
     for (const width of [1400, 700, 1920, 1280]) {
       await page.setViewportSize({ width, height: 900 });

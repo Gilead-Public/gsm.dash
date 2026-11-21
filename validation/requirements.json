@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "9a04751b530c7a927ae962c2ba74096f972a5c45d3c6a4f23e379b31f47e23ea",
+  "hash": "b56823483f8c713ffcc91165809c18ee0f97fd602f51753fc4022d6fd7d211e2",
   "issues": [
     {
       "number": 8,
@@ -88,7 +88,7 @@
       "title": "Build a Layout A bar-chart distribution widget",
       "parent": "Gilead-BioStats/gsm.roadmap#618",
       "userTest": true,
-      "scopeSection": "**In:** a Layout A bar-chart widget following the contract in the gsm.roadmap#617 pipeline design.\n- **One card per tracker widget:** the study page (#32) has a card for each tracker widget with a breakdown (two for widget 5), and each card shows exactly the breakdown its card list names (#12):\n  - 1, Eligibility Status: `kri0014`'s eligibility status, % of enrolled;\n  - 3, Eligibility I/E Criteria: `kri0014`'s criteria not met, counts, top 5;\n  - 4, Premature Death summary: `kri0015`'s deaths, as a table (below; interim);\n  - 5, IP Status, as two cards (the review split combined widgets): `kri0019`'s IP status, % of enrolled; and `kri0007-2`'s treatment disposition, % of dosed;\n  - 6, Premature Treatment Discontinuation reasons: `kri0007-2`'s reasons, counts;\n  - 7, Study Disposition – enrolled: `kri0006`'s study disposition, % of enrolled (interim);\n  - 8, Study Disposition – screening focus: `kri0012`'s screening outcome, Screen Failure and Enrolled, % of screened (reduced interim: no \"In Screening\" until the card moves to `ctq0001`, #9);\n  - 9, Screen failure reasons: `kri0012`'s reasons, counts, top 5.\n- **Widget 4, premature deaths:** counts from #617's combined columns, in a table per column group: eligibility status, then treatment relatedness. Each has a row per death window, and the first also gives each window's deaths. Deaths with a blank window are counted in a \"Not recorded\" row. Counts only: percentages wait for #617's open question 2.\n- **Interim widgets.** Widgets 4 and 7 render #617's current proposal for their contracts (#9's interim simulation assumptions), and widget 8 renders a reduced interim. The widget reads its categories from the rows, so a changed category list needs no code change; a changed variable or metric is a configuration change. For these three widgets, the tests show that the cards render the fixture's rows correctly; calculation review and user acceptance wait until #617 decides their contracts.\n- **Header:** the card's (#32): its title, the metric's value and n / N.\n- **Scope of data:** filter to one metric and, optionally, one group. Site rows are summed to study level in one function; nothing else is derived.\n- **Bars:** Σ `Count` per category, sorted by descending count, with \"Not recorded\" last. A top-N setting collapses the rest into a \"+ k more\" bar, and a breakdown never shows more bars than its card has room for, so nothing is clipped (#32).\n- **One value per bar:**\n  - status sections (the metric's denominator) show each category's share of that population, Σ `Count` / Σ `Total`. The section names the population, e.g. \"% of enrolled\" or \"% of dosed\";\n  - reason sections (the metric's numerator) show each category's count;\n  - no bar's visible label shows a count and a percentage together;\n  - hovering a bar shows its count out of the section's total (\"n of N\").\n- **Labels:** business terms from configuration (e.g. \"% of enrolled\", \"% of dosed\"). Never show \"Numerator\" or \"Denominator\". Tooltips may carry the longer context.\n- **No duplicate total:** no total row when the header already shows that value.\n- **Colours:** status categories take colours from a configurable status-to-colour map, and fall back to a neutral colour when no map is given. Reason categories aren't coloured.\n- **Footnotes:** shown automatically when Σ `Count` > `Total` (multi-value variables, where a participant counts in several categories) and when \"Not recorded\" is present.\n- **States:** empty (configured, but no rows) and missing (the metric has no distributions).\n- **Accessibility:** accessible labels.\n- **Replaces:** `breakdown-bar`, and removes the `details` consumer.\n\n**Out:**\n- The contents of the status-to-colour map (a separate issue).\n- Other chart types.\n- Pipeline computation.\n- Widgets 10 and 11 (configured under #19) and widget 2 (no breakdown).",
+      "scopeSection": "**In:** a Layout A bar-chart widget following the contract in the gsm.roadmap#617 pipeline design.\n- **One card per tracker widget:** the study page (#32) has a card for each tracker widget with a breakdown (two for widget 5), and each card shows exactly the breakdown its card list names (#12):\n  - 1, Eligibility Status: `kri0014`'s eligibility status, % of enrolled;\n  - 3, Eligibility I/E Criteria: `kri0014`'s criteria not met, counts, top 5;\n  - 4, Premature Death summary, as three cards: `kri0015`'s deaths by time window, by eligibility status, and by relatedness to treatment, in that order; counts only, since percentages wait for #617's open question 2 (interim);\n  - 5, IP Status, as two cards (the review split combined widgets): `kri0019`'s IP status, % of enrolled; and `kri0007-2`'s treatment disposition, % of dosed;\n  - 6, Premature Treatment Discontinuation reasons: `kri0007-2`'s reasons, counts;\n  - 7, Study Disposition – enrolled: `kri0006`'s study disposition, % of enrolled (interim);\n  - 8, Study Disposition – screening focus: `kri0012`'s screening outcome, Screen Failure and Enrolled, % of screened (reduced interim: no \"In Screening\" until the card moves to `ctq0001`, #9);\n  - 9, Screen failure reasons: `kri0012`'s reasons, counts, top 5.\n- **Interim widgets.** Widgets 4 and 7 render #617's current proposal for their contracts (#9's interim simulation assumptions), and widget 8 renders a reduced interim. The widget reads its categories from the rows, so a changed category list needs no code change; a changed variable or metric is a configuration change. For these three widgets, the tests show that the cards render the fixture's rows correctly; calculation review and user acceptance wait until #617 decides their contracts.\n- **Header:** the card's (#32): its title, the metric's value and n / N.\n- **Scope of data:** filter to one metric and, optionally, one group. Site rows are summed to study level in one function; nothing else is derived.\n- **Bars:** Σ `Count` per category, sorted by descending count, with \"Not recorded\" last. A top-N setting collapses the rest into a \"+ k more\" bar, and a breakdown never shows more bars than its card has room for, so nothing is clipped (#32).\n- **One value per bar:**\n  - status sections (the metric's denominator) show each category's share of that population, Σ `Count` / Σ `Total`. The section names the population, e.g. \"% of enrolled\" or \"% of dosed\";\n  - reason sections (the metric's numerator) show each category's count;\n  - no bar's visible label shows a count and a percentage together;\n  - hovering a bar shows its count out of the section's total (\"n of N\").\n- **Labels:** business terms from configuration (e.g. \"% of enrolled\", \"% of dosed\"). Never show \"Numerator\" or \"Denominator\". Tooltips may carry the longer context.\n- **No duplicate total:** no total row when the header already shows that value.\n- **Colours:** status categories take colours from a configurable status-to-colour map, and fall back to a neutral colour when no map is given. Reason categories aren't coloured.\n- **Footnotes:** shown automatically when Σ `Count` > `Total` (multi-value variables, where a participant counts in several categories) and when \"Not recorded\" is present.\n- **States:** empty (configured, but no rows) and missing (the metric has no distributions).\n- **Accessibility:** accessible labels.\n- **Replaces:** `breakdown-bar`, and removes the `details` consumer.\n\n**Out:**\n- The contents of the status-to-colour map (a separate issue).\n- Other chart types.\n- Pipeline computation.\n- Widgets 10 and 11 (configured under #19) and widget 2 (no breakdown).\n- The premature-death summary table (FB-028): a joint-count table is kept for the premature-death design cycle (ctq.wg #49).",
       "criteria": [
         {
           "id": "10.01",
@@ -155,15 +155,15 @@
         },
         {
           "id": "10.10",
-          "text": "Each card specified in Scope appears exactly once with its specified breakdown. Widget 5 produces separate IP-status and treatment-disposition cards, in that order; widget 4's card shows both specified joint-count tables (test).",
-          "sha256": "df83896e58910f6dffd593d3a790ae52875d80f40c218c5ee92248ed45ddd46d",
+          "text": "Each card specified in Scope appears exactly once with its specified breakdown. Widget 5 produces separate IP-status and treatment-disposition cards, in that order; widget 4 produces time-window, eligibility and relatedness cards, in that order (test).",
+          "sha256": "a897adad8eb153c751f413b68205042bec62575ab669853eb45ffed66bc4a3eb",
           "kind": "e2e",
           "reviewed": true
         },
         {
           "id": "10.11",
-          "text": "Widget 4's joint counts equal an independent recount of the fixture's simulated death records (`test/qual/distributions.js`), on #9's interim columns (test).",
-          "sha256": "d29f5d391549dc95c038476293e7d462fee5591fcdf13d133e09ce257aa5ea03",
+          "text": "The counts on each of widget 4's three cards equal an independent recount of the fixture's simulated death records (`test/qual/distributions.js`), on #9's interim columns (test).",
+          "sha256": "d1f7154faf33315a3948b79bf656d6d4b74c05be2b899effd698d73289c4d492",
           "kind": "e2e",
           "reviewed": true
         }
@@ -435,28 +435,35 @@
       "title": "Show the top protocol-deviation categories",
       "parent": "Gilead-BioStats/gsm.roadmap#625",
       "userTest": false,
-      "scopeSection": "**In:**\n- Configure #10's widget: top 5 categories by count, counts only (percentages switched off), with ties broken alphabetically.\n- One instance for important PDs.\n- An optional second instance for non-important PDs, using configuration only.\n\n**Out:**\n- A new widget type.\n- Harmonising categories across studies.",
+      "scopeSection": "**In:**\n- Two cards on the study page (#32), after widget 9's card and before the standard KRIs: \"Important Protocol Deviation Categories\" (`kri0004`, widget 10), then \"Non-Important Protocol Deviation Categories\" (`kri0003`, widget 11).\n- Each configures #10's widget: the top 5 categories by deviation count, counts only (percentages switched off).\n- Ties at the cut are broken alphabetically, for these cards only. #10's tie order is unchanged elsewhere.\n- All five categories are visible at the default card width, or every category when there are fewer than five. They're never collapsed into \"+ k more\"; the card grid grows instead, its cards staying the same size (#32).\n- The non-important card uses configuration only.\n\n**Out:**\n- A new widget type.\n- Harmonising categories across studies.",
       "criteria": [
         {
           "id": "19.01",
-          "text": "The top 5 categories and their counts equal independently summed fixture rows (test).",
-          "sha256": "5bff00559837ce09ac5ceb8eeaab2cbd250a68e02790539d58144649765a79a5",
-          "kind": "unit",
-          "reviewed": false
+          "text": "Each PD card shows its top 5 categories, or all of them when fewer exist, each label and count visible without scrolling at the default card width. The categories and counts equal independently summed fixture rows, including long category labels and a tie at the cut, which is broken alphabetically (test).",
+          "sha256": "3c1add9665e0af386f082fcd52a08560d2af945769ed2c054bd93f945a9c0e72",
+          "kind": "e2e",
+          "reviewed": true
         },
         {
           "id": "19.02",
           "text": "No percentages are shown.",
           "sha256": "64849207d10e775d3f356414e0e90fcd81ef9b23f8c1622338d4e07ff20e7b9c",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "19.03",
           "text": "The non-important variant renders from configuration alone.",
           "sha256": "a2b0fec340549b42885c5c3c56399ffc879213a14b3ab7f88ebc16417cf65cbe",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
+        },
+        {
+          "id": "19.04",
+          "text": "Both cards appear exactly once, after widget 9's card and before the standard KRIs, important first (test).",
+          "sha256": "d03e345dccecc9e9815e42e06be2ace909c029505b1aa43a0aa6c4529e69ca6e",
+          "kind": "e2e",
+          "reviewed": true
         }
       ]
     },

@@ -1,17 +1,21 @@
 state: earlier-visit (reports)
-dom: sha256 8faa32af2671aaeab49fc3185c4bacfcec305e253b6b021cdca29888a9ff3e0a (31402 characters)
+dom: sha256 b736d3362febe932f0aa175946c306029095834e948d7f3cb01655808f46986c (37415 characters)
 tooltip: none
 drill-in: closed
 cards:
   eligibility-status · Analysis_kri0014: empty 1
   ie-criteria · Analysis_kri0014: empty 1
-  premature-deaths · Analysis_kri0015: empty 1
+  premature-deaths-window · Analysis_kri0015: empty 1
+  premature-deaths-eligibility · Analysis_kri0015: empty 1
+  premature-deaths-related · Analysis_kri0015: empty 1
   ip-status · Analysis_kri0019: empty 1
   treatment-disposition · Analysis_kri0007-2: empty 1
   treatment-discontinuation-reasons · Analysis_kri0007-2: empty 1
   study-disposition · Analysis_kri0006: empty 1
   screening-disposition · Analysis_kri0012: empty 1
   screen-failure-reasons · Analysis_kri0012: empty 1
+  important-pd-categories · Analysis_kri0004: empty 1
+  non-important-pd-categories · Analysis_kri0003: empty 1
   kri0004 · Analysis_kri0004: flags 4
   kri0003 · Analysis_kri0003: flags 4
   kri0002 · Analysis_kri0002: flags 4
@@ -30,7 +34,11 @@ accessibility:
 - group "Eligibility breakdowns": Breakdowns are published for the latest snapshot only.
 - text: IE Eligibility I/E Criteria Planned 5.1% 30 / 591 —
 - group "Eligibility breakdowns": Breakdowns are published for the latest snapshot only.
-- text: DTH90 Premature Death Summary Planned 2.0% 12 / 591 —
+- text: DTH90 Premature Deaths – Time Window Planned 2.0% 12 / 591 —
+- group "Early Deaths (90 days) breakdowns": Breakdowns are published for the latest snapshot only.
+- text: DTH90 Premature Deaths – Eligibility Planned 2.0% 12 / 591 —
+- group "Early Deaths (90 days) breakdowns": Breakdowns are published for the latest snapshot only.
+- text: DTH90 Premature Deaths – Relatedness Planned 2.0% 12 / 591 —
 - group "Early Deaths (90 days) breakdowns": Breakdowns are published for the latest snapshot only.
 - text: IPNS IP Status Planned 1.2% 7 / 591 —
 - group "IP Non-starters breakdowns": Breakdowns are published for the latest snapshot only.
@@ -44,6 +52,10 @@ accessibility:
 - group "Screen Failure Rate breakdowns": Breakdowns are published for the latest snapshot only.
 - text: SF Screen Failure Reasons 24.1% 188 / 779 —
 - group "Screen Failure Rate breakdowns": Breakdowns are published for the latest snapshot only.
+- text: IPD Important Protocol Deviation Categories New 0.07 per 28 days 84 / 1,227.4 —
+- group "Important Protocol Deviation Rate breakdowns": Breakdowns are published for the latest snapshot only.
+- text: PD Non-Important Protocol Deviation Categories New 0.41 per 28 days 506 / 1,227.4 —
+- group "Non-Important Protocol Deviation Rate breakdowns": Breakdowns are published for the latest snapshot only.
 - text: IPD Important Protocol Deviation Rate New 0.07 per 28 days 84 / 1,227.4 —
 - list "Sites by flag":
   - listitem: Red 1 5.9%

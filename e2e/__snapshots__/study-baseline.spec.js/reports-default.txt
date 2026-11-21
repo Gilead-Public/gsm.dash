@@ -1,17 +1,21 @@
 state: default (reports)
-dom: sha256 7e2f75ab944b27b7463689ed919c5472c2aa5682d7f8ec7a1e9a66f76ee00fce (57204 characters)
+dom: sha256 222ce7c769a42ad7e3b413983c12d5cea0e6b96b408d5782a7ec2660bf36978b (72617 characters)
 tooltip: none
 drill-in: closed
 cards:
   eligibility-status · Analysis_kri0014: points 1, lines 2, breakdowns 3
   ie-criteria · Analysis_kri0014: points 1, lines 2, breakdowns 7
-  premature-deaths · Analysis_kri0015: points 1, lines 2, cells 12
+  premature-deaths-window · Analysis_kri0015: points 1, lines 2, breakdowns 2
+  premature-deaths-eligibility · Analysis_kri0015: points 1, lines 2, breakdowns 2
+  premature-deaths-related · Analysis_kri0015: points 1, lines 2, breakdowns 3
   ip-status · Analysis_kri0019: points 1, lines 2, breakdowns 4
   treatment-disposition · Analysis_kri0007-2: points 1, lines 2, breakdowns 3
   treatment-discontinuation-reasons · Analysis_kri0007-2: points 1, lines 2, breakdowns 6
   study-disposition · Analysis_kri0006: points 1, lines 2, breakdowns 7
   screening-disposition · Analysis_kri0012: points 1, lines 2, breakdowns 2
   screen-failure-reasons · Analysis_kri0012: points 1, lines 2, breakdowns 5
+  important-pd-categories · Analysis_kri0004: points 1, lines 2, breakdowns 7
+  non-important-pd-categories · Analysis_kri0003: points 1, lines 2, breakdowns 7
   kri0004 · Analysis_kri0004: points 1, lines 2, flags 4
   kri0003 · Analysis_kri0003: points 1, lines 2, flags 4
   kri0002 · Analysis_kri0002: points 1, lines 2, flags 4
@@ -50,47 +54,31 @@ accessibility:
       - 'listitem "Not recorded: 5 of 37"': Not recorded 5
     - paragraph: A participant can fall in more than one category, so the counts add up to more than 37.
     - paragraph: "Not recorded: the source value was blank."
-- text: DTH90 Premature Death Summary Planned 1.6% 16 / 988
-- 'img "Premature Death Summary trend: 5 snapshots, latest 1.6%"'
+- text: DTH90 Premature Deaths – Time Window Planned 1.6% 16 / 988
+- 'img "Premature Deaths – Time Window trend: 5 snapshots, latest 1.6%"'
 - group "Early Deaths (90 days) breakdowns":
-  - 'table "Early Deaths (90 days) by time from randomisation: Eligibility"':
-    - caption: Eligibility
-    - rowgroup:
-      - row "Time from randomisation Deaths Eligible Ineligible":
-        - columnheader "Time from randomisation"
-        - columnheader "Deaths"
-        - columnheader "Eligible"
-        - columnheader "Ineligible"
-    - rowgroup:
-      - row "≤30 days 6 6 0":
-        - rowheader "≤30 days"
-        - cell "6"
-        - cell "6"
-        - cell "0"
-      - row "31–90 days 10 8 2":
-        - rowheader "31–90 days"
-        - cell "10"
-        - cell "8"
-        - cell "2"
-  - 'table "Early Deaths (90 days) by time from randomisation: Related to treatment"':
-    - caption: Related to treatment
-    - rowgroup:
-      - row "Time from randomisation Yes No Unknown":
-        - columnheader "Time from randomisation"
-        - columnheader "Yes"
-        - columnheader "No"
-        - columnheader "Unknown"
-    - rowgroup:
-      - row "≤30 days 1 5 0":
-        - rowheader "≤30 days"
-        - cell "1"
-        - cell "5"
-        - cell "0"
-      - row "31–90 days 1 9 0":
-        - rowheader "31–90 days"
-        - cell "1"
-        - cell "9"
-        - cell "0"
+  - region "Deaths by time from randomisation":
+    - text: Deaths by time from randomisation
+    - list:
+      - 'listitem "31–90 days: 10 of 16"': 31–90 days 10
+      - 'listitem "≤30 days: 6 of 16"': ≤30 days 6
+- text: DTH90 Premature Deaths – Eligibility Planned 1.6% 16 / 988
+- 'img "Premature Deaths – Eligibility trend: 5 snapshots, latest 1.6%"'
+- group "Early Deaths (90 days) breakdowns":
+  - region "Deaths by eligibility":
+    - text: Deaths by eligibility
+    - list:
+      - 'listitem "Eligible: 14 of 16"': Eligible 14
+      - 'listitem "Ineligible: 2 of 16"': Ineligible 2
+- text: DTH90 Premature Deaths – Relatedness Planned 1.6% 16 / 988
+- 'img "Premature Deaths – Relatedness trend: 5 snapshots, latest 1.6%"'
+- group "Early Deaths (90 days) breakdowns":
+  - region "Deaths by relatedness to treatment":
+    - text: Deaths by relatedness to treatment
+    - list:
+      - 'listitem "No: 14 of 16"': No 14
+      - 'listitem "Yes: 2 of 16"': Yes 2
+      - 'listitem "Unknown: 0 of 16"': Unknown 0
 - text: IPNS IP Status Planned 1.5% 15 / 988
 - 'img "IP Status trend: 5 snapshots, latest 1.5%"'
 - group "IP Non-starters breakdowns":
@@ -157,6 +145,34 @@ accessibility:
       - 'listitem "Withdrawal by Participant: 54 of 353"': Withdrawal by Participant 54
       - 'listitem "Other: 33 of 353"': Other 33
       - 'listitem "Not recorded: 9 of 353"': Not recorded 9
+    - paragraph: "Not recorded: the source value was blank."
+- text: IPD Important Protocol Deviation Categories New 0.05 per 28 days 298 / 5,676.6
+- 'img "Important Protocol Deviation Categories trend: 5 snapshots, latest 0.05 per 28 days"'
+- group "Important Protocol Deviation Rate breakdowns":
+  - region "Top 5 categories":
+    - text: Top 5 categories
+    - list:
+      - 'listitem "Eligibility Criteria: 66 of 298"': Eligibility Criteria 66
+      - 'listitem "Informed Consent: 64 of 298"': Informed Consent 64
+      - 'listitem "Investigational Product: 48 of 298"': Investigational Product 48
+      - 'listitem "Study Procedures: 40 of 298"': Study Procedures 40
+      - 'listitem "Visit Schedule: 32 of 298"': Visit Schedule 32
+      - 'listitem "+ 2 more: 41 of 298"': + 2 more 41
+      - 'listitem "Not recorded: 7 of 298"': Not recorded 7
+    - paragraph: "Not recorded: the source value was blank."
+- text: PD Non-Important Protocol Deviation Categories New 0.41 per 28 days 2,331 / 5,676.6
+- 'img "Non-Important Protocol Deviation Categories trend: 5 snapshots, latest 0.41 per 28 days"'
+- group "Non-Important Protocol Deviation Rate breakdowns":
+  - region "Top 5 categories":
+    - text: Top 5 categories
+    - list:
+      - 'listitem "Visit Schedule: 838 of 2,331"': Visit Schedule 838
+      - 'listitem "Study Procedures: 626 of 2,331"': Study Procedures 626
+      - 'listitem "Investigational Product: 224 of 2,331"': Investigational Product 224
+      - 'listitem "Other: 175 of 2,331"': Other 175
+      - 'listitem "Safety Reporting: 171 of 2,331"': Safety Reporting 171
+      - 'listitem "+ 2 more: 233 of 2,331"': + 2 more 233
+      - 'listitem "Not recorded: 64 of 2,331"': Not recorded 64
     - paragraph: "Not recorded: the source value was blank."
 - text: IPD Important Protocol Deviation Rate New 0.05 per 28 days 298 / 5,676.6
 - 'img "Important Protocol Deviation Rate trend: 5 snapshots, latest 0.05 per 28 days"'
