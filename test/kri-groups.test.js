@@ -25,8 +25,9 @@ describe('the study page\'s cards in order (#32)', () => {
   it('32.03: by default the cards follow tracker order, the breakdowns then the nine standard KRIs, each once (#32)', () => {
     const all = cards(shown);
     expect(all.map((c) => c.spec.id)).toEqual([
-      'eligibility-status', 'ie-criteria', 'premature-deaths', 'ip-status', 'treatment-disposition',
-      'treatment-discontinuation-reasons', 'study-disposition', 'screening-disposition', 'screen-failure-reasons',
+      'eligibility-status', 'ie-criteria', 'premature-deaths-window', 'premature-deaths-eligibility', 'premature-deaths-related',
+      'ip-status', 'treatment-disposition',
+      'treatment-discontinuation-reasons', 'study-disposition', 'screening-disposition', 'screen-failure-reasons', 'important-pd-categories', 'non-important-pd-categories',
       'kri0004', 'kri0003', 'kri0002', 'kri0001', 'kri0005', 'kri0008', 'kri0009', 'kri0010', 'kri0011',
     ]);
     expect(all.filter((c) => c.kri).map((c) => c.metric.ID).sort()).toEqual([...KRIS].sort());

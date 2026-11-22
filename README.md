@@ -80,8 +80,9 @@ To share a build for feedback without releasing it: every CI run that passes als
   (#32). Each card's header gives the metric's value at the visit shown, its
   n / N and a sparkline of that value at each snapshot up to the visit; a
   breakdown longer than its card allows shows its top rows, then "+ k more",
-  and when a card's content can't be shortened (widget 4's tables), every
-  card grows to fit it, so nothing is clipped. Its back link reads
+  and when a card's content can't be shortened (the protocol-deviation
+  categories always show their top 5, #19), every card grows to fit it, so
+  nothing is clipped. Its back link reads
   "← Portfolio". Links
   between reports are relative and carry the portfolio's view in the hash.
   `src/app/` holds the rules and text both pages share.
@@ -100,7 +101,9 @@ To share a build for feedback without releasing it: every CI run that passes als
   pipeline computes" boundary).
 - `src/config/study-cards.js` — the **study page's cards**, in tracker order
   (gsm.roadmap#617): each names its widget, its metric, its title and, for a
-  breakdown, the one section it shows, or a joint-count table (widget 4). The
+  breakdown, the one section it shows. Premature deaths are three cards, by
+  time window, eligibility and relatedness (#10); the joint-count table they
+  replaced is kept unwired for the premature-death design cycle. The
   catalog declares each metric's widget (`Widget`, with options in
   `WidgetConfigs`); a standard KRI declares its card by being in a KRI group.
   A card whose metric is unknown or inactive, whose metric declares another

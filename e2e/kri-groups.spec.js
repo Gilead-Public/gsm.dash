@@ -89,8 +89,10 @@ const gridOf = (page) =>
     }),
   );
 
-/** The tracker's card ids, less the KRIs given. */
+/** The tracker's card ids, less those given. */
 const trackerWithout = (/** @type {string[]} */ out) => TRACKER_CARDS.map((c) => c.id).filter((id) => !out.includes(id));
+/** The PD category cards (#19), whose metrics are kri0004 and kri0003: hidden with them from the portfolio. */
+const PD_CARDS = ['important-pd-categories', 'non-important-pd-categories'];
 
 /**
  * Whether a user can see an element: rendered, neither transparent nor invisible (itself or an ancestor), and with a
@@ -155,14 +157,14 @@ test.describe('the standard KRIs\' cards', () => {
   test('32.03: the cards follow tracker order, the breakdowns then the standard KRIs, each once, with no control to group them (#32)', async ({ app, page }) => {
     await app.openStudy(study.StudyID);
     expect(await gridOf(page)).toEqual(TRACKER_CARDS.map((c) => c.id));
-    for (const m of KRIS.map(metricOf)) await expect(page.locator(`.card[data-metric-id="${m.MetricID}"]`), m.ID).toHaveCount(1);
+    for (const m of KRIS.map(metricOf)) await expect(page.locator(`.card.kri[data-metric-id="${m.MetricID}"]`), m.ID).toHaveCount(1);
     await expect(page.locator('input[data-group-cat], .dd-row, .kri-group, .rowlab')).toHaveCount(0);
     await expect(page.getByText(/group by category/i)).toHaveCount(0);
   });
 
   test('32.03: KRIs hidden from the portfolio, by hidden metric or status filter, are left out (#32)', async ({ app, page }) => {
     await app.openStudy(study.StudyID, undefined, `#statuses=Released&statuses=Planned&hide=${metricOf('kri0005').MetricID}`);
-    expect(await gridOf(page)).toEqual(trackerWithout(['kri0001', 'kri0002', 'kri0003', 'kri0004', 'kri0005']));
+    expect(await gridOf(page)).toEqual(trackerWithout(['kri0001', 'kri0002', 'kri0003', 'kri0004', 'kri0005', ...PD_CARDS]));
   });
 
   test('32.04: with the default configuration there is no expand control (#32)', async ({ app, page }) => {
@@ -175,10 +177,10 @@ test.describe('the standard KRIs\' cards', () => {
     const hash = `#statuses=Released&statuses=Planned&hide=${metricOf('kri0009').MetricID}`;
     await app.openStudy(study.StudyID, configure({ kri0002: { hidden: true }, kri0005: { hidden: true }, kri0009: { hidden: true }, kri0010: { hidden: true } }), hash);
     const out = ['kri0001', 'kri0002', 'kri0003', 'kri0004'];
-    expect(await gridOf(page)).toEqual([...trackerWithout([...out, 'kri0005', 'kri0009', 'kri0010']), 'expand']);
+    expect(await gridOf(page)).toEqual([...trackerWithout([...out, 'kri0005', 'kri0009', 'kri0010', ...PD_CARDS]), 'expand']);
     await expect(page.locator('[data-kri-expand]')).toHaveCount(1);
     await page.locator('[data-kri-expand]').click();
-    expect(await gridOf(page), 'kri0002 stays out by status filter, kri0009 by hidden metric').toEqual(trackerWithout([...out, 'kri0009']));
+    expect(await gridOf(page), 'kri0002 stays out by status filter, kri0009 by hidden metric').toEqual(trackerWithout([...out, 'kri0009', ...PD_CARDS]));
     for (const id of ['kri0005', 'kri0010']) expect(await readKri(page, metricOf(id).MetricID), `${id}: the revealed card shows its values`).toEqual(expectedKri(metricOf(id), study, null));
   });
 
@@ -189,14 +191,16 @@ test.describe('the standard KRIs\' cards', () => {
     expect(await gridOf(page)).toEqual(TRACKER_CARDS.map((c) => c.id));
   });
 
-  test('32.04: with every KRI hidden by default and every other card\'s metric hidden from the portfolio, the expand control alone is shown and reveals the KRIs (#32)', async ({ app, page }) => {
-    const ctqMetrics = [...new Set(TRACKER_CARDS.filter((c) => c.kind !== 'kri').map((c) => c.metric))];
+  test('32.04: with every KRI hidden by default and every other breakdown card\'s metric hidden from the portfolio, only the PD category cards, whose metrics are KRIs, and the expand control are shown, and it reveals the KRIs (#32)', async ({ app, page }) => {
+    const ctqMetrics = [...new Set(TRACKER_CARDS.filter((c) => c.kind !== 'kri' && !KRIS.includes(c.metric)).map((c) => c.metric))];
     expect(ctqMetrics).toHaveLength(6);
+    const pd = TRACKER_CARDS.filter((c) => c.kind !== 'kri' && KRIS.includes(c.metric)).map((c) => c.id);
+    expect(pd).toEqual(['important-pd-categories', 'non-important-pd-categories']);
     const hash = `#${ctqMetrics.map((id) => `hide=${metricOf(id).MetricID}`).join('&')}`;
     await app.openStudy(study.StudyID, configure(Object.fromEntries(KRIS.map((id) => [id, { hidden: true }]))), hash);
-    expect(await gridOf(page)).toEqual(['expand']);
+    expect(await gridOf(page)).toEqual([...pd, 'expand']);
     await page.locator('[data-kri-expand]').click();
-    expect(await gridOf(page)).toEqual(KRIS);
+    expect(await gridOf(page)).toEqual([...pd, ...KRIS]);
     for (const id of KRIS) expect(await readKri(page, metricOf(id).MetricID), `${id}: the revealed card shows its values`).toEqual(expectedKri(metricOf(id), study, null));
   });
 

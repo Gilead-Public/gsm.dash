@@ -76,7 +76,7 @@ test.describe('study page behaviour', () => {
     await expect(page.locator('.ref-problem')).toHaveCount(0);
     for (const c of TRACKER_CARDS) {
       const body = card(page, c.id).locator('.tile-body');
-      const shown = { bars: '.dist .dist-row', joint: 'table.dist-joint td', kri: '.kri .kri-flags li' }[c.kind];
+      const shown = { bars: '.dist .dist-row', kri: '.kri .kri-flags li' }[c.kind];
       await expect(body.locator(shown).first(), c.id).toBeVisible();
     }
   });

@@ -41,10 +41,12 @@ export function sumSitesToStudy(rows, { groupId = null } = {}) {
 
 const ratio = (n, d) => (d > 0 ? n / d : null);
 
-function orderAndCollapse(categories, topN) {
+// Ties keep the rows' order unless a section asks for alphabetical ones (#19), so the top N it shows is stable.
+function orderAndCollapse(categories, topN, ties) {
   const recorded = categories.filter((c) => c.Category !== null);
   const blank = categories.find((c) => c.Category === null);
-  const sorted = recorded.map((c, i) => ({ c, i })).sort((a, b) => b.c.Count - a.c.Count || a.i - b.i).map(({ c }) => c);
+  const byName = (a, b) => (ties === 'alphabetical' ? String(a.c.Category).localeCompare(String(b.c.Category), 'en') : 0);
+  const sorted = recorded.map((c, i) => ({ c, i })).sort((a, b) => b.c.Count - a.c.Count || byName(a, b) || a.i - b.i).map(({ c }) => c);
   const shown = Number.isFinite(topN) && sorted.length > topN ? sorted.slice(0, topN) : sorted;
   const rest = sorted.slice(shown.length);
   return { shown, rest, blank: blank && blank.Count > 0 ? blank : null };
@@ -145,7 +147,9 @@ function section(s, { config, maxBars }) {
   const isStatus = (config.statusVariables ?? []).includes(s.Variable);
   const colours = config.colours ?? null;
   const display = s.Source === 'Denominator' ? 'percent' : 'count';
-  const { shown, rest, blank } = orderAndCollapse(s.categories, Math.min(sc.topN ?? config.topN ?? Infinity, maxBars));
+  // A section that keeps its top N (#19) shows all of them however small its card; the host grows the cards instead.
+  const topN = sc.topN ?? config.topN ?? Infinity;
+  const { shown, rest, blank } = orderAndCollapse(s.categories, sc.keepTopN ? topN : Math.min(topN, maxBars), sc.ties);
 
   const bar = (c, label, kind) => ({
     kind,

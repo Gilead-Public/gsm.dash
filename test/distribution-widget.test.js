@@ -3,7 +3,7 @@ import { generatePortfolio, METRICS } from '../scripts/generate-example-data.mjs
 import { buildDistributionModel, NEUTRAL_COLOUR, NOT_RECORDED, sumSitesToStudy } from '../src/data/distributions.js';
 import { DISTRIBUTION_CONFIG, distributionConfig } from '../src/config/distributions.js';
 import { renderDistribution } from '../src/widgets/distribution-bar.js';
-import { categoryName, expectedView, jointRecount, studyTotals } from './qual/distributions.js';
+import { categoryName, countBy, expectedView, jointRecount, studyTotals } from './qual/distributions.js';
 
 const { manifest, snapshots, records } = generatePortfolio();
 const latest = manifest.studies.map((s) => snapshots.find((x) => x.StudyID === s.StudyID && x.SnapshotDate === s.snapshots.at(-1)));
@@ -251,7 +251,24 @@ describe('a card\'s one breakdown (#10)', () => {
     }
   });
 
-  it('10.11: widget 4\'s joint counts equal an independent recount of the fixture\'s simulated death records, in every study (#10)', () => {
+  it('10.11: the counts on each of widget 4\'s three cards equal an independent recount of the fixture\'s simulated death records, in every study (#10)', () => {
+    let bars = 0;
+    for (const snap of latest) {
+      const sets = [...records].filter(([k]) => k.startsWith(`${snap.StudyID}|${snap.SnapshotDate}|`) && k.endsWith(`|${deaths.MetricID}`)).map(([, v]) => v.records);
+      expect(sets.length, snap.StudyID).toBeGreaterThan(0);
+      for (const variable of ['death_window', 'eligibility_status', 'treatment_related']) {
+        const { sections } = buildDistributionModel({ rows: rowsFor(snap, deaths), metric: deaths, study: studyRow(snap, deaths), config: distributionConfig(deaths), only: [`Numerator:${variable}`] });
+        expect(sections, `${snap.StudyID} ${variable}`).toHaveLength(1);
+        const shown = sections[0].bars.filter((b) => b.count > 0).map((b) => [b.label, b.count]);
+        const want = [...countBy(sets, variable)].map(([category, n]) => [category ?? NOT_RECORDED, n]);
+        expect(Object.fromEntries(shown), `${snap.StudyID} ${variable}`).toEqual(Object.fromEntries(want));
+        bars += shown.length;
+      }
+    }
+    expect(bars).toBeGreaterThan(20);
+  });
+
+  it('the joint-count table kept for the premature-death design cycle still equals an independent recount of the fixture\'s simulated death records, in every study', () => {
     let cells = 0;
     for (const snap of latest) {
       const sets = [...records].filter(([k]) => k.startsWith(`${snap.StudyID}|${snap.SnapshotDate}|`) && k.endsWith(`|${deaths.MetricID}`)).map(([, v]) => v.records);
@@ -275,7 +292,7 @@ describe('a card\'s one breakdown (#10)', () => {
     expect(cells).toBeGreaterThan(20);
   });
 
-  it('10.07: widget 4\'s table counts blank windows in a Not recorded row with no cells, notes blanks, shows a pair with no rows as 0 and a row only the combined columns name without a count, and names an unlabelled section by its variable (#10)', () => {
+  it('the joint-count table kept for the premature-death design cycle counts blank windows in a Not recorded row with no cells, notes blanks, shows a pair with no rows as 0 and a row only the combined columns name without a count, and names an unlabelled section by its variable', () => {
     const at = (Variable, Category, Count) => site('S1', Category, Count, 10, { Variable });
     const rows = [
       at('death_window', '≤30', 3),
@@ -360,5 +377,38 @@ describe('a breakdown that fits its card (#32)', () => {
     renderDistribution(el, data, { only });
     expect(el.innerHTML).not.toMatch(/dist-head|dist-pct|dist-nd/);
     expect(el.innerHTML).not.toContain('10 / 50');
+  });
+});
+
+describe('the top protocol-deviation categories (#19)', () => {
+  const pd = METRICS.find((m) => m.ID === 'kri0004');
+  const at = (GroupID, Category, Count, Total) => site(GroupID, Category, Count, Total, { MetricID: pd.MetricID, Variable: 'dvdecod' });
+  const build = (rows, maxBars = Infinity) => buildDistributionModel({ rows, metric: pd, study: { Numerator: 40, Denominator: 4000 }, config: distributionConfig(pd), maxBars });
+  const expected = (rows) => expectedView(rows, DISTRIBUTION_CONFIG.kri0004)[0].bars.map((b) => [b.label, b.count]);
+  const shown = (model) => model.sections[0].bars.map((b) => [b.label, b.count]);
+
+  it('19.01: the top 5 by count, summed over sites, equal the independent expectation, a tie at the cut going to the alphabetically first category whatever the rows\' order (#19)', () => {
+    const rows = [
+      at('S1', 'Study Procedures', 5, 30), at('S2', 'Study Procedures', 4, 19),
+      at('S1', 'Investigational Product', 8, 30),
+      at('S1', 'Eligibility Criteria', 7, 30),
+      at('S2', 'Safety Reporting', 6, 19),
+      at('S1', 'Visit Schedule', 5, 30),
+      at('S2', 'Informed Consent', 5, 19),
+      at('S2', 'Other', 2, 19),
+    ];
+    expect(shown(build(rows))).toEqual(expected(rows));
+    expect(shown(build(rows))).toEqual([
+      ['Study Procedures', 9], ['Investigational Product', 8], ['Eligibility Criteria', 7], ['Safety Reporting', 6], ['Informed Consent', 5], ['+ 2 more', 7],
+    ]);
+    expect(shown(build([...rows].reverse()))).toEqual(shown(build(rows)));
+  });
+
+  it('19.01: the top 5 are kept however little room the card has, and fewer categories than five are all shown (#19)', () => {
+    const rows = ['A', 'B', 'C', 'D', 'E', 'F'].map((c, i) => at('S1', c, 10 - i, 45));
+    expect(build(rows, 2).sections[0].bars.filter((b) => b.kind === 'category')).toHaveLength(5);
+    const few = rows.slice(0, 3);
+    expect(shown(build(few, 1))).toEqual(expected(few));
+    expect(shown(build(few, 1))).toEqual([['A', 10], ['B', 9], ['C', 8]]);
   });
 });

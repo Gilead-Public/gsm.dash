@@ -71,11 +71,11 @@ export const categoryName = (category) => (category === null ? '\u0001' : catego
 /**
  * Independent expectation of the Layout A view for one metric, written from the issue #10 rules rather than from
  * src/: numerator sections first (otherwise first appearance), bars by descending count with ties in first-appearance
- * order, the top N then one "+ k more" bar holding the rest, "Not recorded" last and only when non-zero. A
+ * order (by name, ignoring case, where the section asks for alphabetical ties, #19), the top N then one "+ k more" bar holding the rest, "Not recorded" last and only when non-zero. A
  * denominator (status) section shows each bar's share of the section total; a numerator (reason) section shows its
  * count. Every bar's hover is its count out of the section total.
  * @param {{ Source: string, Variable: string, Category: string | null, GroupID: string, GroupLevel?: string, Count: number, Participants: number, Total: number }[]} allRows one metric's rows; only site rows count
- * @param {{ sections?: Record<string, { title?: string, topN?: number }>, topN?: number }} config keyed by 'Source:Variable'
+ * @param {{ sections?: Record<string, { title?: string, topN?: number, ties?: string }>, topN?: number }} config keyed by 'Source:Variable'
  */
 export function expectedView(allRows, config) {
   const rows = allRows.filter((r) => r.GroupLevel === 'Site');
@@ -88,11 +88,12 @@ export function expectedView(allRows, config) {
     const t = sums[Source][Variable];
     const sc = config.sections?.[`${Source}:${Variable}`] ?? {};
     const limit = sc.topN ?? config.topN ?? Infinity;
+    const named = sc.ties === 'alphabetical';
     const categories = [];
     for (const r of rows) {
       if (r.Source === Source && r.Variable === Variable && r.Category !== null && !categories.includes(r.Category)) categories.push(r.Category);
     }
-    const ranked = categories.map((c, i) => ({ c, i, n: t.categories[c].Count })).sort((a, b) => b.n - a.n || a.i - b.i);
+    const ranked = categories.map((c, i) => ({ c, i, n: t.categories[c].Count })).sort((a, b) => b.n - a.n || (named ? (a.c.toUpperCase() < b.c.toUpperCase() ? -1 : a.c.toUpperCase() > b.c.toUpperCase() ? 1 : 0) : 0) || a.i - b.i);
     const display = Source === 'Denominator' ? 'percent' : 'count';
     const bar = (label, kind, count) => ({
       label, kind, count,
@@ -106,6 +107,25 @@ export function expectedView(allRows, config) {
     const counted = Object.values(t.categories).reduce((a, c) => a + c.Count, 0);
     return { Source, Variable, title: sc.title ?? Variable, Total: t.Total, display, bars, notes: { multi: counted > t.Total, notRecorded: blank > 0 } };
   });
+}
+
+/**
+ * Independent count of numerator records by one single-value variable, over every record set given (one per site).
+ * A blank value counts under `null`.
+ * @param {Array<Array<{ inNumerator: boolean, values: Record<string, unknown> }>>} recordSets
+ * @param {string} variable
+ * @returns {Map<string | null, number>}
+ */
+export function countBy(recordSets, variable) {
+  const counts = new Map();
+  for (const records of recordSets) {
+    for (const r of records) {
+      if (!r.inNumerator) continue;
+      const value = r.values[variable] ?? null;
+      counts.set(value, (counts.get(value) ?? 0) + 1);
+    }
+  }
+  return counts;
 }
 
 /**
