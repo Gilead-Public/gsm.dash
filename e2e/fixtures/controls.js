@@ -55,14 +55,42 @@ export function control(page, selector) {
 }
 
 /**
- * Sets the portfolio table's View, Overview (collapsed) or Details (expanded), with Config's Collapse all / Expand all.
+ * Sets the portfolio table's Cell display (#47): Compact (folded), Detailed or Custom (both open).
  * @param {Page} page
- * @param {string} view
+ * @param {'compact' | 'detailed' | 'custom'} view
  */
 export async function chooseView(page, view) {
-  const toggle = control(page, 'button[data-view-toggle]');
-  const now = (await toggle.getAttribute('aria-pressed')) === 'true' ? 'details' : 'overview';
-  if (now !== view) await toggle.click();
+  await control(page, `button[data-display="${view}"]`).click();
+}
+
+/**
+ * Sets the heatmap's measure, which applies under Custom only (#47): Custom first, then the measure.
+ * @param {Page} page
+ * @param {string} measure
+ */
+export async function chooseHeatmap(page, measure) {
+  await chooseView(page, 'custom');
+  await control(page, 'select[data-heatmap]').selectOption(measure);
+}
+
+/**
+ * Sets one of the Admin panel's settings (#46), opening the panel from the header and closing it after.
+ * @param {Page} page
+ * @param {string} key
+ * @param {string} value
+ */
+export async function chooseAdmin(page, key, value) {
+  await control(page, `button[data-admin="${key}"][data-value="${value}"]`).click();
+}
+
+/**
+ * Leaves only one group open: a grouping opens every group (#47), so each other group's row is clicked closed.
+ * @param {Page} page
+ * @param {string} value
+ */
+export async function openOnly(page, value) {
+  const buckets = await page.locator('tr[data-bucket]').evaluateAll((rows) => rows.map((tr) => tr.getAttribute('data-bucket')));
+  for (const bucket of buckets) if (bucket !== value) await page.locator(`tr[data-bucket="${bucket}"] td.grp`).click();
 }
 
 /**

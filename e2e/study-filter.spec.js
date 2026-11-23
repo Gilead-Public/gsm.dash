@@ -3,7 +3,7 @@
 // under the configured defaults (#16); the study filter is kept in the address like the other filters.
 import { expect, readData, test } from './fixtures/app.js';
 import { capturePortfolio } from './fixtures/baseline.js';
-import { chooseView, control } from './fixtures/controls.js';
+import { chooseAdmin, chooseHeatmap, chooseView, control } from './fixtures/controls.js';
 import { visibleLines } from './fixtures/visible.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
@@ -15,7 +15,7 @@ const study = 'STUDY004';
 const hidden = 'Analysis_kri0005';
 const CONFIG = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'] };
 /** Every setting the address holds, besides one `filter.<param>` per filter the Controls panel offers. */
-const VIEW_KEYS = ['cell', 'dir', 'expand', 'group', 'heatmap', 'hide', 'show', 'sort', 'statuses', 'view', 'hidegroup', 'hidebygroup'];
+const VIEW_KEYS = ['collapse', 'dir', 'group', 'heatmap', 'hide', 'show', 'sort', 'view', 'hidegroup', 'hidebygroup', 'theme', 'perrow', 'cfgpanel', 'legend'];
 
 
 /** @param {Page} page */
@@ -30,17 +30,16 @@ async function changeEverySetting(page) {
   await control(page, 'button[data-filter="phase"][data-value="P2"]').click();
   for (const status of ['Active', 'Enrolling']) await control(page, `button[data-filter="status"][data-value="${status}"]`).click();
   await control(page, `input[data-filter="study"][data-value="${study}"]`).check();
-  await control(page, 'button[data-status="Planned"]').click();
   await control(page, `input[data-metric="${hidden}"]`).uncheck();
   await control(page, 'select[data-groupby]').selectOption('therapeutic_area');
-  await chooseView(page, 'details');
+  await chooseView(page, 'detailed');
   await page.locator('tr[data-bucket="Cardiology"] td.grp').click();
   await page.locator('th[data-sort="Analysis_kri0008"]').click();
-  await control(page, 'button[data-seg="cellMode"][data-value="custom"]').click();
+  await chooseHeatmap(page, 'num');
   await control(page, 'button[data-show="den"]').click();
   await control(page, 'button[data-show="num"]').click();
-  await control(page, 'select[data-heatmap]').selectOption('num');
   await control(page, 'button[data-group="Data quality"]').click();
+  for (const [key, value] of [['theme', 'light'], ['perrow', '5'], ['cfgpanel', 'side'], ['legend', 'on']]) await chooseAdmin(page, key, value);
 }
 
 /** @param {Page} page */
@@ -63,18 +62,29 @@ for (const [configuration, config] of /** @type {const} */ ([['the default confi
     expect([...new Set(filters)].sort(), 'the filters the Controls panel offers').toEqual(['filter.phase', 'filter.status', 'filter.study', 'filter.therapeutic_area']);
     expect(hashKeys(page), 'every setting moved from its default').toEqual([...VIEW_KEYS, ...new Set(filters)].sort());
 
-    // Reset leaves Filters and Config as they were: their open state isn't part of the view (Scope).
+    // Reset leaves Filters and Config as they were: their open state isn't part of the view (Scope). Config is set to
+    // open as a side panel, a modal over the header (#46), so Reset is pressed with Filters open and Config closed, then
+    // again, back on the popover, with both open.
     const host = page.locator('#header-controls');
     const opened = () => host.locator('[data-open="filters"], [data-open="config"]').evaluateAll((els) => els.map((e) => [e.getAttribute('data-open'), e.getAttribute('aria-expanded')]));
     if ((await host.locator('[data-open="filters"]').getAttribute('aria-expanded')) !== 'true') await host.locator('[data-open="filters"]').click();
+    expect(await opened(), 'before Reset').toEqual([['filters', 'true'], ['config', 'false']]);
+    await host.locator('[data-reset]').click();
+    expect(await opened(), 'Reset leaves Filters open').toEqual([['filters', 'true'], ['config', 'false']]);
+    await settled(page);
+    expect(page.url(), 'the address').toBe(freshUrl);
+    expect((await capturePortfolio(page, 'fresh load')).text, 'the page').toBe(fresh.text);
+
+    // The capture above closed what it found open.
+    await host.locator('[data-open="filters"]').click();
     await host.locator('[data-open="config"]').click();
-    expect(await opened(), 'before Reset').toEqual([['filters', 'true'], ['config', 'true']]);
+    expect(await opened(), 'Config open, as a popover after Reset').toEqual([['filters', 'true'], ['config', 'true']]);
     await host.locator('[data-reset]').click();
     expect(await opened(), 'Reset leaves Filters and Config open').toEqual([['filters', 'true'], ['config', 'true']]);
     await expect(host.locator('.filter-bar'), 'the filter bar, after Reset').toBeVisible();
     await expect(host.locator('[data-pop="config"]'), 'Config, after Reset').toBeVisible();
     await settled(page);
-    expect(page.url(), 'the address').toBe(freshUrl);
+    expect(page.url(), 'the address, Reset again').toBe(freshUrl);
     expect((await capturePortfolio(page, 'fresh load')).text, 'the page, with the Controls panel').toBe(fresh.text);
   });
 }

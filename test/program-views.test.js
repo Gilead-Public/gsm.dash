@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { PortfolioStore } from '../src/data/store.js';
+import { PortfolioStore, currentParams } from '../src/data/store.js';
 import { enrollTarget } from '../src/app/portfolio-table.js';
 import { generatePortfolio } from '../scripts/generate-example-data.mjs';
 
-// Overview and Details are the table's two views: every category folded to headline tiles, or every category open.
+// The Cell display (#47): Compact folds every category to headline tiles; Detailed and Custom open every category.
 
 let store;
 const portfolio = generatePortfolio();
@@ -13,9 +13,33 @@ beforeEach(() => {
 const cats = () => store.metricCategories().map((g) => g.category);
 
 describe('table view', () => {
-  it('lands on Overview, or on the configured view', () => {
-    expect(store.state.view).toBe('overview');
-    expect(new PortfolioStore({ ...portfolio, config: { view: 'details' } }).state.view).toBe('details');
+  it('47.02: lands on Compact, or on the configured Cell display (#47)', () => {
+    expect(store.state.view).toBe('compact');
+    expect(new PortfolioStore({ ...portfolio, config: { view: 'detailed' } }).state.view).toBe('detailed');
+  });
+
+  it('47.02: shows the heatmap under Custom only, whatever the heatmap setting (#47)', () => {
+    store.set('heatmap', 'rate');
+    expect(['compact', 'detailed', 'custom'].map((v) => (store.set('view', v), store.activeHeatmap()))).toEqual(['none', 'none', 'rate']);
+  });
+
+  it('47.03: opens every group when a grouping is chosen; a closed group travels in the address, and a new grouping or Reset opens it again (#47)', () => {
+    store.set('groupBy', 'phase');
+    const [first, second] = store.buckets().map((b) => String(b.value));
+    expect(store.state.collapsed.size).toBe(0);
+    store.toggleBucketOpen(first);
+    expect(store.programParams().getAll('collapse')).toEqual([first]);
+    const other = new PortfolioStore(portfolio);
+    other.applyProgramParams(new URLSearchParams(store.programParams().toString()));
+    expect([...other.state.collapsed]).toEqual([first]);
+    other.applyProgramParams(new URLSearchParams(`group=phase&expand=${second}`));
+    expect(other.state.collapsed.size, 'an old address\'s open groups are ignored').toBe(0);
+    store.set('groupBy', 'status');
+    expect(store.state.collapsed.size).toBe(0);
+    store.set('groupBy', 'phase');
+    store.toggleBucketOpen(first);
+    store.reset();
+    expect(store.state.collapsed.size).toBe(0);
   });
 });
 
@@ -33,21 +57,33 @@ describe('highlight study (unwired, kept for a possible enhanced version)', () =
 
 describe('URL params', () => {
   it('round-trips the view, and leaves a highlight out of the address', () => {
-    store.set('view', 'details');
+    store.set('view', 'detailed');
     store.highlight(store.studies[0].StudyID);
     const params = store.programParams();
     expect([...params.keys()]).toEqual(['view']);
 
     const other = new PortfolioStore(portfolio);
     other.applyProgramParams(new URLSearchParams(params.toString()));
-    expect(other.state.view).toBe('details');
+    expect(other.state.view).toBe('detailed');
     expect(other.state.highlightStudy).toBeNull();
   });
 
-  it('accepts a hand-written ?view=details and ignores unknown ids', () => {
-    store.applyProgramParams(new URLSearchParams('view=details&study=NOPE'));
-    expect(store.state.view).toBe('details');
-    expect(store.state.highlightStudy).toBeNull();
+  it('46.07: a study report keeps the portfolio\'s address in its current form: retired params removed, the old View rewritten, everything else as it was (#46)', () => {
+    const old = 'statuses=Released&hide=a&hide=b&theme=dark&view=details&cell=custom&expand=P2&group=phase&collapse=P1&open=all&study=X&density=roomy&ramp=teal&dfold=Y';
+    expect(currentParams(new URLSearchParams(old)).toString()).toBe('hide=a&hide=b&theme=dark&view=custom&group=phase&collapse=P1');
+    expect(currentParams(new URLSearchParams('view=overview')).toString()).toBe('view=compact');
+    expect(currentParams(new URLSearchParams('view=distribution&hide=a')).toString()).toBe('hide=a');
+    const current = 'filter.study=STUDY001&view=detailed&perrow=3';
+    expect(currentParams(new URLSearchParams(current)).toString()).toBe(current);
+  });
+
+  it('47.04: reads an old address\'s View and cell mode as the Cell display, and rewrites it in the new form (#47)', () => {
+    const cases = [['view=overview', 'compact', ''], ['view=details', 'detailed', 'view=detailed'], ['view=details&cell=custom', 'custom', 'view=custom'], ['view=overview&cell=custom', 'compact', ''], ['view=details&study=NOPE', 'detailed', 'view=detailed']];
+    for (const [old, view, written] of cases) {
+      const s = new PortfolioStore(portfolio);
+      s.applyProgramParams(new URLSearchParams(old));
+      expect([s.state.view, s.programParams().toString()], old).toEqual([view, written]);
+    }
   });
 
   it('ignores the retired settings in an old address: the Distribution view, its folds, open bands, row density and the highlighted study', () => {
@@ -79,20 +115,19 @@ describe('URL params', () => {
     expect(other.programParams().toString()).toBe(url);
   });
 
-  it('27.05: carries an emptied cell stack and an emptied status filter (#27)', () => {
-    store.set('cellMode', 'custom');
+  it('27.05: carries an emptied cell stack (#27)', () => {
+    store.set('view', 'custom');
     for (const part of [...store.state.show]) store.toggleShow(part);
-    for (const status of [...store.state.statuses]) store.toggleStatus(status);
     const other = new PortfolioStore(portfolio);
     other.applyProgramParams(store.programParams());
     expect(other.state.show.size).toBe(0);
-    expect(other.state.statuses.size).toBe(0);
   });
 
   it('27.05: drops unknown values, keeping the defaults (#27)', () => {
     const junk = [
-      'view=nope', 'open=Nope', 'study=NOPE', 'group=nickname', 'expand=Oncology', 'sort=Nope', 'dir=desc',
+      'view=nope', 'open=Nope', 'study=NOPE', 'group=nickname', 'expand=Oncology', 'collapse=Oncology', 'sort=Nope', 'dir=desc',
       'cell=nope', 'show=nope', 'heatmap=nope', 'ramp=red', 'filter.phase=P9', 'filter.nope=1', 'statuses=Nope', 'hide=Nope',
+      'theme=pink', 'perrow=9', 'cfgpanel=left', 'legend=maybe',
     ];
     store.applyProgramParams(new URLSearchParams(junk.join('&')));
     expect(viewState(store)).toEqual(viewState(new PortfolioStore(portfolio)));
@@ -107,22 +142,22 @@ describe('URL params', () => {
     const data = { ...portfolio, manifest: { ...portfolio.manifest, studies } };
     const a = new PortfolioStore(data);
     a.set('groupBy', 'therapeutic_area');
-    a.toggleExpanded('Cardiology, Renal');
+    a.toggleBucketOpen('Cardiology, Renal');
     a.toggleFilter('therapeutic_area', 'Cardiology, Renal');
     const b = new PortfolioStore(data);
     b.applyProgramParams(new URLSearchParams(a.programParams().toString()));
-    expect([...b.state.expanded]).toEqual(['Cardiology, Renal']);
+    expect([...b.state.collapsed]).toEqual(['Cardiology, Renal']);
     expect([...b.state.filters.therapeutic_area]).toEqual(['Cardiology, Renal']);
   });
 
-  it('27.05: a study report takes only the metric-status filters and hidden metrics, those its hidden groups hide included (#27)', () => {
+  it('27.05: a study report\'s store takes only the hidden metrics, those its hidden groups hide included (#27)', () => {
     changeEveryField(store);
     const study = new PortfolioStore(portfolio);
     study.applyMetricParams(store.programParams());
-    const { statuses, hiddenMetrics } = viewState(store);
+    const { hiddenMetrics } = viewState(store);
     const byGroup = store.metricCategories(store.supportedMetrics()).filter((g) => store.state.hiddenGroups.has(g.category)).flatMap((g) => g.metrics.map((m) => m.MetricID));
     expect(byGroup.length).toBeGreaterThan(0);
-    expect(viewState(study)).toEqual({ ...viewState(new PortfolioStore(portfolio)), statuses, hiddenMetrics: [...new Set([...hiddenMetrics, ...byGroup])].sort() });
+    expect(viewState(study)).toEqual({ ...viewState(new PortfolioStore(portfolio)), hiddenMetrics: [...new Set([...hiddenMetrics, ...byGroup])].sort() });
   });
 
   it('16.03: a study report shows exactly the metrics the portfolio shows, with groups hidden, while the portfolio keeps its checkboxes as they were (#16)', () => {
@@ -145,12 +180,12 @@ describe('URL params', () => {
 
 /** Every view setting 27.05 lists, sets as sorted arrays. */
 describe('configured defaults (#16)', () => {
-  const config = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'], view: 'details' };
+  const config = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'], view: 'custom' };
   const configured = () => new PortfolioStore({ ...portfolio, config });
 
   it('opens with the configured view, and an empty hash restores it', () => {
     const s = configured();
-    expect([s.state.groupBy, s.state.heatmap, [...s.state.show].sort(), [...s.state.hiddenMetrics].sort(), s.state.view]).toEqual(['phase', 'rate', ['den', 'trend'], config.metrics, 'details']);
+    expect([s.state.groupBy, s.state.heatmap, [...s.state.show].sort(), [...s.state.hiddenMetrics].sort(), s.state.view]).toEqual(['phase', 'rate', ['den', 'trend'], config.metrics, 'custom']);
     const fresh = viewState(s);
     changeEveryField(s);
     s.applyProgramParams(new URLSearchParams());
@@ -161,7 +196,7 @@ describe('configured defaults (#16)', () => {
     const s = configured();
     s.set('groupBy', 'none');
     s.set('heatmap', 'none');
-    s.set('view', 'overview');
+    s.set('view', 'compact');
     s.toggleShow('den');
     s.toggleShow('trend');
     s.toggleShow('num');
@@ -207,7 +242,7 @@ describe('the study filter and Reset (#22)', () => {
   });
 
   it('Reset returns every setting the address holds to a fresh load, under the default and a configured view', () => {
-    const config = { groupBy: 'phase', heatmap: 'rate', show: ['den'], metrics: ['Analysis_kri0003'], view: 'details' };
+    const config = { groupBy: 'phase', heatmap: 'rate', show: ['den'], metrics: ['Analysis_kri0003'], view: 'detailed' };
     for (const data of [portfolio, { ...portfolio, config }]) {
       const s = new PortfolioStore(data);
       const fresh = new PortfolioStore(data);
@@ -221,24 +256,24 @@ describe('the study filter and Reset (#22)', () => {
 });
 
 describe('table columns and view (#21)', () => {
-  it('21.01: by default the table shows the study name, without Enrolled or Status, in Overview; a configuration sets both (#21)', () => {
-    expect([[...store.state.columns], store.state.view]).toEqual([['name'], 'overview']);
+  it('21.01: by default the table shows the study name, without Enrolled or Status, in Compact; a configuration sets both (#21)', () => {
+    expect([[...store.state.columns], store.state.view]).toEqual([['name'], 'compact']);
     expect(store.programParams().toString()).toBe('');
-    const s = new PortfolioStore({ ...portfolio, config: { columns: ['enroll', 'status'], view: 'details' } });
-    expect([[...s.state.columns].sort(), s.state.view]).toEqual([['enroll', 'status'], 'details']);
+    const s = new PortfolioStore({ ...portfolio, config: { columns: ['enroll', 'status'], view: 'detailed' } });
+    expect([[...s.state.columns].sort(), s.state.view]).toEqual([['enroll', 'status'], 'detailed']);
     expect(s.programParams().toString()).toBe('');
   });
 
   it('21.01: the columns and view travel in the address, an emptied choice included, and unknown values are dropped (#21)', () => {
     store.toggleColumn('enroll');
     store.toggleColumn('status');
-    store.set('view', 'details');
+    store.set('view', 'detailed');
     const params = store.programParams();
     expect(params.getAll('cols')).toEqual(['name', 'enroll', 'status']);
-    expect(params.get('view')).toBe('details');
+    expect(params.get('view')).toBe('detailed');
     const other = new PortfolioStore(portfolio);
     other.applyProgramParams(new URLSearchParams(params.toString()));
-    expect([[...other.state.columns].sort(), other.state.view]).toEqual([['enroll', 'name', 'status'], 'details']);
+    expect([[...other.state.columns].sort(), other.state.view]).toEqual([['enroll', 'name', 'status'], 'detailed']);
     other.toggleColumn('name');
     other.toggleColumn('enroll');
     other.toggleColumn('status');
@@ -246,7 +281,7 @@ describe('table columns and view (#21)', () => {
     empty.applyProgramParams(new URLSearchParams(other.programParams().toString()));
     expect([...empty.state.columns]).toEqual([]);
     empty.applyProgramParams(new URLSearchParams('cols=site&view=mixed'));
-    expect([[...empty.state.columns], empty.state.view]).toEqual([['name'], 'overview']);
+    expect([[...empty.state.columns], empty.state.view]).toEqual([['name'], 'compact']);
   });
 
   it('21.02: a study\'s enrollment target is its ParticipantTarget above zero, as a number or as text, and none otherwise (#21)', () => {
@@ -263,26 +298,24 @@ function viewState(s) {
   return {
     view: state.view,
     groupBy: state.groupBy,
-    expanded: sorted(state.expanded),
+    collapsed: sorted(state.collapsed),
     sort: state.sort,
-    cellMode: state.cellMode,
     show: sorted(state.show),
     heatmap: state.heatmap,
     filters: Object.fromEntries(Object.entries(state.filters).map(([k, v]) => [k, sorted(v)])),
-    statuses: sorted(state.statuses),
     hiddenMetrics: sorted(state.hiddenMetrics),
     hiddenGroups: sorted(state.hiddenGroups),
     columns: sorted(state.columns),
+    admin: state.admin,
   };
 }
 
 /** Moves every setting viewState() reads away from its default, through the store's own setters. */
 function changeEveryField(s) {
-  s.set('view', s.state.view === 'details' ? 'overview' : 'details');
+  s.set('view', s.state.view === 'custom' ? 'detailed' : 'custom');
   s.set('groupBy', 'therapeutic_area');
-  s.toggleExpanded('Oncology');
+  s.toggleBucketOpen('Oncology');
   s.toggleSort(s.supportedMetrics()[0].MetricID);
-  s.set('cellMode', 'custom');
   s.toggleShow('den');
   s.toggleShow('num');
   s.set('heatmap', 'rate');
@@ -290,7 +323,10 @@ function changeEveryField(s) {
   s.toggleFilter('status', 'Active');
   s.toggleFilter('therapeutic_area', 'Oncology');
   s.toggleFilter('study', s.studies[2].StudyID);
-  s.toggleStatus('Planned');
+  s.setAdmin('theme', 'dark');
+  s.setAdmin('perrow', '6');
+  s.setAdmin('cfgpanel', 'side');
+  s.setAdmin('legend', 'on');
   s.toggleMetric(s.supportedMetrics()[1].MetricID);
   s.toggleGroupHidden(s.groupNames().at(-1));
   s.toggleColumn('name');

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { generatePortfolio, METRICS } from '../scripts/generate-example-data.mjs';
 import { buildDistributionModel, NEUTRAL_COLOUR, NOT_RECORDED, sumSitesToStudy } from '../src/data/distributions.js';
 import { DISTRIBUTION_CONFIG, distributionConfig } from '../src/config/distributions.js';
-import { renderDistribution } from '../src/widgets/distribution-bar.js';
+import { descriptor, renderDistribution } from '../src/widgets/distribution-bar.js';
 import { categoryName, countBy, expectedView, jointRecount, studyTotals } from './qual/distributions.js';
 
 const { manifest, snapshots, records } = generatePortfolio();
@@ -153,14 +153,16 @@ describe('one value per bar', () => {
   });
 
   const rows = [site('S1', 'a', 3, 10), site('S1', 'ok', 6, 30, { Source: 'Denominator', Variable: 'status' })];
-  const config = { sections: { 'Denominator:status': { percentLabel: '% of enrolled' } } };
+  const config = { sections: { 'Denominator:status': { of: 'enrolled' }, 'Numerator:reason': { of: 'ineligible' } } };
 
-  it('10.09: a reason section shows counts with no percentage, and a status section shows percentages named by its population (#10)', () => {
+  it('10.09: a reason section shows counts with no percentage, and a status section shows percentages, each naming its population and total (#10)', () => {
     const [reason, status] = model(rows, config).sections;
-    expect(reason).toMatchObject({ source: 'Numerator', display: 'count', valueLabel: 'n' });
+    expect(reason).toMatchObject({ source: 'Numerator', display: 'count', population: 'ineligible' });
     expect(reason.bars[0]).toMatchObject({ count: 3, percent: null });
-    expect(status).toMatchObject({ source: 'Denominator', display: 'percent', valueLabel: '% of enrolled' });
+    expect(descriptor(reason)).toBe('n of 10 ineligible');
+    expect(status).toMatchObject({ source: 'Denominator', display: 'percent', population: 'enrolled' });
     expect(status.bars[0]).toMatchObject({ count: 6, percent: 0.2 });
+    expect(descriptor(status)).toBe('% of 30 enrolled');
   });
 });
 
@@ -345,6 +347,24 @@ describe('a breakdown that fits its card (#32)', () => {
     get scrollHeight() {
       return (this.innerHTML.match(/class="dist-row /g) ?? []).length * 20;
     },
+  });
+
+  it('48.05: a status section\'s bar shows its percentage and its count, and a reason section\'s its count only (#48)', () => {
+    const status = ['Eligible', 'Ineligible'].map((c, i) => site('A', c, [40, 10][i], 50, { MetricID: ie.MetricID, Source: 'Denominator', Variable: 'eligibility_status' }));
+    const values = (el) => [...el.innerHTML.matchAll(/<span class="v">(.*?)<\/span>\s*<\/div>/g)].map((m) => m[1].replace(/<[^>]+>/g, ''));
+    const statusBox = box(400);
+    renderDistribution(statusBox, { ...data, distributions: status }, { only: ['Denominator:eligibility_status'] });
+    expect(values(statusBox)).toEqual(['80.0% (40)', '20.0% (10)']);
+    const reasonBox = box(400);
+    renderDistribution(reasonBox, data, { only });
+    expect(values(reasonBox)).toEqual(['20', '19', '18', '17', '16', '42', '2']);
+  });
+
+  it('48.06: the widget leaves its notes out of the card body and hands them to the card (#48)', () => {
+    const el = box(400);
+    const { notes } = renderDistribution(el, data, { only });
+    expect(notes).toEqual(['A participant can fall in more than one category, so the counts add up to more than 50.', 'Not recorded: the source value was blank.']);
+    expect(el.innerHTML).not.toMatch(/dist-note|participant can fall|source value was blank/);
   });
 
   it('32.08: maxBars caps a section below its top-N, the rest going into "+ k more" before "Not recorded" (#32)', () => {

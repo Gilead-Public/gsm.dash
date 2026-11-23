@@ -4,7 +4,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { expectSeen, visibleLines } from './fixtures/visible.js';
 import { countText, latestSnapshot, pooled, shownMetrics } from '../test/qual/pooling.js';
-import { chooseView, control } from './fixtures/controls.js';
+import { chooseView, control, openOnly } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
 
@@ -24,12 +24,11 @@ const literal = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const VIEWS = {
   Overview: async () => {},
   'Details, ungrouped': async (page) => {
-    await chooseView(page, 'details');
+    await chooseView(page, 'detailed');
   },
-  'Details, grouped with a group open': async (page) => {
-    await chooseView(page, 'details');
+  'Details, grouped with the groups open': async (page) => {
+    await chooseView(page, 'detailed');
     await control(page, 'select[data-groupby]').selectOption('phase');
-    await page.locator('tr[data-bucket] td.grp').first().click();
     await expect(page.locator('.portfolio-table tr.study').first()).toBeVisible();
   },
 };
@@ -154,7 +153,7 @@ test('20.02: hovering a metric\'s header in Details or its band label in Overvie
     expect(shown.get('Snapshot'), `${s.StudyID}: snapshot date`).toBe(`${latestSnapshot(s)} (${s.snapshots.length} available)`);
   }
 
-  await chooseView(page, 'details');
+  await chooseView(page, 'detailed');
   for (const m of catalog) await expectGlossary(page, page.locator(`th[data-sort="${m.MetricID}"]`), m, `Details ${m.Abbreviation}`);
 
 });
@@ -170,7 +169,7 @@ test('20.04: the portfolio\'s hovers and tooltips in Overview and Details, for v
   await shoot(page.locator('.tlab').first(), 'overview band label');
   await shoot(page.locator('tbody tr.total .otile').first(), 'overview tile');
   await shoot(page.locator('tr.study a[data-study]').first(), 'study name');
-  await chooseView(page, 'details');
+  await chooseView(page, 'detailed');
   await shoot(page.locator('th[data-sort^="Analysis_"]').first(), 'details header');
   await shoot(page.locator('tbody tr.total td[data-tip]:not(.pop)').first(), 'details cell');
 });
@@ -179,7 +178,7 @@ test('20.05: ungrouped, the table has no Snapshot column in Overview or Details;
   await app.open();
   const table = page.locator('.portfolio-table table.po');
   for (const view of ['overview', 'details']) {
-    await chooseView(page, view);
+    await chooseView(page, view === 'details' ? 'detailed' : 'compact');
     await expect(table.locator('th[data-sort="meta"]'), view).toHaveCount(0);
     await expect(table.locator('td.nstud'), view).toHaveCount(0);
     expect((await table.locator('thead').innerText()).includes('Snapshot'), view).toBe(false);
@@ -190,9 +189,9 @@ test('20.05: ungrouped, the table has no Snapshot column in Overview or Details;
   const counts = new Map();
   for (const s of studies) counts.set(s.params.phase, (counts.get(s.params.phase) ?? 0) + 1);
   const open = [...counts.keys()].sort()[0];
-  await page.locator(`tr[data-bucket="${open}"] td.grp`).click();
+  await openOnly(page, open);
   for (const view of ['overview', 'details']) {
-    await chooseView(page, view);
+    await chooseView(page, view === 'details' ? 'detailed' : 'compact');
     const head = table.locator('th[data-sort="meta"]');
     await expect(head, view).toHaveText(/^Studies/);
     await expectSeen(head, `${view}: Studies heading`);
@@ -229,7 +228,7 @@ test('20.06: in Overview and Details, every cell\'s and tile\'s hover gives the 
   const byId = new Map(studies.map((s) => [s.StudyID, s]));
   const tooltip = page.locator('#gsm-tooltip');
   for (const view of /** @type {const} */ (['overview', 'details'])) {
-    await chooseView(page, view);
+    await chooseView(page, view === 'details' ? 'detailed' : 'compact');
     const { columns, rows } = await valueGrid(page, view);
     const metrics = columns.map((c) => catalog.find((m) => ('abbr' in c ? m.Abbreviation === c.abbr : m.MetricID === c.id)));
     expect(metrics.every(Boolean) && metrics.length === catalog.length, `${view}: a column for every catalog metric`).toBe(true);

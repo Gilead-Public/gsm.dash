@@ -71,15 +71,18 @@ To share a build for feedback without releasing it: every CI run that passes als
   document (gsm.viz inlined into study reports). Hovering a metric's header
   shows its definition from `Reporting_Metrics` (#20). The portfolio's
   controls sit in its header (#22, #24): **Filters**, a chip bar collapsed on
-  load with the study filter first; **Config**, with Collapse all / Expand all
-  (the table's View, Overview or Details), the display settings, the optional
-  columns (study name, **Enrolled**, Status; #21) and each metric's checkbox;
-  and **Reset**. Enrolled is the summary's
-  `ParticipantCount`, summed over the row's studies. The study page is one
-  grid of same-size cards, one per widget the tracker requests, in its order
-  (#32). Each card's header gives the metric's value at the visit shown, its
-  n / N and a sparkline of that value at each snapshot up to the visit; a
-  breakdown longer than its card allows shows its top rows, then "+ k more",
+  load with the study filter first; **Config**, with Group rows by, the Cell
+  display (Compact, Detailed, or Custom with its cell contents and heatmap;
+  #47), the metric groups, the optional columns under Column grouping (study
+  name, **Enrolled**, Status; #21) and each metric's checkbox; **Reset**; and
+  **Admin**, a demo tool for the theme, the study grid's cards per row, Config
+  as a popover or side panel, and a heatmap legend (#46). Enrolled is the
+  summary's `ParticipantCount`, summed over the row's studies. The study page
+  is one grid of same-size cards, one per widget the tracker requests, in its
+  order (#32), at the study's latest snapshot (#48). Each card's header gives
+  the metric's title, and on its right the value and n / N, whose hover names
+  both; a breakdown names its total, its notes sit behind a footer marker, and
+  one longer than its card allows shows its top rows, then "+ k more",
   and when a card's content can't be shortened (the protocol-deviation
   categories always show their top 5, #19), every card grows to fit it, so
   nothing is clipped. Its back link reads

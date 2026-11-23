@@ -16,13 +16,17 @@ const FOOTNOTES = {
   'not-recorded': () => 'Not recorded: the source value was blank.',
 };
 
-const value = (bar, s) => (s.display === 'percent' ? fmtPct(bar.percent) : fmtInt(bar.count));
+/** A bar's value: a status section's share with its count beside it (#48), a reason section's count. */
+const value = (bar, s) => (s.display === 'percent' ? `${fmtPct(bar.percent)} <span class="vn">(${fmtInt(bar.count)})</span>` : fmtInt(bar.count));
+
+/** What a section's values are out of, its total named: "% of 366 enrolled", "n of 37 ineligible" (#48). */
+export const descriptor = (s) => `${s.display === 'percent' ? '%' : 'n'} of ${fmtInt(s.total)}${s.population ? ` ${s.population}` : ''}`;
 
 function rowHtml(bar, s, max) {
   const width = max > 0 ? ((bar.count / max) * 100).toFixed(1) : '0';
   const style = bar.colour ? ` style="width:${width}%;background:${esc(bar.colour)}"` : ` style="width:${width}%"`;
   const nOfN = `${fmtInt(bar.count)} of ${fmtInt(s.total)}`;
-  const aria = s.display === 'percent' ? `${bar.label}: ${value(bar, s)}${s.valueLabel.replace(/^%/, '')}, ${nOfN}` : `${bar.label}: ${nOfN}`;
+  const aria = s.display === 'percent' ? `${bar.label}: ${fmtPct(bar.percent)}, ${nOfN}` : `${bar.label}: ${nOfN}`;
   return `<div class="dist-row ${bar.kind}" role="listitem" title="${esc(`${bar.label}: ${nOfN}`)}" aria-label="${esc(aria)}" data-category="${esc(bar.category ?? '')}" data-kind="${bar.kind}">
     <span class="lbl">${esc(bar.label)}</span>
     <div class="btrack" aria-hidden="true"><div class="b${bar.colour ? ' status' : ''}"${style}></div></div>
@@ -30,16 +34,22 @@ function rowHtml(bar, s, max) {
   </div>`;
 }
 
+// The section's title and what its values are out of share one row (#48); its notes go to the card's footer.
 function sectionHtml(s) {
   const max = Math.max(0, ...s.bars.map((b) => b.count));
-  const notes = s.footnotes.map((f) => `<p class="dist-note">${esc(FOOTNOTES[f](s))}</p>`).join('');
   return `<section class="dist-sec" data-source="${esc(s.source)}" data-variable="${esc(s.variable)}" data-display="${s.display}" aria-label="${esc(s.title)}">
-    <div class="sub-h">${esc(s.title)}</div>
-    <div class="dist-cols" aria-hidden="true"><span></span><span>${esc(s.valueLabel)}</span></div>
+    <div class="sec-head"><div class="sub-h">${esc(s.title)}</div><div class="dist-cols">${esc(descriptor(s))}</div></div>
     <div class="dist-bars" role="list">${s.bars.map((b) => rowHtml(b, s, max)).join('')}</div>
-    ${notes}
   </section>`;
 }
+
+/** The notes a model's sections or joint table carry, each once, for the card's footer (#48). */
+const notesOf = (model) => [
+  ...new Set([
+    ...(model.sections ?? []).flatMap((s) => s.footnotes.map((f) => FOOTNOTES[f](s))),
+    ...(model.joint?.footnotes ?? []).map((f) => FOOTNOTES[f]()),
+  ]),
+];
 
 const count = (/** @type {number | null} */ n) => (n == null ? '—' : fmtInt(n));
 
@@ -55,8 +65,7 @@ function jointHtml(t, title) {
       .join('');
     return `<table class="dist-joint" data-section="${esc(g.key)}" aria-label="${esc(`${title}: ${g.label}`)}"><caption>${esc(g.label)}</caption><thead>${head}</thead><tbody>${body}</tbody></table>`;
   });
-  const notes = t.footnotes.map((f) => `<p class="dist-note">${esc(FOOTNOTES[f]())}</p>`).join('');
-  return `${tables.join('')}${notes}`;
+  return tables.join('');
 }
 
 const shownBars = (model) => Math.max(0, ...(model.sections ?? []).map((s) => s.bars.filter((b) => b.kind === 'category').length));
@@ -69,7 +78,8 @@ const overflowsAcross = (el) => el.isConnected && el.clientWidth > 0 && el.scrol
  * `config.only` (section keys) or `config.joint` choose what a card shows (#10); the rest is the metric's
  * distribution configuration, merged over the shipped one. The card's header carries the metric's value and n / N
  * (#32). While the breakdown overflows its box, each section shows one bar fewer, the rest going into "+ k more",
- * down to one bar. A breakdown that then fits is marked `data-fits`; the host grows the cards for anything else.
+ * down to one bar. A breakdown that then fits is marked `data-fits`; the host grows the cards for anything else. It
+ * returns the breakdown's notes, which the card shows in its footer (#48).
  */
 export function renderDistribution(el, data, config = {}) {
   const { only = null, joint = null, ...options } = /** @type {any} */ (config);
@@ -96,6 +106,7 @@ export function renderDistribution(el, data, config = {}) {
   // Joint tables wider than the card may break their headings inside words, which they otherwise keep whole.
   if (model.joint && overflowsAcross(el)) el.toggleAttribute('data-tight', true);
   el.toggleAttribute('data-fits', Boolean(model.sections) && !overflows(el));
+  return { notes: model.state === 'ok' ? notesOf(model) : [] };
 }
 
 function html(model) {

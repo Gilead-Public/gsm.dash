@@ -1,12 +1,10 @@
 // @ts-check
-// #32: every card on the study page is the same size, with nothing clipped (32.08), and its header's sparkline draws
-// the card's value at each snapshot up to the visit shown (32.09). Expected values come from test/qual/, never from
-// src/.
+// #32: every card on the study page is the same size, with nothing clipped (32.08). Expected values come from
+// test/qual/, never from src/.
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
 import { DISTRIBUTION_CONFIG } from '../src/config/distributions.js';
 import { expectedView } from '../test/qual/distributions.js';
-import { pooled } from '../test/qual/pooling.js';
 import { expect, readData, test } from './fixtures/app.js';
 import { card, TRACKER_CARDS } from './fixtures/tiles.js';
 
@@ -19,20 +17,7 @@ const metricOf = (id) => portfolio.metrics.find((/** @type {any} */ m) => m.ID =
 const CONFIG = /** @type {Record<string, any>} */ (DISTRIBUTION_CONFIG);
 
 /**
- * @param {Page} page
- * @param {number} index
- */
-async function goToVisit(page, index) {
-  await page.locator('input[data-visit]').evaluate((el, i) => {
-    const input = /** @type {HTMLInputElement} */ (el);
-    input.value = String(i);
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    input.dispatchEvent(new Event('change', { bubbles: true }));
-  }, index);
-}
-
-/**
- * Every card's size; its title, value, n / N, sparkline and body text; each piece of text a user can't see (hidden,
+ * Every card's size; its title, value, n / N and body text; each piece of text a user can't see (hidden,
  * transparent or without a box); and each piece that lies outside its card, outside the part of the card it sits in
  * (header, value, body or footer), or outside a box that would clip it.
  * @param {Page} page
@@ -77,18 +62,14 @@ const layout = (page) =>
         }
       }
     }
-    const parts = cards.map((c) => {
-      const spark = c.querySelector('.card-value .spark');
-      return {
-        id: c.getAttribute('data-card'),
-        title: text(c.querySelector('.tile-head .name')),
-        value: text(c.querySelector('.card-value .big')),
-        nd: text(c.querySelector('.card-value .card-nd')),
-        spark: spark ? (spark.querySelector('svg') ? 'svg' : text(spark)) : null,
-        body: text(c.querySelector('.tile-body')),
-        problem: Boolean(c.querySelector('.ref-problem')),
-      };
-    });
+    const parts = cards.map((c) => ({
+      id: c.getAttribute('data-card'),
+      title: text(c.querySelector('.tile-head .name')),
+      value: text(c.querySelector('.card-value .big')),
+      nd: text(c.querySelector('.card-value .card-nd')),
+      body: text(c.querySelector('.tile-body')),
+      problem: Boolean(c.querySelector('.ref-problem')),
+    }));
     const sizes = cards.map((c) => {
       const r = c.getBoundingClientRect();
       return `${r.width.toFixed(1)} × ${r.height.toFixed(1)}`;
@@ -97,7 +78,7 @@ const layout = (page) =>
   });
 
 /**
- * Every card is the same size and shows its title, its value, n / N and sparkline (unless it can't show its widget)
+ * Every card is the same size and shows its title, its value and n / N (unless it can't show its widget)
  * and its body, with every piece of text visible and inside its card.
  * @param {Page} page
  * @param {string} where
@@ -115,7 +96,6 @@ async function expectFitted(page, where) {
     expect(p.body, `${where} ${c.id} body`).toBeTruthy();
     if (p.problem) continue;
     expect([p.value, p.nd], `${where} ${c.id} value and n / N`).toEqual([expect.stringMatching(/\S/), expect.stringMatching(/ \/ /)]);
-    expect(p.spark, `${where} ${c.id} sparkline`).toMatch(/^(svg|—)$/);
   }
 }
 
@@ -146,14 +126,15 @@ test.describe('cards of one size, with nothing clipped', () => {
     }
   });
 
-  test('32.08: at earlier visits, with breakdowns\' empty messages and sparklines of one point, and in another study, no text is clipped (#32)', async ({ app, page }) => {
-    await app.openStudy(study.StudyID);
-    for (const index of [1, 0]) {
-      await goToVisit(page, index);
-      await expect(page.locator('.visits .meta')).toContainText(study.snapshots[index]);
-      await expect(card(page, 'eligibility-status').locator('[data-empty="not-published"]')).toBeVisible();
-      await expectFitted(page, `visit ${index + 1}`);
-    }
+  test('32.08: with breakdowns\' empty messages, and in another study, no text is clipped (#32)', async ({ app, page }) => {
+    const empty = ['kri0014', 'kri0019'].map((id) => metricOf(id).MetricID);
+    await app.openStudy(study.StudyID, {
+      snapshot: (/** @type {any} */ snap) => {
+        snap.distributions = (snap.distributions ?? []).filter((/** @type {any} */ r) => !empty.includes(r.MetricID));
+      },
+    });
+    for (const id of ['eligibility-status', 'ip-status']) await expect(card(page, id).locator('[data-empty="no-rows"]'), id).toBeVisible();
+    await expectFitted(page, 'with empty breakdowns');
     await app.openStudy(studies[1].StudyID);
     await expectFitted(page, studies[1].StudyID);
   });
@@ -169,7 +150,7 @@ test.describe('cards of one size, with nothing clipped', () => {
     expect((await layout(page)).parts.find((p) => p.id === 'ip-status')?.problem).toBe(true);
   });
 
-  test('32.08: when a card can\'t shorten its content to fit, as the important-PD card with long category labels, every card grows with it, at any width, and returns to its size when no card needs more (#32)', async ({ app, page }) => {
+  test('32.08: when a card can\'t shorten its content to fit, as the important-PD card with long category labels, every card grows with it, at any width, and keeps its configured size when no card needs more (#32)', async ({ app, page }) => {
     const pd = metricOf('kri0004').MetricID;
     const long = ' — a long description of the deviation category that wraps over several lines in a card of the shipped size';
     await app.openStudy(study.StudyID, {
@@ -188,14 +169,22 @@ test.describe('cards of one size, with nothing clipped', () => {
       await expect.poll(async () => (await layout(page)).outside, `${width} px`).toEqual([]);
       await expectFitted(page, `${width} px`);
     }
-    await goToVisit(page, 1);
-    await expect(page.locator('.visits .meta')).toContainText(study.snapshots[1]);
-    await expect.poll(height, 'no card needs more room at an earlier visit').toBeCloseTo(configured, 0);
-    await expectFitted(page, 'earlier visit');
+    // Under the sub-path, an override is a route: drop it to open the report as shipped.
+    await page.unrouteAll({ behavior: 'ignoreErrors' });
+    await app.openStudy(study.StudyID);
+    await expect.poll(height, 'no card needs more room without the long labels').toBeCloseTo(configured, 0);
+    await expectFitted(page, 'without the long labels');
   });
 
   test('32.08: a breakdown shows fewer bars than its top-N only for lack of room: it leaves less room than another bar would take, and given taller cards each shows them all (#32)', async ({ app, page }) => {
-    await app.openStudy(study.StudyID);
+    // Long reason labels wrap over several lines, so some breakdown has more bars than its card has room for.
+    const long = ' — a long description of the reason that wraps over several lines in a card of the shipped size';
+    const reasons = ['Numerator:ietestcd_concat', 'Numerator:sf_reason', 'Numerator:drv_premature_discontinuation_reason'];
+    await app.openStudy(study.StudyID, {
+      snapshot: (/** @type {any} */ snap) => {
+        for (const r of snap.distributions ?? []) if (reasons.includes(`${r.Source}:${r.Variable}`) && r.Category !== null) r.Category += long;
+      },
+    });
     let trimmed = 0;
     for (const b of breakdowns) {
       const shown = await barsShown(page, b.id);
@@ -220,155 +209,5 @@ test.describe('cards of one size, with nothing clipped', () => {
     await page.addStyleTag({ content: '.tiles.cards { --card-h: 900px; }' });
     for (const b of breakdowns) await expect.poll(() => barsShown(page, b.id), b.id).toBe(b.bars);
     await expectFitted(page, 'taller cards');
-  });
-});
-
-/**
- * What one card's sparkline should show at a visit, from the fixture as `read` gives it: the pooled value at each of
- * the study's snapshots up to the visit, null where there is none, and its label.
- * @param {(typeof TRACKER_CARDS)[number]} c
- * @param {StudyEntry} of
- * @param {number} index
- * @param {(path: string) => any} [read]
- */
-function expectedSpark(c, of, index, read = readData) {
-  const m = metricOf(c.metric);
-  const dates = [...of.snapshots].sort().slice(0, index + 1);
-  const rates = dates.map((d) => pooled(read, [of], m.MetricID, d).rate);
-  const last = rates.at(-1);
-  const unit = m.WidgetConfigs?.['kri-summary']?.unit ?? 'per 28 days';
-  const latest = last == null ? '—' : m.Display === 'per_28d' ? `${(last * 28).toFixed(2)} ${unit}` : `${(last * 100).toFixed(1)}%`;
-  const missing = rates.filter((r) => r == null).length;
-  return { rates, label: `${c.title || m.Metric} trend: ${rates.length} snapshots${missing ? `, ${missing} without a value` : ''}, latest ${latest}` };
-}
-
-/**
- * What a sparkline draws: its label, the number of points in each piece of line, the lone dots, whether the last
- * snapshot has its end dot, and every point drawn, left to right.
- * @param {import('@playwright/test').Locator} svg
- */
-const readSpark = (svg) =>
-  svg.evaluate((el) => {
-    /** @param {Element} c */
-    const at = (c) => ({ x: Number(c.getAttribute('cx')), y: Number(c.getAttribute('cy')) });
-    const segments = (el.querySelector('.spark-line')?.getAttribute('d') ?? '')
-      .split('M')
-      .filter((seg) => seg.trim())
-      .map((seg) => [...seg.matchAll(/([\d.]+),([\d.]+)/g)].map((m) => ({ x: Number(m[1]), y: Number(m[2]) })));
-    const lone = [...el.querySelectorAll('.spark-point')].map(at);
-    const end = el.querySelector('.spark-dot');
-    const drawn = [...segments.flat(), ...lone, ...(end ? [at(end)] : [])];
-    const points = [...new Map(drawn.map((p) => [p.x, p])).values()].sort((a, b) => a.x - b.x);
-    const [, , width, height] = (el.getAttribute('viewBox') ?? '').split(' ').map(Number);
-    return { label: el.getAttribute('aria-label'), pieces: segments.map((seg) => seg.length), lone: lone.length, end: Boolean(end), points, width, height };
-  });
-
-/**
- * Checks a card's sparkline against the expected value at each snapshot: one place per snapshot, each value at its own
- * place and height (scaled to the series' range), a gap where a value is missing, and the label.
- * @param {import('@playwright/test').Locator} svg
- * @param {{ rates: (number | null)[], label: string }} want
- * @param {string} where
- */
-async function expectSpark(svg, want, where) {
-  const seen = await readSpark(svg);
-  expect(seen.label, where).toBe(want.label);
-  const slots = want.rates.flatMap((r, i) => (r == null ? [] : [i]));
-  /** @type {number[][]} */
-  const runs = [[]];
-  want.rates.forEach((r, i) => (r == null ? runs.push([]) : runs[runs.length - 1].push(i)));
-  const end = want.rates.length - 1;
-  expect(seen.pieces, `${where}: pieces of line`).toEqual(runs.filter((r) => r.length > 1).map((r) => r.length));
-  expect(seen.lone, `${where}: lone values`).toBe(runs.filter((r) => r.length === 1 && r[0] !== end).length);
-  expect(seen.end, `${where}: end dot`).toBe(want.rates[end] != null);
-  expect(seen.points, `${where}: points`).toHaveLength(slots.length);
-  for (const p of seen.points) expect(p.x >= 0 && p.x <= seen.width && p.y >= 0 && p.y <= seen.height, `${where}: (${p.x}, ${p.y}) inside the sparkline`).toBe(true);
-  const [first, last] = [seen.points[0], seen.points[seen.points.length - 1]];
-  const place = seen.points.map((p) => slots[0] + ((p.x - first.x) / (last.x - first.x)) * (slots[slots.length - 1] - slots[0]));
-  place.forEach((x, i) => expect(Math.abs(x - slots[i]), `${where}: point ${i + 1}'s place`).toBeLessThan(0.05));
-  const ys = seen.points.map((p) => p.y);
-  const [top, bottom] = [Math.min(...ys), Math.max(...ys)];
-  const heights = ys.map((y) => (bottom === top ? 0.5 : (bottom - y) / (bottom - top)));
-  const values = scaled(/** @type {number[]} */ (want.rates.filter((r) => r != null)));
-  heights.forEach((h, i) => expect(Math.abs(h - values[i]), `${where}: point ${i + 1}'s height`).toBeLessThan(0.02));
-}
-
-/** @param {number[]} values */
-function scaled(values) {
-  const lo = Math.min(...values);
-  const hi = Math.max(...values);
-  return values.map((v) => (hi === lo ? 0.5 : (v - lo) / (hi - lo)));
-}
-
-test.describe('each card\'s sparkline', () => {
-  test('32.09: at the latest and an earlier visit, each card\'s sparkline draws exactly the values pooled independently at the snapshots up to that visit, per-28-day KRIs included, labelled and hovered with the latest value as the header writes it (#32)', async ({ app, page }) => {
-    let compared = 0;
-    for (const of of [studies[0], studies[3]]) {
-      await app.openStudy(of.StudyID);
-      for (const index of [of.snapshots.length - 1, 2]) {
-        await goToVisit(page, index);
-        await expect(page.locator('.visits .meta')).toContainText(of.snapshots[index]);
-        for (const c of TRACKER_CARDS) {
-          const want = expectedSpark(c, of, index);
-          const where = `${of.StudyID} visit ${index + 1} ${c.id}`;
-          expect(want.rates.filter((r) => r != null).length, where).toBeGreaterThan(1);
-          await expectSpark(card(page, c.id).locator('.card-value .spark svg'), want, where);
-          compared++;
-        }
-      }
-    }
-    expect(compared).toBe(4 * TRACKER_CARDS.length);
-    expect(TRACKER_CARDS.some((c) => metricOf(c.metric).Display === 'per_28d')).toBe(true);
-    const ae = TRACKER_CARDS.find((c) => c.metric === 'kri0001');
-    const spark = card(page, 'kri0001').locator('.card-value .spark');
-    await spark.hover();
-    await expect(page.locator('#gsm-tooltip')).toBeVisible();
-    await expect(page.locator('#gsm-tooltip')).toHaveText(expectedSpark(/** @type {any} */ (ae), studies[3], 2).label);
-  });
-
-  test('32.09: a snapshot without a value, between others or at the visit shown, leaves a gap in the sparkline, which its label reports, and a value with no neighbour is a dot (#32)', async ({ app, page }) => {
-    const [ae, lab] = [metricOf('kri0001'), metricOf('kri0008')];
-    const dates = [...study.snapshots].sort();
-    // AE has no site rows at the second snapshot; every lab site has a zero denominator at the last.
-    const change = (/** @type {any} */ snap) => {
-      if (snap.SnapshotDate === dates[1]) snap.results = snap.results.filter((/** @type {any} */ r) => r.MetricID !== ae.MetricID);
-      if (snap.SnapshotDate === dates.at(-1)) {
-        for (const r of snap.results) if (r.MetricID === lab.MetricID && r.GroupLevel === 'Site') Object.assign(r, { Numerator: 0, Denominator: 0, Metric: null, Score: null, Flag: null });
-      }
-    };
-    const read = (/** @type {string} */ path) => {
-      const doc = structuredClone(readData(path));
-      change(doc);
-      return doc;
-    };
-    await app.openStudy(study.StudyID, { snapshot: change });
-    const checked = [];
-    for (const index of [dates.length - 1, 2]) {
-      await goToVisit(page, index);
-      await expect(page.locator('.visits .meta')).toContainText(dates[index]);
-      for (const c of TRACKER_CARDS) {
-        const want = expectedSpark(c, study, index, read);
-        await expectSpark(card(page, c.id).locator('.card-value .spark svg'), want, `visit ${index + 1} ${c.id}`);
-        if (want.rates.includes(null)) checked.push(`${index} ${c.id}`);
-      }
-    }
-    expect(checked, 'the gaps checked').toEqual([`${dates.length - 1} kri0001`, `${dates.length - 1} kri0008`, '2 kri0001']);
-    await goToVisit(page, dates.length - 1);
-    await expect(card(page, 'kri0008').locator('.card-value .big'), 'the header has no value at the visit shown either').toHaveText('—');
-    await expect(card(page, 'kri0008').locator('.card-value .spark svg')).toHaveAttribute('aria-label', /, 1 without a value, latest —$/);
-    await goToVisit(page, 2);
-    const lone = await readSpark(card(page, 'kri0001').locator('.card-value .spark svg'));
-    expect([lone.pieces, lone.lone, lone.end], 'two values either side of a gap: two dots and no line').toEqual([[], 1, true]);
-  });
-
-  test('32.09: with one snapshot up to the visit, every card shows "—" and no trend line (#32)', async ({ app, page }) => {
-    await app.openStudy(study.StudyID);
-    await goToVisit(page, 0);
-    await expect(page.locator('.visits .meta')).toContainText(study.snapshots[0]);
-    for (const c of TRACKER_CARDS) {
-      const spark = card(page, c.id).locator('.card-value .spark');
-      await expect(spark, c.id).toHaveText('—');
-      await expect(spark.locator('svg, path'), c.id).toHaveCount(0);
-    }
   });
 });

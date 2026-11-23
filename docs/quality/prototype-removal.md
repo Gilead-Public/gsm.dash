@@ -17,7 +17,7 @@ baselines and records the reassessment. Code locations are as of `ef550d9`.
 | R2 | "Metric glossary" button and dialog, both reports | No requirement; its text still describes the prototype ("simulated", "(Q2)" placeholders). Each metric's glossary entry stays in its hovers (#20) | `src/layouts/Report.astro`, `src/app/glossary.js`, `src/react/mount.jsx` |
 | R3 | "⤨ Randomize" on the study report | A demo aid | `src/react/StudyPage.jsx` |
 | R4 | STANDARD / CUSTOM badge on study tiles and in the Charts panel | Developer-facing, and it labels Breakdowns "Standard" while its help text calls them "Custom" | `src/react/StudyPage.jsx` |
-| R5 | ▶ / ❚❚ play through visits | A demo animation; the visit slider stays | `src/react/StudyPage.jsx` |
+| R5 | ▶ / ❚❚ play through visits | A demo animation; the visit slider stayed (the demo review of 2026-11-23 removes it, #48) | `src/react/StudyPage.jsx` |
 | R6 | Comparison line "portfolio … · this study … pt" on Details tiles, and the portfolio comparison data in each study document | A derived calculation with no requirement or calculation review; it also puts portfolio-wide figures in every study report (gsm.roadmap#623, open question 5) | `src/widgets/scalar-tile.js`, `src/widgets/resolve.js`, `scripts/study-document.mjs`, `schemas/study-document.schema.json`, `src/react/document.js` |
 | R7 | Note "n metrics are not site-level … held back until a future release adds that plumbing." | Developer wording, no requirement | `src/app/portfolio-controls.js` |
 | R8 | Study metadata line "n metrics · exported <date>" | No requirement; #24 removes the portfolio's | `src/react/mount.jsx` |
@@ -48,8 +48,8 @@ widget, no toggling inside it, ordered by layout only):
 | ID | Feature | Decision |
 |---|---|---|
 | K1 | Page tags "Program overview" / "Study view" | Removed by #24 (design review 2026-11-19): the header shows the logo and the dashboard's title |
-| K3 | "Extract: <date>" on a single-snapshot study | Kept, and required by 35.09. Source: gsm.roadmap#625 (the view is generated from the scheduled study snapshot) |
-| K4 | Trend over time tile view | Kept in the second pass (gsm.roadmap#618 and #625: the study view presents CTQ trends); the third pass moves the trend into each card's header as a sparkline (#32) and removes the view (R15) |
+| K3 | "Extract: <date>" on a single-snapshot study | Kept, and required by 35.09. Source: gsm.roadmap#625 (the view is generated from the scheduled study snapshot). Replaced by "Latest snapshot: <date>" on every study, and 35.09 retired, by the demo review of 2026-11-23 (#48) |
+| K4 | Trend over time tile view | Kept in the second pass (gsm.roadmap#618 and #625: the study view presents CTQ trends); the third pass moves the trend into each card's header as a sparkline (#32) and removes the view (R15). The demo review of 2026-11-23 removes the sparkline (#48) |
 
 These were uncovered in the audit, but a requirement now covers them:
 - row-click highlight (25.05), since unwired with the Highlight study control by the 19 Nov design review (35.11);

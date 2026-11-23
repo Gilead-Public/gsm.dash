@@ -33,8 +33,7 @@ test('27.01: every report, one per study and the portfolio, is one HTML file wit
     requests.length = 0;
     const url = await app.openReport(study.StudyID);
     await expect(page.locator('.dd-head .study.mono')).toHaveText(study.StudyID);
-    const n = study.snapshots.length;
-    await expect(page.locator('.visits .meta')).toHaveText(`Visit ${n}/${n} · ${latest(study.snapshots)}`);
+    await expect(page.locator('.dd-head .snapshot')).toHaveText(`Latest snapshot: ${latest(study.snapshots)}`);
     expect(requests, `${study.StudyID}: requests besides the report itself`).toEqual([url]);
   }
 

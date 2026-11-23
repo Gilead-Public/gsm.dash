@@ -3,7 +3,6 @@
 // what a user sees (its text or accessible name) and by its old markup, so a renamed copy can't slip through.
 import { expect, readData, test } from './fixtures/app.js';
 import { shownCards, tile, TRACKER_CARDS } from './fixtures/tiles.js';
-import { visibleLines } from './fixtures/visible.js';
 import { chooseView, closeControls, control } from './fixtures/controls.js';
 import { capturePortfolio } from './fixtures/baseline.js';
 /** @typedef {import('@playwright/test').Page} Page */
@@ -14,7 +13,7 @@ const studies = portfolio.studies;
 const study = studies[0];
 const KRI = 'Analysis_kri0001';
 const LIGHT = 'rgb(246, 247, 246)';
-const DARK = 'rgb(16, 21, 20)';
+const DARK = 'rgb(12, 16, 21)';
 
 /** @param {Page} page */
 const bodyText = (page) => page.locator('body').innerText();
@@ -22,19 +21,31 @@ const bodyText = (page) => page.locator('body').innerText();
 const background = (page) => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
 
 /**
- * No glossary button or dialog, and no theme control, by name or by markup.
+ * No glossary button or dialog, and no theme control outside the Admin panel (#46), by name or by markup, whether the
+ * Admin panel is open or not.
  * @param {Page} page
  * @param {string} what
  */
 async function expectNoGlossaryOrTheme(page, what) {
   await expect(page.getByRole('button', { name: /glossary/i }), `${what}: glossary button`).toHaveCount(0);
   await expect(page.locator('#glossaryBtn, dialog'), `${what}: glossary dialog`).toHaveCount(0);
-  await expect(page.getByRole('button', { name: /^(auto|light|dark)$/i }), `${what}: theme buttons`).toHaveCount(0);
-  await expect(page.locator('[data-theme-pref], #themeSeg, [aria-label="Theme"]'), `${what}: theme control`).toHaveCount(0);
+  const outsideAdmin = () =>
+    page.evaluate(() =>
+      [...document.querySelectorAll('button, [data-theme-pref], #themeSeg, [aria-label="Theme"]')]
+        .filter((el) => !el.closest('.admin-pop'))
+        .filter((el) => el.matches('[data-theme-pref], #themeSeg, [aria-label="Theme"]') || /^(auto|light|dark)$/i.test((el.textContent ?? '').trim()))
+        .map((el) => el.outerHTML.slice(0, 80)),
+    );
+  expect(await outsideAdmin(), `${what}: a theme control outside the Admin panel`).toEqual([]);
+  await page.locator('#header-controls [data-open="admin"]').click();
+  await expect(page.locator('.admin-pop [aria-label="Theme"]'), `${what}: the Admin panel's theme`).toBeVisible();
+  expect(await outsideAdmin(), `${what}: the Admin panel open`).toEqual([]);
+  await page.keyboard.press('Escape');
 }
 
 /**
- * The page follows the operating system's light or dark setting, whatever the browser has stored.
+ * With the Admin panel's theme on Auto, its default, the page follows the operating system's light or dark setting,
+ * whatever the browser has stored.
  * @param {Page} page
  * @param {() => Promise<unknown>} open
  * @param {string} what
@@ -49,7 +60,7 @@ async function expectFollowsSystem(page, open, what) {
   }
 }
 
-test('35.01: the portfolio has no change log link and no "not site-level" note; neither report has a glossary button or dialog or a theme control, and each follows the system\'s light or dark setting (#35)', async ({ app, page }) => {
+test('35.01: the portfolio has no change log link and no "not site-level" note; neither report has a glossary button or dialog or a theme control outside the Admin panel, and with its theme on Auto each follows the system\'s light or dark setting (#35)', async ({ app, page }) => {
   await app.open();
   await expect(page.getByRole('link', { name: /change log/i })).toHaveCount(0);
   await expect(page.locator('a[href*="pages.github.io"], #changelogLink')).toHaveCount(0);
@@ -71,20 +82,11 @@ test('35.02: the study report has no Randomize or play button, no STANDARD / CUS
     await expect(page.getByRole('button', { name: /randomi[sz]e/i }), `${id}: Randomize`).toHaveCount(0);
     await expect(page.getByRole('button', { name: /play|pause/i }), `${id}: play`).toHaveCount(0);
     await expect(page.locator('[data-randomize-views], [data-play], .kind'), `${id}: old markup`).toHaveCount(0);
-    await expect(page.locator('input[type="range"][data-visit]'), `${id}: the visit slider stays`).toBeVisible();
     expect(await page.locator('header.app').innerText(), `${id}: metadata line`).not.toMatch(/metrics|exported/i);
-
-    const dates = /** @type {{ snapshots: string[] }} */ (studies.find((s) => s.StudyID === id)).snapshots;
-    for (const at of [0, dates.length - 1]) {
-      await page.locator('input[type="range"][data-visit]').evaluate((el, i) => {
-        /** @type {HTMLInputElement} */ (el).value = String(i);
-        el.dispatchEvent(new Event('change', { bubbles: true }));
-      }, at);
-      const text = await page.locator('.study-page').innerText();
-      const where = `${id}, visit ${at + 1}`;
-      expect(text, `${where}: comparison line`).not.toMatch(/this study|^portfolio /im);
-      expect(text, `${where}: badge`).not.toMatch(/^(standard|custom)$/im);
-    }
+    // The page shows the latest snapshot only (#48).
+    const text = await page.locator('.study-page').innerText();
+    expect(text, `${id}: comparison line`).not.toMatch(/this study|^portfolio /im);
+    expect(text, `${id}: badge`).not.toMatch(/^(standard|custom)$/im);
 
     await tile(page, KRI).locator('button[data-detail-metric]').click();
     const panel = page.locator('.detail');
@@ -234,7 +236,7 @@ test('35.08: the portfolio\'s Metrics section has no All / None or per-category 
   await page.locator('#header-controls [data-open="config"]').click();
   await expect(controls.getByRole('button', { name: /^(all|none)$/i })).toHaveCount(0);
   await expect(controls.locator('[data-metrics-all], [data-group-metrics]')).toHaveCount(0);
-  await chooseView(page, 'details');
+  await chooseView(page, 'detailed');
   const box = control(page, 'input[data-metric="Analysis_kri0012"]');
   const column = page.locator('.portfolio-table th[data-sort="Analysis_kri0012"]');
   await expect(column).toHaveCount(1);
@@ -242,18 +244,6 @@ test('35.08: the portfolio\'s Metrics section has no All / None or per-category 
   await expect(column).toHaveCount(0);
   await box.check();
   await expect(column).toHaveCount(1);
-});
-
-test('35.09: a study with one snapshot shows "Extract: <date>" with that date, in place of the visit slider (#35)', async ({ app, page }) => {
-  const last = /** @type {string} */ (study.snapshots.at(-1));
-  await app.openReport(study.StudyID, {
-    document: (doc) => {
-      doc.study.snapshots = [last];
-      doc.snapshots = doc.snapshots.filter((/** @type {{ SnapshotDate: string }} */ s) => s.SnapshotDate === last);
-    },
-  });
-  await expect.poll(() => visibleLines(page.locator('.dd-head')), 'the label and its date can be seen').toContain(`Extract: ${last}`);
-  await expect(page.locator('input[type="range"][data-visit]')).toHaveCount(0);
 });
 
 test('35.10: the portfolio has no Distribution view, view tabs or hint, or category folding; an address\'s retired settings are ignored and removed, and its supported ones keep their effect (#35)', async ({ app, page }) => {
@@ -289,13 +279,13 @@ test('35.10: the portfolio has no Distribution view, view tabs or hint, or categ
 
   // A supported setting beside retired ones keeps its effect.
   await page.goto('about:blank');
-  await app.open('#view=details&heatmap=rate');
+  await app.open('#view=custom&heatmap=rate');
   await settled();
   const supported = await capturePortfolio(page, 'supported settings');
   await page.goto('about:blank');
-  await app.open('#view=details&density=condensed&open=Disposition&dfold=Safety&heatmap=rate');
+  await app.open('#view=custom&density=condensed&open=Disposition&dfold=Safety&heatmap=rate');
   await settled();
-  expect(new URL(page.url()).hash, 'supported settings beside retired ones').toBe('#view=details&heatmap=rate');
+  expect(new URL(page.url()).hash, 'supported settings beside retired ones').toBe('#view=custom&heatmap=rate');
   expect((await capturePortfolio(page, 'supported settings')).text, 'supported settings beside retired ones').toBe(supported.text);
 });
 
@@ -308,14 +298,14 @@ test('35.11: the portfolio has no study highlight: no Highlight study control an
   await closeControls(page);
   // No instruction to highlight is left anywhere: the page's text, native titles and hover tips, collapsed and expanded.
   for (const view of ['overview', 'details']) {
-    await chooseView(page, view);
+    await chooseView(page, view === 'details' ? 'detailed' : 'compact');
     const cues = await page.evaluate(() => [
       document.body.innerText,
       ...[...document.querySelectorAll('[title], [data-tip]')].flatMap((el) => [el.getAttribute('title') ?? '', el.getAttribute('data-tip') ?? '']),
     ].filter((t) => /highlight/i.test(t)));
     expect(cues, `${view}: highlight instructions`).toEqual([]);
   }
-  await chooseView(page, 'overview');
+  await chooseView(page, 'compact');
   await closeControls(page);
   const fresh = await capturePortfolio(page, 'fresh load');
 

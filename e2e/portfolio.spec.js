@@ -5,7 +5,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { expectSeen } from './fixtures/visible.js';
 import { countText, displayed, pooled, population, readRate, shownMetrics, snapshotAsOf, studiesBy, tolerance } from '../test/qual/pooling.js';
-import { control } from './fixtures/controls.js';
+import { control, openOnly } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
 /** @typedef {import('../test/qual/pooling.js').MetricMeta} MetricMeta */
@@ -157,7 +157,11 @@ test.describe('portfolio view numbers', () => {
     const groups = studiesBy(studies, 'phase');
     const labels = [...groups.keys()].sort((a, b) => a.localeCompare(b));
     expect(labels.length, 'the fixture has more than one phase').toBeGreaterThan(1);
-    expect(table.rows.map((r) => [r.kind, r.label])).toEqual([['total', 'Portfolio total'], ...labels.map((l) => ['bucket', l])]);
+    // A grouping opens every group (#47).
+    expect(table.rows.map((r) => [r.kind, r.label])).toEqual([
+      ['total', 'Portfolio total'],
+      ...labels.flatMap((l) => [['bucket', l], .../** @type {StudyEntry[]} */ (groups.get(l)).map((s) => ['study', s.StudyID])]),
+    ]);
     await expectRow(page, table, 'Portfolio total', studies);
     for (const label of labels) {
       const members = /** @type {StudyEntry[]} */ (groups.get(label));
@@ -205,7 +209,7 @@ test.describe('portfolio view numbers', () => {
       const open = labels[0];
       const inGroup = (/** @type {string} */ label) => /** @type {StudyEntry[]} */ (groups.get(label));
       await control(page, 'select[data-groupby]').selectOption('phase');
-      await page.locator(`tr[data-bucket="${open}"] td.grp`).click();
+      await openOnly(page, open);
       await expect(page.locator('.portfolio-table tr.study'), what).toHaveCount(inGroup(open).length);
       table = await shownTable(page);
       expect(table.rows.map((r) => [r.kind, r.label]), `${what}: grouped rows, ${open} open`).toEqual([

@@ -129,19 +129,6 @@ async function expectState(page, testInfo, artifact, name) {
   await expectRecorded(testInfo, `${artifact}-${name}.txt`, await capture(page, name, artifact));
 }
 
-/**
- * Moves the visit scrubber as a user releasing the slider would.
- * @param {Page} page
- * @param {number} index
- */
-async function goToVisit(page, index) {
-  await page.locator('input[data-visit]').evaluate((el, i) => {
-    /** @type {HTMLInputElement} */ (el).value = String(i);
-    el.dispatchEvent(new Event('input', { bubbles: true }));
-    el.dispatchEvent(new Event('change', { bubbles: true }));
-  }, index);
-}
-
 test.describe('the study page against its recorded baseline', () => {
   // The records hold every bar, so they are the same whatever fonts the platform has.
   test.beforeEach(({ page }) => styleFromStart(page, ROOM_FOR_EVERY_BAR));
@@ -155,13 +142,6 @@ test.describe('the study page against its recorded baseline', () => {
       await page.locator('.detail .viz canvas').waitFor();
       await expectState(page, testInfo, app.artifact, `drill-in-${tab.toLowerCase().replace(/ /g, '-')}`);
     }
-  });
-
-  test('12.02: the study page matches its baseline at an earlier visit, where breakdowns are not published (#12)', async ({ app, page }, testInfo) => {
-    await app.openStudy(study.StudyID);
-    await goToVisit(page, 0);
-    await page.locator('.visits .meta').filter({ hasText: `Visit 1/` }).waitFor();
-    await expectState(page, testInfo, app.artifact, 'earlier-visit');
   });
 
   test('12.02: the study page matches its baseline with a breakdown configured but no rows for it (#12)', async ({ app, page }, testInfo) => {

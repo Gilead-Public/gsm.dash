@@ -2,20 +2,50 @@ import { orderMetrics, normalizeMetric, pivotGroups, indexResults } from './norm
 import { selectLatestSnapshots, poolResults, bucketStudies, filterStudies } from './rollup.js';
 import { indexSummary, poolSummary, POPULATIONS } from './summary.js';
 import { nextSort } from './sort.js';
-import { STATUS_ORDER, CATEGORY_ORDER, groupAsConfigured, groupByCategory } from './catalog.js';
-import { CELL_MODES, COLUMN_OPTIONS, GROUP_BY_OPTIONS, HEATMAPS, VIEWS, showOptions } from '../app/portfolio-controls.js';
+import { CATEGORY_ORDER, groupAsConfigured, groupByCategory } from './catalog.js';
+import { COLUMN_OPTIONS, GROUP_BY_OPTIONS, HEATMAPS, VIEWS, SHOW_OPTIONS } from '../app/portfolio-controls.js';
+import { readAdmin, writeAdmin } from '../app/admin-settings.js';
 import { POP_COLUMNS } from '../app/portfolio-table.js';
 import { portfolioDefaults } from './portfolio-config.js';
 
 // The portfolio's single-valued settings in its URL: [param, state field, the controls' choices].
 const SCALARS = [
   ['group', 'groupBy', GROUP_BY_OPTIONS],
-  ['cell', 'cellMode', CELL_MODES],
   ['view', 'view', VIEWS],
   ['heatmap', 'heatmap', HEATMAPS],
 ];
-const SHOW_PARTS = showOptions(false).map(([part]) => part);
+const SHOW_PARTS = SHOW_OPTIONS.map(([part]) => part);
 const COLUMN_PARTS = COLUMN_OPTIONS.map(([part]) => part);
+
+/**
+ * The Cell display an address asks for. Addresses from before #47 carried the View (overview / details) and the cell
+ * mode apart: details with a custom cell mode is Custom.
+ * @param {URLSearchParams} params
+ */
+function legacyView(params) {
+  const view = params.get('view');
+  if (view === 'overview') return 'compact';
+  if (view === 'details') return params.get('cell') === 'custom' ? 'custom' : 'detailed';
+  return view;
+}
+
+/** Params no setting reads: #35's retired views and highlight, #23's palette, #46's status filter, and #47's open
+ * groups and cell mode. */
+const RETIRED_PARAMS = ['open', 'dfold', 'study', 'density', 'ramp', 'statuses', 'expand', 'cell'];
+
+/**
+ * An address in its current form, for a report that only carries the portfolio's (a study report): retired params
+ * removed, and an old View and cell mode rewritten as the Cell display (#47). Every other param is kept as it is.
+ * @param {URLSearchParams} params
+ */
+export function currentParams(params) {
+  const out = new URLSearchParams(params);
+  const view = legacyView(params);
+  for (const key of RETIRED_PARAMS) out.delete(key);
+  if (view != null && !VIEWS.some(([choice]) => choice === view)) out.delete('view');
+  else if (view != null && view !== params.get('view')) out.set('view', view);
+  return out;
+}
 
 /**
  * The known values of a set the user can empty. An emptied set is written as one empty value; a set whose values are
@@ -50,7 +80,7 @@ export class PortfolioStore extends EventTarget {
    */
   constructor({ manifest, snapshots, summary, config }) {
     super();
-    this.#defaults = { cellMode: 'defined', ...portfolioDefaults(config) };
+    this.#defaults = portfolioDefaults(config);
     const { active, inactive } = orderMetrics(manifest.metrics.map(normalizeMetric));
     this.metrics = active;
     this.inactiveMetrics = inactive;
@@ -80,19 +110,18 @@ export class PortfolioStore extends EventTarget {
     this.state = {
       show: new Set(this.#defaults.show), // any of num | den | rate | trend; cells stack what's on
       columns: new Set(this.#defaults.columns), // the table's optional columns shown: name | enroll | status (#21)
-      view: this.#defaults.view, // 'overview' (each category folded to headline tiles) | 'details'
-      heatmap: this.#defaults.heatmap, // 'none' | 'num' | 'den' | 'rate' — column-relative cell shading (and the metric sort measure)
+      view: this.#defaults.view, // the Cell display (#47): 'compact' (headline tiles) | 'detailed' (as defined) | 'custom' (`show` and the heatmap)
+      heatmap: this.#defaults.heatmap, // 'none' | 'num' | 'den' | 'rate'; applies under Custom only (activeHeatmap)
       groupBy: this.#defaults.groupBy, // 'none' (one row per study) | a study param
       filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set(), study: new Set() },
       hiddenMetrics: new Set(this.#defaults.metrics), // MetricIDs the user has switched off
       hiddenGroups: new Set(this.#hiddenGroupDefaults()), // metric groups whose band is hidden (#21), independent of hiddenMetrics
-      expanded: new Set(),
+      collapsed: new Set(), // group-by buckets closed by the user; every group opens by default (#47)
       sort: { key: null, dir: null }, // key: 'label' | 'meta' | a MetricID
       detail: { metricId: null, tab: 'viz-bar' }, // study-page drill-in panel (W4)
       groupByCategory: false, // study page: the grouped layout, unwired since the 19 Nov design review (#35)
       asOf: null, // view the portfolio as of this date; the study page's visit scrubber drives it
-      cellMode: this.#defaults.cellMode, // 'defined' — each metric shows its glossary display rule | 'custom' — the `show` stack for every metric
-      statuses: new Set(STATUS_ORDER), // glossary Status values to show (Released | New | Planned)
+      admin: readAdmin(new URLSearchParams()), // the Admin panel's settings (#46)
       // StudyID marked in the table. Unwired since the 19 Nov 2026 design review (#35): nothing sets it, and the address
       // doesn't carry it; kept for a possible enhanced version of the page.
       highlightStudy: null,
@@ -134,7 +163,7 @@ export class PortfolioStore extends EventTarget {
         .flatMap((g) => g.metrics.map((m) => m.MetricID)),
     );
     return this.supportedMetrics().filter(
-      (m) => !this.state.hiddenMetrics.has(m.MetricID) && !hiddenGroup.has(m.MetricID) && this.state.statuses.has(m.Status ?? 'Released')
+      (m) => !this.state.hiddenMetrics.has(m.MetricID) && !hiddenGroup.has(m.MetricID)
     );
   }
 
@@ -159,12 +188,6 @@ export class PortfolioStore extends EventTarget {
     this.#emit();
   }
 
-  toggleStatus(status) {
-    const set = this.state.statuses;
-    set.has(status) ? set.delete(status) : set.add(status);
-    this.#emit();
-  }
-
   /** Mark one study in the table; selecting it again clears the highlight. */
   highlight(studyId) {
     this.state.highlightStudy = studyId && this.state.highlightStudy !== studyId ? studyId : null;
@@ -183,7 +206,7 @@ export class PortfolioStore extends EventTarget {
     // A set that can be emptied writes an empty value, so that it differs from the default.
     const addSet = (key, values) => (values.length ? add(key, values) : params.set(key, ''));
     for (const [key, field] of SCALARS) if (state[field] !== this.#defaults[field]) params.set(key, state[field]);
-    if (state.groupBy !== 'none') add('expand', this.#bucketValues().filter((v) => state.expanded.has(v)));
+    if (state.groupBy !== 'none') add('collapse', this.#bucketValues().filter((v) => state.collapsed.has(v)));
     if (state.sort.key && state.sort.dir) {
       params.set('sort', state.sort.key);
       params.set('dir', state.sort.dir);
@@ -192,7 +215,6 @@ export class PortfolioStore extends EventTarget {
     if (COLUMN_PARTS.some((p) => state.columns.has(p) !== this.#defaults.columns.includes(p))) addSet('cols', COLUMN_PARTS.filter((p) => state.columns.has(p)));
     const options = this.filterOptions();
     for (const param of Object.keys(state.filters)) add(`filter.${param}`, options[param].filter((v) => state.filters[param].has(v)));
-    if (STATUS_ORDER.some((s) => !state.statuses.has(s))) addSet('statuses', STATUS_ORDER.filter((s) => state.statuses.has(s)));
     const hidden = this.metrics.map((m) => m.MetricID).filter((id) => state.hiddenMetrics.has(id));
     // Written even when it equals the configured default: a study report has no configuration, and takes the hidden
     // metrics from the link.
@@ -208,7 +230,7 @@ export class PortfolioStore extends EventTarget {
       .filter((g) => state.hiddenGroups.has(g.category))
       .flatMap((g) => g.metrics.map((m) => m.MetricID));
     add('hidebygroup', groupHidden);
-    return params;
+    return writeAdmin(params, state.admin);
   }
 
   /** Restore what programParams() wrote: an absent param is its configured default, and unknown values are dropped. One 'change'. */
@@ -216,10 +238,11 @@ export class PortfolioStore extends EventTarget {
     const { state } = this;
     const known = (values, options) => values.filter((v) => options.includes(v));
     for (const [key, field, choices] of SCALARS) {
-      const v = params.get(key);
+      const v = key === 'view' ? legacyView(params) : params.get(key);
       state[field] = choices.some(([choice]) => choice === v) ? v : this.#defaults[field];
     }
-    state.expanded = new Set(state.groupBy === 'none' ? [] : known(params.getAll('expand'), this.#bucketValues()));
+    state.collapsed = new Set(state.groupBy === 'none' ? [] : known(params.getAll('collapse'), this.#bucketValues()));
+    state.admin = readAdmin(params);
     const [sortKey, dir] = [params.get('sort'), params.get('dir')];
     const sortable = ['label', 'meta', ...POP_COLUMNS.map((c) => c.key), ...this.metrics.map((m) => m.MetricID)];
     state.sort = sortable.includes(sortKey) && (dir === 'asc' || dir === 'desc') ? { key: sortKey, dir } : { key: null, dir: null };
@@ -233,8 +256,8 @@ export class PortfolioStore extends EventTarget {
   }
 
   /**
-   * What a study report takes from the portfolio's params: the metric-status filters, and the hidden metrics, those its
-   * hidden groups hide included. One 'change'.
+   * What a study report takes from the portfolio's params: the hidden metrics, those its hidden groups hide included.
+   * One 'change'.
    */
   applyMetricParams(params) {
     this.#applyMetricParams(params);
@@ -244,7 +267,6 @@ export class PortfolioStore extends EventTarget {
   }
 
   #applyMetricParams(params) {
-    this.state.statuses = new Set(chosen(params, 'statuses', STATUS_ORDER, STATUS_ORDER));
     this.state.hiddenMetrics = new Set(chosen(params, 'hide', this.metrics.map((m) => m.MetricID), this.#defaults.metrics));
   }
 
@@ -264,6 +286,18 @@ export class PortfolioStore extends EventTarget {
 
   set(key, value) {
     this.state[key] = value;
+    if (key === 'groupBy') this.state.collapsed.clear();
+    this.#emit();
+  }
+
+  /** The heatmap the table shows: its measure under Custom cell display, none otherwise (#47). */
+  activeHeatmap() {
+    return this.state.view === 'custom' ? this.state.heatmap : 'none';
+  }
+
+  /** @param {string} key @param {string} value */
+  setAdmin(key, value) {
+    this.state.admin = { ...this.state.admin, [key]: value };
     this.#emit();
   }
 
@@ -299,8 +333,8 @@ export class PortfolioStore extends EventTarget {
     return Object.values(this.state.filters).reduce((n, set) => n + set.size, 0);
   }
 
-  toggleExpanded(bucketValue) {
-    const set = this.state.expanded;
+  toggleBucketOpen(bucketValue) {
+    const set = this.state.collapsed;
     set.has(bucketValue) ? set.delete(bucketValue) : set.add(bucketValue);
     this.#emit();
   }

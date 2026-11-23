@@ -1,5 +1,5 @@
 // @ts-check
-import { COLUMN_OPTIONS, GROUP_BY_OPTIONS, HEATMAPS, VIEWS, showOptions } from '../app/portfolio-controls.js';
+import { COLUMN_OPTIONS, GROUP_BY_OPTIONS, HEATMAPS, SHOW_OPTIONS, VIEWS } from '../app/portfolio-controls.js';
 import { orderMetrics } from './normalize.js';
 import { OTHER_CATEGORY } from './catalog.js';
 
@@ -11,13 +11,13 @@ import { OTHER_CATEGORY } from './catalog.js';
  * @property {string[]} [show]
  * @property {string[]} [metrics] MetricIDs hidden by default.
  * @property {string[]} [columns] The table's optional columns shown by default (#21).
- * @property {string} [view] The table's view, Overview or Details.
+ * @property {string} [view] The table's Cell display: compact, detailed or custom.
  * @property {Array<{ name: string, metrics: string[], hidden?: boolean }> | null} [groups] The metric groups, in order,
  *   each with its MetricIDs and whether it starts hidden; null groups by the catalog's Category.
  */
 
 /** @type {Required<PortfolioConfig>} */
-const BUILT_IN = { groupBy: 'none', heatmap: 'none', show: ['num', 'rate'], metrics: [], columns: ['name'], view: 'overview', groups: null };
+const BUILT_IN = { groupBy: 'none', heatmap: 'none', show: ['num', 'rate'], metrics: [], columns: ['name'], view: 'compact', groups: null };
 
 /**
  * The MetricIDs a portfolio column can show: active, site-level metrics in the catalog.
@@ -74,10 +74,10 @@ export function configProblems(config, catalog) {
   const settings = {
     groupBy: { allowed: GROUP_BY_OPTIONS.map(([v]) => v), what: 'a Group rows by choice' },
     heatmap: { allowed: HEATMAPS.map(([v]) => v), what: 'a Heatmap choice' },
-    show: { allowed: showOptions(false).map(([v]) => v), what: 'a Show in each cell choice' },
+    show: { allowed: SHOW_OPTIONS.map(([v]) => v), what: 'a Show in each cell choice' },
     metrics: { allowed: portfolioColumnIds(catalog), what: 'an active, site-level metric in the catalog' },
     columns: { allowed: COLUMN_OPTIONS.map(([v]) => v), what: 'an optional table column' },
-    view: { allowed: VIEWS.map(([v]) => v), what: 'a View choice' },
+    view: { allowed: VIEWS.map(([v]) => v), what: 'a Cell display choice' },
   };
   const keys = [...Object.keys(settings), 'groups'].join(', ');
   if (typeof config !== 'object' || config === null || Array.isArray(config)) return [`config: ${JSON.stringify(config)} is not an object; allowed: ${keys}`];

@@ -3,7 +3,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { expectSeen, visibleLines } from './fixtures/visible.js';
 import { shownMetrics } from '../test/qual/pooling.js';
-import { chooseView, control } from './fixtures/controls.js';
+import { chooseHeatmap, chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 const portfolio = readData('portfolio.json');
@@ -51,11 +51,11 @@ test('24.02: each report\'s header shows the logo and the document\'s title, or 
   for (const [title, shown] of /** @type {const} */ ([[undefined, 'gsm.dash'], ['CtQ Dashboard', 'CtQ Dashboard']])) {
     await openTitled(app, page, 'portfolio', title);
     await page.locator('#app > .layout').waitFor();
-    expect(await header(page), `portfolio, title ${title}`).toEqual({ text: [shown, 'Filters', 'Config', 'Reset'], logo });
+    expect(await header(page), `portfolio, title ${title}`).toEqual({ text: [shown, 'Filters', 'Config', 'Reset', 'Admin'], logo });
     expect(await page.title(), `portfolio tab, title ${title}`).toBe(shown);
     await openTitled(app, page, study, title);
     await page.locator('#app .tile').first().waitFor();
-    expect(await header(page), `study report, title ${title}`).toEqual({ text: [shown], logo });
+    expect(await header(page), `study report, title ${title}`).toEqual({ text: [shown, 'Admin'], logo });
     expect(await page.title(), `study tab, title ${title}`).toBe(`${study} · ${shown}`);
   }
   await expect(page.locator('header.app .tag, #page-tag, #meta')).toHaveCount(0);
@@ -116,7 +116,7 @@ test('24.02: the status line sits below the table and reads the studies and metr
   await control(page, `button[data-filter="phase"][data-value="${phase}"]`).click();
   await control(page, `input[data-metric="${metrics[0].MetricID}"]`).uncheck();
   const sortBy = metrics[1];
-  await chooseView(page, 'details');
+  await chooseView(page, 'detailed');
   await page.locator(`th[data-sort="${sortBy.MetricID}"]`).click();
   const { text, below } = await statusLine(page);
   expect(below).toBe(true);
@@ -129,7 +129,7 @@ test('24.02: the status line sits below the table and reads the studies and metr
 
 test('24.02: the status line names every active sort and its direction, marking a sort whose column is hidden (#24)', async ({ app, page }) => {
   await app.open();
-  await chooseView(page, 'details');
+  await chooseView(page, 'detailed');
   const [shown, other] = metrics;
   /** The sort the status line names, or null. */
   const named = async () => (await statusLine(page)).text.split(' · sorted by ')[1] ?? null;
@@ -160,7 +160,7 @@ test('24.02: the status line names every active sort and its direction, marking 
   expect(await named(), 'Enrolled hidden').toBe(`Enrolled (hidden) ${dir}`);
 
   await sortBy(shown.MetricID, `${shown.Abbreviation} rate`);
-  await control(page, 'select[data-heatmap]').selectOption('num');
+  await chooseHeatmap(page, 'num');
   dir = await arrow(shown.MetricID);
   expect(await named(), 'heatmap Numerator').toBe(`${shown.Abbreviation} numerator ${dir}`);
   await control(page, `input[data-metric="${shown.MetricID}"]`).uncheck();

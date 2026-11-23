@@ -21,6 +21,13 @@ const logo = `data:image/png;base64,${readFileSync('src/assets/gismo-logo.png').
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <script is:inline>
+      // The Admin panel's theme (#46), applied before the first paint.
+      {
+        const theme = new URLSearchParams(location.hash.slice(1)).get('theme');
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      }
+    </script>
     {viz && <style is:inline set:html={vizCss}></style>}
   </head>
   <body data-page={page}>

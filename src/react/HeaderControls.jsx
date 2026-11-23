@@ -1,27 +1,50 @@
 // @ts-check
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { STATUS_ORDER } from '../data/catalog.js';
-import {
-  CELL_MODES, COLUMN_OPTIONS, FILTER_LABELS, GROUP_BY_OPTIONS, HEATMAPS, cellModeHint, controlStates, showLabel,
-  showOptions,
-} from '../app/portfolio-controls.js';
-import { StatusPill } from './parts.jsx';
+import { COLUMN_OPTIONS, FILTER_LABELS, GROUP_BY_OPTIONS, HEATMAPS, SHOW_OPTIONS, VIEWS, VIEW_HINTS } from '../app/portfolio-controls.js';
+import { AdminMenu } from './AdminPanel.jsx';
+import { useDismiss } from './parts.jsx';
 
 /** The study filter comes first (#22). */
 const FILTER_ORDER = ['study', 'therapeutic_area', 'phase', 'status'];
 
 /**
- * A control; a non-empty `na` disables it, and its trimmed text is the reason shown under it.
- * @param {{ na?: string, children: import('react').ReactNode }} props
+ * The side panel is modal (#46): while it's open, focus moves into it and Tab stays inside it, and when it closes,
+ * focus returns to the button that opened it. Its scrim takes clicks meant for the page behind it.
+ * @param {boolean} active
+ * @param {import('react').RefObject<HTMLElement | null>} panel
+ * @param {import('react').RefObject<HTMLElement | null>} opener
  */
-function Control({ na = '', children }) {
-  return (
-    <div className={`ctl ${na ? 'na' : ''}`} aria-disabled={na ? 'true' : undefined}>
-      {children}
-      {na.trim() && <p className="sb-why">{na}</p>}
-    </div>
-  );
+function useModalFocus(active, panel, opener) {
+  useEffect(() => {
+    const el = panel.current;
+    if (!active || !el) return;
+    const stops = () => /** @type {HTMLElement[]} */ ([...el.querySelectorAll('button, select, input, a[href]')]).filter((e) => !e.hasAttribute('disabled') && e.offsetParent !== null);
+    stops()[0]?.focus();
+    const keep = (/** @type {FocusEvent} */ e) => {
+      if (!el.contains(/** @type {Node} */ (e.target))) stops()[0]?.focus();
+    };
+    const trap = (/** @type {KeyboardEvent} */ e) => {
+      const list = stops();
+      if (e.key !== 'Tab' || !list.length) return;
+      const [first, last] = [list[0], list[list.length - 1]];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    const back = opener.current;
+    document.addEventListener('focusin', keep);
+    el.addEventListener('keydown', trap);
+    return () => {
+      document.removeEventListener('focusin', keep);
+      el.removeEventListener('keydown', trap);
+      back?.focus();
+    };
+  }, [active, panel, opener]);
 }
 
 /**
@@ -55,40 +78,62 @@ function FilterChoices({ store, param, values }) {
 }
 
 /**
- * Config: the table's Collapse all / Expand all toggle, a chip per metric group showing or hiding its band, the display
- * settings, and which metrics are shown.
+ * Config (#47): on the left, Group rows by, the Cell display with Custom's own choices under it, and a chip per metric
+ * group showing or hiding its band; on the right, the optional columns and which metrics are shown.
  * @param {{ store: any }} props
  */
 function ConfigPanel({ store }) {
   const { state } = store;
-  const na = controlStates(store);
-  const defined = state.cellMode === 'defined';
   const supported = store.supportedMetrics();
-  const statusCount = (/** @type {string} */ st) => supported.filter((/** @type {any} */ m) => (m.Status ?? 'Released') === st).length;
-  const collapsed = state.view === 'overview';
-  /**
-   * @param {string} key
-   * @param {string[][]} options
-   */
-  const seg = (key, options) => (
-    <div className="seg" role="group">
-      {options.map(([value, label]) => (
-        <button key={value} type="button" data-seg={key} data-value={value} className={value === state[key] ? 'on' : ''} onClick={() => store.set(key, value)}>
-          {label}
-        </button>
-      ))}
-    </div>
-  );
   return (
     <>
       <div className="cfg-col" data-sec="config">
-        <Control>
-          <label>Table</label>
-          <button type="button" className="chip view-toggle" data-view-toggle="" aria-pressed={!collapsed} onClick={() => store.set('view', collapsed ? 'details' : 'overview')}>
-            {collapsed ? 'Expand all' : 'Collapse all'}
-          </button>
-        </Control>
-        <Control>
+        <div className="ctl">
+          <label>Group rows by</label>
+          <select data-groupby="" value={state.groupBy} onChange={(e) => store.set('groupBy', e.target.value)}>
+            {GROUP_BY_OPTIONS.map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="ctl">
+          <label>Cell display</label>
+          <div className="seg" role="group" aria-label="Cell display">
+            {VIEWS.map(([value, label]) => (
+              <button key={value} type="button" data-display={value} aria-pressed={state.view === value} className={state.view === value ? 'on' : ''} onClick={() => store.set('view', value)}>
+                {label}
+              </button>
+            ))}
+          </div>
+          <p className="sb-hint">{VIEW_HINTS[state.view]}</p>
+        </div>
+        {state.view === 'custom' && (
+          <>
+            <div className="ctl sub">
+              <label>Show in each cell</label>
+              <div className="chips">
+                {SHOW_OPTIONS.map(([k, label]) => (
+                  <button key={k} type="button" className={`chip ${state.show.has(k) ? 'on' : ''}`} data-show={k} aria-pressed={state.show.has(k)} onClick={() => store.toggleShow(k)}>
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="ctl sub">
+              <label>Heatmap (also drives column sort)</label>
+              <select data-heatmap="" value={state.heatmap} onChange={(e) => store.set('heatmap', e.target.value)}>
+                {HEATMAPS.map(([k, label]) => (
+                  <option key={k} value={k}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </>
+        )}
+        <div className="ctl">
           <label>Groups</label>
           <div className="chips">
             {store.groupNames().map((/** @type {string} */ name) => {
@@ -100,34 +145,11 @@ function ConfigPanel({ store }) {
               );
             })}
           </div>
-        </Control>
-        <Control na={na.cellMode}>
-          <label>Cell display</label>
-          {seg('cellMode', CELL_MODES)}
-          {!na.cellMode && <p className="sb-hint">{cellModeHint(defined)}</p>}
-        </Control>
-        <Control na={na.show}>
-          <label>{showLabel(defined)}</label>
-          <div className="chips">
-            {showOptions(defined).map(([k, label]) => (
-              <button key={k} type="button" className={`chip ${state.show.has(k) ? 'on' : ''}`} data-show={k} aria-pressed={state.show.has(k)} onClick={() => store.toggleShow(k)}>
-                {label}
-              </button>
-            ))}
-          </div>
-        </Control>
-        <Control>
-          <label>Heatmap (also drives column sort)</label>
-          <select data-heatmap="" value={state.heatmap} onChange={(e) => store.set('heatmap', e.target.value)}>
-            {HEATMAPS.map(([k, label]) => (
-              <option key={k} value={k}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </Control>
-        <Control>
-          <label>Columns</label>
+        </div>
+      </div>
+      <div className="cfg-col" data-sec="metrics">
+        <div className="ctl">
+          <label>Column grouping</label>
           <div className="chips">
             {COLUMN_OPTIONS.map(([k, label]) => (
               <button key={k} type="button" className={`chip ${state.columns.has(k) ? 'on' : ''}`} data-column={k} aria-pressed={state.columns.has(k)} onClick={() => store.toggleColumn(k)}>
@@ -135,29 +157,9 @@ function ConfigPanel({ store }) {
               </button>
             ))}
           </div>
-        </Control>
-        <Control>
-          <label>Group rows by</label>
-          <select data-groupby="" value={state.groupBy} onChange={(e) => store.set('groupBy', e.target.value)}>
-            {GROUP_BY_OPTIONS.map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </Control>
-      </div>
-      <div className="cfg-col" data-sec="metrics">
+        </div>
         <div className="ctl">
           <label>Metrics</label>
-          <div className="chips">
-            {STATUS_ORDER.filter(statusCount).map((st) => (
-              <button key={st} type="button" className={`chip ${state.statuses.has(st) ? 'on' : ''}`} data-status={st} aria-pressed={state.statuses.has(st)} onClick={() => store.toggleStatus(st)}>
-                {st}
-                <span className="cnt">{statusCount(st)}</span>
-              </button>
-            ))}
-          </div>
         </div>
         <div className="metric-list">
           {store.metricCategories(supported).map((/** @type {any} */ g) => {
@@ -170,17 +172,13 @@ function ConfigPanel({ store }) {
                     {on}/{g.metrics.length}
                   </span>
                 </div>
-                {g.metrics.map((/** @type {any} */ m) => {
-                  const off = !state.statuses.has(m.Status ?? 'Released');
-                  return (
-                    <label key={m.MetricID} className={`metric-opt ${off ? 'status-off' : ''}`} title={`${m.Metric}${off ? ' — hidden by the status filter' : ''}`}>
-                      <input type="checkbox" data-metric={m.MetricID} checked={!state.hiddenMetrics.has(m.MetricID)} onChange={() => store.toggleMetric(m.MetricID)} />
-                      <span className="mono">{m.Abbreviation}</span>
-                      <span className="mname">{m.Metric}</span>
-                      <StatusPill metric={m} />
-                    </label>
-                  );
-                })}
+                {g.metrics.map((/** @type {any} */ m) => (
+                  <label key={m.MetricID} className="metric-opt" title={m.Metric}>
+                    <input type="checkbox" data-metric={m.MetricID} checked={!state.hiddenMetrics.has(m.MetricID)} onChange={() => store.toggleMetric(m.MetricID)} />
+                    <span className="mono">{m.Abbreviation}</span>
+                    <span className="mname">{m.Metric}</span>
+                  </label>
+                ))}
               </div>
             );
           })}
@@ -200,24 +198,15 @@ function Controls({ store }) {
   const [filtersShown, setFiltersShown] = useState(false);
   const [open, setOpen] = useState(/** @type {string | null} */ (null));
   const ref = useRef(/** @type {HTMLDivElement | null} */ (null));
-  useEffect(() => {
-    const onDown = (/** @type {MouseEvent} */ e) => {
-      if (ref.current && !ref.current.contains(/** @type {Node} */ (e.target))) setOpen(null);
-    };
-    const onKey = (/** @type {KeyboardEvent} */ e) => {
-      if (e.key === 'Escape') setOpen(null);
-    };
-    document.addEventListener('mousedown', onDown);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onDown);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, []);
+  useDismiss(ref, () => setOpen(null));
   const toggle = (/** @type {string} */ name) => setOpen((o) => (o === name ? null : name));
   const { state } = store;
   const options = store.filterOptions();
   const active = store.activeFilterCount();
+  const side = state.admin.cfgpanel === 'side';
+  const configButton = useRef(/** @type {HTMLButtonElement | null} */ (null));
+  const configPop = useRef(/** @type {HTMLDivElement | null} */ (null));
+  useModalFocus(side && open === 'config', configPop, configButton);
   return (
     <div className="hctl" ref={ref}>
       <div className="filter-bar" role="group" aria-label="Filters" hidden={!filtersShown}>
@@ -256,10 +245,24 @@ function Controls({ store }) {
         {active > 0 && <span className="badge">{active}</span>}
       </button>
       <div className="popwrap">
-        <button type="button" className="hbtn" data-open="config" aria-expanded={open === 'config'} onClick={() => toggle('config')}>
+        <button type="button" className="hbtn" data-open="config" aria-expanded={open === 'config'} ref={configButton} onClick={() => toggle('config')}>
           Config
         </button>
-        <div className="hpop config-pop" data-pop="config" role="group" aria-label="Config" hidden={open !== 'config'}>
+        {side && open === 'config' && <div className="drawer-scrim" data-scrim="" onClick={() => setOpen(null)} />}
+        <div
+          className={`hpop config-pop ${side ? 'drawer' : ''}`}
+          data-pop="config"
+          role={side ? 'dialog' : 'group'}
+          aria-modal={side ? 'true' : undefined}
+          aria-label="Config"
+          hidden={open !== 'config'}
+          ref={configPop}
+        >
+          {side && (
+            <button type="button" className="drawer-close" data-close="config" aria-label="Close Config" onClick={() => setOpen(null)}>
+              ×
+            </button>
+          )}
           <ConfigPanel store={store} />
         </div>
       </div>
@@ -276,5 +279,13 @@ function Controls({ store }) {
  */
 export function HeaderControls({ store }) {
   const host = typeof document === 'undefined' ? null : document.getElementById('header-controls');
-  return host ? createPortal(<Controls store={store} />, host) : null;
+  return host
+    ? createPortal(
+        <>
+          <Controls store={store} />
+          <AdminMenu admin={store.state.admin} onChange={(key, value) => store.setAdmin(key, value)} />
+        </>,
+        host,
+      )
+    : null;
 }

@@ -1,10 +1,8 @@
 // @ts-check
-import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { attachHoverTooltip, metricTip } from '../app/tooltip.js';
-import { cardRate, cardValue } from '../app/card-value.js';
-import { sparkline } from '../charts/sparkline.js';
+import { cardValue, cardValueTip } from '../app/card-value.js';
 import { esc } from '../util/format.js';
-import { StatusPill } from './parts.jsx';
 import { configProblems, problemText, resolveView } from '../app/references.js';
 import { reportLink } from '../app/report-links.js';
 import { DETAIL_TABS } from '../app/study-page-spec.js';
@@ -12,8 +10,8 @@ import { studyCards } from '../app/study-cards.js';
 import { useStore } from './useStore.js';
 import { Widget } from './Widget.jsx';
 
-// The study overview (#32): one grid of cards, one per widget the tracker requests, in its order; a drill-in panel of
-// gsm.viz charts under a standard KRI's card; and a visit scrubber.
+// The study overview (#32): one grid of cards, one per widget the tracker requests, in its order, at the study's latest
+// snapshot (#48); and a drill-in panel of gsm.viz charts under a standard KRI's card.
 
 const PARAMS = ['therapeutic_area', 'protocol_indication', 'phase', 'status', 'product'];
 
@@ -116,15 +114,6 @@ export function StudyPage({ store, studyId, back }) {
     if (grid.current) fitCards(grid.current, fitState.current);
   });
 
-  // The newest visit clears asOf rather than pinning it, so the page returns to "latest available".
-  const goToVisit = useCallback(
-    (/** @type {number} */ i) => {
-      const clamped = Math.max(0, Math.min(dates.length - 1, i));
-      store.set('asOf', clamped === dates.length - 1 ? null : dates[clamped]);
-    },
-    [store, dates],
-  );
-
   if (!study) return <p className="muted">Unknown study: {studyId}</p>;
 
   const date = store.latestDate(studyId);
@@ -160,7 +149,9 @@ export function StudyPage({ store, studyId, back }) {
             </Fragment>
           ))}
         </span>
-        <VisitScrubber dates={dates} visit={visit} date={date} goToVisit={goToVisit} />
+        <span className="meta snapshot">
+          Latest snapshot: <b>{date ?? '—'}</b>
+        </span>
       </div>
       <div className="tiles cards" ref={grid}>
         {shown.map((card, i) => {
@@ -180,12 +171,13 @@ export function StudyPage({ store, studyId, back }) {
 }
 
 /**
- * A range over the study's snapshot dates. The range commits on `change` (pointer release), not `input`: `input` only
- * retitles the live label, so nothing re-renders mid-drag. Both are native listeners, so a value set by script and
- * then dispatched behaves like a user's.
+ * A range over the study's snapshot dates, unwired since the 23 Nov demo review (#48): the page shows the latest
+ * snapshot only. Kept should earlier snapshots come back; `goToVisit(i)` would set the store's `asOf` to `dates[i]`,
+ * or null for the newest. The range commits on `change` (pointer release), not `input`: `input` only retitles the live
+ * label, so nothing re-renders mid-drag.
  * @param {{ dates: string[], visit: number, date: string | null, goToVisit: (i: number) => void }} props
  */
-function VisitScrubber({ dates, visit, date, goToVisit }) {
+export function VisitScrubber({ dates, visit, date, goToVisit }) {
   const range = useRef(/** @type {HTMLInputElement | null} */ (null));
   const label = useRef(/** @type {HTMLElement | null} */ (null));
 
@@ -226,61 +218,63 @@ function VisitScrubber({ dates, visit, date, goToVisit }) {
 }
 
 /**
- * The card's value at the visit shown, its n / N, and a sparkline of the value at each snapshot up to that visit
- * (#32). The sparkline's hover gives what its accessible label gives.
- * @param {{ metric: any, title: string, store: any, studyId: string }} props
+ * The card's value at the study's latest snapshot and its n / N, on the header's right (#48). Its hover names what n
+ * and N count.
+ * @param {{ metric: any, store: any, studyId: string }} props
  */
-function CardValue({ metric, title, store, studyId }) {
-  const spark = useRef(/** @type {HTMLSpanElement | null} */ (null));
-  const date = store.latestDate(studyId);
-  const value = cardValue(metric, store.studyRollup(studyId, date, metric.MetricID));
-  useLayoutEffect(() => {
-    const el = spark.current;
-    if (!el) return;
-    sparkline(el, store.studyTrend(studyId, metric.MetricID, date), { width: 72, height: 24, label: `${title} trend`, format: (rate) => cardRate(metric, rate), gaps: true });
-    const label = el.querySelector('svg')?.getAttribute('aria-label');
-    if (label) el.dataset.tip = esc(label);
-    else delete el.dataset.tip;
-  });
+function CardValue({ metric, store, studyId }) {
+  const study = store.studyRollup(studyId, store.latestDate(studyId), metric.MetricID);
+  const value = cardValue(metric, study);
   return (
-    <div className="card-value">
-      <div className="card-figs">
-        <span className="card-rate">
-          <b className="big">{value.rate}</b>
-          {value.unit ? <span className="unit">{value.unit}</span> : null}
-        </span>
-        <span className="card-nd">{`${value.n} / ${value.N}`}</span>
-      </div>
-      <span className="spark" ref={spark} />
+    <div className="card-value" data-tip={cardValueTip(metric, study) ?? undefined}>
+      <span className="card-rate">
+        <b className="big">{value.rate}</b>
+        {value.unit ? <span className="unit">{value.unit}</span> : null}
+      </span>
+      <span className="card-nd">{`${value.n} / ${value.N}`}</span>
     </div>
   );
 }
 
 /**
- * One card: its title (whose hover gives the metric's definition), its value, n / N and sparkline, its one widget or
- * the reason it can't show it, and a footer with the detailed-report link and, on a standard KRI, the Charts drill-in.
+ * A breakdown's notes, behind a marker in the card's footer (#48): its hover, or keyboard focus, shows them in full.
+ * @param {{ notes: string[] }} props
+ */
+function NotesMarker({ notes }) {
+  if (!notes.length) return null;
+  return (
+    <button type="button" className="notes" data-notes="" aria-label={`Notes: ${notes.join(' ')}`} data-tip={notes.map(esc).join('<br>')}>
+      * Notes
+    </button>
+  );
+}
+
+/**
+ * One card: a header with its title (whose hover gives the metric's definition) and its value and n / N; its one
+ * widget or the reason it can't show it; and a footer with the breakdown's notes, the detailed-report link and, on a
+ * standard KRI, the Charts drill-in.
  * @param {{ card: import('../app/study-cards.js').Card, open: boolean, store: any, studyId: string, version: number }} props
  */
 export function Card({ card, open, store, studyId, version }) {
   const { spec, metric, def, config, problem, kri } = card;
   const link = metric ? reportLink(metric, store.reportBase, location.href, studyId) : null;
   const toggleDetail = () => store.set('detail', { metricId: open ? null : metric.MetricID, tab: store.state.detail.tab });
+  const [notes, setNotes] = useState('');
   return (
     <div className={kri ? 'tile card kri' : 'tile card'} data-card={spec.id} data-metric-id={metric?.MetricID}>
       <div className="tile-head">
-        {metric ? <span className="abbr">{metric.Abbreviation}</span> : null}
         <span className="name" data-tip={metric ? metricTip(metric) : undefined}>
           {card.title}
         </span>
-        {metric ? <StatusPill metric={metric} /> : null}
+        {def ? <CardValue metric={metric} store={store} studyId={studyId} /> : null}
       </div>
-      {def ? <CardValue metric={metric} title={card.title} store={store} studyId={studyId} /> : null}
       {def ? (
-        <Widget className="tile-body" def={def} metricId={metric.MetricID} config={config} store={store} studyId={studyId} version={version} />
+        <Widget className="tile-body" def={def} metricId={metric.MetricID} config={config} store={store} studyId={studyId} version={version} onResult={(result) => setNotes((result?.notes ?? []).join('\n'))} />
       ) : (
         <div className="tile-body">{problem ? <ProblemNote problem={problem} what="card" /> : null}</div>
       )}
       <div className="tile-foot">
+        <NotesMarker notes={notes ? notes.split('\n') : []} />
         {kri && def ? (
           <button type="button" className={`tile-more ${open ? 'on' : ''}`} data-detail-metric={metric.MetricID} aria-expanded={open} title="Full-size gsm.viz charts" onClick={toggleDetail}>
             Charts {open ? '▴' : '▾'}

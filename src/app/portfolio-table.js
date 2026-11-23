@@ -62,7 +62,8 @@ export const MEASURE_LABELS = { num: 'numerator', den: 'denominator', rate: 'rat
  */
 export function tableRows(store) {
   const { state } = store;
-  const { sort, heatmap } = state;
+  const { sort } = state;
+  const heatmap = store.activeHeatmap();
   const filtered = store.filteredStudies();
   /** @type {Map<string, string>} */
   const latest = store.latestFor(filtered);
@@ -105,7 +106,7 @@ export function tableRows(store) {
     : sorted(
         store.buckets().map((/** @type {any} */ b) =>
           makeRow('bucket', b.studies, String(b.value), b.studies.length, {
-            open: state.expanded.has(String(b.value)),
+            open: !state.collapsed.has(String(b.value)),
             children: sorted(reported(b.studies).map(studyRow)),
           }, history?.get(String(b.value))),
         ),
@@ -143,8 +144,6 @@ export function heatClasses(heatmap, metrics, primary) {
 /** @param {number} n */
 export const snapshotNote = (n) => (n === 1 ? '1 study at its latest snapshot' : `${n} studies, each at its latest snapshot`);
 
-const PLANNED_WARNING = '<br><span class="tip-warn">Planned metric: not yet released</span>';
-
 /**
  * The pooled counts, the denominator named by the metric's catalog label (#20).
  * @param {any} metric
@@ -166,8 +165,7 @@ export function cellTip(rollup, metric, label) {
     `<span class="tip-muted">${esc(metric.Metric)}</span><br>` +
     `${esc(fmtMetric(metric, rollup).text)} <span class="tip-muted">— ${esc(displayLabel(metric))}</span><br>` +
     `${counts(metric, rollup)}${per28 ? ` = ${rollup.Rate.toFixed(4)} / day × ${DAYS_PER_MONTH}` : ` = ${fmtPct(rollup.Rate)}`}<br>` +
-    `${snapshotNote(rollup.NumStudies)}` +
-    (metric.Status === 'Planned' ? PLANNED_WARNING : '')
+    `${snapshotNote(rollup.NumStudies)}`
   );
 }
 
@@ -182,8 +180,7 @@ export function tileTip(rowLabel, metric, rollup) {
     `<b>${esc(rowLabel)} · ${esc(metric.Abbreviation)}</b><br>` +
     `<span class="tip-muted">${esc(metric.Metric)}</span><br>` +
     `${esc(fmtMetric(metric, rollup).text)} <span class="tip-muted">— ${esc(displayLabel(metric))}</span><br>` +
-    counts(metric, rollup) +
-    (metric.Status === 'Planned' ? PLANNED_WARNING : '')
+    counts(metric, rollup)
   );
 }
 
@@ -260,7 +257,7 @@ export function tableShowing(store, filtered, metrics) {
     key === 'label' ? [flat ? 'Study' : 'Group', true]
     : key === 'meta' ? ['Studies', !flat]
     : pop ? [pop.long, pop.key !== 'enroll' || state.columns.has('enroll')]
-    : metric ? [`${metric.Abbreviation} ${MEASURE_LABELS[sortMeasure(state.heatmap)]}`, metrics.includes(metric)]
+    : metric ? [`${metric.Abbreviation} ${MEASURE_LABELS[sortMeasure(store.activeHeatmap())]}`, metrics.includes(metric)]
     : null;
   return {
     lead: `${filtered.length} / ${store.studies.length} studies · ${metrics.length} / ${store.supportedMetrics().length} metrics`,

@@ -5,7 +5,7 @@ import { expect, readData, test } from './fixtures/app.js';
 import { expectSeen } from './fixtures/visible.js';
 import { capturePortfolio } from './fixtures/baseline.js';
 import { shownMetrics } from '../test/qual/pooling.js';
-import { chooseView, control } from './fixtures/controls.js';
+import { chooseView, control, openOnly } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('@playwright/test').Locator} Locator */
 /** @typedef {import('./fixtures/app.js').App} App */
@@ -128,7 +128,7 @@ async function expectTableLinks(page, rows, view, what) {
 }
 
 /** @param {Page} page @param {'overview' | 'details'} view */
-const showView = (page, view) => chooseView(page, view);
+const showView = (page, view) => chooseView(page, view === 'details' ? 'detailed' : 'compact');
 
 /**
  * Follows a link: its report opens in a new tab, and the portfolio's tab keeps its address.
@@ -163,7 +163,7 @@ test('25.01: in Details and Overview, ungrouped and with a group open, every stu
   }
 
   await control(page, 'select[data-groupby]').selectOption('phase');
-  await page.locator(`tr[data-bucket="${open}"] td.grp`).click();
+  await openOnly(page, open);
   for (const view of /** @type {const} */ (['details', 'overview'])) {
     await showView(page, view);
     await expectTableLinks(page, ROWS.phase, view, `${view}, grouped`);
@@ -185,14 +185,13 @@ test('25.02: no cell or tile links when its metric has no report link, or its li
     await showView(page, view);
     for (const group of /** @type {const} */ (['none', 'phase'])) {
       await control(page, 'select[data-groupby]').selectOption(group);
-      if (group === 'phase') await page.locator(`tr[data-bucket="${open}"] td.grp`).click();
+      if (group === 'phase') await openOnly(page, open);
       const found = Object.fromEntries(await tableLinks(page));
       for (const [row, cells] of Object.entries(expectedLinks(ROWS[group], view))) {
         for (const [key, value] of Object.entries(cells)) {
           if (value === '-') expect(found[row]?.[key], `${view}, ${group}: ${row}, ${key}`).toBe('-');
         }
       }
-      if (group === 'phase') await page.locator(`tr[data-bucket="${open}"] td.grp`).click();
     }
   }
   await expect(page.locator('.portfolio-table a[href^="javascript:"], .portfolio-table a[href^="data:"]')).toHaveCount(0);
@@ -203,7 +202,7 @@ test('25.03: linked and unlinked cells and tiles in Details and Overview, for vi
   /** @param {Locator} link @param {string} label */
   const hover = async (link, label) => {
     const style = (/** @type {Locator} */ el) => el.evaluate((e) => [getComputedStyle(e).color, getComputedStyle(e).textDecorationLine]);
-    const unlinked = link.locator('xpath=ancestor::tr').locator(await link.evaluate((a) => (a.matches('.otile') ? 'span.otile:not(.pl)' : 'div.cell')));
+    const unlinked = link.locator('xpath=ancestor::tr').locator(await link.evaluate((a) => (a.matches('.otile') ? 'span.otile' : 'div.cell')));
     expect(await style(link), `${label}: at rest, like an unlinked value`).toEqual([(await style(unlinked.first()))[0], 'none']);
     await link.hover();
     await expectSeen(link, label);

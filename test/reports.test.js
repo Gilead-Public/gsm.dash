@@ -200,7 +200,9 @@ describe('the portfolio document', () => {
       [{ metrics: [studyLevel] }, 'metrics', studyLevel, eligible],
       [{ columns: ['name', 'site'] }, 'columns', 'site', ['name', 'enroll', 'status']],
       [{ columns: 'name' }, 'columns', 'name', ['name', 'enroll', 'status']],
-      [{ view: 'mixed' }, 'view', 'mixed', ['overview', 'details']],
+      [{ view: 'mixed' }, 'view', 'mixed', ['compact', 'detailed', 'custom']],
+      [{ view: 'overview' }, 'view', 'overview', ['compact', 'detailed', 'custom']],
+      [{ view: 'details' }, 'view', 'details', ['compact', 'detailed', 'custom']],
       [{ density: 'roomy' }, 'density', 'roomy', settings],
     ];
     for (const [config, key, value, allowed] of refused) {

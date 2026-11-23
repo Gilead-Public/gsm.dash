@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { metricUnit } from '../util/format.js';
 import { distRow, distShowing, distStudies } from '../app/portfolio-dist.js';
 import { metricTip } from '../app/tooltip.js';
-import { StatusPill, studyHref, useHoverTooltip } from './parts.jsx';
+import { studyHref, useHoverTooltip } from './parts.jsx';
 
 /**
  * The Distribution view: one strip per metric, a dot per study at its latest snapshot, the pooled portfolio value as a
@@ -45,7 +45,6 @@ export function PortfolioDist({ store, hidden }) {
           <span className="ab" data-abbr={m.Abbreviation}>
             {m.Abbreviation}
           </span>
-          <StatusPill metric={m} />
           <span className="u">{metricUnit(m)}</span>
         </div>
         <div className={`track ${sel ? 'dim' : ''}`} role="img" aria-label={`${m.Metric}: ${row.count} studies`}>

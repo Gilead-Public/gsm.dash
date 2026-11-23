@@ -1,37 +1,38 @@
 state: rows-metric-hidden
-canonical dom: sha256 4dec767f3bd2302451ed64ee7402e339d52a31d417d3532e33f564bb2a8b011c (64644 characters)
-computed styles: sha256 e6b020e73224f1118445e10b70f30e6b3bb18c1fd6d32e955f3eca6cc8aa1d09 (426 elements)
+canonical dom: sha256 ecdb244f3db05290ee40db600847d8af5c59db9d7d0ac3b9d86dbec39436e20f (68439 characters)
+computed styles: sha256 9434ee30a01d00a53ac9a9fd329c0a9e4c3d50545131bace36eff86ad3f7823d (438 elements)
 tooltip: none
-cell backgrounds: rgb(237, 240, 238) ×3 | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
+cell backgrounds: rgb(237, 240, 238) ×3 | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 sparklines:
   none
 accessibility:
 - button "Filters 1"
 - button "Config ▾"
 - button "Reset"
+- button "Admin ▾"
 - main:
   - table:
     - rowgroup:
-      - row "Study Population Disposition 5 metrics SDSC TDSC PTDSC WC LTFU Early events 3 metrics Planned DTH30 DTH90 IPNS Eligibility & integrity 3 metrics Planned IE STRAT PFSC Safety & deviations 1 metric LB Data quality 4 metrics QRY OQRY ODAT CDAT":
+      - row "Study Population Disposition 5 metrics SDSC TDSC PTDSC WC LTFU Early events 3 metrics DTH30 DTH90 IPNS Eligibility & integrity 3 metrics IE STRAT PFSC Safety & deviations 5 metrics AE SAE PD IPD LB Data quality 4 metrics QRY OQRY ODAT CDAT":
         - columnheader "Study"
         - columnheader "Population"
         - columnheader "Disposition 5 metrics SDSC TDSC PTDSC WC LTFU"
-        - columnheader "Early events 3 metrics Planned DTH30 DTH90 IPNS"
-        - columnheader "Eligibility & integrity 3 metrics Planned IE STRAT PFSC"
-        - columnheader "Safety & deviations 1 metric LB"
+        - columnheader "Early events 3 metrics DTH30 DTH90 IPNS"
+        - columnheader "Eligibility & integrity 3 metrics IE STRAT PFSC"
+        - columnheader "Safety & deviations 5 metrics AE SAE PD IPD LB"
         - columnheader "Data quality 4 metrics QRY OQRY ODAT CDAT"
       - row "Scr. n":
         - columnheader "Scr. n"
     - rowgroup:
-      - row "Portfolio total 3,233 6.6% 11.5% 9.4% 3.1% 1.9% 0.7% 1.6% 1.5% 4.1% 2.6% 2.5% 4.1% 6.2% 9.2% 11.4% 2.7%":
+      - row "Portfolio total 3,233 6.6% 11.5% 9.4% 3.1% 1.9% 0.7% 1.6% 1.5% 4.1% 2.6% 2.5% 0.98 0.10 0.39 0.06 4.1% 6.2% 9.2% 11.4% 2.7%":
         - cell "Portfolio total"
         - cell "3,233"
         - cell "6.6% 11.5% 9.4% 3.1% 1.9%"
         - cell "0.7% 1.6% 1.5%"
         - cell "4.1% 2.6% 2.5%"
-        - cell "4.1%"
+        - cell "0.98 0.10 0.39 0.06 4.1%"
         - cell "6.2% 9.2% 11.4% 2.7%"
-      - row "STUDY001ATLAS-1 1,341 6.6% 12.2% 8.6% 2.5% 2.6% 0.6% 1.6% 1.5% 3.7% 3.2% 3.2% 5.0% 5.2% 5.5% 10.4% 2.1%":
+      - row "STUDY001ATLAS-1 1,341 6.6% 12.2% 8.6% 2.5% 2.6% 0.6% 1.6% 1.5% 3.7% 3.2% 3.2% 0.86 0.14 0.41 0.05 5.0% 5.2% 5.5% 10.4% 2.1%":
         - cell "STUDY001ATLAS-1":
           - link "STUDY001":
             - /url: study:STUDY001
@@ -44,9 +45,9 @@ accessibility:
             - /url: https://gilead-biostats.github.io/gsm.kri/
           - text: 1.5%
         - cell "3.7% 3.2% 3.2%"
-        - cell "5.0%"
+        - cell "0.86 0.14 0.41 0.05 5.0%"
         - cell "5.2% 5.5% 10.4% 2.1%"
-      - row "STUDY008HARBOR-2 611 5.2% 9.2% 8.8% 2.4% 1.4% 0.4% 1.2% 1.6% 2.8% 2.8% 2.0% 2.2% 6.8% 13.4% 12.2% 3.5%":
+      - row "STUDY008HARBOR-2 611 5.2% 9.2% 8.8% 2.4% 1.4% 0.4% 1.2% 1.6% 2.8% 2.8% 2.0% 1.24 0.09 0.24 0.02 2.2% 6.8% 13.4% 12.2% 3.5%":
         - cell "STUDY008HARBOR-2":
           - link "STUDY008":
             - /url: study:STUDY008
@@ -59,9 +60,9 @@ accessibility:
             - /url: https://gilead-biostats.github.io/gsm.kri/
           - text: 1.6%
         - cell "2.8% 2.8% 2.0%"
-        - cell "2.2%"
+        - cell "1.24 0.09 0.24 0.02 2.2%"
         - cell "6.8% 13.4% 12.2% 3.5%"
-      - row "STUDY012LUMEN-1 1,281 7.3% 11.9% 10.5% 4.1% 1.3% 0.9% 1.9% 1.4% 5.2% 1.8% 2.1% 4.3% 6.8% 9.5% 11.8% 2.8%":
+      - row "STUDY012LUMEN-1 1,281 7.3% 11.9% 10.5% 4.1% 1.3% 0.9% 1.9% 1.4% 5.2% 1.8% 2.1% 0.96 0.08 0.45 0.09 4.3% 6.8% 9.5% 11.8% 2.8%":
         - cell "STUDY012LUMEN-1":
           - link "STUDY012":
             - /url: study:STUDY012
@@ -74,6 +75,6 @@ accessibility:
             - /url: https://gilead-biostats.github.io/gsm.kri/
           - text: 1.4%
         - cell "5.2% 1.8% 2.1%"
-        - cell "4.3%"
+        - cell "0.96 0.08 0.45 0.09 4.3%"
         - cell "6.8% 9.5% 11.8% 2.8%"
-  - text: 3 / 12 studies · 16 / 21 metrics
+  - text: 3 / 12 studies · 20 / 21 metrics

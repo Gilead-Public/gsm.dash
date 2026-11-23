@@ -76,12 +76,12 @@ test.describe('the snapshot cycle', () => {
     await expect(control(page, `input[data-filter="study"][data-value="${off.StudyID}"]`).locator).toHaveCount(0);
   });
 
-  test('14.03: with every study in cycle, the portfolio renders as its recorded baseline in Overview, Details and grouped (#14)', async ({ app, page }) => {
+  test('14.03: with every study in cycle, the portfolio renders as its recorded baseline in Compact, Detailed and grouped (#14)', async ({ app, page }) => {
     await app.open();
     const expectAsRecorded = async (/** @type {string} */ name) => expect.soft((await capturePortfolio(page, name)).text, name).toBe(recorded(name));
-    await expectAsRecorded('table-overview');
-    await chooseView(page, 'details');
-    await expectAsRecorded('table-details');
+    await expectAsRecorded('table-compact');
+    await chooseView(page, 'detailed');
+    await expectAsRecorded('table-detailed');
     await app.open();
     await control(page, 'select[data-groupby]').selectOption('phase');
     await expectAsRecorded('rows-grouped');
@@ -96,7 +96,7 @@ test.describe('the snapshot cycle', () => {
 
   test('14.02: with a study off cycle, each Portfolio total trend keeps that study\'s history before the cycle date and ends on the in-cycle total (#14)', async ({ app, page }) => {
     await app.open('', offCycle);
-    await chooseView(page, 'details');
+    await chooseView(page, 'custom');
     await control(page, 'button[data-show="trend"]').click();
     const history = studies.map((s) => (s === off ? { ...s, snapshots: s.snapshots.filter((d) => d !== cycle.SnapshotDate) } : s));
     const inCycle = studies.filter((s) => s !== off);

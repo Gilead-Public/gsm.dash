@@ -14,10 +14,9 @@ const studies = portfolio.studies;
 const catalog = portfolio.metrics;
 /** @param {string} id */
 const metricOf = (id) => /** @type {MetricMeta} */ (catalog.find((m) => /** @type {any} */ (m).ID === id));
-// A study that started later than most, so its visits are its own rather than the portfolio's dates.
+// A study that started later than most, so its snapshots are its own rather than the portfolio's dates.
 const most = Math.max(...studies.map((s) => s.snapshots.length));
 const study = /** @type {StudyEntry} */ (studies.find((s) => s.snapshots.length < most));
-const dates = study.snapshots;
 /** A shown metric without a card. */
 const cardless = metricOf('ctq0002');
 /** The cards as they should read: each id, title and metric. A standard KRI's card takes its metric's name. */
@@ -45,26 +44,6 @@ const panelChart = (page) =>
     };
   });
 
-/**
- * Moves the visit scrubber as a user releasing the slider would.
- * @param {Page} page
- * @param {number} index
- */
-async function goToVisit(page, index) {
-  await page.locator('input[data-visit]').evaluate((el, i) => {
-    const input = /** @type {HTMLInputElement} */ (el);
-    input.value = String(i);
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    input.dispatchEvent(new Event('change', { bubbles: true }));
-  }, index);
-}
-
-/** @param {Page} page */
-const visitLabel = (page) => page.locator('.visits .meta');
-
-/** @param {number} index */
-const visitText = (index) => new RegExp(`^\\s*Visit ${index + 1}/${dates.length} · ${dates[index]}\\s*$`);
-
 test.describe('study page behaviour', () => {
   test.beforeEach(async ({ app }) => {
     await app.openStudy(study.StudyID);
@@ -88,17 +67,6 @@ test.describe('study page behaviour', () => {
     await expect(tip).toBeVisible();
     await expect(tip).toContainText(metric.Metric);
     await expect(tip).toContainText('Definition');
-  });
-
-  test('12.02: the visit scrubber shows the chosen visit (#12)', async ({ page }) => {
-    expect(dates.length).toBeGreaterThan(3);
-    await expect(visitLabel(page)).toHaveText(visitText(dates.length - 1));
-    await goToVisit(page, 0);
-    await expect(visitLabel(page)).toHaveText(visitText(0));
-    await goToVisit(page, dates.length - 3);
-    await expect(visitLabel(page)).toHaveText(visitText(dates.length - 3));
-    await goToVisit(page, dates.length - 1);
-    await expect(visitLabel(page)).toHaveText(visitText(dates.length - 1));
   });
 
   test('12.02: the chart panel opens across the grid after its standard KRI\'s card, switches tabs, and closes (#12)', async ({ page }) => {
@@ -172,15 +140,15 @@ function trackCharts() {
   /** @type {any} */ (window).__liveCharts = () => live.size;
 }
 
-test('12.02: stepping through visits and switching chart tabs leaves one live gsm.viz chart per chart shown (#12)', async ({ app, page }) => {
+test('12.02: switching the drill-in between cards and between chart tabs leaves one live gsm.viz chart per chart shown (#12)', async ({ app, page }) => {
   await page.addInitScript(trackCharts);
   await app.openStudy(study.StudyID);
   const charts = () => page.evaluate(() => ({ live: /** @type {any} */ (window).__liveCharts(), shown: document.querySelectorAll('.viz canvas').length }));
   await page.locator('button[data-detail-metric]').first().click();
   await expect.poll(charts, 'drill-in opened').toEqual({ live: 1, shown: 1 });
-  for (const index of [0, 1, dates.length - 1, 0]) {
-    await goToVisit(page, index);
-    await expect.poll(charts, `visit ${index + 1}`).toEqual({ live: 1, shown: 1 });
+  for (const at of [1, 2, 0]) {
+    await page.locator('button[data-detail-metric]').nth(at).click();
+    await expect.poll(charts, `the drill-in of KRI card ${at + 1}`).toEqual({ live: 1, shown: 1 });
   }
   for (const name of ['Scatter plot', 'Over time', 'Bar chart']) {
     await page.locator('.detail').getByRole('tab', { name }).click();

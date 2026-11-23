@@ -15,10 +15,28 @@ export function studyHref(store, studyId) {
   return `./${encodeURIComponent(studyId)}.html${view ? `#${view}` : ''}`;
 }
 
-/** @param {{ metric: any }} props */
-export function StatusPill({ metric }) {
-  const status = metric?.Status ?? 'Released';
-  return status === 'Released' ? null : <span className={`pill ${status.toLowerCase()}`}>{status}</span>;
+/**
+ * Calls `dismiss` on a mouse press outside `ref`'s element, or on Escape: how the header's popovers close.
+ * @param {import('react').RefObject<HTMLElement | null>} ref
+ * @param {() => void} dismiss
+ */
+export function useDismiss(ref, dismiss) {
+  const latest = useRef(dismiss);
+  latest.current = dismiss;
+  useEffect(() => {
+    const onDown = (/** @type {MouseEvent} */ e) => {
+      if (ref.current && !ref.current.contains(/** @type {Node} */ (e.target))) latest.current();
+    };
+    const onKey = (/** @type {KeyboardEvent} */ e) => {
+      if (e.key === 'Escape') latest.current();
+    };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [ref]);
 }
 
 /**

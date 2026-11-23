@@ -140,8 +140,9 @@ function header(metric, totals) {
   };
 }
 
-// Status sections (the metric's denominator) show each category's share of their population; reason sections (its
-// numerator) show counts (design follow-up, 2026-11-13).
+// Status sections (the metric's denominator) show each category's share of their population and its count (#48);
+// reason sections (its numerator) show counts (design follow-up, 2026-11-13). `population` names what the section's
+// total counts, as in "% of 366 enrolled" (#48).
 function section(s, { config, maxBars }) {
   const sc = config.sections?.[sectionKey(s.Source, s.Variable)] ?? {};
   const isStatus = (config.statusVariables ?? []).includes(s.Variable);
@@ -177,7 +178,7 @@ function section(s, { config, maxBars }) {
     variable: s.Variable,
     title: sc.title ?? s.Variable,
     display,
-    valueLabel: display === 'percent' ? (sc.percentLabel ?? config.percentLabel ?? '%') : 'n',
+    population: sc.of ?? null,
     total: s.Total,
     isStatus,
     bars,

@@ -6,23 +6,44 @@ import {
   POP_COLUMNS, MEASURE_LABELS, cellTip, enrollTarget, heatClasses, metricHeadTip, popHeadTip, popTip, popValue, sortMeasure,
   studyTip, tableRows, tableShowing, tileTip,
 } from '../app/portfolio-table.js';
-import { MetricValue, Sparkline, StatusPill, studyHref, useHoverTooltip } from './parts.jsx';
+import { MetricValue, Sparkline, studyHref, useHoverTooltip } from './parts.jsx';
 /** @typedef {import('../app/portfolio-table.js').Row} Row */
 
 const LINK_HINT = 'Open the detailed report in a new tab';
 
 /**
+ * The heatmap's key (#46): its measure, and its four shades from lower to higher, each column shaded within its own
+ * range.
+ * @param {{ measure: string }} props
+ */
+function HeatLegend({ measure }) {
+  return (
+    <div className="heat-legend" data-legend="">
+      <span>Heatmap: {measure}, shaded within each column</span>
+      <span className="heat-scale">
+        lower
+        {[1, 2, 3, 4].map((i) => (
+          <i key={i} className={`hot${i}`} />
+        ))}
+        higher
+      </span>
+    </div>
+  );
+}
+
+/**
  * The portfolio table: the portfolio total, then a row per study or per group-by bucket. A folded category shows one
- * headline tile per metric (Overview); an open one shows full cells (Details). Clicking a study's name opens its
+ * headline tile per metric (Compact); an open one shows full cells (Detailed and Custom). Clicking a study's name opens its
  * report, and its cells and tiles open their metric's detailed report in a new tab (#25).
  * @param {{ store: any }} props
  */
 export function PortfolioTable({ store }) {
   const ref = useHoverTooltip();
   const { state } = store;
-  const { sort, heatmap } = state;
+  const { sort } = state;
+  const heatmap = store.activeHeatmap();
   const metrics = store.visibleMetrics();
-  const groups = store.metricCategories(metrics).map((/** @type {any} */ g) => ({ ...g, collapsed: state.view === 'overview' }));
+  const groups = store.metricCategories(metrics).map((/** @type {any} */ g) => ({ ...g, collapsed: state.view === 'compact' }));
   const { filtered, latest, flat, total, primary } = tableRows(store);
   const heatClass = heatClasses(heatmap, metrics, primary);
   const measureLabel = MEASURE_LABELS[sortMeasure(heatmap)];
@@ -36,7 +57,7 @@ export function PortfolioTable({ store }) {
     const target = /** @type {Element} */ (e.target);
     if (target.closest('a[href]')) return;
     const bucketCell = target.closest('tr[data-bucket] td.grp');
-    if (bucketCell) return store.toggleExpanded(/** @type {HTMLElement} */ (bucketCell.parentElement).dataset.bucket);
+    if (bucketCell) return store.toggleBucketOpen(/** @type {HTMLElement} */ (bucketCell.parentElement).dataset.bucket);
     const th = target.closest('th[data-sort]');
     if (th instanceof HTMLElement) return store.toggleSort(th.dataset.sort, { numeric: th.dataset.sort !== 'label' });
   };
@@ -81,14 +102,10 @@ export function PortfolioTable({ store }) {
             </th>
           );
         }
-        const statuses = new Set(g.metrics.map((/** @type {any} */ m) => m.Status ?? 'Released'));
         return (
           <th key={g.category} rowSpan={2} className="bandh gs closed" data-band={g.category}>
             {g.category}
-            <span className="u">
-              {`${n} metric${n === 1 ? '' : 's'}`}
-              {statuses.size === 1 && <StatusPill metric={g.metrics[0]} />}
-            </span>
+            <span className="u">{`${n} metric${n === 1 ? '' : 's'}`}</span>
             <span className="otiles">
               {g.metrics.map((/** @type {any} */ m) => (
                 <span key={m.MetricID} className="tlab" data-abbr={m.Abbreviation} data-tip={metricTip(m, { technical: false })}>
@@ -127,10 +144,9 @@ export function PortfolioTable({ store }) {
                 <>
                   {m.Abbreviation}
                   <span className="u">{metricUnit(m)}</span>
-                  <StatusPill metric={m} />
                 </>
               ),
-              classes: `${i === 0 ? 'gs' : ''} ${m.Status === 'Planned' ? 'planned' : ''}`,
+              classes: i === 0 ? 'gs' : '',
               tip: metricHeadTip(m, measureLabel),
               abbr: m.Abbreviation,
             }),
@@ -163,8 +179,8 @@ export function PortfolioTable({ store }) {
   };
 
   /**
-   * An open cell: in "defined" mode the metric's display rule, in "custom" mode the chosen counts and rate; either way
-   * with the trend under it when chosen.
+   * An open cell: under Detailed the metric's display rule; under Custom the chosen counts and rate, with the trend
+   * under them when chosen (#47).
    * @param {Row} row
    * @param {any} metric
    * @param {boolean} first
@@ -172,10 +188,11 @@ export function PortfolioTable({ store }) {
   const cell = (row, metric, first) => {
     const rollup = row.rollup(metric.MetricID);
     const label = `${row.label} · ${metric.Abbreviation}`;
-    const { show, cellMode } = state;
+    const { show } = state;
+    const custom = state.view === 'custom';
     /** @type {import('react').ReactNode[]} */
     const lines = [];
-    if (cellMode === 'defined') {
+    if (!custom) {
       lines.push(
         <span key="main" className="cell-main">
           <MetricValue metric={metric} rollup={rollup} />
@@ -198,10 +215,10 @@ export function PortfolioTable({ store }) {
         );
       }
     }
-    if (show.has('trend')) lines.push(<Sparkline key="trend" index={sparks++} series={row.trend(metric.MetricID)} label={`${label} trend`} />);
+    if (custom && show.has('trend')) lines.push(<Sparkline key="trend" index={sparks++} series={row.trend(metric.MetricID)} label={`${label} trend`} />);
     const href = linkFor(row, metric);
     return (
-      <td key={metric.MetricID} className={`${first ? 'gs ' : ''}${heatClass(row, metric)} ${metric.Status === 'Planned' ? 'planned' : ''}`} data-tip={cellTip(rollup, metric, label)}>
+      <td key={metric.MetricID} className={`${first ? 'gs ' : ''}${heatClass(row, metric)}`} data-tip={cellTip(rollup, metric, label)}>
         {href ? (
           <a className="cell" href={href} target="_blank" rel="noopener" title={LINK_HINT}>
             {lines}
@@ -222,7 +239,7 @@ export function PortfolioTable({ store }) {
               <span className="otiles">
                 {g.metrics.map((/** @type {any} */ m) => {
                   const rollup = row.rollup(m.MetricID);
-                  const className = `otile ${m.Status === 'Planned' ? 'pl' : ''} ${heatClass(row, m)}`;
+                  const className = `otile ${heatClass(row, m)}`;
                   const tip = tileTip(row.label, m, rollup);
                   const href = linkFor(row, m);
                   return href ? (
@@ -313,6 +330,7 @@ export function PortfolioTable({ store }) {
           <tbody>{body}</tbody>
         </table>
       </div>
+      {state.admin.legend === 'on' && heatmap !== 'none' && <HeatLegend measure={MEASURE_LABELS[heatmap]} />}
       <div className="showing">
         {showing.lead}
         {showing.highlight && (

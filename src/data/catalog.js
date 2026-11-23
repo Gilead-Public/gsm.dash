@@ -6,10 +6,6 @@
 export const CATEGORY_ORDER = ['Disposition', 'Early events', 'Eligibility & integrity', 'Safety & deviations', 'Data quality'];
 export const OTHER_CATEGORY = 'Other';
 
-// Tracker lifecycle: Released (in production), New (in development), Planned
-// (owned by a roadmap Requirement, not yet built).
-export const STATUS_ORDER = ['Released', 'New', 'Planned'];
-
 /**
  * Group metrics into category buckets in CATEGORY_ORDER; metrics with an
  * unknown or missing Category land in a trailing "Other" bucket. Metric order

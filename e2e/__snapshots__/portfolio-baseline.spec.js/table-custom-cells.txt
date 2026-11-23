@@ -1,6 +1,6 @@
 state: table-custom-cells
-canonical dom: sha256 c82503971cbd94a1101e7420b828f4a0ce39f84645ae30785a82c18eeafd615b (409572 characters)
-computed styles: sha256 7c689c3ed0a7656609d8c74dfaaf97598ae54ae6a2859a43d3431c23dd9fb199 (2857 elements)
+canonical dom: sha256 ee5ac049a1ae1091f94e5a24854c24088b8301c4f41e829353f86c29edd9916f (399424 characters)
+computed styles: sha256 dc91d24eec4d18a9d7f82e0a3773b6e80568b096beb5d30fb47ddaa504f28b32 (2849 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×2 | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) | rgb(214, 228, 245) ×7 | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) ×3 | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) ×2 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(238, 244, 251) ×3 | rgb(134, 169, 216) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) ×2 | rgb(134, 169, 216) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) ×2 | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(214, 228, 245) ×3 | rgb(179, 203, 233) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(179, 203, 233) ×2 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) ×3 | rgb(214, 228, 245) | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) | rgb(134, 169, 216) ×2 | rgb(179, 203, 233) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(134, 169, 216) ×2 | rgb(238, 244, 251) | rgb(134, 169, 216) ×2 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(134, 169, 216) ×2 | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) | rgb(179, 203, 233) ×2 | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) ×2 | rgb(179, 203, 233) | rgb(134, 169, 216) ×2 | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×4 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(134, 169, 216) ×2 | rgb(214, 228, 245) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) ×2 | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(134, 169, 216) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(134, 169, 216) ×2 | rgb(238, 244, 251) | rgb(214, 228, 245) ×2 | rgb(134, 169, 216) ×2 | rgb(179, 203, 233) | rgb(134, 169, 216) ×3 | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(238, 244, 251)
 sparklines:
@@ -281,6 +281,7 @@ accessibility:
 - button "Filters"
 - button "Config ▾"
 - button "Reset"
+- button "Admin ▾"
 - main:
   - table:
     - rowgroup:
@@ -292,24 +293,24 @@ accessibility:
         - columnheader "Eligibility & integrity3"
         - columnheader "Safety & deviations5"
         - columnheader "Data quality4"
-      - row "Scr. n SF % scr. SDSC n (% enr.) TDSC n (% dosed) PTDSC n (% dosed) Planned WC n (% enr.) Planned LTFU n (% enr.) Planned DTH30 n (% enr.) Planned DTH90 n (% enr.) Planned IPNS n (% enr.) Planned IE n (% enr.) Planned STRAT n (% enr.) Planned PFSC n (% enr.) Planned AE / 28 d New SAE / 28 d New PD / 28 d New IPD / 28 d New LB n (%) QRY % OQRY % ODAT % CDAT %":
+      - row "Scr. n SF % scr. SDSC n (% enr.) TDSC n (% dosed) PTDSC n (% dosed) WC n (% enr.) LTFU n (% enr.) DTH30 n (% enr.) DTH90 n (% enr.) IPNS n (% enr.) IE n (% enr.) STRAT n (% enr.) PFSC n (% enr.) AE / 28 d SAE / 28 d PD / 28 d IPD / 28 d LB n (%) QRY % OQRY % ODAT % CDAT %":
         - columnheader "Scr. n"
         - columnheader "SF % scr."
         - columnheader "SDSC n (% enr.)"
         - columnheader "TDSC n (% dosed)"
-        - columnheader "PTDSC n (% dosed) Planned"
-        - columnheader "WC n (% enr.) Planned"
-        - columnheader "LTFU n (% enr.) Planned"
-        - columnheader "DTH30 n (% enr.) Planned"
-        - columnheader "DTH90 n (% enr.) Planned"
-        - columnheader "IPNS n (% enr.) Planned"
-        - columnheader "IE n (% enr.) Planned"
-        - columnheader "STRAT n (% enr.) Planned"
-        - columnheader "PFSC n (% enr.) Planned"
-        - columnheader "AE / 28 d New"
-        - columnheader "SAE / 28 d New"
-        - columnheader "PD / 28 d New"
-        - columnheader "IPD / 28 d New"
+        - columnheader "PTDSC n (% dosed)"
+        - columnheader "WC n (% enr.)"
+        - columnheader "LTFU n (% enr.)"
+        - columnheader "DTH30 n (% enr.)"
+        - columnheader "DTH90 n (% enr.)"
+        - columnheader "IPNS n (% enr.)"
+        - columnheader "IE n (% enr.)"
+        - columnheader "STRAT n (% enr.)"
+        - columnheader "PFSC n (% enr.)"
+        - columnheader "AE / 28 d"
+        - columnheader "SAE / 28 d"
+        - columnheader "PD / 28 d"
+        - columnheader "IPD / 28 d"
         - columnheader "LB n (%)"
         - columnheader "QRY %"
         - columnheader "OQRY %"

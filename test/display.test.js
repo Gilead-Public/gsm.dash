@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { fmtInt, fmtRate, fmtMetric, metricUnit, ndLine, displayRate } from '../src/util/format.js';
-import { groupByCategory, CATEGORY_ORDER, OTHER_CATEGORY, STATUS_ORDER } from '../src/data/catalog.js';
+import { groupByCategory, CATEGORY_ORDER, OTHER_CATEGORY } from '../src/data/catalog.js';
 import { normalizeMetric } from '../src/data/normalize.js';
 import { PortfolioStore } from '../src/data/store.js';
 import { generatePortfolio } from '../scripts/generate-example-data.mjs';
@@ -70,19 +70,16 @@ describe('catalog in the example portfolio', () => {
   it('assigns every site-level metric a known category and status', () => {
     for (const m of store.supportedMetrics()) {
       expect(CATEGORY_ORDER).toContain(m.Category);
-      expect(STATUS_ORDER).toContain(m.Status);
+      expect(['Released', 'New', 'Planned']).toContain(m.Status);
     }
   });
 
-  it('filters visible metrics by status', () => {
-    const all = store.visibleMetrics().length;
-    const planned = store.visibleMetrics().filter((m) => m.Status === 'Planned').length;
-    expect(planned).toBeGreaterThan(0);
-    store.toggleStatus('Planned');
-    expect(store.visibleMetrics().length).toBe(all - planned);
-    expect(store.visibleMetrics().some((m) => m.Status === 'Planned')).toBe(false);
-    store.toggleStatus('Planned');
-    expect(store.visibleMetrics().length).toBe(all);
+  it('46.07: shows every site-level metric whatever its status, and drops an address\'s statuses (#46)', () => {
+    expect(store.supportedMetrics().some((m) => m.Status === 'Planned')).toBe(true);
+    expect(store.visibleMetrics()).toEqual(store.supportedMetrics());
+    store.applyProgramParams(new URLSearchParams('statuses=Released'));
+    expect(store.visibleMetrics()).toEqual(store.supportedMetrics());
+    expect(store.programParams().has('statuses')).toBe(false);
   });
 
   it('sums screened ≥ enrolled ≥ dosed populations across studies', () => {

@@ -3,7 +3,7 @@
 // view survives a reload and the trip to a study report and back under any configuration.
 import { expect, readData, test } from './fixtures/app.js';
 import { canonicalDom, capturePortfolio } from './fixtures/baseline.js';
-import { chooseView, closeControls, control } from './fixtures/controls.js';
+import { chooseHeatmap, chooseView, closeControls, control } from './fixtures/controls.js';
 import { visibleLines } from './fixtures/visible.js';
 import { shownMetrics } from '../test/qual/pooling.js';
 import { cardMetrics, withCards } from './fixtures/tiles.js';
@@ -17,7 +17,7 @@ const catalog = portfolio.metrics;
 /** @type {Array<{ StudyID: string, params: Record<string, string> }>} */
 const studies = portfolio.studies;
 const eligible = catalog.filter((m) => m.Active !== false && m.GroupLevel === 'Site').map((m) => m.MetricID);
-const CONFIG = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'], view: 'details' };
+const CONFIG = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'], view: 'custom' };
 const study = 'STUDY004';
 const studyParams = /** @type {{ params: Record<string, string> }} */ (studies.find((s) => s.StudyID === study)).params;
 
@@ -34,39 +34,36 @@ const tableMarkup = (page) => page.locator('.portfolio-table table.po').evaluate
 /** @param {Page} page */
 async function controls(page) {
   return {
-    view: (await control(page, 'button[data-view-toggle]').getAttribute('aria-pressed')) === 'true' ? 'details' : 'overview',
+    view: await control(page, 'button[data-display][aria-pressed="true"]').getAttribute('data-display'),
     groupBy: await control(page, 'select[data-groupby]').inputValue(),
-    heatmap: await control(page, 'select[data-heatmap]').inputValue(),
+    // The heatmap's control shows under Custom only (#47).
+    heatmap: (await control(page, 'select[data-heatmap]').locator.count()) ? await control(page, 'select[data-heatmap]').inputValue() : null,
     hidden: (await control(page, 'input[data-metric]:not(:checked)').locator.evaluateAll((els) => els.map((e) => e.getAttribute('data-metric')))).sort(),
     shown: (await control(page, 'input[data-metric]:checked').locator.evaluateAll((els) => els.map((e) => e.getAttribute('data-metric')))).sort(),
   };
 }
 
 /**
- * The table in Overview and in Details, ending in Overview. Cell display is set in Details: Overview shows one headline
- * value per metric and disables it.
+ * The table under each Cell display (#47), ending in Custom.
  * @param {Page} page
  */
-async function bothViews(page) {
-  await chooseView(page, 'overview');
-  await page.mouse.move(0, 0);
-  const overview = await tableMarkup(page);
-  await chooseView(page, 'details');
-  await page.mouse.move(0, 0);
-  const details = await tableMarkup(page);
-  await chooseView(page, 'overview');
-  return { overview, details };
+async function allViews(page) {
+  /** @type {Record<string, string>} */
+  const out = {};
+  for (const view of /** @type {const} */ (['compact', 'detailed', 'custom'])) {
+    await chooseView(page, view);
+    await page.mouse.move(0, 0);
+    out[view] = await tableMarkup(page);
+  }
+  return out;
 }
 
 /**
- * The Show in each cell chips under Custom cell display, read with Custom on, leaving the cell display as it was.
+ * The Show in each cell chips, which Config shows under Custom only (#47).
  * @param {Page} page
  */
 async function customChips(page) {
-  const was = await control(page, 'button[data-seg="cellMode"].on').getAttribute('data-value');
-  await control(page, 'button[data-seg="cellMode"][data-value="custom"]').click();
   const chips = await control(page, 'button[data-show]').locator.evaluateAll((els) => els.map((e) => [e.getAttribute('data-show'), e.getAttribute('aria-pressed')]));
-  if (was !== 'custom') await control(page, `button[data-seg="cellMode"][data-value="${was}"]`).click();
   return Object.fromEntries(chips);
 }
 
@@ -74,23 +71,20 @@ test('16.01: with every setting configured away from its built-in default, the p
   // The same view reached through the controls, without configuration.
   await app.openReport('portfolio');
   await control(page, 'select[data-groupby]').selectOption('phase');
-  await control(page, 'select[data-heatmap]').selectOption('rate');
-  await chooseView(page, 'details');
-  await control(page, 'button[data-seg="cellMode"][data-value="custom"]').click();
+  await chooseHeatmap(page, 'rate');
   for (const part of ['num', 'rate', 'den', 'trend']) await control(page, `button[data-show="${part}"]`).click();
-  await control(page, 'button[data-seg="cellMode"][data-value="defined"]').click();
-  await chooseView(page, 'overview');
   for (const id of CONFIG.metrics) await control(page, `input[data-metric="${id}"]`).uncheck();
-  const reference = await bothViews(page);
+  const reference = await allViews(page);
 
   await app.openReport('portfolio', configured(CONFIG));
   const shown = await controls(page);
-  expect([shown.view, shown.groupBy, shown.heatmap]).toEqual(['details', 'phase', 'rate']);
+  expect([shown.view, shown.groupBy, shown.heatmap]).toEqual(['custom', 'phase', 'rate']);
   await page.mouse.move(0, 0);
-  expect(await tableMarkup(page), 'the table opens in Details').toEqual(reference.details);
+  expect(await tableMarkup(page), 'the table opens in Custom').toEqual(reference.custom);
   expect(shown.hidden).toEqual([...CONFIG.metrics].sort());
   expect(shown.shown).toEqual(eligible.filter((id) => !CONFIG.metrics.includes(id)).sort());
-  expect(await bothViews(page), 'the table equals the same view set through the controls, in Overview and Details').toEqual(reference);
+  expect(await customChips(page)).toEqual({ num: 'false', den: 'true', rate: 'false', trend: 'true' });
+  expect(await allViews(page), 'the table equals the same view set through the controls, under each Cell display').toEqual(reference);
 
   const table = page.locator('.portfolio-table table.po');
   const phases = [...new Set(studies.map((s) => s.params.phase))].sort((a, b) => a.localeCompare(b));
@@ -103,54 +97,54 @@ test('16.01: with every setting configured away from its built-in default, the p
     }),
   );
   expect(buckets, 'grouped by phase').toEqual(phases);
-  expect(await table.locator('.otile[class*="hot"]').count(), 'cells shaded by rate').toBeGreaterThan(0);
+  expect(await table.locator('td[class*="hot"]').count(), 'cells shaded by rate').toBeGreaterThan(0);
+  await chooseView(page, 'compact');
   const columns = await table.locator('thead th.bandh .tlab').allTextContents();
   const abbr = (/** @type {string} */ id) => catalog.find((m) => m.MetricID === id)?.Abbreviation;
   expect(columns.map((c) => c.trim()).sort(), 'every eligible metric but the hidden ones').toEqual(
     eligible.filter((id) => !CONFIG.metrics.includes(id)).map(abbr).sort(),
   );
-  await chooseView(page, 'details');
-  expect(await customChips(page)).toEqual({ num: 'false', den: 'true', rate: 'false', trend: 'true' });
 });
 
 /**
- * Settings away from the configuration, through the controls. The configuration opens in Details, where the cell
- * display is set, so each change ends by choosing Overview, the built-in default.
+ * Settings away from the configuration, through the controls. The configuration opens in Custom, where the heatmap and
+ * the cell contents are set; each change ends on the Cell display it is checked under.
  * @type {Record<string, (page: Page) => Promise<void>>}
  */
 const CHANGES = {
   'as configured': async () => {},
   'changed to other values': async (page) => {
     await control(page, 'select[data-groupby]').selectOption('status');
-    await control(page, 'select[data-heatmap]').selectOption('num');
-    await control(page, 'button[data-seg="cellMode"][data-value="custom"]').click();
+    await chooseHeatmap(page, 'num');
     for (const part of ['den', 'num']) await control(page, `button[data-show="${part}"]`).click();
     await control(page, 'input[data-metric="Analysis_kri0003"]').check();
     await control(page, 'input[data-metric="Analysis_kri0005"]').uncheck();
-    await chooseView(page, 'overview');
+    await chooseView(page, 'detailed');
   },
   'changed back to the built-in defaults': async (page) => {
     await control(page, 'select[data-groupby]').selectOption('none');
-    await control(page, 'select[data-heatmap]').selectOption('none');
-    await control(page, 'button[data-seg="cellMode"][data-value="custom"]').click();
+    await chooseHeatmap(page, 'none');
     for (const part of ['den', 'trend', 'num', 'rate']) await control(page, `button[data-show="${part}"]`).click();
-    await control(page, 'button[data-seg="cellMode"][data-value="defined"]').click();
     for (const id of CONFIG.metrics) await control(page, `input[data-metric="${id}"]`).check();
-    await chooseView(page, 'overview');
+    await chooseView(page, 'compact');
   },
 };
+/** @type {Record<string, string>} */
+const LEFT_IN = { 'as configured': 'custom', 'changed to other values': 'detailed', 'changed back to the built-in defaults': 'compact' };
 
 test('16.03: under a configuration, the portfolio comes back as it was left after a reload and after a study report and its back link, and the study report shows exactly the metrics the portfolio showed (#16)', async ({ app, page }) => {
   for (const [what, change] of Object.entries(CHANGES)) {
     await app.openReport('portfolio', configured(CONFIG));
     await change(page);
     const groupBy = await control(page, 'select[data-groupby]').inputValue();
-    if (groupBy !== 'none') await page.locator(`tr[data-bucket="${studyParams[groupBy]}"] td.grp`).click();
+    // Groups open by default (#47): close one other than the study's, so the study's link stays in view.
+    const other = groupBy === 'none' ? null : studies.map((s) => s.params[groupBy]).find((v) => v !== studyParams[groupBy]);
+    if (other) await page.locator(`tr[data-bucket="${other}"] td.grp`).click();
     await page.mouse.move(0, 0);
     const left = page.url();
     const before = await capturePortfolio(page, 'before leaving');
     const { shown, view } = await controls(page);
-    expect(view, `${what}: the view`).toBe(what === 'as configured' ? 'details' : 'overview');
+    expect(view, `${what}: the view`).toBe(LEFT_IN[what]);
     if (what === 'changed back to the built-in defaults') expect(shown, `${what}: every metric shown`).toEqual([...eligible].sort());
     else expect(shown.length, what).toBeLessThan(eligible.length);
 

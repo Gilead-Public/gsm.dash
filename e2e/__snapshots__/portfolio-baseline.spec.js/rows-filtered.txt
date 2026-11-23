@@ -1,6 +1,6 @@
 state: rows-filtered
-canonical dom: sha256 eeb439ad5c19fbab1f8e94d00aa499febb8f40be047af746cc743c3a38af7e9d (74030 characters)
-computed styles: sha256 f549b7d1b057ee45d236c984b5bd7a08b47dc59988667db317baf1807f982596 (451 elements)
+canonical dom: sha256 d2dd971bfa5417a308d2eb34c486213f36fc3b151664c4bf074054683e0b8cbb (70316 characters)
+computed styles: sha256 8555be60dafd8da5f19877786649d1f87aef9291c5cfd17943c1c03896bd33bb (443 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×3 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 sparklines:
@@ -9,15 +9,16 @@ accessibility:
 - button "Filters 1"
 - button "Config ▾"
 - button "Reset"
+- button "Admin ▾"
 - main:
   - table:
     - rowgroup:
-      - row "Study Population Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU Early events 3 metrics Planned DTH30 DTH90 IPNS Eligibility & integrity 3 metrics Planned IE STRAT PFSC Safety & deviations 5 metrics AE SAE PD IPD LB Data quality 4 metrics QRY OQRY ODAT CDAT":
+      - row "Study Population Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU Early events 3 metrics DTH30 DTH90 IPNS Eligibility & integrity 3 metrics IE STRAT PFSC Safety & deviations 5 metrics AE SAE PD IPD LB Data quality 4 metrics QRY OQRY ODAT CDAT":
         - columnheader "Study"
         - columnheader "Population"
         - columnheader "Disposition 6 metrics SF SDSC TDSC PTDSC WC LTFU"
-        - columnheader "Early events 3 metrics Planned DTH30 DTH90 IPNS"
-        - columnheader "Eligibility & integrity 3 metrics Planned IE STRAT PFSC"
+        - columnheader "Early events 3 metrics DTH30 DTH90 IPNS"
+        - columnheader "Eligibility & integrity 3 metrics IE STRAT PFSC"
         - columnheader "Safety & deviations 5 metrics AE SAE PD IPD LB"
         - columnheader "Data quality 4 metrics QRY OQRY ODAT CDAT"
       - row "Scr. n":

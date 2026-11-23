@@ -9,7 +9,7 @@
 // cell's background, and any open tooltip. The canonical DOM lets the React page be compared with the same records.
 import { readData, test } from './fixtures/app.js';
 import { capturePortfolio as capture, expectRecorded } from './fixtures/baseline.js';
-import { chooseView, control } from './fixtures/controls.js';
+import { chooseHeatmap, chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 /** @typedef {import('@playwright/test').TestInfo} TestInfo */
 
@@ -31,35 +31,32 @@ async function expectState(page, testInfo, name) {
 
 
 test.describe('the portfolio against its recorded baseline', () => {
-  test('11.03: the table matches its baseline in Overview and Details, sorted both ways, with a heatmap and with each cell display (#11)', async ({ app, page }, testInfo) => {
+  test('11.03: the table matches its baseline under each Cell display, sorted both ways, and with a heatmap (#11)', async ({ app, page }, testInfo) => {
     await app.open();
-    await expectState(page, testInfo, 'table-overview');
-    await chooseView(page, 'details');
-    await expectState(page, testInfo, 'table-details');
+    await expectState(page, testInfo, 'table-compact');
+    await chooseView(page, 'detailed');
+    await expectState(page, testInfo, 'table-detailed');
     const column = await page.locator('th.sortable[data-sort^="Analysis_"]').first().getAttribute('data-sort');
     await page.locator(`th[data-sort="${column}"]`).click();
     await expectState(page, testInfo, 'table-sorted-once');
     await page.locator(`th[data-sort="${column}"]`).click();
     await expectState(page, testInfo, 'table-sorted-twice');
-    await control(page, 'select[data-heatmap]').selectOption('rate');
+    await chooseHeatmap(page, 'rate');
     await expectState(page, testInfo, 'table-heatmap-rate');
-    await control(page, 'button[data-seg="cellMode"][data-value="custom"]').click();
     for (const show of ['num', 'den', 'trend']) await control(page, `button[data-show="${show}"]`).click();
     await expectState(page, testInfo, 'table-custom-cells');
   });
 
-  test('11.03: the table matches its baseline grouped with a group open, filtered, and with a status and a metric hidden (#11)', async ({ app, page }, testInfo) => {
+  test('11.03: the table matches its baseline grouped with every group open and with one closed, filtered, and with a metric hidden (#11)', async ({ app, page }, testInfo) => {
     await app.open();
     await control(page, 'select[data-groupby]').selectOption('phase');
     await expectState(page, testInfo, 'rows-grouped');
     await page.locator('tr[data-bucket] td.grp').first().click();
-    await expectState(page, testInfo, 'rows-group-open');
+    await expectState(page, testInfo, 'rows-group-closed');
     await control(page, 'select[data-groupby]').selectOption('none');
     const area = studies[0].params.therapeutic_area;
     await control(page, `button[data-filter="therapeutic_area"][data-value="${area}"]`).click();
     await expectState(page, testInfo, 'rows-filtered');
-    await control(page, 'button[data-status="New"]').click();
-    await expectState(page, testInfo, 'rows-status-hidden');
     const first = await control(page, 'input[type="checkbox"][data-metric]').locator.first().getAttribute('data-metric');
     await control(page, `input[data-metric="${first}"]`).uncheck();
     await expectState(page, testInfo, 'rows-metric-hidden');
@@ -69,7 +66,7 @@ test.describe('the portfolio against its recorded baseline', () => {
     await app.open();
     await page.locator('#app .otile').first().hover();
     await expectState(page, testInfo, 'tooltip-table-cell');
-    await chooseView(page, 'details');
+    await chooseView(page, 'detailed');
     await page.locator('#app thead th[data-sort^="Analysis_"]').first().hover();
     await expectState(page, testInfo, 'tooltip-table-header');
   });

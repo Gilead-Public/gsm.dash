@@ -23,9 +23,9 @@ export function hideTooltip() {
 }
 
 /**
- * Delegate hover tooltips for every `[data-tip]` inside `host`. Idempotent per
- * element, so a component may call it from connectedCallback without stacking
- * listeners across re-connects.
+ * Delegate hover tooltips for every `[data-tip]` inside `host`, and show the same tip while one that can take focus
+ * has keyboard focus (#48); blur or Escape hides it. Idempotent per element, so a component may call it from
+ * connectedCallback without stacking listeners across re-connects.
  */
 export function attachHoverTooltip(host) {
   if (host.dataset.tipHost === 'on') return;
@@ -45,15 +45,23 @@ export function attachHoverTooltip(host) {
     tip.style.top = `${y}px`;
   });
   host.addEventListener('mouseleave', hideTooltip);
+  host.addEventListener('focusin', (e) => {
+    const target = /** @type {HTMLElement | null} */ (/** @type {Element} */ (e.target).closest?.('[data-tip]'));
+    if (!target) return;
+    const tip = tooltipEl();
+    tip.innerHTML = target.dataset.tip ?? '';
+    tip.hidden = false;
+    const box = target.getBoundingClientRect();
+    tip.style.left = `${Math.max(4, Math.min(box.left, window.innerWidth - 280))}px`;
+    tip.style.top = `${box.bottom + 130 > window.innerHeight ? Math.max(4, box.top - 110) : box.bottom + 6}px`;
+  });
+  host.addEventListener('focusout', hideTooltip);
+  host.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') hideTooltip();
+  });
 }
 
 export const REQUIREMENT_URL = (n) => `https://github.com/Gilead-BioStats/gsm.roadmap/issues/${n}`;
-
-/** Status pill — Released metrics carry none; New / Planned are flagged. */
-export function statusPill(metric) {
-  const status = metric?.Status ?? 'Released';
-  return status === 'Released' ? '' : `<span class="pill ${status.toLowerCase()}">${esc(status)}</span>`;
-}
 
 /**
  * A metric's glossary entry as tooltip HTML — name, status, definition,
@@ -82,7 +90,7 @@ export function metricTip(metric, { technical = true } = {}) {
     ['Note', metric.Note],
   ].filter(([, v]) => v != null && v !== '');
   return (
-    `<b>${esc(metric.Metric)}</b>${statusPill(metric)}<br>` +
+    `<b>${esc(metric.Metric)}</b><br>` +
     `<span class="tip-muted mono">${esc(metric.Abbreviation)}${technical ? ` · ${esc(metric.ID ?? metric.MetricID)}` : ''}${
       metric.Category ? ` · ${esc(metric.Category)}` : ''
     }</span>` +

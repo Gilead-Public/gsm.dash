@@ -1,6 +1,6 @@
-state: table-details
-canonical dom: sha256 a3125d5a0f31b0c90de87d9cee3c37b7f613675c1521c11577d08f4fd175d8ca (211634 characters)
-computed styles: sha256 8e99a266c248abd64b12ffe5495f66dd1fab0c440f05d5fc4d598cceb5691802 (1371 elements)
+state: table-detailed
+canonical dom: sha256 3195d6274efa683eba947652ee477c24d248e3f6a58a436d044735bb0064ee46 (199866 characters)
+computed styles: sha256 e8de4bede3d246b2a4e0ac89aeab01a60dcb91212907959e394b499a3f90438d (1352 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×23 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21
 sparklines:
@@ -9,6 +9,7 @@ accessibility:
 - button "Filters"
 - button "Config ▾"
 - button "Reset"
+- button "Admin ▾"
 - main:
   - table:
     - rowgroup:
@@ -20,24 +21,24 @@ accessibility:
         - columnheader "Eligibility & integrity3"
         - columnheader "Safety & deviations5"
         - columnheader "Data quality4"
-      - row "Scr. n SF % scr. SDSC n (% enr.) TDSC n (% dosed) PTDSC n (% dosed) Planned WC n (% enr.) Planned LTFU n (% enr.) Planned DTH30 n (% enr.) Planned DTH90 n (% enr.) Planned IPNS n (% enr.) Planned IE n (% enr.) Planned STRAT n (% enr.) Planned PFSC n (% enr.) Planned AE / 28 d New SAE / 28 d New PD / 28 d New IPD / 28 d New LB n (%) QRY % OQRY % ODAT % CDAT %":
+      - row "Scr. n SF % scr. SDSC n (% enr.) TDSC n (% dosed) PTDSC n (% dosed) WC n (% enr.) LTFU n (% enr.) DTH30 n (% enr.) DTH90 n (% enr.) IPNS n (% enr.) IE n (% enr.) STRAT n (% enr.) PFSC n (% enr.) AE / 28 d SAE / 28 d PD / 28 d IPD / 28 d LB n (%) QRY % OQRY % ODAT % CDAT %":
         - columnheader "Scr. n"
         - columnheader "SF % scr."
         - columnheader "SDSC n (% enr.)"
         - columnheader "TDSC n (% dosed)"
-        - columnheader "PTDSC n (% dosed) Planned"
-        - columnheader "WC n (% enr.) Planned"
-        - columnheader "LTFU n (% enr.) Planned"
-        - columnheader "DTH30 n (% enr.) Planned"
-        - columnheader "DTH90 n (% enr.) Planned"
-        - columnheader "IPNS n (% enr.) Planned"
-        - columnheader "IE n (% enr.) Planned"
-        - columnheader "STRAT n (% enr.) Planned"
-        - columnheader "PFSC n (% enr.) Planned"
-        - columnheader "AE / 28 d New"
-        - columnheader "SAE / 28 d New"
-        - columnheader "PD / 28 d New"
-        - columnheader "IPD / 28 d New"
+        - columnheader "PTDSC n (% dosed)"
+        - columnheader "WC n (% enr.)"
+        - columnheader "LTFU n (% enr.)"
+        - columnheader "DTH30 n (% enr.)"
+        - columnheader "DTH90 n (% enr.)"
+        - columnheader "IPNS n (% enr.)"
+        - columnheader "IE n (% enr.)"
+        - columnheader "STRAT n (% enr.)"
+        - columnheader "PFSC n (% enr.)"
+        - columnheader "AE / 28 d"
+        - columnheader "SAE / 28 d"
+        - columnheader "PD / 28 d"
+        - columnheader "IPD / 28 d"
         - columnheader "LB n (%)"
         - columnheader "QRY %"
         - columnheader "OQRY %"

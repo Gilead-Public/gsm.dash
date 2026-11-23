@@ -39,8 +39,8 @@ async function rowParts(page, id) {
 }
 
 /**
- * Which View the table shows, read from the table itself: Overview folds every category to headline tiles; Details
- * opens them all, with a header per metric. Null when it is neither.
+ * How the table shows its categories, read from the table itself: 'folded' (Compact, #47) is every category folded to
+ * headline tiles; 'open' (Detailed and Custom) is them all open, with a header per metric. Null when it is neither.
  * @param {Page} page
  */
 async function shownView(page) {
@@ -48,13 +48,13 @@ async function shownView(page) {
   const [tiles, closed, open, heads] = await Promise.all(
     ['.otile', 'thead th.bandh.closed', 'thead th.bandh.open', 'thead th[data-sort^="Analysis_"]'].map((s) => table.locator(s).count()),
   );
-  if (tiles && closed && !open && !heads) return 'overview';
-  if (!tiles && !closed && open && heads) return 'details';
+  if (tiles && closed && !open && !heads) return 'folded';
+  if (!tiles && !closed && open && heads) return 'open';
   return null;
 }
 
-/** @param {Page} page */
-const viewControl = async (page) => ((await control(page, 'button[data-view-toggle]').getAttribute('aria-pressed')) === 'true' ? 'details' : 'overview');
+/** The Cell display pressed in Config (#47). @param {Page} page */
+const viewControl = async (page) => control(page, 'button[data-display][aria-pressed="true"]').getAttribute('data-display');
 
 /**
  * Opens the portfolio with its document changed, then waits for the table.
@@ -96,31 +96,33 @@ test.describe('table columns and view', () => {
     expect(new URL(page.url()).hash).toBe('');
   });
 
-  test('21.01: the View shows the table in Overview by default and in Details when chosen, and the choice survives a reload until Reset (#21)', async ({ app, page }) => {
+  test('21.01: the table is folded under Compact, the default, and open under Detailed and Custom, and the choice survives a reload until Reset (#21)', async ({ app, page }) => {
     await app.open();
-    expect([await viewControl(page), await shownView(page)]).toEqual(['overview', 'overview']);
-    await chooseView(page, 'details');
-    expect([await viewControl(page), await shownView(page)]).toEqual(['details', 'details']);
+    expect([await viewControl(page), await shownView(page)]).toEqual(['compact', 'folded']);
+    await chooseView(page, 'detailed');
+    expect([await viewControl(page), await shownView(page)]).toEqual(['detailed', 'open']);
+    await chooseView(page, 'custom');
+    expect([await viewControl(page), await shownView(page)]).toEqual(['custom', 'open']);
     await page.reload();
     await page.locator('#app > .layout').waitFor();
-    expect([await viewControl(page), await shownView(page)]).toEqual(['details', 'details']);
+    expect([await viewControl(page), await shownView(page)]).toEqual(['custom', 'open']);
     await control(page, '[data-reset]').click();
-    expect([await viewControl(page), await shownView(page)]).toEqual(['overview', 'overview']);
+    expect([await viewControl(page), await shownView(page)]).toEqual(['compact', 'folded']);
     expect(new URL(page.url()).hash).toBe('');
   });
 
   test('21.01: configured columns and View are the defaults, and Reset returns to them (#21)', async ({ app, page }) => {
-    await openWith(app, page, (doc) => void (doc.config = { columns: ['enroll', 'status'], view: 'details' }));
+    await openWith(app, page, (doc) => void (doc.config = { columns: ['enroll', 'status'], view: 'detailed' }));
     expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
     expect((await rowParts(page, studies[0].StudyID)).name).toBeNull();
-    expect([await viewControl(page), await shownView(page)]).toEqual(['details', 'details']);
+    expect([await viewControl(page), await shownView(page)]).toEqual(['detailed', 'open']);
     await chip(page, 'status').click();
-    await chooseView(page, 'overview');
+    await chooseView(page, 'compact');
     expect(await headers(page)).toEqual(['Scr.n', 'Enr.n']);
-    expect(await shownView(page)).toBe('overview');
+    expect(await shownView(page)).toBe('folded');
     await control(page, '[data-reset]').click();
     expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
-    expect([await viewControl(page), await shownView(page)]).toEqual(['details', 'details']);
+    expect([await viewControl(page), await shownView(page)]).toEqual(['detailed', 'open']);
   });
 
   test('21.02: Enrolled reads n / expected for a study with a target, as a number or text, and the count alone otherwise (#21)', async ({ app, page }) => {
@@ -146,13 +148,13 @@ test.describe('table columns and view', () => {
     expect(await seenText(page.locator('tbody tr.total td.pop').nth(1))).toBe(countText(total));
   });
 
-  test('21.03: the table collapsed and expanded, and the Config popover with its toggle and metric checkboxes, for visual comparison (#21)', async ({ app, page, evidence }) => {
+  test('21.03: the table in Compact and Detailed, and Config with its Cell display, group chips, Column grouping and metric checkboxes, for visual comparison (#21)', async ({ app, page, evidence }) => {
     await app.open();
-    expect(await shownView(page)).toBe('overview');
-    await evidence.shot(page, 'collapsed');
-    await chooseView(page, 'details');
-    expect(await shownView(page)).toBe('details');
-    await evidence.shot(page, 'expanded');
+    expect(await shownView(page)).toBe('folded');
+    await evidence.shot(page, 'Compact');
+    await chooseView(page, 'detailed');
+    expect(await shownView(page)).toBe('open');
+    await evidence.shot(page, 'Detailed');
     await page.locator('#header-controls [data-open="config"]').click();
     await expect(page.locator('#header-controls [data-pop="config"]')).toBeVisible();
     await evidence.shot(page, 'Config open');

@@ -4,7 +4,7 @@
 import { expect, readData, test } from './fixtures/app.js';
 import { capturePortfolio } from './fixtures/baseline.js';
 import { cardMetrics, withCards } from './fixtures/tiles.js';
-import { chooseView, control } from './fixtures/controls.js';
+import { chooseAdmin, chooseHeatmap, chooseView, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 test.describe.configure({ timeout: 90_000 });
@@ -18,15 +18,14 @@ const catalog = portfolio.metrics;
 
 const study = 'STUDY004';
 const hidden = 'Analysis_kri0005';
-/** The tiles a study report may show once Planned metrics and `hidden` are filtered out, from the catalog. */
+/** The tiles a study report may show once `hidden` is filtered out, from the catalog. */
 const allowed = catalog
-  .filter((m) => m.Active !== false && m.GroupLevel === 'Site' && (m.Status ?? 'Released') !== 'Planned' && m.MetricID !== hidden)
+  .filter((m) => m.Active !== false && m.GroupLevel === 'Site' && m.MetricID !== hidden)
   .map((m) => m.MetricID)
   .sort();
 
 /** @param {Page} page */
 async function filterMetrics(page) {
-  await control(page, 'button[data-status="Planned"]').click();
   await control(page, `input[data-metric="${hidden}"]`).uncheck();
 }
 
@@ -44,8 +43,9 @@ async function studyReport(page, studyId) {
  * @param {Page} page
  * @param {import('@playwright/test').Locator} link
  * @param {string[]} [tiles] The tiles the report shows, when not `allowed`.
+ * @param {() => Promise<void>} [onStudy] Further checks on the study report.
  */
-async function roundTrip(page, link, tiles = allowed) {
+async function roundTrip(page, link, tiles = allowed, onStudy = async () => {}) {
   const left = new URL(page.url());
   const dir = left.href.slice(0, left.href.lastIndexOf('/') + 1);
   expect(await link.getAttribute('href')).toBe(`./${study}.html${left.hash}`);
@@ -56,6 +56,7 @@ async function roundTrip(page, link, tiles = allowed) {
   await studyReport(page, study);
   expect(page.url()).toBe(`${dir}${study}.html${left.hash}`);
   expect(await cardMetrics(page)).toEqual(withCards([...tiles].sort(), catalog));
+  await onStudy();
 
   const back = page.locator('#app a.back');
   expect(await back.getAttribute('href')).toBe(`./portfolio.html${left.hash}`);
@@ -86,7 +87,7 @@ test('27.02: every study link and back link is relative, and each opens its repo
   }
 });
 
-test('27.05: the table view carries over to a study report, which applies its metric filters, and back (#27)', async ({ app, page }) => {
+test('27.05: the table view carries over to a study report, which applies its hidden metrics and the Admin settings, and back (#27)', async ({ app, page }) => {
   await app.openReport('portfolio');
   await page.locator('#app > .layout').waitFor();
 
@@ -95,21 +96,27 @@ test('27.05: the table view carries over to a study report, which applies its me
   for (const status of ['Active', 'Enrolling']) await control(page, `button[data-filter="status"][data-value="${status}"]`).click();
   await filterMetrics(page);
   await control(page, 'select[data-groupby]').selectOption('therapeutic_area');
-  await chooseView(page, 'details');
-  await page.locator('tr[data-bucket="Cardiology"] td.grp').click();
+  await chooseView(page, 'detailed');
+  // Groups open by default (#47): a group other than STUDY004's is closed, so its link stays in view.
+  const closed = studies.find((s) => s.params.phase === 'P2' && ['Active', 'Enrolling'].includes(s.params.status) && s.params.therapeutic_area !== 'Cardiology')?.params.therapeutic_area;
+  expect(closed, 'another group under the filters').toBeDefined();
+  await page.locator(`tr[data-bucket="${closed}"] td.grp`).click();
   await page.locator('th[data-sort="Analysis_kri0008"]').click();
-  await control(page, 'button[data-seg="cellMode"][data-value="custom"]').click();
+  await chooseHeatmap(page, 'rate');
   await control(page, 'button[data-show="den"]').click();
   await control(page, 'button[data-show="num"]').click();
-  await control(page, 'select[data-heatmap]').selectOption('rate');
   await control(page, 'button[data-group="Data quality"]').click();
+  for (const [key, value] of [['theme', 'dark'], ['perrow', '3'], ['cfgpanel', 'side'], ['legend', 'on']]) await chooseAdmin(page, key, value);
 
   const keys = [...new Set(new URLSearchParams(new URL(page.url()).hash.slice(1)).keys())].sort();
   expect(keys, 'every setting moved from its default').toEqual(
-    ['cell', 'dir', 'expand', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'hidebygroup', 'hidegroup', 'show', 'sort', 'statuses', 'view'].sort(),
+    ['cfgpanel', 'collapse', 'dir', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'hidebygroup', 'hidegroup', 'legend', 'perrow', 'show', 'sort', 'theme', 'view'].sort(),
   );
   // The study report also leaves out the hidden group's metrics (16.03).
   const dataQuality = catalog.filter((/** @type {any} */ m) => m.Category === 'Data quality').map((/** @type {any} */ m) => m.MetricID);
   expect(dataQuality.length).toBeGreaterThan(0);
-  await roundTrip(page, page.locator(`#app .portfolio-table a[data-study="${study}"]`), allowed.filter((id) => !dataQuality.includes(id)));
+  await roundTrip(page, page.locator(`#app .portfolio-table a[data-study="${study}"]`), allowed.filter((id) => !dataQuality.includes(id)), async () => {
+    const applied = await page.evaluate(() => [document.documentElement.dataset.theme, getComputedStyle(document.documentElement).getPropertyValue('--per-row').trim()]);
+    expect(applied, 'the study report applies the Admin settings').toEqual(['dark', '3']);
+  });
 });

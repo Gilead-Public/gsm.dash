@@ -53,7 +53,7 @@ import { ROOM_FOR_EVERY_BAR, styleFromStart, TRACKER_CARDS } from './fixtures/ti
 const portfolio = readData('portfolio.json');
 const study = portfolio.studies[0];
 const snapshot = readData(study.files[study.snapshots.at(-1)]);
-const CONFIG = /** @type {Record<string, { statusVariables?: string[]; percentLabel?: string; sections: Record<string, { title?: string; topN?: number; percentLabel?: string }> }>} */ (DISTRIBUTION_CONFIG);
+const CONFIG = /** @type {Record<string, { statusVariables?: string[]; sections: Record<string, { title?: string; topN?: number; of?: string }> }>} */ (DISTRIBUTION_CONFIG);
 /** @type {Metric[]} */
 const configured = TRACKER_CARDS.filter((c) => c.kind === 'bars').map((c) => ({ ...portfolio.metrics.find((/** @type {any} */ m) => m.ID === c.metric), card: c.id, section: c.section }));
 
@@ -101,8 +101,11 @@ function expectedFor(m) {
       ? { pct: ((totals.Numerator / totals.Denominator) * 28).toFixed(2), nd: `${int(totals.Numerator)} / ${(totals.Denominator / 28).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}` }
       : { pct: pct(totals.Numerator / totals.Denominator), nd: `${int(totals.Numerator)} / ${int(totals.Denominator)}` },
     sections: sections.map((s) => {
-      // The one column heading is the population's business label for a status section, or "n" for a reason section.
-      const heading = s.display === 'percent' ? (config.sections?.[`${s.Source}:${s.Variable}`]?.percentLabel ?? config.percentLabel ?? '%') : 'n';
+      // The one heading names what the values are out of, with the section's total (#48): a status section's population
+      // from the fixture's metric, a reason section's from configuration.
+      const heading = s.display === 'percent'
+        ? `% of ${int(s.Total)} ${String(m.Population).toLowerCase()}`
+        : `n of ${int(s.Total)} ${config.sections?.[`${s.Source}:${s.Variable}`]?.of ?? ''}`.trim();
       return {
         title: s.title,
         variable: s.Variable,
@@ -113,7 +116,7 @@ function expectedFor(m) {
         rows: s.bars.map((bar) => ({
           label: bar.label,
           kind: bar.kind,
-          values: { [heading]: s.display === 'percent' ? pct(bar.percent) : int(bar.count) },
+          values: { [heading]: s.display === 'percent' ? `${pct(bar.percent)} (${int(bar.count)})` : int(bar.count) },
           hover: `${bar.label}: ${int(bar.hover.count)} of ${int(bar.hover.of)}`,
         })),
         notes: [
@@ -151,7 +154,7 @@ async function renderedFor(page, m) {
       return text(e);
     };
     const sections = [...el.querySelectorAll('.dist-sec')].map((s, i) => {
-      const headings = [...s.querySelectorAll('.dist-cols span')].filter((h) => text(h)).map((h, k) => {
+      const headings = [...s.querySelectorAll('.dist-cols')].filter((h) => text(h)).map((h, k) => {
         const box = h.getBoundingClientRect();
         return { text: visible(h, `section ${i} heading ${k}`), left: box.left, right: box.right };
       });
@@ -171,9 +174,12 @@ async function renderedFor(page, m) {
         title: visible(s.querySelector('.sub-h'), `section ${i} title`),
         headings: headings.map((h) => h.text),
         rows,
-        notes: [...s.querySelectorAll('.dist-note')].map((n, j) => visible(n, `section ${i} footnote ${j}`)),
       };
     });
+    // The notes sit behind the card footer's marker (#48), one per line of its hover.
+    const marker = el.closest('.card')?.querySelector('.tile-foot .notes') ?? null;
+    const notes = marker ? (marker.getAttribute('data-tip') ?? '').split('<br>') : [];
+    if (marker) visible(marker, 'the notes marker');
     /** @type {string[]} */
     const unexpected = [];
     const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
@@ -181,12 +187,13 @@ async function renderedFor(page, m) {
       const content = node.textContent?.trim();
       const parent = node.parentElement;
       if (!content || !parent || !shown(parent)) continue;
-      if (!parent.closest('.sub-h, .dist-cols, .dist-row, .dist-note')) unexpected.push(content);
+      if (!parent.closest('.sub-h, .dist-cols, .dist-row')) unexpected.push(content);
     }
     const head = el.closest('.card')?.querySelector('.card-value') ?? null;
     return {
       header: { pct: visible(head?.querySelector('.big') ?? null, 'header value'), nd: visible(head?.querySelector('.card-nd') ?? null, 'header counts') },
       sections,
+      notes,
       hidden,
       unexpected,
     };
@@ -239,7 +246,7 @@ test.describe('Layout A distribution widget', () => {
     }
   });
 
-  test('10.09: no bar shows a count and a percentage together, and each status section names its population (#10)', async ({ app, page }) => {
+  test('10.09: reason sections\' bars show a count, never a percentage, and each section names its population and total (#10)', async ({ app, page }) => {
     await openStudy(app, page);
     const checked = { Denominator: 0, Numerator: 0 };
     for (const m of configured) {
@@ -250,13 +257,15 @@ test.describe('Layout A distribution widget', () => {
       seen.sections.forEach((s, i) => {
         const { source, title } = want.sections[i];
         const where = `${m.card} ${title}`;
-        // The population comes from the fixture's metric, not from the widget configuration.
-        expect(s.headings, where).toEqual([source === 'Denominator' ? `% of ${String(m.Population).toLowerCase()}` : 'n']);
+        // A status section's population comes from the fixture's metric, not from the widget configuration; its total
+        // from the fixture's rows.
+        expect(s.headings, where).toEqual(want.sections[i].headings);
+        expect(s.headings[0], where).toMatch(source === 'Denominator' ? new RegExp(`^% of [\\d,]+ ${String(m.Population).toLowerCase()}$`) : /^n of [\d,]+ \S/);
         for (const row of s.rows) {
           const shown = Object.values(row.values);
-          expect(shown, `${where} ${row.label}: one value`).toHaveLength(1);
-          expect(shown[0], `${where} ${row.label}`).toMatch(source === 'Denominator' ? /^(\d+\.\d%|—)$/ : /^\d[\d,]*$/);
-          expect(row.text, `${where}: the row shows only its label and one value`).toBe(`${row.label} ${shown[0]}`);
+          expect(shown, `${where} ${row.label}: one value cell`).toHaveLength(1);
+          expect(shown[0], `${where} ${row.label}`).toMatch(source === 'Denominator' ? /^(\d+\.\d% \(\d[\d,]*\)|—)$/ : /^\d[\d,]*$/);
+          expect(row.text, `${where}: the row shows only its label and its value`).toBe(`${row.label} ${shown[0]}`);
         }
         checked[/** @type {'Denominator' | 'Numerator'} */ (source)] += 1;
       });
@@ -282,7 +291,7 @@ test.describe('Layout A distribution widget', () => {
       const seen = await renderedFor(page, m);
       const want = expectedFor(m);
       expect(seen.sections.map((s) => s.rows.map((r) => r.label)), m.card).toEqual(want.sections.map((s) => s.rows.map((r) => r.label)));
-      expect(seen.unexpected, `${m.card}: visible content outside the titles, headings, rows and footnotes`).toEqual([]);
+      expect(seen.unexpected, `${m.card}: visible content outside the titles, headings and rows`).toEqual([]);
       await expect(body(page, m).locator('.dist-total'), m.card).toHaveCount(0);
       await expect(page.locator(`.card[data-card="${m.card}"] .card-nd`), m.card).toHaveText(want.header.nd);
     }
@@ -344,14 +353,14 @@ test.describe('Layout A distribution widget', () => {
     for (const bar of await reasons.all()) expect(await bar.getAttribute('style')).not.toMatch(/background/);
   });
 
-  test('10.07: on every breakdown card, bars sort and collapse as expected, Not recorded comes last, and the footnotes show (#10)', async ({ app, page }) => {
+  test('10.07: on every breakdown card, bars sort and collapse as expected, Not recorded comes last, and the footnotes show behind the footer\'s marker (#10)', async ({ app, page }) => {
     await openStudy(app, page);
     for (const m of configured) {
       const seen = await renderedFor(page, m);
       const want = expectedFor(m);
       expect(seen.hidden, m.card).toEqual([]);
       expect(seen.sections.map((s) => s.rows.map((r) => r.label)), `${m.card} order`).toEqual(want.sections.map((s) => s.rows.map((r) => r.label)));
-      expect(seen.sections.map((s) => s.notes), `${m.card} footnotes`).toEqual(want.sections.map((s) => s.notes));
+      expect(seen.notes, `${m.card} footnotes`).toEqual(want.sections.flatMap((s) => s.notes));
     }
     const all = configured.flatMap((m) => expectedFor(m).sections);
     expect(all.some((s) => s.notes.length === 2), 'the fixture exercises both footnotes in one section').toBe(true);
@@ -369,19 +378,6 @@ test.describe('Layout A distribution widget', () => {
     const message = body(page, m).locator('[data-empty="no-rows"]');
     await expect(message).toBeVisible();
     await expect(message).toHaveText('No breakdown rows for this metric in this snapshot.');
-  });
-
-  test('10.07: an earlier visit shows that breakdowns are published for the latest snapshot only (#10)', async ({ app, page }) => {
-    await openStudy(app, page);
-    const m = cardById('study-disposition');
-    await page.locator('input[data-visit]').evaluate((el) => {
-      /** @type {HTMLInputElement} */ (el).value = '0';
-      el.dispatchEvent(new Event('change', { bubbles: true }));
-    });
-    await expect(body(page, m)).toHaveAttribute('data-state', 'empty');
-    const message = body(page, m).locator('[data-empty="not-published"]');
-    await expect(message).toBeVisible();
-    await expect(message).toHaveText('Breakdowns are published for the latest snapshot only.');
   });
 
   test('10.08: the rendered widgets, at the shipped card size, are captured for comparison with the Layout A design (visual comparison) (#10)', async ({ app, page, evidence }) => {
