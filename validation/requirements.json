@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "b56823483f8c713ffcc91165809c18ee0f97fd602f51753fc4022d6fd7d211e2",
+  "hash": "96b48b6fc4ef6fc1ffab2dffcd09620d33cbedfb1376626ead2f471a081b3c1b",
   "issues": [
     {
       "number": 8,
@@ -914,6 +914,29 @@
           "id": "35.11",
           "text": "The portfolio has no study highlight: no Highlight study control and no marked row, and clicking a study row outside its links changes nothing. An address's `study` parameter is ignored and removed (test).",
           "sha256": "bf1f80d9079fc98891707d357e85f1dc4e0e81ad0e1551d67ab754b850d82710",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 44,
+      "title": "Make the portfolio easier to read: larger text, no hatching on planned metrics",
+      "parent": null,
+      "userTest": false,
+      "scopeSection": "**In:**\n- Planned metrics lose the hatch pattern on their column headers and Overview tiles, and the dashed outline on the tiles. They keep the \"Planned\" tag in the header and in Config's metric list, and their muted values.\n- A planned metric's hover reads \"Planned metric: not yet released\". The current \"values are simulated\" is true only of example data.\n- Text on the portfolio page is at least 12px: the table, the header, Filters, Config, the Overview tiles and their labels, band headers, units, tags and hovers. Icons such as sort arrows and chevrons are exempt.\n- The table's study and total rows are 14px. Overview tiles widen to fit their larger text.\n\n**Out:**\n- A text-size setting: browser zoom already scales a report.\n- The study page's text sizes: its cards are sized to fit their content (#32).\n- The styling of the unused Distribution view, kept in reserve (#35).",
+      "criteria": [
+        {
+          "id": "44.01",
+          "text": "Planned metrics show no hatch pattern and no dashed outline in the table's headers, cells or Overview tiles; their headers keep the \"Planned\" tag, and their hovers say \"Planned metric: not yet released\", not that values are simulated (test).",
+          "sha256": "baa736c93751a95f763a27de61c0e0828726ddc8ce1f30a5fd72af6937dda0f8",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "44.02",
+          "text": "Every piece of text on the portfolio page, in Overview and Details, with Filters and Config open and in a hover, renders at 12px or more, icons aside, and the table's study and total rows at 14px (test).",
+          "sha256": "dde15b7551374228ce7a4469e9c1b985ca5b986c294c3980d3e7fafcf0b07cbf",
           "kind": "e2e",
           "reviewed": true
         }

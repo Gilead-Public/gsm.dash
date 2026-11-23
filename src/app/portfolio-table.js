@@ -143,7 +143,7 @@ export function heatClasses(heatmap, metrics, primary) {
 /** @param {number} n */
 export const snapshotNote = (n) => (n === 1 ? '1 study at its latest snapshot' : `${n} studies, each at its latest snapshot`);
 
-const PLANNED_WARNING = '<br><span class="tip-warn">Planned metric — values are simulated</span>';
+const PLANNED_WARNING = '<br><span class="tip-warn">Planned metric: not yet released</span>';
 
 /**
  * The pooled counts, the denominator named by the metric's catalog label (#20).

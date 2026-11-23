@@ -65,12 +65,12 @@ body {
 .metric-list { display: flex; flex-direction: column; gap: 3px; }
 .metric-opt { display: grid; grid-template-columns: auto 44px 1fr; gap: 7px; align-items: center; font-size: 12.5px; color: var(--ink-2); cursor: pointer; }
 .metric-opt input { margin: 0; accent-color: var(--accent); }
-.metric-opt .mono { color: var(--ink); font-size: 11.5px; }
+.metric-opt .mono { color: var(--ink); font-size: 12px; }
 .metric-opt .mname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .study-opts { display: grid; gap: 3px; max-height: 220px; overflow-y: auto; }
 .study-opt { display: grid; grid-template-columns: auto auto 1fr; gap: 7px; align-items: center; font-size: 12.5px; color: var(--ink-2); cursor: pointer; }
 .study-opt input { margin: 0; accent-color: var(--accent); }
-.study-opt .mono { color: var(--ink); font-size: 11.5px; }
+.study-opt .mono { color: var(--ink); font-size: 12px; }
 .study-opt .mname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .content { min-width: 0; }
 header.app {
@@ -91,7 +91,7 @@ header.app h1 { font-family: "Archivo", "Segoe UI", system-ui, sans-serif; font-
 .hbtn { font: 600 13px "Archivo", sans-serif; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 8px; background: var(--panel); color: var(--ink-2); cursor: pointer; }
 .hbtn:hover, .hbtn[aria-expanded="true"] { color: var(--accent); border-color: var(--accent); }
 .hbtn.on { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
-.hbtn .badge { font: 600 10.5px "IBM Plex Mono", monospace; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; }
+.hbtn .badge { font: 600 12px "IBM Plex Mono", monospace; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 10px; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; }
 .fchip::after, .hbtn[data-open="config"]::after { content: "▾"; font-size: 10px; opacity: 0.7; }
 .filter-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
 .filter-bar[hidden] { display: none; }
@@ -113,7 +113,7 @@ header.app h1 { font-family: "Archivo", "Segoe UI", system-ui, sans-serif; font-
 .ctl { display: flex; flex-direction: column; gap: 5px; }
 .ctl label {
   font-family: "Archivo", sans-serif;
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.09em;
@@ -159,11 +159,11 @@ button:focus-visible, .chip:focus-visible, select:focus-visible, a:focus-visible
 .showing { font-size: 13px; color: var(--ink-2); margin: 8px 0 2px; }
 .tblwrap { overflow-x: auto; border: 1px solid var(--line-2); border-radius: 9px; background: var(--panel); }
 table.po { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; color: var(--ink); }
-table.po th, table.po td { padding: 7px 8px; text-align: right; font-size: 13px; white-space: nowrap; }
+table.po th, table.po td { padding: 7px 8px; text-align: right; font-size: 14px; white-space: nowrap; }
 table.po th.status-col, table.po td.status-col { text-align: left; }
 table.po thead th {
   font-family: "IBM Plex Mono", ui-monospace, monospace;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--ink-2);
   border-bottom: 2px solid var(--line-2);
@@ -178,7 +178,7 @@ table.po th.sortable:hover, table.po th.active { color: var(--accent); }
 table.po th .si { font-size: 8px; margin-left: 3px; vertical-align: 1px; }
 table.po td .cell { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; line-height: 1.25; }
 table.po td .cell-nums { font-variant-numeric: tabular-nums; }
-table.po td .cell-rate.secondary { font-size: 11.5px; color: var(--ink-2); }
+table.po td .cell-rate.secondary { font-size: 12px; color: var(--ink-2); }
 table.po td .cell .spark { margin-top: 2px; }
 table.po td { border-bottom: 1px solid var(--line); }
 tr.total td { font-weight: 600; background: var(--panel-2); }
@@ -190,9 +190,9 @@ tr.study a { color: var(--accent); text-decoration: none; }
 tr.study a:hover { text-decoration: underline; }
 table.po a.cell { color: inherit; }
 table.po a.otile { cursor: pointer; }
-.nick { margin-left: 7px; color: var(--ink-2); font-size: 12.5px; }
+.nick { margin-left: 7px; color: var(--ink-2); font-size: 13.5px; }
 .dd-head .study.nick { font-weight: 500; color: var(--ink-2); font-family: "Archivo", sans-serif; }
-tr.study.child td { color: var(--ink-2); font-size: 12px; background: var(--bg); }
+tr.study.child td { color: var(--ink-2); background: var(--bg); }
 tr.study.child td.grp { padding-left: 32px; background: var(--bg); }
 td .spark { display: inline-block; line-height: 0; vertical-align: middle; }
 table.po td.hot1 { background: var(--ramp1); }
@@ -203,7 +203,7 @@ table.po td.hot4 { background: var(--ramp4); }
 table.po td.enroll, table.po th.enroll { font-variant-numeric: tabular-nums; border-right: 1px solid var(--line-2); }
 .cellbar { display: flex; gap: 2px; height: 5px; margin-top: 3px; border-radius: 3px; overflow: hidden; width: 56px; }
 .cellbar i { display: block; height: 100%; border-radius: 2px; }
-.cell-flags { display: flex; gap: 7px; font-size: 11px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.cell-flags { display: flex; gap: 7px; font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .cell-flags .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 3px; vertical-align: 0; }
 .cell-flags .dot.pair { margin-left: -5px; box-shadow: 0 0 0 1px var(--panel); }
 .flag-red { background: var(--crit); }
@@ -367,21 +367,21 @@ div:where(.study-page) .back { color: var(--accent); text-decoration: none; font
 .pill.planned { color: var(--planned); background: var(--planned-soft); }
 
 /* banded header */
-table.po thead tr.band th.bandh { font: 700 10px "Archivo", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); text-align: center; border-bottom: 1px solid var(--line-2); padding: 6px 6px 4px; cursor: default; }
+table.po thead tr.band th.bandh { font: 700 12px "Archivo", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); text-align: center; border-bottom: 1px solid var(--line-2); padding: 6px 6px 4px; cursor: default; }
 table.po thead tr.band th.bandh .tw { color: var(--ink-3); font-weight: 400; margin-left: 5px; letter-spacing: 0; }
 table.po thead tr.band th[rowspan] { vertical-align: bottom; }
 table.po thead tr.cols th { top: 26px; vertical-align: bottom; }
-table.po th .u { display: block; font: 400 10px "Source Sans 3", sans-serif; color: var(--ink-3); margin-top: 1px; letter-spacing: 0; }
-table.po th .pill { display: table; margin: 3px 0 0 auto; font-size: 8px; padding: 2px 4px 1px; }
-table.po th.planned { background-image: repeating-linear-gradient(135deg, transparent 0 5px, var(--planned-soft) 5px 10px); }
+table.po th .u { display: block; font: 400 12px "Source Sans 3", sans-serif; color: var(--ink-3); margin-top: 1px; letter-spacing: 0; }
+table.po th .pill, .metric-opt .pill, body[data-page="portfolio"] #gsm-tooltip .pill { font: 600 12px "Archivo", sans-serif; letter-spacing: 0; text-transform: none; }
+table.po th .pill { display: table; margin: 3px 0 0 auto; padding: 1px 5px; }
 table.po td.planned { color: var(--ink-2); }
 table.po th.gs, table.po td.gs { border-left: 1px solid var(--line-2); }
 table.po td.pop, table.po th.pop { color: var(--ink-2); }
-table.po td.pop { background: color-mix(in srgb, var(--panel-2) 45%, var(--panel)); font-size: 12.5px; }
+table.po td.pop { background: color-mix(in srgb, var(--panel-2) 45%, var(--panel)); }
 table.po td.pop-last, table.po th.pop-last { border-right: 1px solid var(--line-2); }
 tr.total td.pop { background: var(--panel-2); }
 table.po td .cell-main { white-space: nowrap; }
-table.po td .pc { color: var(--ink-2); font-size: 11.5px; margin-left: 1px; }
+table.po td .pc { color: var(--ink-2); font-size: 12px; margin-left: 1px; }
 tr.total td .pc { font-weight: 600; }
 
 /* ---------------------------------------------------------------------------
@@ -401,13 +401,13 @@ table.po thead tr.band th.closed .otiles { display: flex; margin-top: 5px; }
 
 /* Overview tiles: one headline value per metric */
 table.po .otiles { display: inline-flex; gap: 2px; vertical-align: middle; }
-table.po .otile, table.po .tlab { width: 40px; flex: none; text-align: center; }
-table.po .otile { height: 24px; border-radius: 4px; font: 500 10.5px/24px "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; color: var(--ink); background: var(--panel-2); cursor: help; }
-table.po .otile.pl { outline: 1px dashed var(--planned); outline-offset: -1px; background-image: repeating-linear-gradient(135deg, transparent 0 5px, var(--planned-soft) 5px 10px); color: var(--ink-2); }
+table.po .otile, table.po .tlab { width: 46px; flex: none; text-align: center; }
+table.po .otile { height: 26px; border-radius: 4px; font: 500 12px/26px "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; color: var(--ink); background: var(--panel-2); cursor: help; }
+table.po .otile.pl { color: var(--ink-2); }
 table.po .otile.hot1 { background-color: var(--ramp1); } table.po .otile.hot2 { background-color: var(--ramp2); }
 table.po .otile.hot3 { background-color: var(--ramp3); } table.po .otile.hot4 { background-color: var(--ramp4); }
 tr.total .otile { font-weight: 700; background: var(--panel); }
-table.po .tlab { font: 600 9px "IBM Plex Mono", monospace; letter-spacing: 0; color: var(--ink-2); cursor: help; overflow: hidden; text-overflow: ellipsis; }
+table.po .tlab { font: 600 12px "IBM Plex Mono", monospace; letter-spacing: 0; color: var(--ink-2); cursor: help; overflow: hidden; text-overflow: ellipsis; }
 table.po td.cat { text-align: left; padding: 6px 9px; }
 
 /* a highlighted study (unwired, #35) */
@@ -418,7 +418,7 @@ tr.study.sel td.grp { box-shadow: inset 4px 0 0 var(--accent), inset 0 1.5px 0 v
 /* controls that don't apply to the current view */
 .ctl.na > :not(label):not(.sb-why) { opacity: 0.45; pointer-events: none; }
 .ctl.na > label { color: var(--ink-3); }
-.sb-why { font-size: 11.5px; color: var(--ink-3); font-style: italic; margin: 4px 0 0; line-height: 1.35; }
+.sb-why { font-size: 12px; color: var(--ink-3); font-style: italic; margin: 4px 0 0; line-height: 1.35; }
 
 /* glossary-first tooltip */
 #gsm-tooltip .tip-muted { opacity: 0.7; }
@@ -428,13 +428,13 @@ tr.study.sel td.grp { box-shadow: inset 4px 0 0 var(--accent), inset 0 1.5px 0 v
 #gsm-tooltip .tip-dl dt { opacity: 0.65; }
 #gsm-tooltip .tip-dl dd { margin: 0; }
 
-.sb-hint { font-size: 11.5px; color: var(--ink-3); margin: 5px 0 0; line-height: 1.35; }
-.chip .cnt { margin-left: 5px; font-size: 10.5px; opacity: 0.7; }
+.sb-hint { font-size: 12px; color: var(--ink-3); margin: 5px 0 0; line-height: 1.35; }
+.chip .cnt { margin-left: 5px; font-size: 12px; opacity: 0.7; }
 .mgroup { margin-bottom: 6px; }
-.mgroup-head { display: flex; align-items: baseline; gap: 8px; font-size: 11.5px; font-weight: 700; color: var(--ink); margin: 6px 0 2px; }
-.mgroup-head .cnt { margin-left: auto; font: 400 10.5px "IBM Plex Mono", monospace; color: var(--ink-3); }
+.mgroup-head { display: flex; align-items: baseline; gap: 8px; font-size: 12px; font-weight: 700; color: var(--ink); margin: 6px 0 2px; }
+.mgroup-head .cnt { margin-left: auto; font: 400 12px "IBM Plex Mono", monospace; color: var(--ink-3); }
 .metric-opt { grid-template-columns: auto 44px 1fr auto; }
-.metric-opt .pill { margin-left: 0; font-size: 8px; padding: 2px 4px 1px; }
+.metric-opt .pill { margin-left: 0; padding: 1px 5px; }
 .metric-opt.status-off { opacity: 0.45; }
 
 /* tiles */

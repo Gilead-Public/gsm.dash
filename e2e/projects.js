@@ -30,6 +30,7 @@ export const SPEC_ARTIFACTS = {
   'e2e/kri-groups.spec.js': ['reports'],
   'e2e/portfolio-config.spec.js': ['reports'],
   'e2e/portfolio-hovers.spec.js': ['reports'],
+  'e2e/portfolio-legibility.spec.js': ['reports'],
   'e2e/portfolio-links.spec.js': ['reports'],
   'e2e/portfolio.spec.js': ['reports'],
   'e2e/prototype-removal.spec.js': ['reports'],

@@ -7,7 +7,7 @@ export const CATEGORY_ORDER = ['Disposition', 'Early events', 'Eligibility & int
 export const OTHER_CATEGORY = 'Other';
 
 // Tracker lifecycle: Released (in production), New (in development), Planned
-// (owned by a roadmap Requirement, not yet built — values are simulated).
+// (owned by a roadmap Requirement, not yet built).
 export const STATUS_ORDER = ['Released', 'New', 'Planned'];
 
 /**
