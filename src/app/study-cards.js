@@ -76,3 +76,32 @@ export function studyCards({ metrics, inactive, visible, cards = STUDY_CARDS }) 
   }
   return out;
 }
+
+/**
+ * The grid's items when similar cards are combined (#46): a configured pair whose cards both show becomes one item, at
+ * the place of whichever comes first, its top card first; every other card stands alone.
+ * @template {{ spec: { id: string } }} C
+ * @param {C[]} cards
+ * @param {string[][]} pairs
+ * @returns {C[][]}
+ */
+export function combineCards(cards, pairs) {
+  const byId = new Map(cards.map((c) => [c.spec.id, c]));
+  /** @type {Map<string, string[]>} */
+  const pairOf = new Map();
+  for (const pair of pairs) if (pair.every((id) => byId.has(id))) for (const id of pair) pairOf.set(id, pair);
+  const placed = new Set();
+  /** @type {C[][]} */
+  const items = [];
+  for (const card of cards) {
+    if (placed.has(card.spec.id)) continue;
+    const pair = pairOf.get(card.spec.id);
+    if (!pair) {
+      items.push([card]);
+      continue;
+    }
+    for (const id of pair) placed.add(id);
+    items.push(pair.map((id) => /** @type {C} */ (byId.get(id))));
+  }
+  return items;
+}

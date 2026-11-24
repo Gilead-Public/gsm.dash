@@ -164,6 +164,20 @@ describe('one value per bar', () => {
     expect(status.bars[0]).toMatchObject({ count: 6, percent: 0.2 });
     expect(descriptor(status)).toBe('% of 30 enrolled');
   });
+
+  it('10.09: a section\'s heading shows its unit alone, and its hover names the population and the total (#10)', () => {
+    const ie = METRICS.find((m) => m.ID === 'kri0014');
+    const ieRows = [
+      site('A', 'EX01', 3, 10, { MetricID: ie.MetricID, Variable: 'ietestcd_concat' }),
+      site('A', 'Eligible', 6, 30, { MetricID: ie.MetricID, Source: 'Denominator', Variable: 'eligibility_status' }),
+    ];
+    const el = { innerHTML: '', dataset: {}, removeAttribute() {}, toggleAttribute() {}, isConnected: false, clientHeight: 0, scrollHeight: 0 };
+    renderDistribution(el, { metric: ie, distributions: ieRows, study: null, siteRows: [] }, {});
+    expect([...el.innerHTML.matchAll(/<div class="dist-cols">([^<]*)<\/div>/g)].map((m) => m[1])).toEqual(['n', '%']);
+    const decode = (t) => t.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+    const tips = [...el.innerHTML.matchAll(/class="sec-head" data-tip="([^"]*)"/g)].map((m) => decode(m[1]).replace(/<br>/g, '|').replace(/<[^>]+>/g, ''));
+    expect(tips).toEqual(['Top I/E criteria not met|n of 10 ineligible|Each bar: its count', 'Eligibility status|% of 30 enrolled|Each bar: its share, then its count']);
+  });
 });
 
 describe('status colours', () => {

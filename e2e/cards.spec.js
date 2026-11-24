@@ -7,6 +7,7 @@ import { DISTRIBUTION_CONFIG } from '../src/config/distributions.js';
 import { expectedView } from '../test/qual/distributions.js';
 import { expect, readData, test } from './fixtures/app.js';
 import { card, TRACKER_CARDS } from './fixtures/tiles.js';
+import { layout } from './fixtures/card-layout.js';
 
 const portfolio = readData('portfolio.json');
 /** @type {StudyEntry[]} */
@@ -15,67 +16,6 @@ const study = studies[0];
 /** @param {string} id */
 const metricOf = (id) => portfolio.metrics.find((/** @type {any} */ m) => m.ID === id);
 const CONFIG = /** @type {Record<string, any>} */ (DISTRIBUTION_CONFIG);
-
-/**
- * Every card's size; its title, value, n / N and body text; each piece of text a user can't see (hidden,
- * transparent or without a box); and each piece that lies outside its card, outside the part of the card it sits in
- * (header, value, body or footer), or outside a box that would clip it.
- * @param {Page} page
- */
-const layout = (page) =>
-  page.locator('.study-page .cards').evaluate((grid) => {
-    const cards = [...grid.querySelectorAll(':scope > .card')];
-    /**
-     * @param {DOMRect} r
-     * @param {DOMRect} b
-     */
-    const inside = (r, b) => r.left >= b.left - 0.5 && r.right <= b.right + 0.5 && r.top >= b.top - 0.5 && r.bottom <= b.bottom + 0.5;
-    /** @param {string} colour */
-    const transparent = (colour) => colour === 'transparent' || /,\s*0\)$|\/\s*0\)$/.test(colour);
-    /** @param {Element | null | undefined} e */
-    const text = (e) => e?.textContent?.replace(/\s+/g, ' ').trim() ?? null;
-    /** @type {string[]} */
-    const outside = [];
-    /** @type {string[]} */
-    const unseen = [];
-    for (const c of cards) {
-      const id = c.getAttribute('data-card');
-      const walker = document.createTreeWalker(c, NodeFilter.SHOW_TEXT);
-      for (let n = walker.nextNode(); n; n = walker.nextNode()) {
-        const content = n.textContent?.trim() ?? '';
-        const parent = /** @type {Element} */ (n.parentElement);
-        if (!content) continue;
-        const range = document.createRange();
-        range.selectNodeContents(n);
-        const rects = [...range.getClientRects()].filter((r) => r.width > 0 && r.height > 0);
-        if (!parent.checkVisibility({ opacityProperty: true, visibilityProperty: true }) || transparent(getComputedStyle(parent).color) || !rects.length) {
-          unseen.push(`${id}: "${content}"`);
-          continue;
-        }
-        const boxes = [c];
-        for (let a = /** @type {Element | null} */ (parent); a && a !== c; a = a.parentElement) {
-          const st = getComputedStyle(a);
-          if (a.parentElement === c || st.overflowX !== 'visible' || st.overflowY !== 'visible') boxes.push(a);
-        }
-        for (const r of rects) {
-          for (const b of boxes) if (!inside(r, b.getBoundingClientRect())) outside.push(`${id}: "${content}" outside ${b === c ? 'the card' : b.className}`);
-        }
-      }
-    }
-    const parts = cards.map((c) => ({
-      id: c.getAttribute('data-card'),
-      title: text(c.querySelector('.tile-head .name')),
-      value: text(c.querySelector('.card-value .big')),
-      nd: text(c.querySelector('.card-value .card-nd')),
-      body: text(c.querySelector('.tile-body')),
-      problem: Boolean(c.querySelector('.ref-problem')),
-    }));
-    const sizes = cards.map((c) => {
-      const r = c.getBoundingClientRect();
-      return `${r.width.toFixed(1)} × ${r.height.toFixed(1)}`;
-    });
-    return { cards: cards.length, sizes: [...new Set(sizes)], parts, unseen: [...new Set(unseen)], outside: [...new Set(outside)] };
-  });
 
 /**
  * Every card is the same size and shows its title, its value and n / N (unless it can't show its widget)
@@ -137,6 +77,28 @@ test.describe('cards of one size, with nothing clipped', () => {
     await expectFitted(page, 'with empty breakdowns');
     await app.openStudy(studies[1].StudyID);
     await expectFitted(page, studies[1].StudyID);
+  });
+
+  test('32.08: with similar KRI cards stacked in pairs (an Admin demo setting), long KRI titles and a placeholder included, no text is clipped, the single cards keep one size, and each pair stays one card wide and two tall, at any width (#32)', async ({ app, page }) => {
+    // A title long enough that its card, stacked under another, needs more than its share of the pair.
+    const long = ' — a much longer name for this rate that wraps over several lines of the card header'.repeat(6);
+    await app.openStudy(study.StudyID, {
+      portfolio: (/** @type {any} */ p) => {
+        for (const m of p.metrics) if (['kri0003', 'kri0002', 'kri0011'].includes(m.ID)) m.Metric += long;
+        p.metrics = p.metrics.filter((/** @type {any} */ m) => m.ID !== 'kri0009');
+      },
+    }, '#combine=on');
+    await expect(card(page, 'kri0009').locator('.ref-problem')).toBeVisible();
+    await expect(page.locator('.card-pair')).toHaveCount(4);
+    for (const width of [1280, 1000, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect.poll(async () => (await layout(page)).outside, `${width} px`).toEqual([]);
+      const seen = await layout(page);
+      expect(seen.cards, `${width} px`).toBe(TRACKER_CARDS.length);
+      expect(seen.sizes, `${width} px: one card size`).toHaveLength(1);
+      expect(seen.pairs, `${width} px: each pair one card wide and two tall`).toEqual([true, true, true, true]);
+      expect(seen.unseen, `${width} px: text a user can't see`).toEqual([]);
+    }
   });
 
   test('32.08: a card that can\'t show its widget keeps the same size and shows its whole message (#32)', async ({ app, page }) => {

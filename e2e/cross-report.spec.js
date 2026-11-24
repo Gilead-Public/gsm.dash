@@ -106,11 +106,11 @@ test('27.05: the table view carries over to a study report, which applies its hi
   await control(page, 'button[data-show="den"]').click();
   await control(page, 'button[data-show="num"]').click();
   await control(page, 'button[data-group="Data quality"]').click();
-  for (const [key, value] of [['theme', 'dark'], ['perrow', '3'], ['cfgpanel', 'side'], ['legend', 'on']]) await chooseAdmin(page, key, value);
+  for (const [key, value] of [['theme', 'dark'], ['perrow', '3'], ['cfgpanel', 'side'], ['legend', 'on'], ['combine', 'on']]) await chooseAdmin(page, key, value);
 
   const keys = [...new Set(new URLSearchParams(new URL(page.url()).hash.slice(1)).keys())].sort();
   expect(keys, 'every setting moved from its default').toEqual(
-    ['cfgpanel', 'collapse', 'dir', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'hidebygroup', 'hidegroup', 'legend', 'perrow', 'show', 'sort', 'theme', 'view'].sort(),
+    ['cfgpanel', 'collapse', 'combine', 'dir', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'hidebygroup', 'hidegroup', 'legend', 'perrow', 'show', 'sort', 'theme', 'view'].sort(),
   );
   // The study report also leaves out the hidden group's metrics (16.03).
   const dataQuality = catalog.filter((/** @type {any} */ m) => m.Category === 'Data quality').map((/** @type {any} */ m) => m.MetricID);

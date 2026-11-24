@@ -324,9 +324,10 @@ function changeEveryField(s) {
   s.toggleFilter('therapeutic_area', 'Oncology');
   s.toggleFilter('study', s.studies[2].StudyID);
   s.setAdmin('theme', 'dark');
-  s.setAdmin('perrow', '6');
+  s.setAdmin('perrow', '5');
   s.setAdmin('cfgpanel', 'side');
   s.setAdmin('legend', 'on');
+  s.setAdmin('combine', 'on');
   s.toggleMetric(s.supportedMetrics()[1].MetricID);
   s.toggleGroupHidden(s.groupNames().at(-1));
   s.toggleColumn('name');

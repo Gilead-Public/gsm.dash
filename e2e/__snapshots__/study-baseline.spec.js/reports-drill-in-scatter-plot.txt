@@ -1,5 +1,5 @@
 state: drill-in-scatter-plot (reports)
-dom: sha256 9052135c6671ccf1affdfc6a745f45c549071e98525d45f200e65bfc5044879c (64360 characters)
+dom: sha256 936e57eac954ba5566eacad2ed95d5d6e8bf13d9747315d9112cfa7decb42ee9 (66590 characters)
 tooltip: none
 drill-in: AE · Scatter plot · gsm.viz · scatterPlot · AE: charts 1
   type undefined; labels: 
@@ -59,16 +59,16 @@ accessibility:
   - /url: ./portfolio.html
 - text: "STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A Latest snapshot: 2026-06-30 Eligibility Status 3.7% 37 / 988"
 - group "Eligibility breakdowns":
-  - region "Eligibility status":
-    - text: Eligibility status % of 988 enrolled
+  - region "Eligibility status, % of 988 enrolled":
+    - text: Eligibility status %
     - list:
       - 'listitem "Eligible: 96.3%, 951 of 988"': Eligible 96.3% (951)
       - 'listitem "Ineligible: 2.8%, 28 of 988"': Ineligible 2.8% (28)
       - 'listitem "Potentially Ineligible: 0.9%, 9 of 988"': Potentially Ineligible 0.9% (9)
 - text: Eligibility I/E Criteria 3.7% 37 / 988
 - group "Eligibility breakdowns":
-  - region "Top I/E criteria not met":
-    - text: Top I/E criteria not met n of 37 ineligible
+  - region "Top I/E criteria not met, n of 37 ineligible":
+    - text: Top I/E criteria not met n
     - list:
       - 'listitem "EX03: 11 of 37"': EX03 11
       - 'listitem "IN04: 9 of 37"': IN04 9
@@ -80,30 +80,30 @@ accessibility:
 - 'button "Notes: A participant can fall in more than one category, so the counts add up to more than 37. Not recorded: the source value was blank."': "* Notes"
 - text: Premature Deaths – Time Window 1.6% 16 / 988
 - group "Early Deaths (90 days) breakdowns":
-  - region "Deaths by time from randomisation":
-    - text: Deaths by time from randomisation n of 16 deaths
+  - region "Deaths by time from randomisation, n of 16 deaths":
+    - text: Deaths by time from randomisation n
     - list:
       - 'listitem "31–90 days: 10 of 16"': 31–90 days 10
       - 'listitem "≤30 days: 6 of 16"': ≤30 days 6
 - text: Premature Deaths – Eligibility 1.6% 16 / 988
 - group "Early Deaths (90 days) breakdowns":
-  - region "Deaths by eligibility":
-    - text: Deaths by eligibility n of 16 deaths
+  - region "Deaths by eligibility, n of 16 deaths":
+    - text: Deaths by eligibility n
     - list:
       - 'listitem "Eligible: 14 of 16"': Eligible 14
       - 'listitem "Ineligible: 2 of 16"': Ineligible 2
 - text: Premature Deaths – Relatedness 1.6% 16 / 988
 - group "Early Deaths (90 days) breakdowns":
-  - region "Deaths by relatedness to treatment":
-    - text: Deaths by relatedness to treatment n of 16 deaths
+  - region "Deaths by relatedness to treatment, n of 16 deaths":
+    - text: Deaths by relatedness to treatment n
     - list:
       - 'listitem "No: 14 of 16"': No 14
       - 'listitem "Yes: 2 of 16"': Yes 2
       - 'listitem "Unknown: 0 of 16"': Unknown 0
 - text: IP Status 1.5% 15 / 988
 - group "IP Non-starters breakdowns":
-  - region "IP status":
-    - text: IP status % of 988 enrolled
+  - region "IP status, % of 988 enrolled":
+    - text: IP status %
     - list:
       - 'listitem "Dosed: 94.9%, 938 of 988"': Dosed 94.9% (938)
       - 'listitem "Potential Non-Starter – within window: 2.0%, 20 of 988"': Potential Non-Starter – within window 2.0% (20)
@@ -111,16 +111,16 @@ accessibility:
       - 'listitem "Confirmed Non-Starter: 1.5%, 15 of 988"': Confirmed Non-Starter 1.5% (15)
 - text: Treatment Disposition 8.6% 84 / 973
 - group "Premature Treatment Discontinuation Rate breakdowns":
-  - region "Treatment disposition":
-    - text: Treatment disposition % of 973 dosed
+  - region "Treatment disposition, % of 973 dosed":
+    - text: Treatment disposition %
     - list:
       - 'listitem "Dosed – treatment complete: 47.7%, 464 of 973"': Dosed – treatment complete 47.7% (464)
       - 'listitem "Dosed – ongoing: 43.7%, 425 of 973"': Dosed – ongoing 43.7% (425)
       - 'listitem "Dosed – premature treatment discontinuation: 8.6%, 84 of 973"': Dosed – premature treatment discontinuation 8.6% (84)
 - text: Premature Treatment Discontinuation Reasons 8.6% 84 / 973
 - group "Premature Treatment Discontinuation Rate breakdowns":
-  - region "Reasons for treatment discontinuation":
-    - text: Reasons for treatment discontinuation n of 84 discontinued
+  - region "Reasons for treatment discontinuation, n of 84 discontinued":
+    - text: Reasons for treatment discontinuation n
     - list:
       - 'listitem "Adverse Event: 26 of 84"': Adverse Event 26
       - 'listitem "Other: 26 of 84"': Other 26
@@ -131,8 +131,8 @@ accessibility:
 - 'button "Notes: A participant can fall in more than one category, so the counts add up to more than 84. Not recorded: the source value was blank."': "* Notes"
 - text: Study Disposition – Enrolled 6.6% 65 / 988
 - group "Study Discontinuation Rate breakdowns":
-  - region "Study disposition":
-    - text: Study disposition % of 988 enrolled
+  - region "Study disposition, % of 988 enrolled":
+    - text: Study disposition %
     - list:
       - 'listitem "Study Completion: 49.9%, 493 of 988"': Study Completion 49.9% (493)
       - 'listitem "Ongoing: 43.5%, 430 of 988"': Ongoing 43.5% (430)
@@ -144,15 +144,15 @@ accessibility:
 - 'button "Notes: Not recorded: the source value was blank."': "* Notes"
 - text: Study Disposition – Screening 26.3% 353 / 1,341
 - group "Screen Failure Rate breakdowns":
-  - region "Screening status":
-    - text: Screening status % of 1,341 screened
+  - region "Screening status, % of 1,341 screened":
+    - text: Screening status %
     - list:
       - 'listitem "Enrolled: 73.7%, 988 of 1,341"': Enrolled 73.7% (988)
       - 'listitem "Screen Failure: 26.3%, 353 of 1,341"': Screen Failure 26.3% (353)
 - text: Screen Failure Reasons 26.3% 353 / 1,341
 - group "Screen Failure Rate breakdowns":
-  - region "Screen failure reasons":
-    - text: Screen failure reasons n of 353 screen failures
+  - region "Screen failure reasons, n of 353 screen failures":
+    - text: Screen failure reasons n
     - list:
       - 'listitem "Inclusion Criteria Not Met: 154 of 353"': Inclusion Criteria Not Met 154
       - 'listitem "Exclusion Criteria Met: 103 of 353"': Exclusion Criteria Met 103
@@ -162,8 +162,8 @@ accessibility:
 - 'button "Notes: Not recorded: the source value was blank."': "* Notes"
 - text: Important Protocol Deviation Categories 0.05 per 28 days 298 / 5,676.6
 - group "Important Protocol Deviation Rate breakdowns":
-  - region "Top 5 categories":
-    - text: Top 5 categories n of 298 deviations
+  - region "Top 5 categories, n of 298 deviations":
+    - text: Top 5 categories n
     - list:
       - 'listitem "Eligibility Criteria: 66 of 298"': Eligibility Criteria 66
       - 'listitem "Informed Consent: 64 of 298"': Informed Consent 64
@@ -175,8 +175,8 @@ accessibility:
 - 'button "Notes: Not recorded: the source value was blank."': "* Notes"
 - text: Non-Important Protocol Deviation Categories 0.41 per 28 days 2,331 / 5,676.6
 - group "Non-Important Protocol Deviation Rate breakdowns":
-  - region "Top 5 categories":
-    - text: Top 5 categories n of 2,331 deviations
+  - region "Top 5 categories, n of 2,331 deviations":
+    - text: Top 5 categories n
     - list:
       - 'listitem "Visit Schedule: 838 of 2,331"': Visit Schedule 838
       - 'listitem "Study Procedures: 626 of 2,331"': Study Procedures 626

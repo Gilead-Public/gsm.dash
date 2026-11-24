@@ -6,7 +6,8 @@ import { esc } from '../util/format.js';
 import { configProblems, problemText, resolveView } from '../app/references.js';
 import { reportLink } from '../app/report-links.js';
 import { DETAIL_TABS } from '../app/study-page-spec.js';
-import { studyCards } from '../app/study-cards.js';
+import { combineCards, studyCards } from '../app/study-cards.js';
+import { COMBINED_CARDS } from '../config/study-cards.js';
 import { useStore } from './useStore.js';
 import { Widget } from './Widget.jsx';
 
@@ -32,14 +33,16 @@ function fitCards(grid, state) {
     fitScopes.set(grid, scope);
     grid.style.removeProperty('--card-min');
   }
-  const cards = /** @type {HTMLElement[]} */ ([...grid.querySelectorAll(':scope > .card')]);
+  // A card stacked in a pair (#46) is measured too: the pair takes two card heights, so every card grows with it.
+  const cards = /** @type {HTMLElement[]} */ ([...grid.querySelectorAll(':scope > .card, :scope > .card-pair > .card')]);
   let need = 0;
   for (const c of cards) {
     const body = c.querySelector(':scope > .tile-body');
     if (!body || body.hasAttribute('data-fits')) continue;
-    need = Math.max(need, c.offsetHeight - body.clientHeight + body.scrollHeight);
+    const wanted = c.offsetHeight - body.clientHeight + body.scrollHeight;
+    if (wanted > c.offsetHeight) need = Math.max(need, wanted);
   }
-  if (cards.length && need > cards[0].offsetHeight) grid.style.setProperty('--card-min', `${need}px`);
+  if (need) grid.style.setProperty('--card-min', `${need}px`);
 }
 
 /** @param {{ problem: import('../app/references.js').Problem, what: string }} props */
@@ -70,9 +73,10 @@ function ConfigNotice({ problems }) {
 }
 
 /**
- * @param {{ store: any, studyId: string, back: string }} props `back` is the portfolio's address, with the view it was left in.
+ * @param {{ store: any, studyId: string, back: string, combine?: boolean }} props `back` is the portfolio's address, with the
+ *   view it was left in; `combine` stacks similar KRIs in one card, an Admin setting (#46).
  */
-export function StudyPage({ store, studyId, back }) {
+export function StudyPage({ store, studyId, back, combine = false }) {
   const version = useStore(store);
   const root = useRef(/** @type {HTMLDivElement | null} */ (null));
   const grid = useRef(/** @type {HTMLDivElement | null} */ (null));
@@ -90,7 +94,7 @@ export function StudyPage({ store, studyId, back }) {
   const asOf = store.state.asOf;
   const found = asOf ? dates.lastIndexOf(asOf) : dates.length - 1;
   const visit = found < 0 ? dates.length - 1 : found;
-  fitState.current = `${studyId}|${visit}|${expanded}`;
+  fitState.current = `${studyId}|${visit}|${expanded}|${combine}`;
   committing.current = true;
 
   // A widget redrawn on its own, or a grid that changes width, may change the height the cards need. Within the page's
@@ -154,13 +158,22 @@ export function StudyPage({ store, studyId, back }) {
         </span>
       </div>
       <div className="tiles cards" ref={grid}>
-        {shown.map((card, i) => {
-          const open = card.kri && detail.metricId != null && detail.metricId === card.metric?.MetricID;
+        {(combine ? combineCards(shown, COMBINED_CARDS) : shown.map((card) => [card])).map((group) => {
+          const opened = group.find((card) => card.kri && detail.metricId != null && detail.metricId === card.metric?.MetricID);
+          const ids = group.map((card) => card.spec.id);
           return (
-            <Fragment key={card.spec.id}>
-              <Card card={card} open={open} {...shared} />
-              {open ? <DetailPanel metric={card.metric} {...shared} /> : null}
-              {i === lastKri ? expand : null}
+            <Fragment key={ids.join('+')}>
+              {group.length === 1 ? (
+                <Card card={group[0]} open={opened === group[0]} {...shared} />
+              ) : (
+                <div className="card-pair" data-pair={ids.join(' ')}>
+                  {group.map((card) => (
+                    <Card key={card.spec.id} card={card} open={opened === card} {...shared} />
+                  ))}
+                </div>
+              )}
+              {opened ? <DetailPanel metric={opened.metric} {...shared} /> : null}
+              {group.includes(shown[lastKri]) ? expand : null}
             </Fragment>
           );
         })}

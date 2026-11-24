@@ -108,22 +108,29 @@ test('48.03: each card\'s value hover names n and N with the catalog\'s labels, 
   expect(per28, 'per-28-day cards checked').toBeGreaterThan(0);
 });
 
-test('48.04: each breakdown section\'s title and descriptor share a row, and the descriptor names the section\'s total, the header\'s N for a status section and its n for a reason section (#48)', async ({ app, page }) => {
+test('48.04: each breakdown section\'s title and its unit, % or n, share a row, a long title included; hovering the row shows the title, the section\'s total and what each bar shows, the total being the header\'s N for a status section and its n for a reason section (#48)', async ({ app, page }) => {
   await app.openStudy(study.StudyID);
+  const tip = page.locator('#gsm-tooltip');
   const counted = { Numerator: 0, Denominator: 0 };
   for (const c of BREAKDOWNS) {
     const want = sectionFor(c);
     const sec = card(page, c.id).locator('.dist-sec');
-    const [title, descriptor] = await Promise.all([sec.locator('.sub-h').boundingBox(), sec.locator('.dist-cols').boundingBox()]);
+    const [title, unit] = await Promise.all([sec.locator('.sub-h').boundingBox(), sec.locator('.dist-cols').boundingBox()]);
     const t = /** @type {{ x: number, y: number, width: number, height: number }} */ (title);
-    const d = /** @type {{ x: number, y: number, width: number, height: number }} */ (descriptor);
-    expect(d.y < t.y + t.height && t.y < d.y + d.height && d.x >= t.x + t.width - 0.5, `${c.id}: title and descriptor share a row`).toBe(true);
-    const text = (await sec.locator('.dist-cols').innerText()).trim();
-    expect(text, c.id).toMatch(want.display === 'percent' ? /^% of [\d,]+ \S/ : /^n of [\d,]+ \S/);
-    const total = Number(text.split(' ')[2].replace(/,/g, ''));
+    const u = /** @type {{ x: number, y: number, width: number, height: number }} */ (unit);
+    expect(u.y < t.y + t.height && t.y < u.y + u.height && u.x >= t.x + t.width - 0.5, `${c.id}: title and unit share a row`).toBe(true);
+    await expect(sec.locator('.dist-cols'), `${c.id}: the unit alone`).toHaveText(want.display === 'percent' ? '%' : 'n');
+    await sec.locator('.sub-h').hover();
+    await expect(tip, c.id).toBeVisible();
+    const lines = (await tip.innerText()).split('\n').map((l) => l.trim());
+    expect(lines[0], `${c.id}: the hover's title`).toBe(want.title);
+    expect(lines[1], c.id).toMatch(want.display === 'percent' ? /^% of [\d,]+ \S/ : /^n of [\d,]+ \S/);
+    expect(lines[2], c.id).toBe(want.display === 'percent' ? 'Each bar: its share, then its count' : 'Each bar: its count');
+    const total = Number(lines[1].split(' ')[2].replace(/,/g, ''));
     expect(total, `${c.id}: the fixture's total`).toBe(want.Total);
     const [n, N] = (await card(page, c.id).locator('.card-nd').innerText()).split(' / ').map((x) => Number(x.replace(/,/g, '')));
     expect(total, `${c.id}: the header's ${want.display === 'percent' ? 'N' : 'n'}`).toBe(want.display === 'percent' ? N : n);
+    await page.mouse.move(0, 0);
     counted[/** @type {'Numerator' | 'Denominator'} */ (want.Source)]++;
   }
   expect([counted.Denominator > 0, counted.Numerator > 0], 'status and reason sections checked').toEqual([true, true]);
@@ -188,8 +195,8 @@ test('48.06: a card with notes has a "* Notes" marker in its footer, whose hover
   expect(withNotes, 'cards with notes checked').toBeGreaterThan(0);
 });
 
-test('48.07: each row holds the smaller of the Admin panel\'s maximum and the 300px cards that fit, every card the same size (#48)', async ({ app, page }) => {
-  for (const [width, perrow, columns] of /** @type {Array<[number, string | null, number]>} */ ([[1440, null, 4], [1440, '2', 2], [1440, '6', 4], [1920, '6', 6], [1920, null, 4], [1000, null, 3]])) {
+test('48.07: each row holds the smaller of the Admin panel\'s maximum and the 320px cards that fit on a page at most 1,720px wide, every card the same size (#48)', async ({ app, page }) => {
+  for (const [width, perrow, columns] of /** @type {Array<[number, string | null, number]>} */ ([[1440, null, 4], [1440, '3', 3], [1440, '5', 4], [1920, '5', 5], [1920, null, 4], [1280, null, 3], [1000, null, 2]])) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('about:blank');
     await app.openStudy(study.StudyID, undefined, perrow ? `#perrow=${perrow}` : '');
@@ -200,12 +207,14 @@ test('48.07: each row holds the smaller of the Admin panel\'s maximum and the 30
         columns: new Set(boxes.map((b) => Math.round(b.left))).size,
         sizes: new Set(boxes.map((b) => `${b.width.toFixed(1)}×${b.height.toFixed(1)}`)).size,
         width: Math.min(...boxes.map((b) => b.width)),
+        page: /** @type {Element} */ (document.querySelector('.wrap')).getBoundingClientRect().width,
       };
     });
     const where = `${width}px, maximum ${perrow ?? 'default'}`;
     expect(seen.columns, where).toBe(columns);
     expect(seen.sizes, `${where}: one card size`).toBe(1);
-    expect(seen.width, `${where}: at least 300px`).toBeGreaterThanOrEqual(300);
+    expect(seen.width, `${where}: at least 320px`).toBeGreaterThanOrEqual(320);
+    expect(seen.page, `${where}: a page at most 1,720px wide`).toBeLessThanOrEqual(Math.min(width, 1720));
   }
 });
 

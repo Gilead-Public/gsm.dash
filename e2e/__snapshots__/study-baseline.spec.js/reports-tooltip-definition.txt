@@ -1,5 +1,5 @@
 state: tooltip-definition (reports)
-dom: sha256 d9ff26668b770f2521d10bfab741e25882a4b06d8d0ed314c36ab1b7041ab8a2 (62423 characters)
+dom: sha256 e89b550cc0f5d49ec0512183268dbfd6d7c69552c7e1a062d31ab65dd11b0372 (64653 characters)
 tooltip: <b>Screen Failure Rate</b><br><span class="tip-muted mono">SF · kri0012 · Disposition</span><dl class="tip-dl"><dt>Definition</dt><dd><span class="tip-muted">not yet supplied (Q2)</span></dd><dt>Numerator</dt><dd>Number of screen failed participants</dd><dt>Denominator</dt><dd>Total screened participants</dd><dt>Displayed as</dt><dd>percent (n ÷ d)</dd><dt>Flagging</dt><dd>Adjusted Z-Score · thresholds -2, -1, 2, 3</dd><dt>Note</dt><dd>The tracker also lists a Planned "Screen Failure" divided by all enrolled (open question Q1).</dd></dl>
 drill-in: closed
 cards:
@@ -30,16 +30,16 @@ accessibility:
   - /url: ./portfolio.html
 - text: "STUDY006 FALCON-2 Immunology · Respiratory · P1 · Enrolling · Product F Latest snapshot: 2026-06-30 Eligibility Status 3.5% 31 / 879"
 - group "Eligibility breakdowns":
-  - region "Eligibility status":
-    - text: Eligibility status % of 879 enrolled
+  - region "Eligibility status, % of 879 enrolled":
+    - text: Eligibility status %
     - list:
       - 'listitem "Eligible: 96.5%, 848 of 879"': Eligible 96.5% (848)
       - 'listitem "Ineligible: 2.0%, 18 of 879"': Ineligible 2.0% (18)
       - 'listitem "Potentially Ineligible: 1.5%, 13 of 879"': Potentially Ineligible 1.5% (13)
 - text: Eligibility I/E Criteria 3.5% 31 / 879
 - group "Eligibility breakdowns":
-  - region "Top I/E criteria not met":
-    - text: Top I/E criteria not met n of 31 ineligible
+  - region "Top I/E criteria not met, n of 31 ineligible":
+    - text: Top I/E criteria not met n
     - list:
       - 'listitem "IN07: 7 of 31"': IN07 7
       - 'listitem "IN01: 6 of 31"': IN01 6
@@ -50,30 +50,30 @@ accessibility:
 - 'button "Notes: A participant can fall in more than one category, so the counts add up to more than 31."': "* Notes"
 - text: Premature Deaths – Time Window 2.6% 23 / 879
 - group "Early Deaths (90 days) breakdowns":
-  - region "Deaths by time from randomisation":
-    - text: Deaths by time from randomisation n of 23 deaths
+  - region "Deaths by time from randomisation, n of 23 deaths":
+    - text: Deaths by time from randomisation n
     - list:
       - 'listitem "31–90 days: 13 of 23"': 31–90 days 13
       - 'listitem "≤30 days: 10 of 23"': ≤30 days 10
 - text: Premature Deaths – Eligibility 2.6% 23 / 879
 - group "Early Deaths (90 days) breakdowns":
-  - region "Deaths by eligibility":
-    - text: Deaths by eligibility n of 23 deaths
+  - region "Deaths by eligibility, n of 23 deaths":
+    - text: Deaths by eligibility n
     - list:
       - 'listitem "Eligible: 20 of 23"': Eligible 20
       - 'listitem "Ineligible: 3 of 23"': Ineligible 3
 - text: Premature Deaths – Relatedness 2.6% 23 / 879
 - group "Early Deaths (90 days) breakdowns":
-  - region "Deaths by relatedness to treatment":
-    - text: Deaths by relatedness to treatment n of 23 deaths
+  - region "Deaths by relatedness to treatment, n of 23 deaths":
+    - text: Deaths by relatedness to treatment n
     - list:
       - 'listitem "No: 16 of 23"': No 16
       - 'listitem "Yes: 5 of 23"': Yes 5
       - 'listitem "Unknown: 2 of 23"': Unknown 2
 - text: IP Status 1.6% 14 / 879
 - group "IP Non-starters breakdowns":
-  - region "IP status":
-    - text: IP status % of 879 enrolled
+  - region "IP status, % of 879 enrolled":
+    - text: IP status %
     - list:
       - 'listitem "Dosed: 93.9%, 825 of 879"': Dosed 93.9% (825)
       - 'listitem "Potential Non-Starter – within window: 2.8%, 25 of 879"': Potential Non-Starter – within window 2.8% (25)
@@ -81,16 +81,16 @@ accessibility:
       - 'listitem "Confirmed Non-Starter: 1.6%, 14 of 879"': Confirmed Non-Starter 1.6% (14)
 - text: Treatment Disposition 4.9% 42 / 865
 - group "Premature Treatment Discontinuation Rate breakdowns":
-  - region "Treatment disposition":
-    - text: Treatment disposition % of 865 dosed
+  - region "Treatment disposition, % of 865 dosed":
+    - text: Treatment disposition %
     - list:
       - 'listitem "Dosed – treatment complete: 55.5%, 480 of 865"': Dosed – treatment complete 55.5% (480)
       - 'listitem "Dosed – ongoing: 39.7%, 343 of 865"': Dosed – ongoing 39.7% (343)
       - 'listitem "Dosed – premature treatment discontinuation: 4.9%, 42 of 865"': Dosed – premature treatment discontinuation 4.9% (42)
 - text: Premature Treatment Discontinuation Reasons 4.9% 42 / 865
 - group "Premature Treatment Discontinuation Rate breakdowns":
-  - region "Reasons for treatment discontinuation":
-    - text: Reasons for treatment discontinuation n of 42 discontinued
+  - region "Reasons for treatment discontinuation, n of 42 discontinued":
+    - text: Reasons for treatment discontinuation n
     - list:
       - 'listitem "Physician Decision: 13 of 42"': Physician Decision 13
       - 'listitem "Other: 13 of 42"': Other 13
@@ -101,8 +101,8 @@ accessibility:
 - 'button "Notes: A participant can fall in more than one category, so the counts add up to more than 42. Not recorded: the source value was blank."': "* Notes"
 - text: Study Disposition – Enrolled 6.9% 61 / 879
 - group "Study Discontinuation Rate breakdowns":
-  - region "Study disposition":
-    - text: Study disposition % of 879 enrolled
+  - region "Study disposition, % of 879 enrolled":
+    - text: Study disposition %
     - list:
       - 'listitem "Study Completion: 53.4%, 469 of 879"': Study Completion 53.4% (469)
       - 'listitem "Ongoing: 39.7%, 349 of 879"': Ongoing 39.7% (349)
@@ -114,15 +114,15 @@ accessibility:
 - 'button "Notes: Not recorded: the source value was blank."': "* Notes"
 - text: Study Disposition – Screening 14.1% 144 / 1,023
 - group "Screen Failure Rate breakdowns":
-  - region "Screening status":
-    - text: Screening status % of 1,023 screened
+  - region "Screening status, % of 1,023 screened":
+    - text: Screening status %
     - list:
       - 'listitem "Enrolled: 85.9%, 879 of 1,023"': Enrolled 85.9% (879)
       - 'listitem "Screen Failure: 14.1%, 144 of 1,023"': Screen Failure 14.1% (144)
 - text: Screen Failure Reasons 14.1% 144 / 1,023
 - group "Screen Failure Rate breakdowns":
-  - region "Screen failure reasons":
-    - text: Screen failure reasons n of 144 screen failures
+  - region "Screen failure reasons, n of 144 screen failures":
+    - text: Screen failure reasons n
     - list:
       - 'listitem "Inclusion Criteria Not Met: 64 of 144"': Inclusion Criteria Not Met 64
       - 'listitem "Exclusion Criteria Met: 33 of 144"': Exclusion Criteria Met 33
@@ -132,8 +132,8 @@ accessibility:
 - 'button "Notes: Not recorded: the source value was blank."': "* Notes"
 - text: Important Protocol Deviation Categories 0.06 per 28 days 380 / 5,928.3
 - group "Important Protocol Deviation Rate breakdowns":
-  - region "Top 5 categories":
-    - text: Top 5 categories n of 380 deviations
+  - region "Top 5 categories, n of 380 deviations":
+    - text: Top 5 categories n
     - list:
       - 'listitem "Informed Consent: 83 of 380"': Informed Consent 83
       - 'listitem "Investigational Product: 72 of 380"': Investigational Product 72
@@ -145,8 +145,8 @@ accessibility:
 - 'button "Notes: Not recorded: the source value was blank."': "* Notes"
 - text: Non-Important Protocol Deviation Categories 0.52 per 28 days 3,055 / 5,928.3
 - group "Non-Important Protocol Deviation Rate breakdowns":
-  - region "Top 5 categories":
-    - text: Top 5 categories n of 3,055 deviations
+  - region "Top 5 categories, n of 3,055 deviations":
+    - text: Top 5 categories n
     - list:
       - 'listitem "Visit Schedule: 1,065 of 3,055"': Visit Schedule 1,065
       - 'listitem "Study Procedures: 891 of 3,055"': Study Procedures 891

@@ -34,11 +34,16 @@ function rowHtml(bar, s, max) {
   </div>`;
 }
 
-// The section's title and what its values are out of share one row (#48); its notes go to the card's footer.
+/** The section's header hover (#48): its title, what its values are out of with the total, and what each bar shows. */
+const headTip = (s) =>
+  `<b>${esc(s.title)}</b><br>${esc(descriptor(s))}<br><span class="tip-muted">${s.display === 'percent' ? 'Each bar: its share, then its count' : 'Each bar: its count'}</span>`;
+
+// The section's title and its unit, % or n, share one row; the rest is in the row's hover (#48). Its notes go to the
+// card's footer.
 function sectionHtml(s) {
   const max = Math.max(0, ...s.bars.map((b) => b.count));
-  return `<section class="dist-sec" data-source="${esc(s.source)}" data-variable="${esc(s.variable)}" data-display="${s.display}" aria-label="${esc(s.title)}">
-    <div class="sec-head"><div class="sub-h">${esc(s.title)}</div><div class="dist-cols">${esc(descriptor(s))}</div></div>
+  return `<section class="dist-sec" data-source="${esc(s.source)}" data-variable="${esc(s.variable)}" data-display="${s.display}" aria-label="${esc(`${s.title}, ${descriptor(s)}`)}">
+    <div class="sec-head" data-tip="${esc(headTip(s))}"><div class="sub-h">${esc(s.title)}</div><div class="dist-cols">${s.display === 'percent' ? '%' : 'n'}</div></div>
     <div class="dist-bars" role="list">${s.bars.map((b) => rowHtml(b, s, max)).join('')}</div>
   </section>`;
 }

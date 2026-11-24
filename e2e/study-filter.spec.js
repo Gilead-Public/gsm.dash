@@ -15,7 +15,7 @@ const study = 'STUDY004';
 const hidden = 'Analysis_kri0005';
 const CONFIG = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'] };
 /** Every setting the address holds, besides one `filter.<param>` per filter the Controls panel offers. */
-const VIEW_KEYS = ['collapse', 'dir', 'group', 'heatmap', 'hide', 'show', 'sort', 'view', 'hidegroup', 'hidebygroup', 'theme', 'perrow', 'cfgpanel', 'legend'];
+const VIEW_KEYS = ['collapse', 'dir', 'group', 'heatmap', 'hide', 'show', 'sort', 'view', 'hidegroup', 'hidebygroup', 'theme', 'perrow', 'cfgpanel', 'legend', 'combine'];
 
 
 /** @param {Page} page */
@@ -39,7 +39,7 @@ async function changeEverySetting(page) {
   await control(page, 'button[data-show="den"]').click();
   await control(page, 'button[data-show="num"]').click();
   await control(page, 'button[data-group="Data quality"]').click();
-  for (const [key, value] of [['theme', 'light'], ['perrow', '5'], ['cfgpanel', 'side'], ['legend', 'on']]) await chooseAdmin(page, key, value);
+  for (const [key, value] of [['theme', 'light'], ['perrow', '5'], ['cfgpanel', 'side'], ['legend', 'on'], ['combine', 'on']]) await chooseAdmin(page, key, value);
 }
 
 /** @param {Page} page */

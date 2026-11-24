@@ -63,7 +63,7 @@ function StudyReport({ store, studyId }) {
   return (
     <>
       {host && createPortal(<AdminMenu admin={admin} onChange={change} />, host)}
-      <StudyPage store={store} studyId={studyId} back={`./portfolio.html${location.hash}`} />
+      <StudyPage store={store} studyId={studyId} back={`./portfolio.html${location.hash}`} combine={admin.combine === 'on'} />
     </>
   );
 }

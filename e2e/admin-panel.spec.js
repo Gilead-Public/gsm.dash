@@ -5,6 +5,7 @@ import { expect, readData, test } from './fixtures/app.js';
 import { chartTextFailures, contrastFailures } from './fixtures/contrast.js';
 import { chooseAdmin, chooseHeatmap, chooseView, closeControls, control } from './fixtures/controls.js';
 import { TRACKER_CARDS, tile } from './fixtures/tiles.js';
+import { layout } from './fixtures/card-layout.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 const portfolio = readData('portfolio.json');
@@ -16,8 +17,8 @@ const shown = catalog.filter((m) => m.Active !== false && m.GroupLevel === 'Site
 const planned = shown.filter((m) => m.Status === 'Planned');
 const study = 'STUDY004';
 const other = /** @type {{ StudyID: string, params: Record<string, string> }} */ (studies.find((s) => s.params.phase !== studies.find((x) => x.StudyID === study)?.params.phase));
-const DEFAULTS = { theme: 'auto', perrow: '4', cfgpanel: 'popover', legend: 'off' };
-const CHANGED = { theme: 'dark', perrow: '2', cfgpanel: 'side', legend: 'on' };
+const DEFAULTS = { theme: 'auto', perrow: '4', cfgpanel: 'popover', legend: 'off', combine: 'off' };
+const CHANGED = { theme: 'dark', perrow: '3', cfgpanel: 'side', legend: 'on', combine: 'on' };
 const LIGHT = 'rgb(246, 247, 246)';
 const DARK = 'rgb(12, 16, 21)';
 
@@ -53,12 +54,12 @@ const portfolioShown = (page) => page.locator('#app > .layout').waitFor();
 /** @param {Page} page @param {string} id */
 const studyShown = (page, id) => page.locator(`#app > [data-study="${id}"] .card`).first().waitFor();
 
-test('46.01: the Admin button on both reports opens the panel with its four settings at their defaults; a changed setting survives a reload, a study link and its back link, and Reset restores the defaults (#46)', async ({ app, page }) => {
+test('46.01: the Admin button on both reports opens the panel with its settings at their defaults; a changed setting survives a reload, a study link and its back link, and Reset restores the defaults (#46)', async ({ app, page }) => {
   for (const open of [() => app.open(), () => app.openStudy(study)]) {
     await open();
     await page.locator('#header-controls [data-open="admin"]').click();
     await expect(page.locator('.admin-pop')).toBeVisible();
-    expect(await page.locator('.admin-pop .ctl > label').allTextContents()).toEqual(['Theme', 'Study cards per row, at most', 'Config opens as', 'Heatmap legend']);
+    expect(await page.locator('.admin-pop .ctl > label').allTextContents()).toEqual(['Theme', 'Study cards per row, at most', 'Config opens as', 'Heatmap legend', 'Combine similar KRI cards']);
     expect(await adminShown(page)).toEqual(DEFAULTS);
     expect(await applied(page)).toEqual({ theme: 'auto', perrow: '4' });
     await closeControls(page);
@@ -71,11 +72,11 @@ test('46.01: the Admin button on both reports opens the panel with its four sett
   await page.reload();
   await portfolioShown(page);
   expect(page.url(), 'reload').toBe(left);
-  expect([await adminShown(page), await applied(page)], 'reload').toEqual([CHANGED, { theme: 'dark', perrow: '2' }]);
+  expect([await adminShown(page), await applied(page)], 'reload').toEqual([CHANGED, { theme: 'dark', perrow: '3' }]);
 
   await page.locator(`#app .portfolio-table a[data-study="${study}"]`).click();
   await studyShown(page, study);
-  expect([await adminShown(page), await applied(page)], 'the study report').toEqual([CHANGED, { theme: 'dark', perrow: '2' }]);
+  expect([await adminShown(page), await applied(page)], 'the study report').toEqual([CHANGED, { theme: 'dark', perrow: '3' }]);
   await page.locator('#app a.back').click();
   await portfolioShown(page);
   expect(page.url(), 'back link').toBe(left);
@@ -102,7 +103,7 @@ test('46.01: Admin settings changed on a study report survive its reload and its
   expect([adminParams(back), viewParams(back)], 'the back link, before a reload').toEqual([CHANGED, viewParams(before)]);
   await page.reload();
   await studyShown(page, study);
-  expect([await adminShown(page), await applied(page)], 'the study report, reloaded').toEqual([CHANGED, { theme: 'dark', perrow: '2' }]);
+  expect([await adminShown(page), await applied(page)], 'the study report, reloaded').toEqual([CHANGED, { theme: 'dark', perrow: '3' }]);
   expect(viewParams(address(page)), 'the study report keeps the portfolio\'s view it arrived with').toEqual(viewParams(before));
 
   await page.locator('#app a.back').click();
@@ -208,6 +209,59 @@ test('46.04: with the legend on and a heatmap shown, a legend between the table 
   await expect(legend).toBeVisible();
   await chooseAdmin(page, 'legend', 'off');
   await expect(legend, 'the legend off').toHaveCount(0);
+});
+
+/** The similar standard KRIs to combine, top card first, as the request names them. */
+const PAIRS = [['kri0004', 'kri0003'], ['kri0001', 'kri0002'], ['kri0008', 'kri0009'], ['kri0010', 'kri0011']];
+
+/**
+ * Each stacked pair on the study page: its cards in order, whether the second sits below the first, and whether the
+ * pair is one card wide and two grid rows tall.
+ * @param {Page} page
+ */
+const pairsShown = (page) =>
+  page.locator('.tiles.cards').evaluate((grid) => {
+    const one = /** @type {Element} */ (grid.querySelector(':scope > .card')).getBoundingClientRect();
+    const gap = Number.parseFloat(getComputedStyle(grid).rowGap);
+    return [...grid.querySelectorAll(':scope > .card-pair')].map((p) => {
+      const cards = [...p.querySelectorAll(':scope > .card')];
+      const box = p.getBoundingClientRect();
+      return {
+        ids: cards.map((c) => c.getAttribute('data-card')),
+        stacked: cards.length === 2 && cards[1].getBoundingClientRect().top >= cards[0].getBoundingClientRect().bottom - 1,
+        oneWide: Math.abs(box.width - one.width) < 1,
+        twoTall: Math.abs(box.height - (2 * one.height + gap)) < 2,
+      };
+    });
+  });
+
+/**
+ * Each standard KRI card's header and body text, by card id.
+ * @param {Page} page
+ */
+const kriTexts = (page) =>
+  page.locator('.card.kri').evaluateAll((els) => Object.fromEntries(els.map((e) => [e.getAttribute('data-card'), `${e.querySelector('.tile-head')?.textContent} | ${e.querySelector('.tile-body')?.textContent}`])));
+
+test('Combine similar KRI cards, an Admin demo setting: when on, each configured pair of standard KRIs whose cards both show stacks in one card, one card wide and two rows tall, the first above the second, with their values unchanged; a pair with a card hidden shows the other alone; off, every card stands alone', async ({ app, page }) => {
+  await app.openStudy(study);
+  await expect(page.locator('.card-pair'), 'off by default').toHaveCount(0);
+  const alone = await kriTexts(page);
+  await chooseAdmin(page, 'combine', 'on');
+  expect(await pairsShown(page)).toEqual(PAIRS.map((ids) => ({ ids, stacked: true, oneWide: true, twoTall: true })));
+  expect(await kriTexts(page), 'each card\'s values, stacked').toEqual(alone);
+  const seen = await layout(page);
+  expect([seen.unseen, seen.outside], 'every stacked card\'s text seen, inside its card and its pair').toEqual([[], []]);
+  const order = await page.locator('.tiles.cards > *').evaluateAll((els) => els.map((e) => e.getAttribute('data-card') ?? e.getAttribute('data-pair')));
+  expect(order.slice(-5), 'each pair at its first card\'s place').toEqual(['kri0004 kri0003', 'kri0001 kri0002', 'kri0005', 'kri0008 kri0009', 'kri0010 kri0011']);
+
+  const hidden = /** @type {{ MetricID: string }} */ (catalog.find((m) => m.ID === 'kri0003')).MetricID;
+  await page.goto('about:blank');
+  await app.openStudy(study, undefined, `#combine=on&hide=${hidden}`);
+  expect((await pairsShown(page)).map((p) => p.ids), 'kri0003 hidden: kri0004 alone').toEqual(PAIRS.slice(1));
+  await expect(page.locator('.tiles.cards > .card[data-card="kri0004"]')).toHaveCount(1);
+
+  await chooseAdmin(page, 'combine', 'off');
+  await expect(page.locator('.card-pair'), 'off again').toHaveCount(0);
 });
 
 /**

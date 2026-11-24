@@ -101,9 +101,10 @@ function expectedFor(m) {
       ? { pct: ((totals.Numerator / totals.Denominator) * 28).toFixed(2), nd: `${int(totals.Numerator)} / ${(totals.Denominator / 28).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}` }
       : { pct: pct(totals.Numerator / totals.Denominator), nd: `${int(totals.Numerator)} / ${int(totals.Denominator)}` },
     sections: sections.map((s) => {
-      // The one heading names what the values are out of, with the section's total (#48): a status section's population
-      // from the fixture's metric, a reason section's from configuration.
-      const heading = s.display === 'percent'
+      // The one heading is the values' unit, % or n; the header's hover names what they are out of, with the section's
+      // total (#48): a status section's population from the fixture's metric, a reason section's from configuration.
+      const heading = s.display === 'percent' ? '%' : 'n';
+      const outOf = s.display === 'percent'
         ? `% of ${int(s.Total)} ${String(m.Population).toLowerCase()}`
         : `n of ${int(s.Total)} ${config.sections?.[`${s.Source}:${s.Variable}`]?.of ?? ''}`.trim();
       return {
@@ -113,6 +114,7 @@ function expectedFor(m) {
         display: s.display,
         isStatus: (config.statusVariables ?? []).includes(s.Variable),
         headings: [heading],
+        outOf,
         rows: s.bars.map((bar) => ({
           label: bar.label,
           kind: bar.kind,
@@ -162,17 +164,22 @@ async function renderedFor(page, m) {
         visible(r.querySelector('.btrack'), `section ${i} row ${j} bar`);
         /** @type {Record<string, string | null>} */
         const values = {};
+        // Values and their heading are right-aligned: a value belongs to the heading that ends where it ends.
         for (const cell of r.querySelectorAll('.v, .p')) {
           const box = cell.getBoundingClientRect();
-          const middle = (box.left + box.right) / 2;
-          const heading = headings.find((h) => middle >= h.left - 0.5 && middle <= h.right + 0.5);
-          values[heading ? String(heading.text) : `no heading at x=${Math.round(middle)}`] = visible(cell, `section ${i} row ${j} value`);
+          const heading = headings.find((h) => Math.abs(box.right - h.right) <= 1);
+          values[heading ? String(heading.text) : `no heading ending at x=${Math.round(box.right)}`] = visible(cell, `section ${i} row ${j} value`);
         }
         return { label: visible(r.querySelector('.lbl'), `section ${i} row ${j} label`), values, hover: r.getAttribute('title'), text: /** @type {HTMLElement} */ (r).innerText.replace(/\s+/g, ' ').trim() };
       });
+      // The header's hover, as its lines read.
+      const tip = s.querySelector('.sec-head')?.getAttribute('data-tip') ?? '';
+      const holder = document.createElement('div');
+      holder.innerHTML = tip.replace(/<br>/g, '\n');
       return {
         title: visible(s.querySelector('.sub-h'), `section ${i} title`),
         headings: headings.map((h) => h.text),
+        hover: (holder.textContent ?? '').split('\n'),
         rows,
       };
     });
@@ -246,7 +253,7 @@ test.describe('Layout A distribution widget', () => {
     }
   });
 
-  test('10.09: reason sections\' bars show a count, never a percentage, and each section names its population and total (#10)', async ({ app, page }) => {
+  test('10.09: reason sections\' bars show a count, never a percentage; each section\'s heading reads % or n, and its hover names its population and total (#10)', async ({ app, page }) => {
     await openStudy(app, page);
     const checked = { Denominator: 0, Numerator: 0 };
     for (const m of configured) {
@@ -257,10 +264,11 @@ test.describe('Layout A distribution widget', () => {
       seen.sections.forEach((s, i) => {
         const { source, title } = want.sections[i];
         const where = `${m.card} ${title}`;
-        // A status section's population comes from the fixture's metric, not from the widget configuration; its total
-        // from the fixture's rows.
-        expect(s.headings, where).toEqual(want.sections[i].headings);
-        expect(s.headings[0], where).toMatch(source === 'Denominator' ? new RegExp(`^% of [\\d,]+ ${String(m.Population).toLowerCase()}$`) : /^n of [\d,]+ \S/);
+        // The heading is the unit alone; the hover names what the values are out of. A status section's population comes
+        // from the fixture's metric, not from the widget configuration; its total from the fixture's rows.
+        expect(s.headings, where).toEqual([source === 'Denominator' ? '%' : 'n']);
+        expect(s.hover, `${where}: the header's hover`).toEqual([title, want.sections[i].outOf, source === 'Denominator' ? 'Each bar: its share, then its count' : 'Each bar: its count']);
+        expect(s.hover[1], where).toMatch(source === 'Denominator' ? new RegExp(`^% of [\\d,]+ ${String(m.Population).toLowerCase()}$`) : /^n of [\d,]+ \S/);
         for (const row of s.rows) {
           const shown = Object.values(row.values);
           expect(shown, `${where} ${row.label}: one value cell`).toHaveLength(1);

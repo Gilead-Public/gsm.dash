@@ -26,3 +26,11 @@ export const STUDY_CARDS = [
   { id: 'non-important-pd-categories', widget: 'distribution-bar', metric: 'kri0003', title: 'Non-Important Protocol Deviation Categories', section: 'Numerator:dvdecod' },
   ...['kri0004', 'kri0003', 'kri0002', 'kri0001', 'kri0005', 'kri0008', 'kri0009', 'kri0010', 'kri0011'].map((metric) => ({ id: metric, widget: 'kri-summary', metric })),
 ];
+
+/** Similar standard KRIs the Admin panel can stack in one card (#46), by card id, the top card first. */
+export const COMBINED_CARDS = [
+  ['kri0004', 'kri0003'],
+  ['kri0001', 'kri0002'],
+  ['kri0008', 'kri0009'],
+  ['kri0010', 'kri0011'],
+];

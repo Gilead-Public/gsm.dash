@@ -88,8 +88,8 @@ body {
   line-height: 1.5;
 }
 .wrap { max-width: 1480px; margin: 0 auto; padding: 0 20px 64px; }
-/* The study page takes the window's width, so wide screens fit more cards per row (#48). */
-body[data-page="study"] .wrap { max-width: none; }
+/* The study page is wider than the portfolio's, so a wide screen fits 5 cards of at least 320px in a row (#48). */
+body[data-page="study"] .wrap { max-width: 1720px; }
 
 /* portfolio: the table, with its controls in the header */
 .layout { display: block; }
@@ -307,9 +307,13 @@ div:where(.study-page) .back { color: var(--accent); text-decoration: none; font
 .kri-group .tiles { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
 .tile.kri { gap: 6px; padding: 10px 12px; }
 /* #32: every card the same size; its header gives the value at the visit shown, n / N and a sparkline. */
-/* As many columns as fit at 300px or more, up to the Admin panel's cards per row (#46, #48), filling the row. */
-.tiles.cards { --card-h: 400px; grid-template-columns: repeat(auto-fill, minmax(max(300px, calc((100% - (var(--per-row, 4) - 1) * 12px) / var(--per-row, 4))), 1fr)); }
+/* As many columns as fit at 320px or more, up to the Admin panel's cards per row (#46, #48), filling the row. */
+.tiles.cards { --card-h: 400px; grid-template-columns: repeat(auto-fill, minmax(max(320px, calc((100% - (var(--per-row, 4) - 1) * 12px) / var(--per-row, 4))), 1fr)); }
 .tile.card { height: max(var(--card-h), var(--card-min, 0px)); }
+/* Similar KRIs stacked in one card, an Admin setting (#46): one card wide and two grid rows tall. */
+.card-pair { grid-row: span 2; height: calc(2 * max(var(--card-h), var(--card-min, 0px)) + 12px); display: flex; flex-direction: column; border: 1px solid var(--line-2); border-radius: 9px; background: var(--panel); box-shadow: var(--shadow); overflow: hidden; }
+.card-pair > .tile.card { flex: 1; height: auto; border: 0; border-radius: 0; box-shadow: none; }
+.card-pair > .tile.card + .tile.card { border-top: 1px solid var(--line-2); }
 .card-value { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; padding-left: 12px; border-left: 1px solid var(--line-2); text-align: right; cursor: help; }
 .card-rate { display: flex; align-items: baseline; justify-content: flex-end; column-gap: 5px; white-space: nowrap; }
 .card-value .big { font-size: 24px; line-height: 1.25; }
@@ -327,8 +331,8 @@ div:where(.study-page) .back { color: var(--accent); text-decoration: none; font
 
 /* Layout A distribution bars (distribution-bar widget): numbers on one line, the bar full width beneath */
 .dist { display: flex; flex-direction: column; gap: 10px; }
-/* A section's title and what its values are out of share a row; a long title wraps in its own column (#48). */
-.sec-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; column-gap: 10px; }
+/* A section's title and its unit share a row, a long title wrapping in its own column; the rest is in its hover (#48). */
+.sec-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; column-gap: 10px; cursor: help; }
 .dist-cols { font-size: 11px; line-height: 1.15; color: var(--ink-3); text-align: right; white-space: nowrap; }
 .dist-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; align-items: end; }
 .dist-row .vn { color: var(--ink-3); }
