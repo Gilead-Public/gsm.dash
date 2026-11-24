@@ -78,8 +78,8 @@ export function studyCards({ metrics, inactive, visible, cards = STUDY_CARDS }) 
 }
 
 /**
- * The grid's items when similar cards are combined (#46): a configured pair whose cards both show becomes one item, at
- * the place of whichever comes first, its top card first; every other card stands alone.
+ * The grid's items when similar cards are combined (an Admin demo setting): a configured pair whose cards both show
+ * becomes one item, at the place of whichever comes first, its top card first; every other card stands alone.
  * @template {{ spec: { id: string } }} C
  * @param {C[]} cards
  * @param {string[][]} pairs

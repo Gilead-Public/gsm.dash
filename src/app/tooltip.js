@@ -86,7 +86,6 @@ export function metricTip(metric, { technical = true } = {}) {
       'Accrual',
       metric.AccrualThreshold != null ? `${metric.AccrualMetric ?? 'Denominator'} ≥ ${metric.AccrualThreshold}` : null,
     ],
-    ['Requirement', metric.RequirementID ? `gsm.roadmap#${metric.RequirementID}` : null],
     ['Note', metric.Note],
   ].filter(([, v]) => v != null && v !== '');
   return (

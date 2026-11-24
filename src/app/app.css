@@ -6,6 +6,7 @@
   --bg: #f6f7f6;
   --panel: #ffffff;
   --panel-2: #edf0ee;
+  --card-head: #f7f9f8;
   --ink: #1b2320;
   --ink-2: #55605b;
   --ink-3: #7d8883;
@@ -33,6 +34,7 @@
     --bg: #0c1015;
     --panel: #1b222c;
     --panel-2: #28313d;
+    --card-head: #212934;
     --ink: #eef2f6;
     --ink-2: #c8d0da;
     --ink-3: #9aa6b3;
@@ -58,6 +60,7 @@
   --bg: #0c1015;
   --panel: #1b222c;
   --panel-2: #28313d;
+  --card-head: #212934;
   --ink: #eef2f6;
   --ink-2: #c8d0da;
   --ink-3: #9aa6b3;
@@ -309,11 +312,14 @@ div:where(.study-page) .back { color: var(--accent); text-decoration: none; font
 /* #32: every card the same size; its header gives the value at the visit shown, n / N and a sparkline. */
 /* As many columns as fit at 320px or more, up to the Admin panel's cards per row (#46, #48), filling the row. */
 .tiles.cards { --card-h: 400px; grid-template-columns: repeat(auto-fill, minmax(max(320px, calc((100% - (var(--per-row, 4) - 1) * 12px) / var(--per-row, 4))), 1fr)); }
-.tile.card { height: max(var(--card-h), var(--card-min, 0px)); }
-/* Similar KRIs stacked in one card, an Admin setting (#46): one card wide and two grid rows tall. */
-.card-pair { grid-row: span 2; height: calc(2 * max(var(--card-h), var(--card-min, 0px)) + 12px); display: flex; flex-direction: column; border: 1px solid var(--line-2); border-radius: 9px; background: var(--panel); box-shadow: var(--shadow); overflow: hidden; }
-.card-pair > .tile.card { flex: 1; height: auto; border: 0; border-radius: 0; box-shadow: none; }
-.card-pair > .tile.card + .tile.card { border-top: 1px solid var(--line-2); }
+.tile.card { --pad-x: 14px; height: max(var(--card-h), var(--card-min, 0px)); padding: 0 var(--pad-x) 12px; }
+.tile.card.kri { --pad-x: 12px; padding-bottom: 10px; }
+/* Similar KRIs in one card, an Admin demo setting: each one's header above its flag table, in equal halves, so every
+   second header in a row lines up. */
+.tile .tile-body.card-parts { display: grid; grid-auto-rows: minmax(0, 1fr); gap: 0; }
+.card-part { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+.card-part + .card-part > .tile-head { border-top: 1px solid var(--line); }
+.tile-foot .foot-lab { font-size: 11.5px; color: var(--ink-2); margin-right: 2px; }
 .card-value { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; padding-left: 12px; border-left: 1px solid var(--line-2); text-align: right; cursor: help; }
 .card-rate { display: flex; align-items: baseline; justify-content: flex-end; column-gap: 5px; white-space: nowrap; }
 .card-value .big { font-size: 24px; line-height: 1.25; }
@@ -350,9 +356,12 @@ div:where(.study-page) .back { color: var(--accent); text-decoration: none; font
 .tile .tile-body { display: flex; flex-direction: column; gap: 8px; flex: 1 1 0; min-height: 0; }
 
 /* tile header: metric identity (always shown) + Standard/Custom badge */
-/* The card header (#48): the title on the left; the value and n / N on the right, behind a thin rule. */
+/* The card header (#48), as the 23 Nov mockup: a tinted band across the card, ruled off from the body, with the title on
+   the left and the value and n / N on the right, behind a thin rule. */
 .tile-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; }
-.tile-head .name { font-size: 13px; color: var(--ink); font-weight: 600; line-height: 1.3; min-width: 0; overflow-wrap: anywhere; cursor: help; }
+.tile.card .tile-head { margin: 0 calc(-1 * var(--pad-x)); padding: 10px var(--pad-x); background: var(--card-head); border-bottom: 1px solid var(--line); }
+.tile.card > .tile-head, .card-part:first-child > .tile-head { border-radius: 8px 8px 0 0; }
+.tile-head .name { font-size: 15px; color: var(--ink); font-weight: 700; line-height: 1.3; min-width: 0; overflow-wrap: anywhere; cursor: help; }
 .sub-h { font-family: "Archivo", sans-serif; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
 
 

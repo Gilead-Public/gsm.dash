@@ -49,11 +49,11 @@ export const shownCards = (page) =>
   );
 
 /**
- * The metrics the study page's cards show, each once, sorted by MetricID.
+ * The metrics the study page's cards show, each once, sorted by MetricID, those sharing a combined card included.
  * @param {Page} page
  */
 export const cardMetrics = async (page) =>
-  [...new Set(await page.locator('#app .card[data-metric-id]').evaluateAll((els) => els.map((t) => t.getAttribute('data-metric-id') ?? '')))].sort();
+  [...new Set(await page.locator('#app .card[data-metric-id], #app .card-part[data-metric-id]').evaluateAll((els) => els.map((t) => t.getAttribute('data-metric-id') ?? '')))].sort();
 
 /**
  * Of the given metrics, those the tracker gives a card: what a study report can show of them (#32).

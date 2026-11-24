@@ -7,7 +7,7 @@ import { configProblems, problemText, resolveView } from '../app/references.js';
 import { reportLink } from '../app/report-links.js';
 import { DETAIL_TABS } from '../app/study-page-spec.js';
 import { combineCards, studyCards } from '../app/study-cards.js';
-import { COMBINED_CARDS } from '../config/study-cards.js';
+import { COMBINED_CARDS, COMBINED_LABELS } from '../config/study-cards.js';
 import { useStore } from './useStore.js';
 import { Widget } from './Widget.jsx';
 
@@ -22,8 +22,9 @@ const fitScopes = new WeakMap();
 /**
  * Every card has one height (#32): the configured one, or more while some card's content can't be shortened to fit
  * it, such as widget 4's tables or a breakdown already down to one bar. A body whose widget fitted it is marked
- * `data-fits` and left out. Until the page state or the grid's width changes the height only grows, so a breakdown
- * given more room doesn't shrink it again.
+ * `data-fits` and left out. A combined card's halves stay equal, so it grows by its fuller half's shortfall in each.
+ * Until the page state or the grid's width changes the height only grows, so a breakdown given more room doesn't
+ * shrink it again.
  * @param {HTMLElement} grid
  * @param {string} state
  */
@@ -33,10 +34,15 @@ function fitCards(grid, state) {
     fitScopes.set(grid, scope);
     grid.style.removeProperty('--card-min');
   }
-  // A card stacked in a pair (#46) is measured too: the pair takes two card heights, so every card grows with it.
-  const cards = /** @type {HTMLElement[]} */ ([...grid.querySelectorAll(':scope > .card, :scope > .card-pair > .card')]);
+  const cards = /** @type {HTMLElement[]} */ ([...grid.querySelectorAll(':scope > .card')]);
   let need = 0;
   for (const c of cards) {
+    const parts = /** @type {HTMLElement[]} */ ([...c.querySelectorAll(':scope > .card-parts > .card-part')]);
+    if (parts.length) {
+      const short = Math.max(...parts.map((p) => p.scrollHeight - p.clientHeight));
+      if (short > 0) need = Math.max(need, Math.ceil(c.offsetHeight + parts.length * short));
+      continue;
+    }
     const body = c.querySelector(':scope > .tile-body');
     if (!body || body.hasAttribute('data-fits')) continue;
     const wanted = c.offsetHeight - body.clientHeight + body.scrollHeight;
@@ -74,7 +80,7 @@ function ConfigNotice({ problems }) {
 
 /**
  * @param {{ store: any, studyId: string, back: string, combine?: boolean }} props `back` is the portfolio's address, with the
- *   view it was left in; `combine` stacks similar KRIs in one card, an Admin setting (#46).
+ *   view it was left in; `combine` shows similar KRIs in one card, an Admin demo setting.
  */
 export function StudyPage({ store, studyId, back, combine = false }) {
   const version = useStore(store);
@@ -163,15 +169,7 @@ export function StudyPage({ store, studyId, back, combine = false }) {
           const ids = group.map((card) => card.spec.id);
           return (
             <Fragment key={ids.join('+')}>
-              {group.length === 1 ? (
-                <Card card={group[0]} open={opened === group[0]} {...shared} />
-              ) : (
-                <div className="card-pair" data-pair={ids.join(' ')}>
-                  {group.map((card) => (
-                    <Card key={card.spec.id} card={card} open={opened === card} {...shared} />
-                  ))}
-                </div>
-              )}
+              {group.length === 1 ? <Card card={group[0]} open={opened === group[0]} {...shared} /> : <CombinedCard cards={group} opened={opened} {...shared} />}
               {opened ? <DetailPanel metric={opened.metric} {...shared} /> : null}
               {group.includes(shown[lastKri]) ? expand : null}
             </Fragment>
@@ -263,24 +261,46 @@ function NotesMarker({ notes }) {
 }
 
 /**
- * One card: a header with its title (whose hover gives the metric's definition) and its value and n / N; its one
- * widget or the reason it can't show it; and a footer with the breakdown's notes, the detailed-report link and, on a
- * standard KRI, the Charts drill-in.
+ * A card's header (#48): its title, whose hover gives the metric's definition, and its value and n / N.
+ * @param {{ card: import('../app/study-cards.js').Card, store: any, studyId: string }} props
+ */
+function CardHead({ card, store, studyId }) {
+  const { metric, def } = card;
+  return (
+    <div className="tile-head">
+      <span className="name" data-tip={metric ? metricTip(metric) : undefined}>
+        {card.title}
+      </span>
+      {def ? <CardValue metric={metric} store={store} studyId={studyId} /> : null}
+    </div>
+  );
+}
+
+/**
+ * The toggle that opens a standard KRI's charts under its card.
+ * @param {{ metric: any, open: boolean, store: any, label?: string }} props
+ */
+function ChartsToggle({ metric, open, store, label = 'Charts' }) {
+  const toggle = () => store.set('detail', { metricId: open ? null : metric.MetricID, tab: store.state.detail.tab });
+  return (
+    <button type="button" className={`tile-more ${open ? 'on' : ''}`} data-detail-metric={metric.MetricID} aria-expanded={open} title="Full-size gsm.viz charts" onClick={toggle}>
+      {label} {open ? '▴' : '▾'}
+    </button>
+  );
+}
+
+/**
+ * One card: its header; its one widget or the reason it can't show it; and a footer with the breakdown's notes, the
+ * detailed-report link and, on a standard KRI, the Charts drill-in.
  * @param {{ card: import('../app/study-cards.js').Card, open: boolean, store: any, studyId: string, version: number }} props
  */
 export function Card({ card, open, store, studyId, version }) {
   const { spec, metric, def, config, problem, kri } = card;
   const link = metric ? reportLink(metric, store.reportBase, location.href, studyId) : null;
-  const toggleDetail = () => store.set('detail', { metricId: open ? null : metric.MetricID, tab: store.state.detail.tab });
   const [notes, setNotes] = useState('');
   return (
     <div className={kri ? 'tile card kri' : 'tile card'} data-card={spec.id} data-metric-id={metric?.MetricID}>
-      <div className="tile-head">
-        <span className="name" data-tip={metric ? metricTip(metric) : undefined}>
-          {card.title}
-        </span>
-        {def ? <CardValue metric={metric} store={store} studyId={studyId} /> : null}
-      </div>
+      <CardHead card={card} store={store} studyId={studyId} />
       {def ? (
         <Widget className="tile-body" def={def} metricId={metric.MetricID} config={config} store={store} studyId={studyId} version={version} onResult={(result) => setNotes((result?.notes ?? []).join('\n'))} />
       ) : (
@@ -288,16 +308,42 @@ export function Card({ card, open, store, studyId, version }) {
       )}
       <div className="tile-foot">
         <NotesMarker notes={notes ? notes.split('\n') : []} />
-        {kri && def ? (
-          <button type="button" className={`tile-more ${open ? 'on' : ''}`} data-detail-metric={metric.MetricID} aria-expanded={open} title="Full-size gsm.viz charts" onClick={toggleDetail}>
-            Charts {open ? '▴' : '▾'}
-          </button>
-        ) : null}
+        {kri && def ? <ChartsToggle metric={metric} open={open} store={store} /> : null}
         {link ? (
           <a className="report-link" href={link} target="_blank" rel="noopener">
             Detailed report ↗
           </a>
         ) : null}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Similar standard KRIs in one card the size of any other, an Admin demo setting: each one's header above its flag
+ * table, and one footer with each one's Charts toggle.
+ * @param {{ cards: import('../app/study-cards.js').Card[], opened: any, store: any, studyId: string, version: number }} props
+ */
+function CombinedCard({ cards, opened, store, studyId, version }) {
+  return (
+    <div className="tile card kri combined" data-pair={cards.map((c) => c.spec.id).join(' ')}>
+      <div className="tile-body card-parts">
+        {cards.map((card) => (
+          <section key={card.spec.id} className="card-part" data-card={card.spec.id} data-metric-id={card.metric?.MetricID}>
+            <CardHead card={card} store={store} studyId={studyId} />
+            {card.def ? (
+              <Widget className="part-body" def={card.def} metricId={card.metric.MetricID} config={card.config} store={store} studyId={studyId} version={version} />
+            ) : (
+              <div className="part-body">{card.problem ? <ProblemNote problem={card.problem} what="card" /> : null}</div>
+            )}
+          </section>
+        ))}
+      </div>
+      <div className="tile-foot">
+        <span className="foot-lab">Charts</span>
+        {cards.map((card) =>
+          card.def ? <ChartsToggle key={card.spec.id} metric={card.metric} open={opened === card} store={store} label={COMBINED_LABELS[card.spec.id] ?? card.title} /> : null,
+        )}
       </div>
     </div>
   );

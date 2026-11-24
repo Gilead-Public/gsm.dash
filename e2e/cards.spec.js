@@ -79,24 +79,25 @@ test.describe('cards of one size, with nothing clipped', () => {
     await expectFitted(page, studies[1].StudyID);
   });
 
-  test('32.08: with similar KRI cards stacked in pairs (an Admin demo setting), long KRI titles and a placeholder included, no text is clipped, the single cards keep one size, and each pair stays one card wide and two tall, at any width (#32)', async ({ app, page }) => {
-    // A title long enough that its card, stacked under another, needs more than its share of the pair.
-    const long = ' — a much longer name for this rate that wraps over several lines of the card header'.repeat(6);
+  test('32.08: with similar KRI cards combined (an Admin demo setting), long KRI titles and a placeholder included, every card, combined or not, keeps one size, each combined card\'s halves stay equal with every second header at one height, and no text is clipped, at any width (#32)', async ({ app, page }) => {
+    // Titles long enough that a combined card needs more than the configured height, in a top half and in bottom halves.
+    const long = ' — a much longer name for this rate that wraps over several lines of the card header'.repeat(3);
     await app.openStudy(study.StudyID, {
       portfolio: (/** @type {any} */ p) => {
-        for (const m of p.metrics) if (['kri0003', 'kri0002', 'kri0011'].includes(m.ID)) m.Metric += long;
+        for (const m of p.metrics) if (['kri0004', 'kri0002', 'kri0011'].includes(m.ID)) m.Metric += long;
         p.metrics = p.metrics.filter((/** @type {any} */ m) => m.ID !== 'kri0009');
       },
     }, '#combine=on');
-    await expect(card(page, 'kri0009').locator('.ref-problem')).toBeVisible();
-    await expect(page.locator('.card-pair')).toHaveCount(4);
+    await expect(page.locator('.card-part[data-card="kri0009"] .ref-problem')).toBeVisible();
+    await expect(page.locator('.card.combined')).toHaveCount(4);
     for (const width of [1280, 1000, 1920]) {
       await page.setViewportSize({ width, height: 900 });
       await expect.poll(async () => (await layout(page)).outside, `${width} px`).toEqual([]);
       const seen = await layout(page);
-      expect(seen.cards, `${width} px`).toBe(TRACKER_CARDS.length);
+      expect(seen.cards, `${width} px: four pairs in four cards`).toBe(TRACKER_CARDS.length - 4);
       expect(seen.sizes, `${width} px: one card size`).toHaveLength(1);
-      expect(seen.pairs, `${width} px: each pair one card wide and two tall`).toEqual([true, true, true, true]);
+      expect(seen.combined.map((c) => c.equal), `${width} px: equal halves`).toEqual([true, true, true, true]);
+      expect(new Set(seen.combined.map((c) => c.second)).size, `${width} px: every second header at one height`).toBe(1);
       expect(seen.unseen, `${width} px: text a user can't see`).toEqual([]);
     }
   });

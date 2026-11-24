@@ -1,19 +1,18 @@
 // @ts-check
-// How the study page's cards are laid out, read the way a user sees them (#32, #46). Shares no code with src/.
+// How the study page's cards are laid out, read the way a user sees them (#32). Shares no code with src/.
 /** @typedef {import('@playwright/test').Page} Page */
 
 /**
- * Every card's size; its title, value, n / N and body text; each piece of text a user can't see (hidden,
- * transparent or without a box); and each piece that lies outside its card, outside the part of the card it sits in
- * (header, value, body or footer), or outside a box that would clip it. Cards stacked in a pair (#46) are read too, and
- * clipped by their pair; `sizes` is the single cards' sizes, and `pairs` whether each pair is one card wide and two grid
- * rows tall.
+ * Every card's size; each metric's title, value, n / N and body text (a combined card, the Admin's demo setting, holds
+ * two); each piece of text a user can't see (hidden, transparent or without a box); and each piece that lies outside
+ * its card, outside the part of the card it sits in (header, value, body, footer or one metric of a combined card), or
+ * outside a box that would clip it. For each combined card: whether its halves are equal, and how far below the card's
+ * top its second header starts.
  * @param {Page} page
  */
 export const layout = (page) =>
   page.locator('.study-page .cards').evaluate((grid) => {
-    const cards = [...grid.querySelectorAll(':scope > .card, :scope > .card-pair > .card')];
-    const single = [...grid.querySelectorAll(':scope > .card')];
+    const cards = [...grid.querySelectorAll(':scope > .card')];
     /**
      * @param {DOMRect} r
      * @param {DOMRect} b
@@ -28,7 +27,7 @@ export const layout = (page) =>
     /** @type {string[]} */
     const unseen = [];
     for (const c of cards) {
-      const id = c.getAttribute('data-card');
+      const id = c.getAttribute('data-card') ?? c.getAttribute('data-pair');
       const walker = document.createTreeWalker(c, NodeFilter.SHOW_TEXT);
       for (let n = walker.nextNode(); n; n = walker.nextNode()) {
         const content = n.textContent?.trim() ?? '';
@@ -42,34 +41,34 @@ export const layout = (page) =>
           continue;
         }
         const boxes = [c];
-        const pair = c.closest('.card-pair');
-        if (pair) boxes.push(pair);
         for (let a = /** @type {Element | null} */ (parent); a && a !== c; a = a.parentElement) {
           const st = getComputedStyle(a);
-          if (a.parentElement === c || st.overflowX !== 'visible' || st.overflowY !== 'visible') boxes.push(a);
+          if (a.parentElement === c || a.matches('.card-part') || st.overflowX !== 'visible' || st.overflowY !== 'visible') boxes.push(a);
         }
         for (const r of rects) {
           for (const b of boxes) if (!inside(r, b.getBoundingClientRect())) outside.push(`${id}: "${content}" outside ${b === c ? 'the card' : b.className}`);
         }
       }
     }
-    const parts = cards.map((c) => ({
+    const metrics = [...grid.querySelectorAll(':scope > .card[data-card], :scope > .card .card-part[data-card]')];
+    const parts = metrics.map((c) => ({
       id: c.getAttribute('data-card'),
       title: text(c.querySelector('.tile-head .name')),
       value: text(c.querySelector('.card-value .big')),
       nd: text(c.querySelector('.card-value .card-nd')),
-      body: text(c.querySelector('.tile-body')),
+      body: text(c.querySelector(':scope > .tile-body, :scope > .part-body')),
       problem: Boolean(c.querySelector('.ref-problem')),
     }));
-    const sizes = single.map((c) => {
+    const sizes = cards.map((c) => {
       const r = c.getBoundingClientRect();
       return `${r.width.toFixed(1)} × ${r.height.toFixed(1)}`;
     });
-    const one = single[0]?.getBoundingClientRect();
-    const gap = Number.parseFloat(getComputedStyle(grid).rowGap);
-    const pairs = [...grid.querySelectorAll(':scope > .card-pair')].map((p) => {
-      const r = p.getBoundingClientRect();
-      return Boolean(one) && Math.abs(r.width - one.width) < 1 && Math.abs(r.height - (2 * one.height + gap)) < 2;
+    const combined = [...grid.querySelectorAll(':scope > .card.combined')].map((c) => {
+      const halves = [...c.querySelectorAll('.card-part')].map((p) => p.getBoundingClientRect());
+      return {
+        equal: halves.length === 2 && Math.abs(halves[0].height - halves[1].height) < 1,
+        second: Math.round(Number(c.querySelectorAll('.card-part .tile-head')[1]?.getBoundingClientRect().top) - c.getBoundingClientRect().top),
+      };
     });
-    return { cards: cards.length, sizes: [...new Set(sizes)], pairs, parts, unseen: [...new Set(unseen)], outside: [...new Set(outside)] };
+    return { cards: cards.length, sizes: [...new Set(sizes)], parts, combined, unseen: [...new Set(unseen)], outside: [...new Set(outside)] };
   });
