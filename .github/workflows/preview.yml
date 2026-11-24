@@ -1,0 +1,80 @@
+name: Publish a preview to GitHub Pages
+
+# Publishes a branch's tested reports, from its latest passing validation run, copied byte for byte, at /preview/ on
+# the repository's Pages site, so people can click around without downloading anything. Run it by hand from main.
+# Pages deploys a whole site at once: a release published with pages.yml replaces this preview, and this preview
+# replaces a release, until one workflow publishes both.
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch whose latest passing validation run is published
+        required: true
+        default: cod/build
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BRANCH: ${{ inputs.branch }}
+    steps:
+      - name: Find the branch's latest passing validation run
+        id: find
+        run: |
+          run=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/validation.yml/runs?branch=$BRANCH&status=success&per_page=1" \
+            --jq '.workflow_runs[0] | select(. != null) | "\(.id) \(.run_attempt) \(.head_sha)"')
+          if [ -z "$run" ]; then echo "::error::no passing validation run on $BRANCH"; exit 1; fi
+          read -r id attempt sha <<< "$run"
+          { echo "id=$id"; echo "attempt=$attempt"; echo "sha=$sha"; } >> "$GITHUB_OUTPUT"
+      - name: Download its tested reports
+        env:
+          ID: ${{ steps.find.outputs.id }}
+          ATTEMPT: ${{ steps.find.outputs.attempt }}
+        run: gh run download "$ID" -R "$GITHUB_REPOSITORY" -n "gsm-dash-reports-$ID-$ATTEMPT" -D reports
+      - name: Stage the site
+        env:
+          ID: ${{ steps.find.outputs.id }}
+          SHA: ${{ steps.find.outputs.sha }}
+        run: |
+          mkdir -p site/preview
+          cp -R reports/gsm-dash-reports/. site/preview/
+          touch site/.nojekyll
+          cat > site/index.html <<HTML
+          <!doctype html>
+          <html lang="en"><head><meta charset="utf-8"><title>gsm.dash preview</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <style>body{font:16px/1.5 system-ui,sans-serif;max-width:40rem;margin:4rem auto;padding:0 1rem}</style></head>
+          <body><h1>gsm.dash preview</h1>
+          <p><a href="preview/portfolio.html">Open the preview</a>: the reports tested by validation run $ID, built from
+          <code>$BRANCH</code> at <code>${SHA:0:7}</code>.</p>
+          <p>Every number is simulated example data. This is a preview for feedback, not a reviewed release.</p>
+          </body></html>
+          HTML
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: preview
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}preview/portfolio.html
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
