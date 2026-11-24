@@ -27,12 +27,15 @@ export const STUDY_CARDS = [
   ...['kri0004', 'kri0003', 'kri0002', 'kri0001', 'kri0005', 'kri0008', 'kri0009', 'kri0010', 'kri0011'].map((metric) => ({ id: metric, widget: 'kri-summary', metric })),
 ];
 
-/** Similar standard KRIs the Admin panel's demo setting shows in one card, by card id, the top one first. */
+/**
+ * Similar standard KRIs the Admin panel's demo setting shows in one card, by card id, the top one first, with the
+ * card's title.
+ */
 export const COMBINED_CARDS = [
-  ['kri0004', 'kri0003'],
-  ['kri0001', 'kri0002'],
-  ['kri0008', 'kri0009'],
-  ['kri0010', 'kri0011'],
+  { title: 'Protocol deviations', cards: ['kri0004', 'kri0003'] },
+  { title: 'Adverse events', cards: ['kri0001', 'kri0002'] },
+  { title: 'Queries', cards: ['kri0008', 'kri0009'] },
+  { title: 'Data entry and changes', cards: ['kri0010', 'kri0011'] },
 ];
 
 /** Each combined KRI's name on its Charts toggle. */

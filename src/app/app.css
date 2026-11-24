@@ -314,11 +314,26 @@ div:where(.study-page) .back { color: var(--accent); text-decoration: none; font
 .tiles.cards { --card-h: 400px; grid-template-columns: repeat(auto-fill, minmax(max(320px, calc((100% - (var(--per-row, 4) - 1) * 12px) / var(--per-row, 4))), 1fr)); }
 .tile.card { --pad-x: 14px; height: max(var(--card-h), var(--card-min, 0px)); padding: 0 var(--pad-x) 12px; }
 .tile.card.kri { --pad-x: 12px; padding-bottom: 10px; }
-/* Similar KRIs in one card, an Admin demo setting: each one's header above its flag table, in equal halves, so every
-   second header in a row lines up. */
-.tile .tile-body.card-parts { display: grid; grid-auto-rows: minmax(0, 1fr); gap: 0; }
-.card-part { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
-.card-part + .card-part > .tile-head { border-top: 1px solid var(--line); }
+/* Similar KRIs in one card, an Admin demo setting. A compact header names the group; the KRIs stack from the top, ruled
+   apart, each its name and value above one stacked bar of its sites by flag and a line of each flag's share and count. */
+.tile.card.combined { gap: 6px; }
+.tile.card.combined > .tile-head { padding-block: 6px; }
+.tile.card.combined > .tile-head .name { cursor: default; }
+/* The KRIs' values share one column, at least 8.5rem wide, so their rules line up in the card and, mostly, the row. */
+.tile .tile-body.card-parts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(8.5rem, max-content); align-content: start; gap: 10px 0; }
+.card-part { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-content: start; row-gap: 5px; }
+.card-part + .card-part { border-top: 1px solid var(--line); padding-top: 10px; }
+.card-part > .part-body { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 5px; }
+.part-head { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; }
+.part-head .name { padding-right: 10px; font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.3; min-width: 0; overflow-wrap: anywhere; cursor: help; }
+.part-head .card-value { gap: 1px; padding-left: 10px; }
+.part-head .card-value .big { font-size: 15px; font-weight: 600; }
+.flag-bar { display: flex; gap: 2px; height: 10px; border-radius: 3px; overflow: hidden; background: var(--panel-2); }
+.flag-bar i { display: block; flex: 0 1 0; min-width: 3px; cursor: help; }
+.flag-key { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px 9px; font-size: 12px; color: var(--ink-2); }
+.flag-key li { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.flag-key i { width: 9px; height: 9px; border-radius: 2px; }
+.flag-key .v { color: var(--ink); font-variant-numeric: tabular-nums; }
 .tile-foot .foot-lab { font-size: 11.5px; color: var(--ink-2); margin-right: 2px; }
 .card-value { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; padding-left: 12px; border-left: 1px solid var(--line-2); text-align: right; cursor: help; }
 .card-rate { display: flex; align-items: baseline; justify-content: flex-end; column-gap: 5px; white-space: nowrap; }
@@ -360,7 +375,7 @@ div:where(.study-page) .back { color: var(--accent); text-decoration: none; font
    the left and the value and n / N on the right, behind a thin rule. */
 .tile-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; }
 .tile.card .tile-head { margin: 0 calc(-1 * var(--pad-x)); padding: 10px var(--pad-x); background: var(--card-head); border-bottom: 1px solid var(--line); }
-.tile.card > .tile-head, .card-part:first-child > .tile-head { border-radius: 8px 8px 0 0; }
+.tile.card > .tile-head { border-radius: 8px 8px 0 0; }
 .tile-head .name { font-size: 15px; color: var(--ink); font-weight: 700; line-height: 1.3; min-width: 0; overflow-wrap: anywhere; cursor: help; }
 .sub-h { font-family: "Archivo", sans-serif; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
 

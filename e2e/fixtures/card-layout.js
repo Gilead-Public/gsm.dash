@@ -6,8 +6,8 @@
  * Every card's size; each metric's title, value, n / N and body text (a combined card, the Admin's demo setting, holds
  * two); each piece of text a user can't see (hidden, transparent or without a box); and each piece that lies outside
  * its card, outside the part of the card it sits in (header, value, body, footer or one metric of a combined card), or
- * outside a box that would clip it. For each combined card: whether its halves are equal, and how far below the card's
- * top its second header starts.
+ * outside a box that would clip it. For each combined card (the Admin's demo setting): whether its second KRI starts
+ * within 12px of where the first's content ends, and whether a rule sets it apart.
  * @param {Page} page
  */
 export const layout = (page) =>
@@ -64,10 +64,12 @@ export const layout = (page) =>
       return `${r.width.toFixed(1)} × ${r.height.toFixed(1)}`;
     });
     const combined = [...grid.querySelectorAll(':scope > .card.combined')].map((c) => {
-      const halves = [...c.querySelectorAll('.card-part')].map((p) => p.getBoundingClientRect());
+      const parts = [...c.querySelectorAll('.card-part')];
+      const end = Number(parts[0]?.lastElementChild?.getBoundingClientRect().bottom);
+      const next = Number(parts[1]?.getBoundingClientRect().top);
       return {
-        equal: halves.length === 2 && Math.abs(halves[0].height - halves[1].height) < 1,
-        second: Math.round(Number(c.querySelectorAll('.card-part .tile-head')[1]?.getBoundingClientRect().top) - c.getBoundingClientRect().top),
+        close: parts.length === 2 && next >= end - 1 && next - end <= 12,
+        ruled: parts.length === 2 && Number.parseFloat(getComputedStyle(parts[1]).borderTopWidth) >= 1,
       };
     });
     return { cards: cards.length, sizes: [...new Set(sizes)], parts, combined, unseen: [...new Set(unseen)], outside: [...new Set(outside)] };

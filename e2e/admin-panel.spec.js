@@ -215,19 +215,22 @@ test('46.04: with the legend on and a heatmap shown, a legend between the table 
 const PAIRS = [['kri0004', 'kri0003'], ['kri0001', 'kri0002'], ['kri0008', 'kri0009'], ['kri0010', 'kri0011']];
 
 /**
- * Each combined card on the study page: its metrics in order, whether the second's header sits below the first's flag
- * table, whether the card is the size of a card showing one metric, and the metrics its footer's Charts toggles open.
+ * Each combined card on the study page: its title, its metrics in order, whether the second's row sits below the
+ * first's, whether their values' rules line up, whether it is the size of a card showing one metric, and the metrics
+ * its footer's Charts toggles open.
  * @param {Page} page
  */
 const combinedShown = (page) =>
   page.locator('.tiles.cards').evaluate((grid) => {
     const one = /** @type {Element} */ (grid.querySelector(':scope > .card:not(.combined)')).getBoundingClientRect();
     return [...grid.querySelectorAll(':scope > .card.combined')].map((c) => {
-      const parts = [...c.querySelectorAll('.card-part')];
+      const rows = [...c.querySelectorAll('.card-part')].map((p) => p.getBoundingClientRect());
       const box = c.getBoundingClientRect();
       return {
-        ids: parts.map((p) => p.getAttribute('data-card')),
-        stacked: parts.length === 2 && Number(parts[1].querySelector('.tile-head')?.getBoundingClientRect().top) >= Number(parts[0].querySelector('.part-body')?.getBoundingClientRect().bottom) - 1,
+        title: c.querySelector(':scope > .tile-head')?.textContent?.trim(),
+        ids: [...c.querySelectorAll('.card-part')].map((p) => p.getAttribute('data-card')),
+        stacked: rows.length === 2 && rows[1].top >= rows[0].bottom - 1,
+        aligned: new Set([...c.querySelectorAll('.part-head .card-value')].map((v) => Math.round(v.getBoundingClientRect().left))).size === 1,
         oneCard: Math.abs(box.width - one.width) < 1 && Math.abs(box.height - one.height) < 1,
         charts: [...c.querySelectorAll(':scope > .tile-foot [data-detail-metric]')].map((b) => b.getAttribute('data-detail-metric')),
       };
@@ -235,26 +238,45 @@ const combinedShown = (page) =>
   });
 
 /**
- * Each standard KRI's header and flag-table text, by card id, whether it has a card of its own or shares one.
+ * Each standard KRI's name, value with n / N, sites by flag (those with any) and each flag's share and count (No flag
+ * only when some site has none), by card id: from its card's flag table, or from its row's stacked bar and the line
+ * under it in a combined card.
  * @param {Page} page
  */
-const kriTexts = (page) =>
+const kriShown = (page) =>
   page.locator('.card.kri:not(.combined), .card.combined .card-part').evaluateAll((els) =>
-    Object.fromEntries(els.map((e) => [e.getAttribute('data-card'), `${e.querySelector(':scope > .tile-head')?.textContent} | ${e.querySelector(':scope > .tile-body, :scope > .part-body')?.textContent}`])),
+    Object.fromEntries(
+      els.map((e) => {
+        const table = [...e.querySelectorAll('.kri-flags li[data-flag]')].map((li) => [li.getAttribute('data-flag'), Number(li.querySelector('.v')?.textContent)]);
+        const bar = [...e.querySelectorAll('.flag-bar [data-flag]')].map((i) => [i.getAttribute('data-flag'), Number(i.getAttribute('data-count'))]);
+        const flags = (table.length ? table : bar).filter(([, n]) => Number(n) > 0);
+        const text = (/** @type {Element | null | undefined} */ el) => el?.textContent?.replace(/\s+/g, ' ').trim();
+        const key = table.length
+          ? [...e.querySelectorAll('.kri-flags li[data-flag]')]
+              .filter((li) => li.getAttribute('data-flag') !== 'na' || Number(text(li.querySelector('.v'))) > 0)
+              .map((li) => `${text(li.querySelector('.lbl'))} ${text(li.querySelector('.p'))} (${text(li.querySelector('.v'))})`)
+          : [...e.querySelectorAll('.flag-key li')].map((li) => text(li));
+        return [e.getAttribute('data-card'), { name: text(e.querySelector('.name')), value: text(e.querySelector('.card-value')), flags: Object.fromEntries(flags), key }];
+      }),
+    ),
   );
 
-test('Combine similar KRI cards, an Admin demo setting: when on, each configured pair of standard KRIs whose cards both show shares one card the size of any other, the first above the second, each with its own header and flag table and their values unchanged, and one footer whose Charts toggles open each; a pair with a card hidden shows the other alone; off, every card stands alone', async ({ app, page }) => {
+test('Combine similar KRI cards, an Admin demo setting: when on, each configured pair of standard KRIs whose cards both show shares one card the size of any other, under its group\'s name; each is a row, its name and value (the values\' rules lined up) above one stacked bar of its sites by flag and a line of each flag\'s share and count, all unchanged; one footer\'s Charts toggles open each; a pair with a card hidden shows the other alone; off, every card stands alone', async ({ app, page }) => {
   await app.openStudy(study);
   await expect(page.locator('.card.combined'), 'off by default').toHaveCount(0);
-  const alone = await kriTexts(page);
+  const alone = await kriShown(page);
   await chooseAdmin(page, 'combine', 'on');
   const metricOf = (/** @type {string} */ id) => /** @type {{ MetricID: string }} */ (catalog.find((m) => m.ID === id)).MetricID;
-  expect(await combinedShown(page)).toEqual(PAIRS.map((ids) => ({ ids, stacked: true, oneCard: true, charts: ids.map(metricOf) })));
-  expect(await kriTexts(page), 'each metric\'s header and flag table, combined').toEqual(alone);
+  const titles = ['Protocol deviations', 'Adverse events', 'Queries', 'Data entry and changes'];
+  expect(await combinedShown(page)).toEqual(PAIRS.map((ids, i) => ({ title: titles[i], ids, stacked: true, aligned: true, oneCard: true, charts: ids.map(metricOf) })));
+  expect(await kriShown(page), 'each KRI\'s name, value, sites by flag and their shares and counts, combined').toEqual(alone);
   const seen = await layout(page);
-  expect([seen.sizes.length, seen.unseen, seen.outside], 'one card size; every combined card\'s text seen and inside its part').toEqual([1, [], []]);
+  expect([seen.sizes.length, seen.unseen, seen.outside], 'one card size; every combined card\'s text seen and inside its row').toEqual([1, [], []]);
   const order = await page.locator('.tiles.cards > *').evaluateAll((els) => els.map((e) => e.getAttribute('data-card') ?? e.getAttribute('data-pair')));
   expect(order.slice(-5), 'each pair at its first card\'s place').toEqual(['kri0004 kri0003', 'kri0001 kri0002', 'kri0005', 'kri0008 kri0009', 'kri0010 kri0011']);
+  const segment = page.locator('.card.combined .card-part[data-card="kri0004"] .flag-bar [data-flag]').first();
+  await segment.hover();
+  await expect(page.locator('#gsm-tooltip'), 'a segment\'s hover gives its count of all sites').toContainText(/\d+ of \d+ sites/);
   await page.locator(`.card.combined [data-detail-metric="${metricOf('kri0003')}"]`).click();
   await expect(page.locator('.detail .detail-title'), 'the second toggle opens the second metric\'s charts').toHaveText(/Non-Important Protocol Deviation Rate/);
 

@@ -79,9 +79,9 @@ test.describe('cards of one size, with nothing clipped', () => {
     await expectFitted(page, studies[1].StudyID);
   });
 
-  test('32.08: with similar KRI cards combined (an Admin demo setting), long KRI titles and a placeholder included, every card, combined or not, keeps one size, each combined card\'s halves stay equal with every second header at one height, and no text is clipped, at any width (#32)', async ({ app, page }) => {
-    // Titles long enough that a combined card needs more than the configured height, in a top half and in bottom halves.
-    const long = ' — a much longer name for this rate that wraps over several lines of the card header'.repeat(3);
+  test('32.08: with similar KRI cards combined (an Admin demo setting), long KRI titles and a placeholder included, every card, combined or not, keeps one size, each combined card\'s KRIs stack closely, ruled apart, and no text is clipped, at any width (#32)', async ({ app, page }) => {
+    // Names long enough that a combined card needs more than the configured height, for its first KRI and its second.
+    const long = ' — a much longer name for this rate that wraps over several lines of the card header'.repeat(6);
     await app.openStudy(study.StudyID, {
       portfolio: (/** @type {any} */ p) => {
         for (const m of p.metrics) if (['kri0004', 'kri0002', 'kri0011'].includes(m.ID)) m.Metric += long;
@@ -96,8 +96,7 @@ test.describe('cards of one size, with nothing clipped', () => {
       const seen = await layout(page);
       expect(seen.cards, `${width} px: four pairs in four cards`).toBe(TRACKER_CARDS.length - 4);
       expect(seen.sizes, `${width} px: one card size`).toHaveLength(1);
-      expect(seen.combined.map((c) => c.equal), `${width} px: equal halves`).toEqual([true, true, true, true]);
-      expect(new Set(seen.combined.map((c) => c.second)).size, `${width} px: every second header at one height`).toBe(1);
+      expect(seen.combined.map((c) => [c.close, c.ruled]), `${width} px: each second KRI close under the first, ruled apart`).toEqual(Array(4).fill([true, true]));
       expect(seen.unseen, `${width} px: text a user can't see`).toEqual([]);
     }
   });
