@@ -1,0 +1,111 @@
+import { describe, it, expect, beforeAll } from 'vitest';
+import { fmtInt, fmtRate, fmtMetric, metricUnit, ndLine, displayRate } from '../src/util/format.js';
+import { configProblems } from '../src/data/portfolio-config.js';
+import { normalizeMetric } from '../src/data/normalize.js';
+import { PortfolioStore } from '../src/data/store.js';
+import { EXAMPLE_GROUPS, generatePortfolio } from '../scripts/generate-example-data.mjs';
+import { stripScale, axisLabel } from '../src/scales/strip.js';
+
+// Glossary display rules (P2): the rule only changes formatting; the rate is
+// always Σn / Σd per day (exposure) or per participant.
+const countPct = { Display: 'count_pct', Population: 'Enrolled', Denominator: 'Enrolled participants' };
+const per28 = { Display: 'per_28d' };
+const pct = { Display: 'pct', Population: 'Screened' };
+
+describe('metric display rules', () => {
+  it('renders count_pct as "n (p%)" with the percent as secondary markup', () => {
+    const out = fmtMetric(countPct, { Numerator: 1234, Denominator: 10000 });
+    expect(out.text).toBe('1,234 (12.3%)');
+    expect(out.html).toBe('1,234<span class="pc"> (12.3%)</span>');
+  });
+
+  it('rescales exposure rates to 28 days for display only', () => {
+    expect(displayRate(per28, 0.01)).toBeCloseTo(0.28, 10);
+    expect(fmtRate(per28, 0.01)).toBe('0.28');
+    expect(fmtMetric(per28, { Numerator: 1, Denominator: 100 }).text).toBe('0.28');
+    expect(fmtRate(pct, 0.1234)).toBe('12.3%');
+  });
+
+  it('handles missing values without throwing', () => {
+    expect(fmtInt(null)).toBe('—');
+    expect(fmtRate(per28, null)).toBe('—');
+    expect(fmtMetric(countPct, { Numerator: 0, Denominator: 0 }).text).toBe('—');
+    expect(ndLine(countPct, null)).toBe('no data');
+  });
+
+  it('labels units and the n/d line from the population', () => {
+    expect(metricUnit(countPct)).toBe('n (% enr.)');
+    expect(metricUnit(per28)).toBe('/ 28 d');
+    expect(metricUnit(pct)).toBe('% scr.');
+    expect(ndLine(countPct, { Numerator: 5, Denominator: 988 })).toBe('of 988 enrolled');
+    expect(ndLine(pct, { Numerator: 5, Denominator: 988 })).toBe('5 / 988');
+  });
+
+  it('defaults metrics without a rule to Released percentages', () => {
+    expect(normalizeMetric({ MetricID: 'x' })).toMatchObject({ Display: 'pct', Status: 'Released' });
+  });
+});
+
+describe('the example configuration\'s metric groups', () => {
+  it('is a valid configuration that places every portfolio column, in catalog order, so nothing trails in Other', () => {
+    const portfolio = generatePortfolio();
+    expect(configProblems({ groups: EXAMPLE_GROUPS }, portfolio.manifest.metrics)).toEqual([]);
+    const s = new PortfolioStore({ ...portfolio, config: { groups: EXAMPLE_GROUPS } });
+    const bands = s.metricCategories(s.supportedMetrics());
+    expect(bands.map((g) => g.category)).toEqual(EXAMPLE_GROUPS.map((g) => g.name));
+    expect(bands.flatMap((g) => g.metrics.map((m) => m.MetricID))).toEqual(s.supportedMetrics().map((m) => m.MetricID));
+  });
+});
+
+describe('catalog in the example portfolio', () => {
+  let store;
+  beforeAll(() => {
+    store = new PortfolioStore(generatePortfolio());
+  });
+
+  it('assigns every site-level metric a known status, and no metric a group of its own', () => {
+    for (const m of store.supportedMetrics()) {
+      expect(['Released', 'New', 'Planned']).toContain(m.Status);
+      expect(m).not.toHaveProperty('Category');
+    }
+  });
+
+  it('46.07: shows every site-level metric whatever its status, and drops an address\'s statuses (#46)', () => {
+    expect(store.supportedMetrics().some((m) => m.Status === 'Planned')).toBe(true);
+    expect(store.visibleMetrics()).toEqual(store.supportedMetrics());
+    store.applyProgramParams(new URLSearchParams('statuses=Released'));
+    expect(store.visibleMetrics()).toEqual(store.supportedMetrics());
+    expect(store.programParams().has('statuses')).toBe(false);
+  });
+
+  it('sums screened ≥ enrolled ≥ dosed populations across studies', () => {
+    const pop = store.population(store.studies);
+    const one = store.population([store.studies[0]]);
+    expect(pop.enrolled).toBe(store.studies.reduce((s, st) => s + store.population([st]).enrolled, 0));
+    expect(one.screened).toBeGreaterThanOrEqual(one.enrolled);
+    expect(one.enrolled).toBeGreaterThanOrEqual(one.dosed);
+    expect(store.population([])).toEqual({ screened: null, enrolled: null, dosed: null });
+  });
+});
+
+describe('distribution strip scale', () => {
+  it('places values on 0 → max × 1.08, portfolio included in the max', () => {
+    const { max, x } = stripScale([0.1, 0.2, null], 0.25);
+    expect(max).toBeCloseTo(0.27, 10);
+    expect(x(0)).toBe(0);
+    expect(x(0.27)).toBeCloseTo(100, 10);
+    expect(x(null)).toBeNull();
+  });
+
+  it('never divides by zero', () => {
+    expect(stripScale([0, 0], 0).max).toBe(1);
+    expect(stripScale([], null).max).toBe(1);
+  });
+
+  it('labels the axis in the display unit', () => {
+    expect(axisLabel(per28, 0.056)).toBe('0.056');
+    expect(axisLabel(per28, 1.234)).toBe('1.23');
+    expect(axisLabel(pct, 0.005)).toBe('0.50%');
+    expect(axisLabel(pct, 0.125)).toBe('12.5%');
+  });
+});

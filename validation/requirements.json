@@ -1,0 +1,1134 @@
+{
+  "repo": "Gilead-Public/gsm.dash",
+  "hash": "d0284a8108306eba96f5f2271d78323fb8c8721d248ace5e1a095dbb562c030f",
+  "issues": [
+    {
+      "number": 8,
+      "title": "Add a distributions layer to the study snapshot contract",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": false,
+      "scopeSection": "**In:**\n- Add an optional `distributions` array to the study snapshot schema, with #617's columns: `GroupID`, `GroupLevel`, `Source` (`Numerator` | `Denominator`), `Variable`, `Category`, `Count`, `Participants`, `Total`, `Percent`, plus `MetricID`, `SnapshotDate` and `StudyID`.\n- A blank category is represented as `null` and displayed as \"Not recorded\".\n- Keep `details` until its consumer is replaced (#10), then remove it.\n\n**Out:**\n- Computing distributions (pipeline, gsm.roadmap#617).\n- Rendering them (#10).",
+      "criteria": [
+        {
+          "id": "8.01",
+          "text": "The schema accepts a valid `distributions` array. It rejects missing required columns, a `Source` outside `Numerator`/`Denominator`, negative counts, and a `Percent` outside 0–1.",
+          "sha256": "3ba41e1c846f21dabe7994778070f3ccf72c8b3877e8cc23b93ec5cd790c0359",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "8.02",
+          "text": "A study file without `distributions` stays valid, because metrics without distributions are unaffected.",
+          "sha256": "6a85d30b5c8ccffa1caca634b27482ded64e4c1ad82811ca9678999d30f10a84",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "8.03",
+          "text": "Contract tests cover the valid, invalid and empty cases.",
+          "sha256": "4860fcea5e62463a57b256d134248995a84ff388b337b818c4a3213f2a049255",
+          "kind": "unit",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "title": "Generate simulated distributions for the #617 metrics",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": false,
+      "scopeSection": "**In:**\n- Rename placeholders to the production IDs in #617: `ctq0004` → `kri0019`, `ctq0005` → `strat0001`. Add `kri0007-2`.\n- Generate `distributions` rows for each metric and category column in #617's data-requirement table (`kri0014`, `kri0015`, `kri0019`, `kri0007-2`, `kri0006`, `kri0012`, `kri0004`, `kri0003`):\n  - numerator-side and denominator-side variables;\n  - at least one multi-value variable;\n  - blank values (\"Not recorded\");\n  - the full category grid, with zeros.\n- Site-level rows only (`GroupLevel` = Site), matching the pipeline design.\n- A deterministic seed, so the fixture is reproducible.\n- Variables named as #617 names its category columns, with the agreed status labels:\n  - eligibility status (`eligibility_status`, `kri0014`'s denominator): Eligible, Potentially Ineligible, Ineligible (not the source);\n  - I/E criteria (`ietestcd_concat`, `kri0014`'s numerator), counted per criterion (a participant can count against several);\n  - premature deaths (`kri0015`'s numerator, interim): `death_window` (≤30 days, 31–90 days), `eligibility_status` (Eligible, Ineligible), `treatment_related` (Yes, No, Unknown), and the combined columns `window_eligibility` and `window_treatment_related` (`<window> | <status>`), taken from the same death records as the separate columns;\n  - IP status (`drv_ip_nonstarter_status`, `kri0019`'s denominator, enrolled participants): Dosed; Potential Non-Starter – within window; Potential Non-Starter – outside window; Confirmed Non-Starter. Only Dosed participants are dosed (gsm.kri's IP Monitoring classification), so Dosed equals the population treatment disposition and every dosed metric count. `kri0019`'s numerator is the Confirmed and outside-window non-starters (gsm.kri's `kri0019`);\n  - treatment disposition (`drv_drg_completion`, `kri0007-2`'s denominator, dosed participants): Dosed – ongoing; Dosed – treatment complete; Dosed – premature treatment discontinuation. The 19 Nov meeting split it from IP status (#617 open question 7; FB-027 had merged them);\n  - premature treatment discontinuation reasons (`drv_premature_discontinuation_reason`, `kri0007-2`'s numerator, multi-value);\n  - study disposition (`drv_study_disposition`, `kri0006`'s denominator, enrolled participants, interim): Withdrawal by Participant; Lost to Follow-Up; Study Discontinuation: Other; Death; Study Completion; Ongoing;\n  - screening (low priority, reduced interim): the screening outcome (`drv_study_disposition`, `kri0012`'s denominator): Screen Failure; Enrolled; and screen-failure reasons (`sf_reason`, `kri0012`'s numerator);\n  - protocol-deviation category (`dvdecod`) for important (`kri0004`) and non-important (`kri0003`) deviations, counted per deviation.\n- No stratification rows (#617 resolved question 4).\n\n**Interim simulation assumptions.** #617's open questions 6 and 8 leave two contracts undecided, so the fixture simulates #617's current proposal for each:\n- widget 4: the death categories from `death_dy` and the gsm.kri premature-death report's relatedness rule (question 6 asks whether the upstream fields from gsm.roadmap#121 replace them);\n- widget 7: `kri0006` (question 8 asks whether it moves to a study-level metric, `ctq0002` or `ctq0003`).\n\nWidget 8 is reduced: #617 puts it on `ctq0001`, a study-level metric (Gilead-Public/gsm.kri#326) the study page doesn't show yet, so it uses the site-level `kri0012`. `kri0012`'s denominator is participants who finished screening, so it has no \"In Screening\" category; that category, and the full widget, wait for `ctq0001`. A missing \"In Screening\" says nothing about whether anyone is still in screening.\n\nFor these widgets, the fixture and its tests (9.01–9.06) check that the simulated rows are consistent with their metric and with each other; they don't check the pipeline's eventual contract. Their production qualification waits until #617 decides.\n\n**Out:** real data, and the R pipeline.",
+      "criteria": [
+        {
+          "id": "9.01",
+          "text": "On the fixture, for numerator distributions, `Total` equals the metric's Numerator (per metric × group). This is a gsm.roadmap#617 acceptance check.",
+          "sha256": "28c46062dc5b96c66a3bdd21e028b940c89a095172dad224611848732fe90749",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "9.02",
+          "text": "On the fixture, for denominator distributions, `Total` equals the metric's Denominator. This is a gsm.roadmap#617 acceptance check.",
+          "sha256": "3b2c50e17aca7891902b3ab491faa59704377becc786ce251b38c3ffe0f3c7c6",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "9.03",
+          "text": "On the fixture, for single-value variables, the sum of `Count` over categories equals `Total`. This is a gsm.roadmap#617 acceptance check.",
+          "sha256": "be8b009fcad351729421e06b11b69c135e271087499f7ebe6e00deaf2d013ceb",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "9.04",
+          "text": "In each study's latest snapshot, every site in `results` for a configured metric has distribution rows.",
+          "sha256": "cadf993ecf71f1e364f8fbbdf2e3892a070e15bfe132720c21b56df42ff5b927",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "9.05",
+          "text": "The generated files validate against the #8 schema.",
+          "sha256": "b916b84a0b3fb53e9132fad27a5b69c4b0e21d9cb05fcd7b29e1b616e82b233b",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "9.06",
+          "text": "On the fixture (widget 4's interim columns), for each site and window, `window_eligibility`'s counts for that window sum to `death_window`'s count, and for each status they sum over the windows to `eligibility_status`'s count; the same holds for `window_treatment_related` and `treatment_related` (test).",
+          "sha256": "ff854dd4779780cd547c9fa99571faa42a9c70a99957897037de3653275505b0",
+          "kind": "unit",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "title": "Build a Layout A bar-chart distribution widget",
+      "parent": "Gilead-BioStats/gsm.roadmap#618",
+      "userTest": true,
+      "scopeSection": "**In:** a Layout A bar-chart widget following the contract in the gsm.roadmap#617 pipeline design.\n- **One card per tracker widget:** the study page (#32) has a card for each tracker widget with a breakdown (two for widget 5), and each card shows exactly the breakdown its card list names (#12):\n  - 1, Eligibility Status: `kri0014`'s eligibility status, % of enrolled;\n  - 3, Eligibility I/E Criteria: `kri0014`'s criteria not met, counts, top 5;\n  - 4, Premature Death summary, as three cards: `kri0015`'s deaths by time window, by eligibility status, and by relatedness to treatment, in that order; counts only, since percentages wait for #617's open question 2 (interim);\n  - 5, IP Status, as two cards (the review split combined widgets): `kri0019`'s IP status without Dosed (the non-starters), % of enrolled; and `kri0007-2`'s treatment disposition, % of dosed, led by IP status's Dosed, % of enrolled, as its own section;\n  - 6, Premature Treatment Discontinuation reasons: `kri0007-2`'s reasons, counts;\n  - 7, Study Disposition – enrolled: `kri0006`'s study disposition, % of enrolled (interim);\n  - 8, Study Disposition – screening focus: `kri0012`'s screening outcome, Screen Failure and Enrolled, % of screened (reduced interim: no \"In Screening\" until the card moves to `ctq0001`, #9);\n  - 9, Screen failure reasons: `kri0012`'s reasons, counts, top 5.\n- **Interim widgets.** Widgets 4 and 7 render #617's current proposal for their contracts (#9's interim simulation assumptions), and widget 8 renders a reduced interim. The widget reads its categories from the rows, so a changed category list needs no code change; a changed variable or metric is a configuration change. For these three widgets, the tests show that the cards render the fixture's rows correctly; calculation review and user acceptance wait until #617 decides their contracts.\n- **Header:** the card's (#32): its title, the metric's value and n / N.\n- **Scope of data:** filter to one metric and, optionally, one group. Site rows are summed to study level in one function; nothing else is derived.\n- **Bars:** Σ `Count` per category, sorted by descending count, with \"Not recorded\" last. A top-N setting collapses the rest into a \"+ k more\" bar, and a breakdown never shows more bars than its card has room for, so nothing is clipped (#32).\n- **Values per bar:**\n  - status sections (the metric's denominator) show each category's share of that population, Σ `Count` / Σ `Total`, and its count, e.g. \"80.1% (293)\" (#48). The section's heading reads %, and its hover names the population and its total, e.g. \"% of 366 enrolled\" (#48);\n  - reason sections (the metric's numerator) show each category's count only. The heading reads n, and its hover names the total, e.g. \"n of 45 ineligible\" (#48);\n  - hovering a bar shows its count out of the section's total (\"n of N\").\n- **Labels:** business terms from configuration (e.g. the populations \"enrolled\" and \"dosed\"). Never show \"Numerator\" or \"Denominator\". Tooltips may carry the longer context.\n- **No duplicate total:** no total row when the header already shows that value.\n- **Colours:** status categories take colours from a configurable status-to-colour map, and fall back to a neutral colour when no map is given. Reason categories aren't coloured.\n- **Footnotes:** shown, behind the card footer's \"* Notes\" marker (#48), automatically when Σ `Count` > `Total` (multi-value variables, where a participant counts in several categories) and when \"Not recorded\" is present.\n- **States:** empty (configured, but no rows) and missing (the metric has no distributions).\n- **Accessibility:** accessible labels.\n- **Replaces:** `breakdown-bar`, and removes the `details` consumer.\n\n**Out:**\n- The contents of the status-to-colour map (a separate issue).\n- Other chart types.\n- Pipeline computation.\n- Widgets 10 and 11 (configured under #19) and widget 2 (no breakdown).\n- The premature-death summary table (FB-028): a joint-count table is kept for the premature-death design cycle (ctq.wg #49).",
+      "criteria": [
+        {
+          "id": "10.01",
+          "text": "The widget renders from the #9 fixture for every configured tracker widget (1, 3–9).",
+          "sha256": "e2489b708eb369a019656a258f4a2ff3421435db5de6fffc7709ed314ddb0c22",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "10.02",
+          "text": "Displayed percentages (status sections), counts (reason sections) and hover values (n of N) equal independently summed fixture values (test).",
+          "sha256": "b334d39000d2cb68aef95cba37c99f022c331116ed3f49aeddf7e91bf4c864c7",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "10.03",
+          "text": "The site-to-study summing sits in one tested function, so it can be qualified as dashboard logic (gsm.roadmap#625).",
+          "sha256": "d3f33887991c31e5beb5b907655fc5aef86628d4f9152a2644393783cdf9840c",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "10.04",
+          "text": "No user-facing text contains \"Numerator\" or \"Denominator\" (test).",
+          "sha256": "a0f13552f8488a0de83d9f703d2b7bbd26ab6d74e8ea727de85d30c07a6db6b7",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "10.05",
+          "text": "There's no total row that repeats the header value.",
+          "sha256": "7c6650c30d4db5a07d019b0a725e45b17d7a415ad1e987276651c1f04e51f1ff",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "10.06",
+          "text": "Status colours come from configuration, and the neutral fallback applies when none are given (test).",
+          "sha256": "b6a077ef4151e1f3c0b674bb67ed8827e739bdee8a7483c643bd6c8bd163132e",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "10.07",
+          "text": "Sorting, top-N collapsing, \"Not recorded\" placement, the footnotes, and the empty and missing states are tested.",
+          "sha256": "f3df7a10bcc0f5528d8769189d395745e34316f406021c4c50c712647f478dd7",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "10.08",
+          "text": "A reviewer compares the rendered widget with the Layout A design, as changed by this issue's Scope, and accepts it (visual comparison).",
+          "sha256": "fb7b91e6b66085f8bc7f136ce5a1c33ecfa477d0c42f11eee3ec162e8142b6ed",
+          "kind": "visual",
+          "reviewed": true
+        },
+        {
+          "id": "10.09",
+          "text": "Reason sections' bars show a count, never a percentage; each section's heading reads % or n, and its hover names its population and total (test).",
+          "sha256": "af8adde5bcc095a6e3293196f43fa92ec921b5542a4bf4f9793aa2809f126be5",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "10.10",
+          "text": "Each card specified in Scope appears exactly once with its specified breakdown. Widget 5 produces separate IP-status and treatment-disposition cards, in that order; widget 4 produces time-window, eligibility and relatedness cards, in that order (test).",
+          "sha256": "a897adad8eb153c751f413b68205042bec62575ab669853eb45ffed66bc4a3eb",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "10.11",
+          "text": "The counts on each of widget 4's three cards equal an independent recount of the fixture's simulated death records (`test/qual/distributions.js`), on #9's interim columns (test).",
+          "sha256": "d1f7154faf33315a3948b79bf656d6d4b74c05be2b899effd698d73289c4d492",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "title": "Hide site-flag views on the study view by default",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": true,
+      "scopeSection": "**In:**\n- The study view never shows site-flag counts on CTQ cards, meaning every card outside #32's standard KRIs: no flag counts, no flag bar and no flag view, whatever the configuration.\n- Site-flag counts on standard KRIs (FB-031) are delivered and qualified under #32, and are outside this issue's scope.\n- The flag views (`flag-dist`, `bar-outliers`) are retired with the tile pager (#35), and with them the per-study setting in the dashboard's code that turned them on. A catalog entry that still names one is listed in #12's notice.\n\n**Out:** the portfolio view.",
+      "criteria": [
+        {
+          "id": "11.01",
+          "text": "In the study view, no card outside #32's standard KRIs shows site-flag counts, a flag bar or a flag view, by default and when a metric's catalog entry names a flag view (in `Widget`, `Widgets` or `WidgetConfigs`); that entry is listed in #12's notice (test).",
+          "sha256": "0a44c25cacc31a60ffd2253277286cec6e361d2251fe1545f8695795da97791e",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "11.03",
+          "text": "The portfolio view is unchanged.",
+          "sha256": "10226d1e4284adcc8979f94ec71bcdc949d16653e951bd590bee678b315c44d7",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "11.04",
+          "text": "A reviewer compares the default study view with the default described in Scope and accepts it (visual comparison).",
+          "sha256": "e77658606afd5f21602291f371df26793bf4f5ff04f52d096d334025f791df38",
+          "kind": "visual",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 12,
+      "title": "Fail visibly on unknown widget or metric references",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": false,
+      "scopeSection": "**In:** each of these renders a visible placeholder naming the reference and the reason, and logs a warning:\n- an unknown widget name;\n- an unknown metric ID;\n- a widget that doesn't apply to the metric's kind (for example a distribution widget on a metric without distributions).\n\nThere is no silent fallback.\n\n**Applicability.** Every tile and chart widget applies to any site-level metric. `distribution-bar` applies only to a metric with a breakdown configuration, and `link-out` only to a metric with a configured report link. Using either on another metric is an incompatible reference: a placeholder names the widget, the metric and the reason, and a warning is logged. A configured metric with no rows keeps the empty states from #10. The study page shows only the latest snapshot (#48).\n\n**Cards** (design review 2026-11-19). The catalog's `Widget` and `WidgetConfigs` declare a metric's widget and its options (gsm.roadmap#618). The study page's card list sets each card's order, title, metric and breakdown. A card shows a placeholder naming the bad reference when:\n- its metric is unknown or inactive;\n- its metric doesn't declare the card's widget (a standard KRI declares its card by being listed as one, #32);\n- it names an unknown widget or an unknown breakdown section.\n\n**Retired inputs.** With the tile pager gone (#35), a catalog entry's `Widgets` (extra tile views), and a `Widget` or `WidgetConfigs` options naming a retired view (Details, Trend over time, the flag views, Report link), have no effect. Where any is supplied, the notice lists it, naming where it was found, so none is silently ignored. The per-study views (#11) were set in the dashboard's code, not supplied with the data, and go with the pager.\n\n**Unknown metric IDs** in configuration (breakdowns, report links, the card list) are listed in a notice at the top of the study page, naming each reference and where it was found.\n\n**Out:** validating configuration before rendering (a separate issue, to follow).",
+      "criteria": [
+        {
+          "id": "12.01",
+          "text": "Tests cover each case, and the placeholder text names the bad reference.",
+          "sha256": "1ef6040373e59226c6e8628b012f282ae56dce5b829adf42b499eec597956432",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "12.02",
+          "text": "Valid references render their widget, with no placeholder and no notice (test).",
+          "sha256": "4753e2b1213066d3ac692004cc213bc33b91bad587df5cd26521e910a7ed8290",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "title": "Configure detailed-report links per widget",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": false,
+      "scopeSection": "**In:**\n- A per-metric (or per-widget) link to its detailed report, taken from configuration.\n- Relative paths, resolved against a configurable base, so links work wherever the reports are hosted.\n- No link at all when none is configured, rather than a broken one.\n\n**Out:** choosing the real destinations, which depends on where reports are deployed (gsm.roadmap#625, open question 4).",
+      "criteria": [
+        {
+          "id": "13.01",
+          "text": "Links render from configuration for each configured metric.",
+          "sha256": "fde12ebe5a8c74cc25c451b6364c5d3501d0b559c345342b6799bf94f6f52b1e",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "13.02",
+          "text": "Relative links resolve against the configured base (test).",
+          "sha256": "9540620b6a415a23a568ac0ea8b2a68f2f4fb069d7a90609f0a6c23f7b03c183",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "13.03",
+          "text": "An unconfigured metric renders no link.",
+          "sha256": "11952bfc040633d27251b885815ef06caccd60c3a52fb7f28f0f856c81d45619",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "title": "Reject portfolio inputs from mixed snapshot cycles",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": false,
+      "scopeSection": "**In:**\n- The portfolio summary declares its cycle: the cycle's snapshot date, and the studies taking part.\n- A summary holding a study the cycle doesn't list is refused.\n- Studies whose latest snapshot isn't on the cycle's date are left out of the current-cycle table, totals and Distribution, and named in a visible notice with their latest snapshot date.\n- Participating studies with no data are named as missing in the same notice.\n- Trend history is unaffected.\n\n**Out:** how the pipeline signals that a cycle is complete (gsm.roadmap#624, open question 4).",
+      "criteria": [
+        {
+          "id": "14.01",
+          "text": "With a fixture that has one study off-cycle, that study is excluded and named (test).",
+          "sha256": "aa73eb56a658bbd25105acae2131ddc31608fea52ab7693d56f46efeb2cf9171",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "14.02",
+          "text": "With a fixture that has one study off-cycle, totals equal the sum over the in-cycle studies (test).",
+          "sha256": "d685fd1b82ce526c51c1cb73cde460051706ef1b91c571706128aafd85ad187f",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "14.03",
+          "text": "With a fixture where every study is in cycle, the portfolio renders as before (test).",
+          "sha256": "d32e852d1b64ccae589fab17f80542ba4062430a18f2abf1812f19dc5a76fc04",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "14.04",
+          "text": "With a fixture whose cycle lists a study that has no data, that study is named as missing (test).",
+          "sha256": "92e15e68f0f672501e2b3685e717adb190a20a8ba0ddad20b663c635d17073db",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "14.05",
+          "text": "A summary holding a study its cycle doesn't list is refused, and the report says which study (test).",
+          "sha256": "1634a150a8fa0fd80fecc6a97f34b4d60d585f6866df52cc730db48777ac47bb",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "title": "Read the portfolio from a counts-only summary",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": false,
+      "scopeSection": "**In:**\n- The portfolio view reads one summary document:\n  - each study's latest parameters;\n  - per study × metric × snapshot: summed Numerator and Denominator, the site count, and flag counts.\n- The summary holds counts only, with no stored rates.\n- Rates and shares are computed after summing. A JSON Schema rejects stored ratios.\n- The example-data generator writes the summary. In production, the portfolio repository produces it (gsm.roadmap#624, P1–P2).\n\n**Out:** the production summary job.",
+      "criteria": [
+        {
+          "id": "15.01",
+          "text": "A double-programming test shows that every portfolio number computed from the summary equals the number from pooling the per-study files.",
+          "sha256": "1727d40a7fcf032eb5a1db640adb3f66357ad43a1793276af95b3ebec08af920",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "15.02",
+          "text": "The schema rejects ratios and unknown fields.",
+          "sha256": "56e6d3b4eab519a9f51e7c21a0e6eb554078404e84b910475da7ce43a9414b39",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "15.03",
+          "text": "On the generated example data, `summary.json` is at most 10% of the combined size of all per-study snapshot files listed in the manifest, measured in bytes on disk without compression.",
+          "sha256": "3cc28fba62b18e03b05076b638dbc1f385b08f9ee447cb9295a699f3f8a42dae",
+          "kind": "unit",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 16,
+      "title": "Move portfolio defaults into a configuration file",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": false,
+      "scopeSection": "**In:**\n- The portfolio's initial view takes these defaults from configuration. Every key is optional, and an absent key keeps today's built-in default:\n  - `groupBy`: one of the Group rows by choices (`none`, `therapeutic_area`, `protocol_indication`, `phase`, `status`, `product`). Built in: `none`.\n  - `heatmap`: one of the Heatmap choices (`none`, `num`, `den`, `rate`), applied under Custom cell display (#47). Built in: `none`.\n  - `show`: what custom cells show, any of `num`, `den`, `rate` and `trend`. Built in: `num` and `rate`.\n  - `metrics`: the MetricIDs hidden by default. Only metrics eligible for a portfolio column count: active, site-level metrics in the catalog. Built in: none hidden.\n  - `view`: the table's Cell display (#47): `compact` (each category folded to one headline value per metric), `detailed` (every category open, each metric as defined) or `custom` (every category open, with `show` and `heatmap`). Built in: `compact`.\n  - `groups`: the metric groups, in order, each `{ \"name\", \"metrics\", \"hidden\" }`: its name, its MetricIDs in order, and whether its metrics start switched off (#21). An eligible metric no group lists goes into a trailing \"Other\" group, so a new metric shows without a configuration change. The name \"Other\" is reserved: that group always comes last, holds exactly the metrics no group lists, and starts shown. Built in: none, as is an empty list; every metric sits in one band, \"Metrics\", with no group checkboxes. A single group holding every metric is shown the same way, as one band under its own name: it has no checkbox, and its `hidden` is ignored, so the table never starts without metrics. Metrics carry no group of their own; the wrapper supplies the default groups.\n- The configuration is set at injection, not at build. For the prototype it's a JSON file that the portfolio document builder writes into the portfolio document, so one built template serves any configuration and the R injector is unchanged. #624 places the production defaults in the portfolio repository's YAML.\n- Values are validated against the Controls panel's choices, and `metrics` against the metrics eligible for a portfolio column, when the portfolio document is built and when the report loads. Any other catalog ID, such as a study-level metric, is refused. `groups` also refuses a metric listed twice, a repeated group name and a group named \"Other\".\n- A setting held in the address's hash overrides its configured default. A setting the hash doesn't hold takes its configured default.\n- Under any configuration, the view carries over to a study report and back as 27.05 describes, and the study report's cards show exactly the metrics the portfolio showed, of those that have a card (#32).\n\n**Out:**\n- The production configuration's location, and the job that writes it.\n- Defaults for the other settings (sorting, filters and the highlighted study), which stay built in.\n- The heatmap colour, which #23 reduces to one.\n- The `columns` default, which #21 adds.",
+      "criteria": [
+        {
+          "id": "16.01",
+          "text": "With a configuration that sets each key in Scope to a value other than its built-in default, `portfolio.html` opened with no hash shows that view: the Cell display and Group rows by controls, Custom's Heatmap control and Show in each cell chips, and the metric checkboxes hold the configured values, and the table is in that Cell display, grouped and shaded accordingly, with every eligible metric's column except the configured hidden ones (test).",
+          "sha256": "f523ab2d3b66b97b21c6106ccdba1d1f4a12f77f5298779cd9e20826f39b30c2",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "16.02",
+          "text": "A configuration with an unknown key, a value outside the Controls panel's choices (such as a `view` other than `compact`, `detailed` or `custom`), a `groups` entry that lists a metric twice, repeats a group's name or is named \"Other\", or a MetricID that isn't eligible for a portfolio column (one the catalog doesn't have, or an inactive or study-level metric) is refused when the portfolio document is built, with a message naming the key, the value and the allowed values (test).",
+          "sha256": "5e211ae0f1a8f3e4c1dd94cd00ef7ef952791ba621a5fdec87823e5e4dcaef3e",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "16.03",
+          "text": "Under the configuration of 16.01, with each configured setting changed, including back to its built-in default (Compact, Heatmap None, no grouping, every metric shown): a reload returns the portfolio as it was left; so does following a study link and that report's back link; and the study report's cards show exactly the metrics the portfolio showed, of those that have a card (#32) (test).",
+          "sha256": "45d1cc3566a61db4ada08873c170dc5e65ca4ecb3ead1cc205a8d98b41724d8e",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "16.04",
+          "text": "A portfolio document whose configuration fails 16.02's check, including a study-level or inactive MetricID in `metrics`, shows the 27.04 error state, naming the key, instead of a portfolio (test).",
+          "sha256": "69f84b88fcaf9183ca3d6bfb195cf3c343b7221d6c7d00bd7bd1f7d597476865",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "16.05",
+          "text": "With `groups` configured, the table's bands and Config's group checkboxes and metric checkboxes follow its order and membership, a group configured hidden starts with its metrics off, and an eligible metric no group lists is in a trailing Other group. Without `groups`, or with an empty list, every metric is in one band, \"Metrics\", and Config shows no group checkboxes; a single group holding every metric is one band under its name, shown even if configured hidden, with no group checkbox (test).",
+          "sha256": "5ec25018da58b3ac8d6d52b4394d85f97d40ab08c40beedf448d69fbda9accb2",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 17,
+      "title": "Add an eligibility-over-time widget",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": true,
+      "scopeSection": "**In:**\n- A time-series widget that plots the study-level `qtl0001` result (percent, with n/N) against snapshot date.\n- Built on the gsm.viz `timeSeries` module, so it matches the standard report's chart.\n- An empty state for a study with a single snapshot.\n\n**Out:**\n- Making past snapshots available to the render step. That's a deployment dependency: it needs read access to the snapshot history.\n- Any new eligibility calculation.",
+      "criteria": [
+        {
+          "id": "17.01",
+          "text": "The plotted values equal the study-level `qtl0001` results at each snapshot (test).",
+          "sha256": "f957f5c9a5a32f2049b200354985d3655608bb45dbf9ad9438d7562aaf9b84a5",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "17.02",
+          "text": "The axis, labels and markers match the standard eligibility report's chart (visual comparison).",
+          "sha256": "3e2a13aaa6050a48570fd6b19de3d62d5c1d06de18060cffc6b79b28e68fe912",
+          "kind": "visual",
+          "reviewed": false
+        },
+        {
+          "id": "17.03",
+          "text": "The single-snapshot and missing-metric states are tested.",
+          "sha256": "649216ca4ad813475a837a699a8e90874e9fef9215ed454a8d5a6d6f72c8a5da",
+          "kind": "unit",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "title": "Add status colours to distribution widgets",
+      "parent": "Gilead-BioStats/gsm.roadmap#618",
+      "userTest": true,
+      "scopeSection": "**In:** a status-to-colour map in configuration, with these entries.\n\n| Group | Status | Colour |\n|---|---|---|\n| Eligibility | Eligible | teal |\n| Eligibility | Ineligible | red |\n| Eligibility | Potentially Ineligible | TBD |\n| IP status | Dosed – ongoing; Dosed – treatment complete; Dosed – premature treatment discontinuation; Potential Non-Starter – within window; Potential Non-Starter – outside window; Confirmed Non-Starter | match the standard IP compliance report (palette TBD) |\n| Study disposition (enrolled) | Withdrawal by Participant | red |\n| Study disposition (enrolled) | Lost to Follow-Up | purple |\n| Study disposition (enrolled) | Death | black |\n| Study disposition (enrolled) | Ongoing | green |\n| Study disposition (enrolled) | Study Discontinuation: Other; Study Completion | match the standard retention report (TBD) |\n| Screening (all participants) | Screen Failure; In Screening; Enrolled | TBD |\n\n- Colour names become the exact values used by the standard eligibility and retention reports.\n- Unknown statuses fall back to the neutral colour and are reported.\n\n**Out:**\n- The colour hook in the widget (#10).\n- Colours for reason categories.",
+      "criteria": [
+        {
+          "id": "18.01",
+          "text": "Each listed status renders in its configured colour (test).",
+          "sha256": "327ef6dc9d9db1a596feae8671389c391ba0effc54ef5b935510cae0ebdbc8e8",
+          "kind": "e2e",
+          "reviewed": false
+        },
+        {
+          "id": "18.02",
+          "text": "A status missing from the map uses the neutral colour and logs a warning (test).",
+          "sha256": "3f6bf9ef618139a18536de25ad1797a2afc28698a07f5d94c79fbad12fb66176",
+          "kind": "unit",
+          "reviewed": false
+        },
+        {
+          "id": "18.03",
+          "text": "The colours match the standard reports (visual comparison).",
+          "sha256": "220bf5d787ee1b1b804cb471b06cad54b754aa03181fc4b728184fb6ea40ac0c",
+          "kind": "visual",
+          "reviewed": false
+        }
+      ]
+    },
+    {
+      "number": 19,
+      "title": "Show the top protocol-deviation categories",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": false,
+      "scopeSection": "**In:**\n- Two cards on the study page (#32), after widget 9's card and before the standard KRIs: \"Important Protocol Deviation Categories\" (`kri0004`, widget 10), then \"Non-Important Protocol Deviation Categories\" (`kri0003`, widget 11).\n- Each configures #10's widget: the top 5 categories by deviation count, counts only (percentages switched off).\n- Ties at the cut are broken alphabetically, for these cards only. #10's tie order is unchanged elsewhere.\n- All five categories are visible at the default card width, or every category when there are fewer than five. They're never collapsed into \"+ k more\"; the card grid grows instead, its cards staying the same size (#32).\n- The non-important card uses configuration only.\n\n**Out:**\n- A new widget type.\n- Harmonising categories across studies.",
+      "criteria": [
+        {
+          "id": "19.01",
+          "text": "Each PD card shows its top 5 categories, or all of them when fewer exist, each label and count visible without scrolling at the default card width. The categories and counts equal independently summed fixture rows, including long category labels and a tie at the cut, which is broken alphabetically (test).",
+          "sha256": "3c1add9665e0af386f082fcd52a08560d2af945769ed2c054bd93f945a9c0e72",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "19.02",
+          "text": "No percentages are shown.",
+          "sha256": "64849207d10e775d3f356414e0e90fcd81ef9b23f8c1622338d4e07ff20e7b9c",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "19.03",
+          "text": "The non-important variant renders from configuration alone.",
+          "sha256": "a2b0fec340549b42885c5c3c56399ffc879213a14b3ab7f88ebc16417cf65cbe",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "19.04",
+          "text": "Both cards appear exactly once, after widget 9's card and before the standard KRIs, important first (test).",
+          "sha256": "d03e345dccecc9e9815e42e06be2ace909c029505b1aa43a0aa6c4529e69ca6e",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 20,
+      "title": "Move portfolio details into hovers and trim the tooltips",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": true,
+      "scopeSection": "**In** (the portfolio report, in Overview and Details):\n- Remove the info icons from metric headers and study rows.\n- Show a metric's glossary entry on hover of its header (Details) and its band label (Overview). Show a study's details, including its snapshot date, on hover of the study's name.\n- With rows ungrouped, drop the Snapshot column. With Group By on, the Studies column stays, and expanded study rows leave it empty.\n- Remove the metric ID and the Flagging row (score and thresholds) from the portfolio's tooltips.\n- In the cell and tile hovers, name the denominator with the metric's own catalog `Denominator` label, instead of \"Σn/Σd\" (FB-019).\n\n**Out:**\n- The study report, whose info icons and tooltips are unchanged.\n- The wording of per-28-day rates, \"per month\" or \"per 28 days\", including the cell hover's \"/ day × 28\". It waits on a working-group decision, and whichever wording is chosen stays a configuration setting.",
+      "criteria": [
+        {
+          "id": "20.01",
+          "text": "The portfolio report has no info icon (`.info`) and no \"ⓘ\" in its page or tooltip text, in Overview and Details (ungrouped, and grouped with a group open) (test).",
+          "sha256": "4e834e90024ee950952c58174ecab409a7767971e768bf6185709b417ff149af",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "20.02",
+          "text": "Hovering a metric's header in Details (`th[data-sort=\"<MetricID>\"]`) or its band label in Overview (`.tlab`) shows the metric's name, definition, numerator, denominator and display rule. Hovering a study's name in the table (`tr.study a[data-study]`) shows its therapeutic area, indication, phase, status, product, and screened, enrolled and dosed counts where present, and its snapshot date (test).",
+          "sha256": "21df66ad4000c680624ff6ac6e61d023e25e96598cadd03ad258a12793fc25b1",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "20.03",
+          "text": "No tooltip on the portfolio report contains a metric's MetricID or ID, its score or its thresholds, in Overview or Details (test).",
+          "sha256": "efc28e1ff8e3a75937e7ee899a481a1fc4ea19064155f6c9974d6346b0c13458",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "20.04",
+          "text": "A reviewer compares the portfolio's hovers and tooltips in Overview and Details with this issue's Scope and accepts them (visual comparison).",
+          "sha256": "34a9225bd5d6354a230b5ad71a3ec5c91881becd8c36d7aa986a9763d38b1663",
+          "kind": "visual",
+          "reviewed": true
+        },
+        {
+          "id": "20.05",
+          "text": "With rows ungrouped, the table has no Snapshot column in Overview or Details. With Group By on, the Studies column holds each group's study count, and expanded study rows leave it empty (test).",
+          "sha256": "2c0288661ef1f257af6d5104c0c251f75ddef28bd46bebcc3fc9baa672feb383",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "20.06",
+          "text": "In Overview and Details, every cell's and tile's hover gives the pooled numerator and denominator, names the denominator with that metric's catalog `Denominator` label, and contains no \"Σn/Σd\" (test).",
+          "sha256": "1751ec9bb4973bdaec41827a42ec6e9670fb3224a1461255c88433c62d0e0914",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 21,
+      "title": "Add column options and an Overview / Details View to the portfolio table",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": true,
+      "scopeSection": "**In:**\n- A column chooser, Study columns in Config (#47): study name (default on), enrolled (default on), status (default off). Enrolled is the Population band's only column; screened shows in the hovers only.\n- Enrolled shown as n / expected when the data carries an enrollment target.\n- The table's View follows Config's Cell display (#47): Compact (Overview) folds every group to one headline value per metric, its rate; Detailed and Custom (Details) open every group. It replaces the view tabs, per-category folding and the roomy/condensed toggle FB-016 asked for, by the design review's decision; a band header is a label.\n- With more than one metric group (#16's `groups`), Config's metric list gives each a checkbox on its heading over its metrics' own checkboxes, which are listed under it behind the group's caret, closed by default (#47). The group's checkbox is ticked when all its metrics are on, half-ticked when some are, and clear when none are; clicking it switches them all on, or off when all are on. A band shows while any of its metrics is on. Its heading counts the metrics selected (\"4/5 selected\"). When every metric is hidden, the page says \"All metrics are hidden.\" with Show all metrics, which switches every metric on. The choices travel in the address, and Reset returns to the configured defaults.\n- The columns' and the View's defaults read from the portfolio configuration (#16).\n\n**Out:** adding the enrollment target to the data contract (a separate data change).",
+      "criteria": [
+        {
+          "id": "21.01",
+          "text": "Each column toggles and its default applies, and the table is folded under Compact and open under Detailed and Custom (#47) (tests).",
+          "sha256": "c8dd2e7bfff17f543265589065f62e8ea4acec52d366ec4b6a47625f4865eb80",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "21.02",
+          "text": "n / expected renders when a target exists, and the count alone renders when it doesn't (tests).",
+          "sha256": "e19d529f91500f761b81a972d99f4e107c1f746c6d9eda4e3701a691d73924f4",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "21.03",
+          "text": "A reviewer compares the table in Compact and Detailed, and Config with its Cell display, group checkboxes, Study columns and metric checkboxes, with this issue's Scope and accepts them (visual check).",
+          "sha256": "e02877415adf58e365c4a19eaa0dd48dbc5f08a98b5df1e73361c7146f80192d",
+          "kind": "visual",
+          "reviewed": true
+        },
+        {
+          "id": "21.04",
+          "text": "Each group's checkbox is ticked when all its metrics are on, half-ticked when some are, and clear when none are; clicking it switches them all on, or off when all are on; a band shows while any of its metrics is on; a group configured hidden starts with its metrics off; the choice survives a reload and a study report's back link, and Reset restores the configured defaults (test).",
+          "sha256": "a19ceb09f76a64ac6d7419658db6b12b979d61a4d42fbda25af10386164abcb1",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "21.05",
+          "text": "A group's heading counts its metrics selected (\"n/total selected\"), closed or open; with every metric hidden, the page says so, not that no study matches, and Show all metrics switches every metric on (test).",
+          "sha256": "50cd55ce09c2febfdced9671de2b7d9eddcd3c461d8bd5939cf938cfd4211184",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 22,
+      "title": "Add a study filter and a full Reset to the portfolio",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": true,
+      "scopeSection": "**In:**\n- A multi-select study filter, the first of the filters, listing every study in the portfolio by StudyID and nickname. It combines with the other filters as they combine with each other, so it limits the table's rows, the Portfolio total and group totals to the selected studies.\n- The study filter counts as an active filter, Clear filters clears it, and it is kept in the address, so it survives a reload and the trip to a study report and back.\n- A Reset control. Afterwards, the view and its address equal those of the report opened with no hash, under the configured defaults (#16). That covers everything the address holds: the Cell display and its Custom choices (#47), grouping and closed groups, sorting, heatmap, columns, filters, hidden metrics and the Admin panel's settings (#46). Whether Filters or Config is open is not part of the view and stays as it is.\n- The filters sit in the portfolio's header, pulled right, collapsed whenever the report opens, including after a reload and a study report's back link, to a Filters & grouping button that shows the number of active filters. Opened, they show one chip per filter, the study filter first, then product, therapeutic area, phase and status, then Group rows by, which arranges the rows rather than choosing them, so it isn't counted and Clear filters leaves it. Each chip opens its choices and shows how many are selected; Clear filters follows them while any filter is on. A study's value is absent when it's missing or blank (empty or spaces): an absent value is no choice and never matches a selection, Group rows by puts it under \"(missing)\", and a filter with no values isn't shown. Config and Reset sit beside Filters & grouping (#24).\n- When no study passes the filters, the page says \"No studies match these filters.\" with Clear filters, apart from the message for hidden metrics (#21).\n\n**Out:** how the status filter matches (FB-010: whether \"Active\" includes \"Enrolling\"). Statuses stay matched exactly until that is decided, since it changes which studies are pooled.",
+      "criteria": [
+        {
+          "id": "22.01",
+          "text": "With studies selected in the study filter, alone and together with a phase filter: the table (ungrouped, and grouped with a group open) lists exactly the selected studies that pass the other filters; and the Portfolio total and each group's total equal the values pooled from those studies by `test/qual/pooling.js` (test).",
+          "sha256": "ad8c0abbfa70db40735883e18ba9a01a98a3c6112802da3666e8c29b4348db06",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "22.02",
+          "text": "After every setting the address holds (listed in Scope) has been changed, including the study filter, clicking Reset leaves the address and the page, including the Controls panel's values, equal to those of the report opened with no hash, under the default configuration and under a non-default one (#16) (test).",
+          "sha256": "f304e7fc244df175063238129dc568bf070dba2b6169dbc7b83ce69078f029f0",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "22.03",
+          "text": "A reviewer compares the study filter and Reset with this issue's Scope and accepts them (visual comparison).",
+          "sha256": "55dbbe21329c82d884bbd097af70d21554a30935d390be420024cae5659b6bea",
+          "kind": "visual",
+          "reviewed": true
+        },
+        {
+          "id": "22.04",
+          "text": "A study-filter selection survives a reload, and a study link followed by that report's back link; Clear filters clears it with the other filters (test).",
+          "sha256": "0557b527482e92eecdacddf31ed4a0f2de2f4836d1f3165e0284ace097e4269c",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "22.05",
+          "text": "The filters are collapsed when the portfolio opens, after a reload and after a study report's back link, and Filters & grouping shows the number of active filters. Opened, they show one chip per filter, in order Study, Product, Therapeutic area, Phase and Status, each opening its choices and showing how many are selected, and every filter value the panel offered before is there; Group rows by follows them, isn't counted, and Clear filters leaves it (test).",
+          "sha256": "85fb610edb42f9991e21c2ff691de2409757f33b415e6f4f2a29e3572d7239b4",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "22.06",
+          "text": "With products selected in the Product filter, alone and together with the phase and study filters: the table (ungrouped, and grouped with a group open) lists exactly the studies of the selected products that pass the other filters; the Portfolio total and each group's total equal the values pooled from those studies by `test/qual/pooling.js`. The selection survives a reload, and a study link followed by that report's back link; Clear filters and Reset clear it (test).",
+          "sha256": "297e795f6044cb733fbd2731ed3a3cab224fe490442463973046bf5cf03e0fac",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "22.07",
+          "text": "Filters offer only values some study has. A field missing from every study, or blank (empty or spaces) in every study, has no chip. A field blank in some studies offers only the others' values, and selecting one leaves out the studies where it's blank. Group rows by puts blank and missing values under \"(missing)\" (test).",
+          "sha256": "16297bb3ea182c11d7ffec047472a060aa188d6420339768b94538af95b9fe3d",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "22.08",
+          "text": "When no study passes the filters, the page says \"No studies match these filters.\", not that metrics are hidden, and its Clear filters brings every study back (test).",
+          "sha256": "104659e8d018c9a6ec1a6fb2932213647e544376553a86119c38adab22d07661",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 23,
+      "title": "Simplify heatmap options and fix shading under Group By",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": true,
+      "scopeSection": "**In:**\n- One colour ramp. Which colour is deferred to a later design decision; until then the ramp is today's default. The Heatmap color control and the `ramp` address parameter are removed; an address that still carries `ramp` opens normally.\n- The heatmap measure persists across filter changes, is restored to its configured default (#16) by Reset (#22), and is kept in the address.\n- Each metric column's shading scale, with each column's range split into four equal steps as today:\n  - ungrouped: study rows are binned among all the study rows shown;\n  - grouped: group rows are binned among the group rows, and expanded study rows among all the study rows the ungrouped table would show, so a study's shade is the same grouped or not;\n  - the Portfolio total is shaded under Rate only, among the top-level rows, as today.\n- The heatmap applies under Custom cell display only (#47); Compact and Detailed are unshaded.\n- Expanded study rows display their shading under Custom.\n- 27.05 no longer lists the palette; #27 is amended with this issue.\n\n**Out:** the heatmap measures and the four-step binning itself.",
+      "criteria": [
+        {
+          "id": "23.01",
+          "text": "The heatmap measure stays as set when any filter changes, survives a reload and the trip to a study report and back, and Reset restores it to its configured default (test).",
+          "sha256": "1b14588d818f82547c8290d7e6a3d7f05c9dd3decbe9f27ff63bde0fa6e747b8",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "23.02",
+          "text": "Expanded study rows display heat shading: a reviewer compares the table, ungrouped and grouped with a group open, under each heatmap measure, in Custom cell display, in the light and dark themes, with this issue's Scope and accepts it (visual check).",
+          "sha256": "b9b01824e92c358fd018c895bca225217ee0001da22bbb1067d272d73eee91be",
+          "kind": "visual",
+          "reviewed": true
+        },
+        {
+          "id": "23.03",
+          "text": "The Controls panel offers no heatmap colour choice, the address never carries `ramp`, and every shaded cell and tile uses one of the single ramp's four colours in the light and dark themes. An address with `ramp=teal` shows the same page as one without (test).",
+          "sha256": "4152364a1eb07c02b64479cb67877485251b849e14c41e96baeec2d565fba8a9",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "23.04",
+          "text": "For fixed rows with known values, the bins equal expected bins worked out by hand, under Numerator, Denominator and Rate: ungrouped; grouped, for group rows and for expanded study rows, which match their ungrouped bins; and the Portfolio total, shaded under Rate only (test).",
+          "sha256": "e39ee3cc1568766ef9f29a121a5cd692aafc80e3d1e8a00d02b5613d7bdaf7af",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "23.05",
+          "text": "In the report, under Custom cell display and Numerator, Denominator and Rate, each expanded study row's cells carry the same heat class and computed background as that study's row in the ungrouped table (test).",
+          "sha256": "fbc151b61d1a26291d6cab31563701ef715857586ce1b0e485694765c0d069ad",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 24,
+      "title": "Update the reports' headers",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": true,
+      "scopeSection": "**In:**\n- Both reports' headers show the gismo logo and the dashboard's title, with no page tag. The gismo logo replaces the RBQM logo FB-007 asked for, by the design review's decision.\n- The title is the data document's optional `title`, which the render step sets (for example \"CtQ Dashboard\"); it is \"gsm.dash\" when the document has none. The browser tab shows it too: the title alone on the portfolio, and \"<StudyID> · <title>\" on a study report, so open studies can be told apart. The portfolio and study document schemas gain the optional `title` (portfolio-document 1.1.0, study-document 2.1.0).\n- Remove the metadata line.\n- The portfolio header holds, on the right: Filters & grouping, collapsed by default, with the number of active filters, and Group rows by after the filters (#22); Config, a popover or side panel with Cells (the Cell display and its settings) and Columns (Study columns, and the metrics with each group's checkbox) (#21, #47); Reset (#22); and Admin (#46). The study report's header holds Admin.\n- The status line sits below the table and reads \"n / N studies · n / N metrics\", then any active sort: its column (Study or Group, Studies, Enrolled, or a metric with its measure) and direction, marked hidden when that column isn't shown.\n- The theme is an Admin panel setting (#46); #35 removed the earlier theme switch.",
+      "criteria": [
+        {
+          "id": "24.01",
+          "text": "A reviewer compares both reports' headers, and the portfolio's status line, with this issue's Scope and accepts them (visual check).",
+          "sha256": "f6a20cbb83099cfaa57098603caad3a17d50ca882e1f658fadf53be2973ff7a1",
+          "kind": "visual",
+          "reviewed": true
+        },
+        {
+          "id": "24.02",
+          "text": "Each report's header shows the logo and the document's title, or \"gsm.dash\" when it has none, with no page tag and no metadata line. The browser tab shows the same title, after the StudyID on a study report (\"STUDY001 · CtQ Dashboard\"). The portfolio's header also holds Filters, with the number of active filters, Config, Reset and Admin, and the study report's header holds Admin. The status line sits below the table and reads as Scope gives it (test).",
+          "sha256": "731a4983e8a3f29e618410e63ffba147da2523a8b6ab6a0c6d631e0ef267c612",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "24.03",
+          "text": "Both document schemas accept an optional `title`, a non-blank string of at most 60 characters, and refuse any other value; a document whose `title` fails shows the 27.04 error state (test).",
+          "sha256": "ee60578163c233cc92678e9adadefe723e5a13382ce1b6caa7fd79b2a7cc6a84",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 25,
+      "title": "Open the detailed report from a study and metric cell",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": true,
+      "scopeSection": "**In:**\n- A `ReportLink` may contain `{StudyID}`. Each study's link replaces it with that study's StudyID, URL-encoded, before the link is resolved and its scheme checked (http, https or file only). A link without it is the same for every study. This applies to the portfolio's cells and to every detailed-report link on the study report (#13).\n- In the portfolio table, study rows' metric cells (Details) and tiles (Overview), including expanded study rows under Group By, link to their study's report for that metric and open it in a new tab.\n- No link when the metric has no `ReportLink`, or when its link can't be resolved or its scheme isn't allowed. The Portfolio total and group rows never link, since they aren't one study.\n- Clicking a linked cell or tile opens the report and changes nothing else. The study highlight is removed (#35), so a click anywhere else on a study row does nothing.\n\n**Out:**\n- Choosing the real destinations, which depends on where reports are deployed (gsm.roadmap#625, open question 4).\n- Links from the Distribution view, which is removed (#35).\n- Placeholders other than `{StudyID}`.",
+      "criteria": [
+        {
+          "id": "25.01",
+          "text": "In Details and Overview, ungrouped and with a group open, every study-row cell and tile of a metric with a `ReportLink` links to that metric's report for the row's study, with `target=\"_blank\"` and `rel=\"noopener\"`. Following one opens it in a new tab, and the portfolio's tab keeps its address (test).",
+          "sha256": "1503928623b975a8bb20c3de4bcd75563d0c7222d926ec8cc1fa4ad546a19a90",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "25.02",
+          "text": "No cell or tile links when its metric has no `ReportLink`, or when its link, with `{StudyID}` filled, can't be resolved or uses a scheme other than http, https or file. Cells and tiles on the Portfolio total and group rows never link (test).",
+          "sha256": "db46ef3187e4e23018dad490a9a34bbdbec029849973608672b6dcfbc0f0caa4",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "25.03",
+          "text": "A reviewer compares linked and unlinked cells and tiles in Details and Overview with this issue's Scope and accepts them (visual comparison).",
+          "sha256": "2fb46435886737034abd3d68337b7d39c7e780d1f20b59a6d2f21f2c85d126d5",
+          "kind": "visual",
+          "reviewed": true
+        },
+        {
+          "id": "25.04",
+          "text": "A `ReportLink` containing `{StudyID}` gives each study its own address, with the StudyID URL-encoded, in the portfolio's cells and tiles and in the study report's detailed-report links. A `ReportLink` without it gives every study the same address (test).",
+          "sha256": "0e1e1a211209dea07d2a20043242aabef09c2652ebc3dc7e1e20491d8a5196ed",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "25.05",
+          "text": "Clicking a linked cell or tile opens its report and changes nothing else on the page. Clicking a study row's name cell outside its link, a population cell or an unlinked cell changes nothing (test).",
+          "sha256": "d1ae555202bae7dbbc79928c91111347fe3d7a26ce1ffb73b736d1b461457422",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 27,
+      "title": "Deliver one self-contained file per report",
+      "parent": "Gilead-BioStats/gsm.roadmap#623",
+      "userTest": false,
+      "scopeSection": "**In:**\n- One HTML file per report, `portfolio.html` and `<StudyID>.html`, with scripts, styles and data inline, requiring no external runtime resources.\n- Relative links between reports.\n- Data injected into the built template after the build, by a Node injector and by a base R injector that needs no Node or Bun at render time.\n- Each report validates its data against a JSON Schema when it loads.\n- The portfolio view state carries over to a study report and back, as listed in 27.05.\n\n**Out:**\n- Hosting and access control.\n- The R package that calls the R injector.",
+      "criteria": [
+        {
+          "id": "27.01",
+          "text": "Every report is one HTML file with its scripts, styles and data inline, requiring no external runtime resources. It opens offline from `file://` and under a sub-path.",
+          "sha256": "1a1f8d0eaa16228da0f2f23c2fea0dd81432600495c12850d6b597cae2134472",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "27.02",
+          "text": "Reports link to each other with relative URLs.",
+          "sha256": "e35178eed12a0a90c373f65c2237054d3d65e1789a213aee853bfaf77aee3bbb",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "27.03",
+          "text": "Data is injected after the build. The base R injector needs no Node or Bun at render time, and the Node and R injectors produce byte-identical files for the same input.",
+          "sha256": "1010f99877cfe2d4863c5af6cdd54eaf13491131e0298dd8f2527e9a8642c10f",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "27.04",
+          "text": "A data document that fails its schema shows an error state, not numbers.",
+          "sha256": "809ed4e330471134788b489f0ea393718d0b0cfc7f3d80fe39e7a6c5b4bae71a",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "27.05",
+          "text": "The portfolio view state carries over to a study report and back: the Cell display (Compact, Detailed or Custom, with Custom's Show and heatmap) and grouping and closed groups, sorting, study filters, hidden metrics and the Admin panel's settings. The study report applies the hidden metrics and the Admin panel's settings.",
+          "sha256": "0cd9f6a2298f3c05dc0b746fa9623454bcaa668711bf98bd090c497568e4c729",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 32,
+      "title": "Show the study page as one grid of same-size cards",
+      "parent": "Gilead-BioStats/gsm.roadmap#618",
+      "userTest": true,
+      "scopeSection": "**In:**\n- **One grid of cards** in tracker order (gsm.roadmap#617's widget list): #10's distribution cards, then the standard KRIs (12–20). Every card has the same width and height. Widgets 2, 10 and 11 join when they are built.\n- **Card header:** the card's title (its hover gives the metric's definition, #20), the metric's value and n / N, laid out as #48 gives it.\n- **Card footer:** the detailed-report link (#13) where one is configured and, on a standard KRI's card, its Charts button and, where a breakdown has notes, the \"* Notes\" marker (#48); nothing else.\n- Each standard KRI's card shows, for the latest snapshot:\n  - its name;\n  - its rate: Σ numerator ÷ Σ denominator over the metric's site rows, displayed by the metric's display rule (per 28 days to two decimals; percentages to one decimal);\n  - n / N: Σ numerator and Σ denominator;\n  - how many of the metric's sites are red (|flag| 2), amber (|flag| 1), green (flag 0), or have no flag (they can't be evaluated), each with its percentage of all the metric's sites, to one decimal.\n- **Per 28 days:** for metrics displayed per 28 days (AE, SAE and both protocol-deviation rates), the rate is n ÷ exposure days × 28 and N is exposure days ÷ 28, to one decimal, both from unrounded inputs. The unit label comes from configuration; the factor stays 28.\n- Each standard KRI's card keeps the existing \"Charts\" drill-in, whose panel spans its row of the grid. No card has a view pager.\n- **Ordered by layout only:** the cards follow the configured order, and each card appears once. Configuration lists the standard KRIs.\n- **Hiding:**\n  - configuration lists KRIs hidden by default, one list for every study;\n  - one expand control, after the last KRI card, reveals every hidden KRI at once;\n  - by default, no KRI is hidden, so no expand control shows;\n  - a KRI hidden from the portfolio (a hidden metric or group, #27) doesn't appear, even after expanding.\n- **Nothing clipped:** every label, value and empty or error message fits inside its card, and the notes show in full from the footer marker (#48). A breakdown longer than its card allows shows its top rows, then \"+ k more\" (#10).\n\n**Out:** flag computation (owned by the metric workflows); the distribution breakdowns (#10); a user setting for which KRIs are hidden; grouping, sorting, resizing and stacking cards, which the review leaves for later. The CTQ trend sparkline is removed by the demo review of 2026-11-23 (#48). The grouped layout of the 13 Nov follow-up (CTQ widgets by category, then three KRI groups) is removed for now under #35, its code kept unused.",
+      "criteria": [
+        {
+          "id": "32.01",
+          "text": "Each compact widget's displayed rate, n / N, and site counts and percentages per flag equal values computed independently from the fixture's site rows, at the latest snapshot (test).",
+          "sha256": "422791ef7ee8da45f2f11df970e7ab8a7f874ae52d9c33d484b59ff9a4071e85",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "32.02",
+          "text": "For metrics displayed per 28 days, the displayed rate and N follow the per-28-day rule, and a configured unit label is shown (test).",
+          "sha256": "b5eacee9237452a839e2a6170535bf25d7e9543d7ff72b60a2df3bd90a3acbdf",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "32.03",
+          "text": "The cards follow tracker order: #10's distribution cards, then 12–20. Each card appears once, there is no control to group them, and KRIs hidden from the portfolio are left out (test).",
+          "sha256": "ac9ff357352202dcd8180e3ecd72194c3631fb45a655e38822aa7acd2a881dc7",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "32.04",
+          "text": "KRIs configured as hidden by default appear only after the expand control after the last KRI card is used, which reveals them all. KRIs hidden from the portfolio stay out, and with the default configuration no expand control shows (test).",
+          "sha256": "ad251de9c9f7cbcf4819e039105d6ddb068759f722dae5002649bb9ea566419b",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "32.05",
+          "text": "A user compares the card grid, with a KRI hidden by default, against this issue's Scope and accepts it (user acceptance).",
+          "sha256": "a3af7ac5d4d001f7e98cc44a468071b5784ca5ac202fc7f6752d8c8bc515c0f7",
+          "kind": "visual",
+          "reviewed": true
+        },
+        {
+          "id": "32.06",
+          "text": "Each compact widget keeps the Charts drill-in and, where configured, the detailed-report link, and has no view pager (test).",
+          "sha256": "20f09eeac0a852dd1d795d3bcb885df54fa7e6231b71f7d591d22b070ce26f56",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "32.07",
+          "text": "Pooling a metric's site rows into the study's value sits in one tested function, so it can be qualified as dashboard logic (gsm.roadmap#625).",
+          "sha256": "0aebfd223ee080c9859d59f1e6ea94f0ad35a9bd201381d35e5717d57a13b8ba",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "32.08",
+          "text": "Every card has the same width and height, and every label, value and empty or error message is visible inside its card: nothing is clipped. Notes sit behind the footer marker (#48) (test).",
+          "sha256": "847a312e25118d19c9415696ad71e2668751dc6a8e4c3e858ea2cde8507ea8fa",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 35,
+      "title": "Remove prototype features that no requirement backs",
+      "parent": null,
+      "userTest": true,
+      "scopeSection": "**In:**\n- Remove the \"Change log\" link from the portfolio header.\n- Remove the \"Metric glossary\" button and its dialog from both reports. Each metric's glossary entry stays in its hovers (#20).\n- Remove the theme switch and its stored choice. Each report follows the operating system's light or dark setting. This settles #24's theme question. The demo review of 2026-11-23 brings a theme setting back in the Admin panel (#46).\n- Remove from the study report:\n  - the Randomize button;\n  - the play/pause button (the visit slider stayed; #48 removes it);\n  - the STANDARD / CUSTOM badge, on tiles and in the Charts panel;\n  - the metadata line.\n- Remove the comparison line from study tiles, and the portfolio comparison from the study document, its schema and its builder.\n- Remove the \"not site-level\" note from the portfolio's Controls panel.\n- Second pass (17 Nov), removing what no business source backs (gsm.roadmap#618, #624, #625):\n  - the Overview, Scatter (n vs d) and Numerator by site tile views, with their chart hovers. A full study tile pages through Details, then Trend over time, then the metric's own views (Breakdowns, Report link), then, where a study configures them, the flag views (#11). The third pass removes the pager;\n  - the All tiles menu;\n  - the site highlight across charts and its chip, including in the flag views and the Charts panel;\n  - the Charts button and panel on CTQ tiles. The standard-KRI widgets keep theirs (#32);\n  - the portfolio's metric All / None buttons and per-category all / none toggle. Each metric's checkbox stays.\n- Third pass (design review 2026-11-19), from the portfolio:\n  - the Distribution view. Its code stays in the repository, unused, should it be wanted again;\n  - the study highlight: the Highlight study control, the marked row, and highlighting a study by clicking its row. Its code stays in the repository, unused, for a possible enhanced version of the page;\n  - the view tabs and their hint, and per-category folding: the table's View, Overview or Details, replaces them (#21), and a band header is a label;\n  - in an old address, the retired values `view=distribution` and `view=mixed`, and the parameters `open`, `dfold`, `study` (the highlighted study) and #21's `density`, are ignored and removed from the address. Its supported settings keep their effect; otherwise the configured defaults apply (#16).\n- Third pass (design review 2026-11-19), from the study page:\n  - the tile pager: each card shows one widget (#32). With it go the Details and Trend over time views (the value and n / N move to the card's header, and the trend to its sparkline, which #48 removes), a metric's extra views (`Widgets`) and the flag views (#11). A configuration that names them is listed in #12's notice;\n  - the cards of metrics without a widget in the tracker (gsm.roadmap#617's widget list). Those metrics stay in the portfolio;\n  - the \"i\" icon on cards and in the Charts panel: the card's title gives the definition on hover (#20);\n  - the Group by category control and the grouped layout, with its KRI group headings (#32): cards are ordered by layout only, and grouping may come later (the review's minutes). Its code stays in the repository, unused.\n- Keep, with these sources:\n  - the CTQ trends, as each card's sparkline (gsm.roadmap#618 and #625: the study view presents CTQ trends). Removed by the demo review of 2026-11-23 (#48);\n  - \"Extract: <date>\" in place of the visit slider on a study with one snapshot (gsm.roadmap#625: generated from the scheduled study snapshot). Replaced by \"Latest snapshot: <date>\" on every study (#48).\n- Tests that only exercise removed behaviour go with it. The portfolio and study baselines (11.03, 12.02) are re-recorded, and the change is recorded as a reassessment.\n\n**Out:**\n- The page tags \"Program overview\" and \"Study view\", which #24 removes.\n- The other prototype features that only regression baselines cover. A later check finds each a business source, or removes it.\n- The portfolio's metadata line and logo (#24).",
+      "criteria": [
+        {
+          "id": "35.01",
+          "text": "The portfolio report has no \"Change log\" link and no \"not site-level\" note. Neither report has a \"Metric glossary\" button or dialog, or a theme control outside the Admin panel (#46). With the Admin panel's theme on Auto, each follows the operating system's light or dark setting (test).",
+          "sha256": "09128670096939436588fd5e64140860e20c974b9908e494228a8c50a357d7b1",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "35.02",
+          "text": "The study report has no Randomize button, no play/pause button, no STANDARD / CUSTOM badge on any tile or in the Charts panel, no metadata line and no comparison line on any tile (test).",
+          "sha256": "2166d275b3eb500c6fa94c950183ef3514064459054657ee3f1819c5725eb7a0",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "35.03",
+          "text": "The study document carries no portfolio comparison, and the study document schema refuses a document that does (test).",
+          "sha256": "d00877ba3a5b36dea841697a38b59dde75c6a54ed40ca026a96dde02a3b47007",
+          "kind": "unit",
+          "reviewed": true
+        },
+        {
+          "id": "35.04",
+          "text": "A reviewer compares both reports with this issue's Scope and accepts that only the listed features are gone (visual comparison).",
+          "sha256": "06bd72fc655a610a2e2b28e1e695f5ffdd35b3d6a240d790226cf620b5d34d86",
+          "kind": "visual",
+          "reviewed": true
+        },
+        {
+          "id": "35.05",
+          "text": "No study card has a view pager or an \"i\" icon, and each shows one widget: none offers Details, Trend over time, Overview, Scatter (n vs d), Numerator by site or a flag view, there is no All tiles menu and no Group by category control, and only the tracker's widgets have cards (test).",
+          "sha256": "3b973af2b06d68096f00462b35860e7e5b775f96835f9c0c06656c3ec5a899c3",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "35.06",
+          "text": "Clicking a site's mark in any chart highlights nothing: no site chip appears, and no chart, flag view or Charts panel changes (test).",
+          "sha256": "2137c60bb1f8aaf86ef9a00a6e6b94bb8ce23f6c7061926dfc131d81e52f9b80",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "35.07",
+          "text": "CTQ tiles have no Charts button or panel, and each standard-KRI widget keeps its Charts drill-in (test).",
+          "sha256": "fb018dd0aa3b7ad531e8bea82e183a45148100ae0d8bc67f174c37d3904c71ac",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "35.08",
+          "text": "The portfolio's Metrics section has no All / None buttons and no per-category all / none toggle, and each metric's checkbox still hides and shows its metric (test).",
+          "sha256": "672323c949149fa5aa4d2d972c5f4ff4d8f327a88a27797a302896bf454a80fb",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "35.10",
+          "text": "The portfolio has no Distribution view, no view tabs or view hint, and no per-category folding: clicking a band header changes nothing. In an address, the retired values `view=distribution` and `view=mixed`, and the parameters `open`, `dfold` and `density`, are ignored and removed from the address; its supported settings keep their effect, and otherwise the configured defaults apply (test).",
+          "sha256": "5f5adae3475ab21fc7bd5493f319ff9561ccd463aa7e31b011c765fb65d4a3d7",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "35.11",
+          "text": "The portfolio has no study highlight: no Highlight study control and no marked row, and clicking a study row outside its links changes nothing. An address's `study` parameter is ignored and removed (test).",
+          "sha256": "bf1f80d9079fc98891707d357e85f1dc4e0e81ad0e1551d67ab754b850d82710",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 44,
+      "title": "Make the portfolio easier to read: larger text, no hatching on planned metrics",
+      "parent": null,
+      "userTest": false,
+      "scopeSection": "**In:**\n- Planned metrics lose the hatch pattern on their column headers and Overview tiles, and the dashed outline on the tiles. #46 then removes the \"Planned\" tag and the muted values.\n- Text on the portfolio page is at least 12px: the table, the header, Filters, Config, the Overview tiles and their labels, band headers, units, tags and hovers. Icons such as sort arrows and chevrons are exempt.\n- The table's study and total rows are 14px. Overview tiles widen to fit their larger text.\n\n**Out:**\n- A text-size setting: browser zoom already scales a report.\n- The study page's text sizes: its cards are sized to fit their content (#32).\n- The styling of the unused Distribution view, kept in reserve (#35).",
+      "criteria": [
+        {
+          "id": "44.01",
+          "text": "No metric shows a hatch pattern or a dashed outline in the table's headers, cells or Overview tiles (test).",
+          "sha256": "e1108bbe1fd92ef30d51234825bf6bbc7a019ce7d8058cd7ea6ee437059f709d",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "44.02",
+          "text": "Every piece of text on the portfolio page, in Overview and Details, with Filters and Config open and in a hover, renders at 12px or more, icons aside, and the table's study and total rows at 14px (test).",
+          "sha256": "dde15b7551374228ce7a4469e9c1b985ca5b986c294c3980d3e7fafcf0b07cbf",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 46,
+      "title": "Add an Admin panel and a clearer dark theme, and remove metric status labels",
+      "parent": "Gilead-BioStats/gsm.roadmap#625",
+      "userTest": true,
+      "scopeSection": "**In:**\n- **Admin panel.** An Admin button in both reports' headers opens a panel with four settings:\n  - **Theme:** Auto (follows the operating system), Light or Dark. Default Auto.\n  - **Study cards per row, at most:** 3, 4 or 5. Default 4. #48 sets how the grid uses it.\n  - **Config opens as:** Popover or Side panel. Default Popover.\n    - The side panel slides in from the right at full height and holds the same controls.\n    - It's modal: while it's open, the page behind it, header included, can't be clicked or reached with Tab. Focus moves into it and returns to Config when it closes.\n    - It closes on Escape, an outside click or its close button.\n  - **Heatmap legend:** Off or On. Default Off. When it's on and a heatmap is shown, a legend sits below the table, above the status line. It names the measure and its four shades from lower to higher, each column shaded within its own range.\n- **Where the settings live.** They're kept in the address only, each written when it isn't its default (`theme`, `perrow`, `cfgpanel`, `legend`).\n  - Browser storage isn't used, since offline report files can't rely on sharing it.\n  - The settings survive a reload. The portfolio's study links and the study report's back link carry them.\n  - Reset returns them to their defaults, as it does every address setting (#22).\n  - A change made on a study report rewrites only these settings in its address and keeps the portfolio state it arrived with. Its back link follows the current address.\n  - A study report keeps that portfolio state in its current form: retired parameters such as `statuses` are removed, and an old View is rewritten (#47).\n- **Dark theme.** A dark palette, chosen from two candidates, in which:\n  - text has at least 4.5:1 contrast against its surface;\n  - card, popover and side-panel borders have at least 3:1 against the page and against their own surface;\n  - bars have at least 3:1 against the card;\n  - cell text has at least 4.5:1 on each heat step.\n\n  gsm.viz charts aren't theme-aware, so the Charts panel's chart surface stays white in both themes, and the charts' axis and legend text keeps at least 4.5:1 against it. Their flag-threshold labels keep gsm.viz's own colours in both themes.\n- **No metric status.** Neither report shows a metric's Released, New or Planned status:\n  - no tags;\n  - no \"Planned metric\" hover;\n  - no muted values for planned metrics;\n  - no status filter chips.\n\n  A planned metric looks like any other. An old address's `statuses` parameter is ignored and removed. The catalog's `Status` field stays in the data contract.\n\n**Out:**\n- A stored preference that survives opening a report afresh.\n- Theming gsm.viz charts, or the contrast of their flag-threshold labels, which would be an upstream change.",
+      "criteria": [
+        {
+          "id": "46.01",
+          "text": "The Admin button in both reports' headers opens the panel with the four settings at their defaults. Each changed setting survives a reload, a study link and that report's back link, and Reset restores the defaults. Starting from a portfolio with non-default settings (a study filter, a grouping with one group closed, and Custom cell display with a heatmap), Admin settings are changed on a study report, the study report is reloaded and its back link followed. The portfolio returns with its own settings unchanged and the new Admin settings, in both delivery modes (test).",
+          "sha256": "e43547ba19ab17b75737e4db2dc95f389a45d11eeeaf0afaae0d1d7ae4dcc2ba",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "46.02",
+          "text": "With Theme on Auto, both reports follow the operating system's light or dark setting. Light and Dark override it (test).",
+          "sha256": "2010e7a48e14b629804e83df4cc40aa73816355378dc4b7aa573bb7bdba26c99",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "46.03",
+          "text": "With Config set to open as a side panel, Config opens from the right edge at full height with the same controls as the popover. It's modal: focus moves into it, and neither Tab nor a click reaches the page behind it. It closes on Escape, on an outside click and with its close button, and focus returns to Config (test).",
+          "sha256": "4d054fa9ed8f8120733b95e3d6c176bc564c28cffd28facbc26edf8be7b8bda5",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "46.04",
+          "text": "With the legend on and a heatmap shown, a legend sits between the table and the status line, naming the measure and its four shades from lower to higher. With the legend off, or with no heatmap shown, there's no legend (test).",
+          "sha256": "bb0b232018057b9a568fec1300f8b9ff5d11c6b982de80258da4be8a0af86bf5",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "46.05",
+          "text": "In the dark theme, on both reports, measured against composited colours: text has at least 4.5:1 in the header, the table, Filters, Config (popover and side panel), the Admin panel, hovers, cards and the open Charts panel; card, popover and side-panel borders have at least 3:1 against the page and against their own surface; bars have at least 3:1 against the card; cell text has at least 4.5:1 on each heat step; and each open chart's axis and legend text has at least 4.5:1 against the chart's surface (test).",
+          "sha256": "0682a7907082ac6628d3228ebd879aa34da79fa38f8eebaea3b896e6d9cea96f",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "46.06",
+          "text": "A reviewer compares both reports in the dark theme with this issue's Scope and accepts them (visual comparison).",
+          "sha256": "ad692c3bbf3c4688a26dacc2f94ee518a9b13bcb6034d2493efe2d6c2e071df8",
+          "kind": "visual",
+          "reviewed": true
+        },
+        {
+          "id": "46.07",
+          "text": "Neither report shows a metric status tag, a \"Planned metric\" hover, muted values for planned metrics or status filter chips. An address's `statuses` parameter is ignored and removed, from a study report's address and back link too (test).",
+          "sha256": "91c33e27bb458fc2abd7b0cad993e7833d96ab248d3bbb91a2872b90f5320a40",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 47,
+      "title": "Reorganise the portfolio's Config: Cell display presets, Column grouping, and groups open by default",
+      "parent": "Gilead-BioStats/gsm.roadmap#624",
+      "userTest": true,
+      "scopeSection": "**In:**\n- **Cell display:** one control of three buttons, with exactly one pressed.\n  - **Compact** (the default): the folded table, one headline value per metric, its rate. Earlier issues call it Overview.\n  - **Detailed:** the open table, each metric as its glossary defines it, with no trend and no heatmap. Earlier issues call it Details.\n  - **Custom:** the open table with two controls that appear only under Custom: Show in each cell (Numerator, Denominator, Rate, Trend) and Heatmap (None, Numerator, Denominator, Rate).\n\n  Cell display replaces the Collapse all / Expand all toggle and the As defined / Custom switch. Metric columns sort by the active heatmap's measure, otherwise by rate.\n- **Config's layout,** by what it changes:\n  - On the left, Cells: Cell display, with Custom's Show in each cell and Heatmap under it.\n  - On the right, Columns: Study columns (the Study name, Enrolled and Status columns, formerly Column grouping), then Metrics, where each configured metric group's heading carries its checkbox and a caret that shows its metrics. The caret only opens and closes the list, and the checkbox only shows or hides the band; the caret is a button at least 24px square that the keyboard works. The groups start closed, so the two sides balance, stay as left while Config closes and reopens, and start closed again after a reload; with no groups configured, or a single group, the metrics are listed open, without a caret (#21).\n  - Group rows by sits in the Filters bar (#22).\n  - Config opens from the header's right edge and stays inside the window at any width or zoom; below 640px its two sections stack.\n- **Grouped rows open:** choosing a grouping opens every group.\n  - A click on a group row closes or reopens it.\n  - The address carries the closed groups (`collapse`).\n  - Changing the grouping, or Reset, opens them all again.\n- **Configuration (#16):** `view` takes `compact`, `detailed` or `custom`, with `compact` built in. Any other value, `overview` and `details` included, is refused. `show` and `heatmap` set Custom's choices.\n- **Old addresses:**\n  - `view=overview` opens Compact.\n  - `view=details` opens Detailed.\n  - `view=details` with `cell=custom` opens Custom.\n  - `expand` is ignored.\n\n  The address is then rewritten in the new form.\n\n**Out:** the cell contents of Detailed (each metric's display rule) and of Custom (#16's `show`), which are unchanged.",
+      "criteria": [
+        {
+          "id": "47.01",
+          "text": "Config's left section, Cells, holds Cell display, with Show in each cell and Heatmap shown only under Custom. Its right section, Columns, holds Study columns, then Metrics. Group rows by is in the Filters bar, not Config. Each configured metric group starts closed, its heading showing its checkbox, name and how many of its metrics are on, and its caret, a button at least 24px square, opens that group alone, by click or keyboard. Groups opened stay open when Config closes and reopens, and are closed after a reload. With no groups configured, or a single group, the metrics are listed open, without a caret (test).",
+          "sha256": "2ff95e299f95a6eaac62ae408570b338019983bcc10b426b7bd1d8d44e1da7a7",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "47.02",
+          "text": "Cell display has three buttons, exactly one pressed, with Compact by default. Compact shows one rate per metric; Detailed shows the open table as defined, with no trend and no shading, even when `show` includes the trend or `heatmap` is set; Custom applies Show in each cell and Heatmap. Metric columns sort by the active heatmap's measure, otherwise by rate (test).",
+          "sha256": "7ee11ea27da300a9f5e38a44f598a46b3dd1e3ea3cc2d5e4f8125787a00c53f9",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "47.03",
+          "text": "Choosing a grouping opens every group, and clicking a group row closes or reopens it. The closed groups survive a reload, a study link and its back link. Changing the grouping, or Reset, opens them all (test).",
+          "sha256": "9740b23e59f8c3b92727aea82c58488b66a3b9be1c7b2a573fad4b6843168123",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "47.04",
+          "text": "Configuration `view` accepts `compact`, `detailed` and `custom`, and refuses any other value, `overview` and `details` included, both when the portfolio document is built and when it loads. An address with `view=overview` opens Compact, `view=details` opens Detailed, and `view=details` with `cell=custom` opens Custom. `expand` is ignored, and the address is rewritten in the new form (test).",
+          "sha256": "444c51d2c045ccde9e25e5e68a393cedda9118f17aa734987fbea0e99c0d3a3f",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "47.05",
+          "text": "A reviewer compares Config in each preset, as a popover and as a side panel (#46), with this issue's Scope and accepts it (visual comparison).",
+          "sha256": "ba400a32059eba130e4d7fd23ee5258a1cae9f866820a68e7bef21c3bb4a3674",
+          "kind": "visual",
+          "reviewed": true
+        },
+        {
+          "id": "47.06",
+          "text": "Config stays inside the window when it is narrow or zoomed in, at 760 and 480 px wide, and below 640 px its two sections stack (test).",
+          "sha256": "4c831c0af1726683f955cfc6d03bd2a64d48db517b2a646a2d8bfa9cd0ffc30f",
+          "kind": "e2e",
+          "reviewed": true
+        }
+      ]
+    },
+    {
+      "number": 48,
+      "title": "Redesign the study page's header and cards after the 23 Nov demo review",
+      "parent": "Gilead-BioStats/gsm.roadmap#618",
+      "userTest": true,
+      "scopeSection": "**In:**\n- **Header:** every study reads \"Latest snapshot: <date>\", with the study's latest snapshot date. The visit slider is removed and its code kept unused, so the page always shows the latest snapshot.\n- **Card header,** following the review's mockup (gsm.roadmap's study widget walkthrough, the widget header):\n  - The card's title sits on the left. Its hover gives the definition, with the abbreviation and MetricID (#20).\n  - On the right, behind a thin vertical rule, sits the value in 24px bold, with n / N beneath it in smaller muted text of at least 12px.\n  - The header has no status tag (#46), no trend graph and no abbreviation.\n- **Value hover:** under the value, it lists n beside the catalog's Numerator label and N beside its Denominator label, with N in the unit shown.\n  - For a proportion: \"<n> · <Numerator label>\", then \"<N> · <Denominator label>\".\n  - For a rate per 28 days, N is \"<N> · 28-day periods of exposure (<days> exposure days)\". N is the header's exposure days ÷ 28, to one decimal (#32), and is never named in days.\n- **Section row:** each breakdown section's title and its unit, % for a status section or n for a reason section, share one row; a long title wraps within its own column. Hovering the row shows the rest at once: the title, what the values are out of with the section's total (e.g. \"% of 645 enrolled\", \"n of 37 ineligible\"), and what each bar shows. The total is the header's N for a status section and its n for a reason section.\n- **Values:** status sections show each category's percentage and count, as in \"80.1% (293)\". Reason sections show counts only (#10).\n- **Notes:** the multi-category and Not-recorded notes (#10) leave the card body.\n  - A card with notes has a \"* Notes\" marker in its footer, whose hover or keyboard focus shows them in full.\n  - Blur or Escape hides them.\n- **Grid:** cards are wider.\n  - The grid fills the page's width with as many columns as fit, up to the Admin panel's maximum (#46, default 4), each at least 320px wide.\n  - The study page is at most 1,720px wide, enough for 5 cards on a wide screen.\n  - Every card keeps one size (#32).\n- **Trends:** this review removes the CTQ trends that #35 kept as each card's sparkline.\n\n**Out:**\n- Earlier snapshots on the study page: with the slider gone, the page shows only the latest.\n- The Charts drill-in, which is unchanged (#32).\n- The breakdowns' contents and order, which are unchanged (#10, #19).",
+      "criteria": [
+        {
+          "id": "48.01",
+          "text": "For a study with one snapshot and for one with several, the study header reads \"Latest snapshot: <date>\" with the study's latest snapshot date, and there's no visit slider (test).",
+          "sha256": "1cf40381d2703ef68cd3dfca3354527e5bdbd64051e8ec9c3f77086054a6439f",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "48.02",
+          "text": "Each card's header shows its title on the left and, on the right behind a rule, the value with n / N beneath it. It has no status tag, trend graph or abbreviation, and the title's hover holds the abbreviation and MetricID (test).",
+          "sha256": "c4e80f77287e0a3e564b9ba06a8f9b1f512bd56fec769c70b66076953cf6cd3e",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "48.03",
+          "text": "Each card's value hover lists n beside the catalog's Numerator label and N beside its Denominator label, giving N in the unit shown. For metrics per 28 days, N is in 28-day periods of exposure with the exposure days in brackets, and is never labelled as days. Every number equals an independent computation from the fixture, rounding included (test).",
+          "sha256": "d5fb28ce3611e3d39522e48a8da885b655c4852529339ba4092292e1d613e0e2",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "48.04",
+          "text": "Each breakdown section's title and its unit (% or n) share a row, a long title included. Hovering the row shows the title, the section's total and what each bar shows; on the example data the total equals the header's N for a status section and n for a reason section (test).",
+          "sha256": "ae9f31e8cff4dc35b76b50e561b6611afe94df89419e0e62b6c74d2c752e38f8",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "48.05",
+          "text": "Each status section's bars show a percentage and a count, both equal to an independent recount of the fixture's rows. Reason sections show counts only (test).",
+          "sha256": "b5afab3477ee96c3d6562acdb2b5f26eeb5f029465abd186eed9edfcaee224bc",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "48.06",
+          "text": "A card with notes has a \"* Notes\" marker in its footer. Its hover shows the notes in full, and so does keyboard focus without a mouse. Blur or Escape hides them. No note remains in the card body, and a card without notes has no marker (test).",
+          "sha256": "4da5cc6cb9eff9e4f8d29c796abedebe1d0320acb7c7ed3607067e5ff4ada6b7",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "48.07",
+          "text": "Each row of the grid holds the smaller of the Admin panel's maximum and the number of 320px cards that fit on a page at most 1,720px wide, and every card is the same size: 4 at a 1440px window by default, 3 at 1440px with a maximum of 3, 4 at 1440px with a maximum of 5, 5 at 1920px with a maximum of 5, 4 at 1920px by default, 3 at 1280px by default, and 2 at 1000px by default (test).",
+          "sha256": "e9b3f23bda5cd0f89cf7ae130749579a3796acc03afec286691902611fa069d8",
+          "kind": "e2e",
+          "reviewed": true
+        },
+        {
+          "id": "48.08",
+          "text": "A reviewer compares the study page's header, card grid and card headers with this issue's Scope, and the card header with the review's mockup, and accepts them (visual comparison).",
+          "sha256": "03ec1eaea838e93de3fc1ef0b8f2dda8f049a993bce03c08b8d39f23231ab653",
+          "kind": "visual",
+          "reviewed": true
+        }
+      ]
+    }
+  ]
+}

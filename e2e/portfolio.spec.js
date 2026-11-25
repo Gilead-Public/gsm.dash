@@ -1,0 +1,312 @@
+// @ts-check
+// Characterization of the portfolio view's numbers as they ship today. Every visible value is read under its visible
+// column heading and row label and checked against the catalog and independent pooling of the per-study files, so a
+// change in data source (#15) or a study-view change (#11) that alters what the portfolio shows fails here.
+import { expect, readData, test } from './fixtures/app.js';
+import { expectSeen } from './fixtures/visible.js';
+import { countText, displayed, pooled, population, readRate, shownMetrics, snapshotAsOf, studiesBy, tolerance } from '../test/qual/pooling.js';
+import { control, openOnly } from './fixtures/controls.js';
+/** @typedef {import('@playwright/test').Page} Page */
+/** @typedef {import('../test/qual/pooling.js').StudyEntry} StudyEntry */
+/** @typedef {import('../test/qual/pooling.js').MetricMeta} MetricMeta */
+
+const portfolio = readData('portfolio.json');
+/** @type {StudyEntry[]} */
+const studies = portfolio.studies;
+const catalog = shownMetrics(portfolio.metrics);
+/** @type {Array<{ name: string, metrics: string[] }>} */
+const groups = readData('config.json').groups;
+const listed = new Set(groups.flatMap((g) => g.metrics));
+const bands = [
+  ...groups.map((g) => ({ category: g.name, metrics: catalog.filter((m) => g.metrics.includes(m.MetricID)).sort((a, b) => g.metrics.indexOf(a.MetricID) - g.metrics.indexOf(b.MetricID)) })),
+  { category: 'Other', metrics: catalog.filter((m) => !listed.has(m.MetricID)) },
+].filter((b) => b.metrics.length);
+
+/**
+ * @typedef {object} ShownTable
+ * @property {{ category: string; abbrs: string[] }[]} bands Folded category headings and the metric labels under each.
+ * @property {string[]} populationHeadings
+ * @property {{ kind: string; label: string; count: string; population: string[]; tiles: string[][] }[]} rows
+ */
+
+/**
+ * The portfolio table as a user reads it: visible headings, row labels and cell text.
+ * @param {Page} page
+ * @returns {Promise<ShownTable>}
+ */
+function shownTable(page) {
+  return page.locator('.portfolio-table table.po').evaluate((table) => {
+    const text = (/** @type {Element | null} */ el, drop = '') => {
+      if (!el) return '';
+      const copy = /** @type {Element} */ (el.cloneNode(true));
+      if (drop) for (const e of copy.querySelectorAll(drop)) e.remove();
+      return (copy.textContent ?? '').trim();
+    };
+    return {
+      bands: [...table.querySelectorAll('thead th.bandh:not(.pop)')].map((th) => ({
+        category: th.classList.contains('closed') ? text(th, 'button, .otiles') : `(open) ${text(th, 'button')}`,
+        abbrs: [...th.querySelectorAll('.tlab')].map((t) => text(t)),
+      })),
+      populationHeadings: [...table.querySelectorAll('thead tr.cols th.pop')].map((th) => text(th, '.u, .si')),
+      rows: [...table.querySelectorAll('tbody tr')].map((tr) => ({
+        kind: tr.classList.contains('total') ? 'total' : tr.classList.contains('bucket') ? 'bucket' : 'study',
+        label: text(tr.querySelector('td.grp'), '.tri, .nick, .info'),
+        count: text(tr.querySelector('td.nstud')),
+        population: [...tr.querySelectorAll('td.pop')].map((td) => text(td)),
+        tiles: [...tr.querySelectorAll('td.cat')].map((td) => [...td.querySelectorAll('.otile')].map((t) => text(t))),
+      })),
+    };
+  });
+}
+
+/**
+ * @param {import('@playwright/test').Locator} locator
+ * @param {number} count
+ * @param {string} what
+ */
+async function expectEachVisible(locator, count, what) {
+  await expect(locator, what).toHaveCount(count);
+  for (let i = 0; i < count; i++) await expectSeen(locator.nth(i), `${what} ${i + 1}`);
+}
+
+/**
+ * @param {Page} page
+ * @param {ShownTable} table
+ */
+async function expectHeadings(page, table) {
+  expect(table.bands, 'category headings and their metric labels, from the catalog').toEqual(
+    bands.map((b) => ({ category: b.category, abbrs: b.metrics.map((m) => m.Abbreviation) })),
+  );
+  expect(table.populationHeadings).toEqual(['Enr.']);
+  const head = page.locator('.portfolio-table table.po thead');
+  await expectEachVisible(head.locator('th.bandh:not(.pop)'), bands.length, 'category heading');
+  await expectEachVisible(head.locator('th.bandh .tlab'), catalog.length, 'metric heading');
+  await expectEachVisible(head.locator('th.bandh.pop'), 1, 'population heading');
+  await expectEachVisible(head.locator('tr.cols th.pop'), 1, 'population column heading');
+}
+
+/**
+ * Checks every value in one row under its heading, then hovers each metric value and reads the tooltip a user sees.
+ * @param {Page} page
+ * @param {ShownTable} table
+ * @param {string} label
+ * @param {StudyEntry[]} members
+ */
+async function expectRow(page, table, label, members) {
+  const index = table.rows.findIndex((r) => r.label === label);
+  expect(index, `a row labelled ${label}`).toBeGreaterThanOrEqual(0);
+  const row = table.rows[index];
+  expect(row.population, `${label}: Enr.`).toEqual([countText(population(readData, members, 'ParticipantCount'))]);
+  expect(row.tiles.map((t) => t.length), `${label}: values under each category`).toEqual(bands.map((b) => b.metrics.length));
+  const tr = page.locator('.portfolio-table table.po tbody tr').nth(index);
+  await expectSeen(tr.locator(row.kind === 'study' ? 'td.grp a[data-study]' : 'td.grp'), `${label}: row label`);
+  await expectEachVisible(tr.locator('td.pop'), 1, `${label}: population`);
+  if (row.count) await expectSeen(tr.locator('td.nstud'), `${label}: study count`);
+  const cells = tr.locator('td.cat');
+  const tooltip = page.locator('#gsm-tooltip');
+  for (const [j, band] of bands.entries()) {
+    for (const [k, metric] of band.metrics.entries()) {
+      const where = `${label} · ${metric.Abbreviation}`;
+      const want = pooled(readData, members, metric.MetricID);
+      const shown = readRate(metric, row.tiles[j][k]);
+      if (want.rate === null) expect(shown, where).toBeNull();
+      else expect(Math.abs(/** @type {number} */ (shown) - displayed(metric, want.rate)), `${where}: ${row.tiles[j][k]}`).toBeLessThanOrEqual(tolerance(metric));
+      const tile = cells.nth(j).locator('.otile').nth(k);
+      await expectSeen(tile, `${where}: value`);
+      await tile.hover();
+      await expectSeen(tooltip, `${where}: tooltip`);
+      await expect(tooltip.locator('b').first(), where).toHaveText(`${label} · ${metric.Abbreviation}`);
+      const nd = /([\d,]+) \/ ([\d,]+) \(([^)]*)\)/.exec(await tooltip.innerText());
+      expect(nd?.slice(1, 4), `${where}: pooled n / d (denominator)`).toEqual([countText(want.numerator), countText(want.denominator), metric.Denominator]);
+    }
+  }
+}
+
+/**
+ * Opens the portfolio at its defaults, Reset clearing any view saved in the browser, its Population band showing
+ * Enrolled.
+ * @param {any} app
+ * @param {Page} page
+ */
+async function openEnrolled(app, page) {
+  await app.open();
+  await control(page, '[data-reset]').click();
+  await expect(control(page, 'button[data-column="enroll"]').locator).toHaveAttribute('aria-pressed', 'true');
+}
+
+test.describe('portfolio view numbers', () => {
+  // Every value is hovered, which takes most of the default 20 s.
+  test.describe.configure({ timeout: 60_000 });
+
+  test('11.03: the overview shows the pooled total and every study at its own latest snapshot (#11)', async ({ app, page }) => {
+    expect(bands.flatMap((b) => b.metrics), 'the catalog keeps each category together').toEqual(catalog);
+    await openEnrolled(app, page);
+    const table = await shownTable(page);
+    await expectHeadings(page, table);
+    expect(table.rows.map((r) => [r.kind, r.label])).toEqual([['total', 'Portfolio total'], ...studies.map((s) => ['study', s.StudyID])]);
+    await expectRow(page, table, 'Portfolio total', studies);
+    for (const study of studies) {
+      await page.locator(`tr.study a[data-study="${study.StudyID}"]`).hover();
+      await expect(page.locator('#gsm-tooltip'), `${study.StudyID}: its snapshot`).toContainText(`Snapshot: ${snapshotAsOf(study, null)}`);
+      await expectRow(page, table, study.StudyID, [study]);
+    }
+  });
+
+  test('11.03: grouping pools each group of studies (#11)', async ({ app, page }) => {
+    await openEnrolled(app, page);
+    await control(page, 'select[data-groupby]').selectOption('phase');
+    await expect(page.locator('.portfolio-table tr.bucket').first()).toBeVisible();
+    const table = await shownTable(page);
+    await expectHeadings(page, table);
+    const groups = studiesBy(studies, 'phase');
+    const labels = [...groups.keys()].sort((a, b) => a.localeCompare(b));
+    expect(labels.length, 'the fixture has more than one phase').toBeGreaterThan(1);
+    // A grouping opens every group (#47).
+    expect(table.rows.map((r) => [r.kind, r.label])).toEqual([
+      ['total', 'Portfolio total'],
+      ...labels.flatMap((l) => [['bucket', l], .../** @type {StudyEntry[]} */ (groups.get(l)).map((s) => ['study', s.StudyID])]),
+    ]);
+    await expectRow(page, table, 'Portfolio total', studies);
+    for (const label of labels) {
+      const members = /** @type {StudyEntry[]} */ (groups.get(label));
+      expect(table.rows.find((r) => r.label === label)?.count, label).toBe(String(members.length));
+      await expectRow(page, table, label, members);
+    }
+  });
+
+  test('11.03: a filter pools only the studies it keeps (#11)', async ({ app, page }) => {
+    const counts = studiesBy(studies, 'therapeutic_area');
+    const [area, kept] = [...counts].sort((a, b) => b[1].length - a[1].length)[0];
+    expect(kept.length, 'the filter keeps more than one study and drops some').toBeGreaterThan(1);
+    expect(kept.length).toBeLessThan(studies.length);
+    await openEnrolled(app, page);
+    await control(page, `button[data-filter="therapeutic_area"][data-value="${area}"]`).click();
+    await expect(page.locator('.portfolio-table tr.study')).toHaveCount(kept.length);
+    const table = await shownTable(page);
+    await expectHeadings(page, table);
+    expect(table.rows.map((r) => [r.kind, r.label])).toEqual([['total', 'Portfolio total'], ...kept.map((s) => ['study', s.StudyID])]);
+    await expectRow(page, table, 'Portfolio total', kept);
+    for (const study of kept) await expectRow(page, table, study.StudyID, [study]);
+  });
+
+  test('22.01: the study filter, alone and with a phase filter, limits the table to the selected studies that pass the other filters, and its totals pool exactly those studies (#22)', async ({ app, page }) => {
+    test.setTimeout(180_000);
+    const [[phase, inPhase], [, other]] = [...studiesBy(studies, 'phase')].sort((a, b) => b[1].length - a[1].length);
+    expect(inPhase.length, 'the largest phase has more than one study').toBeGreaterThan(1);
+    const picked = new Set([inPhase[0].StudyID, inPhase[1].StudyID, other[0].StudyID]);
+    const selected = studies.filter((s) => picked.has(s.StudyID));
+    /** @type {Array<[string, StudyEntry[], boolean]>} */
+    const cases = [['alone', selected, false], ['with a phase filter', selected.filter((s) => s.params.phase === phase), true]];
+    for (const [what, members, withPhase] of cases) {
+      await openEnrolled(app, page);
+      for (const s of selected) await control(page, `input[data-filter="study"][data-value="${s.StudyID}"]`).check();
+      if (withPhase) await control(page, `button[data-filter="phase"][data-value="${phase}"]`).click();
+      const ids = members.map((s) => s.StudyID);
+
+      await expect(page.locator('.portfolio-table tr.study'), what).toHaveCount(members.length);
+      let table = await shownTable(page);
+      expect(table.rows.map((r) => [r.kind, r.label]), `${what}: ungrouped rows`).toEqual([['total', 'Portfolio total'], ...ids.map((id) => ['study', id])]);
+      await expectRow(page, table, 'Portfolio total', members);
+
+      const groups = studiesBy(members, 'phase');
+      const labels = [...groups.keys()].sort((a, b) => a.localeCompare(b));
+      const open = labels[0];
+      const inGroup = (/** @type {string} */ label) => /** @type {StudyEntry[]} */ (groups.get(label));
+      await control(page, 'select[data-groupby]').selectOption('phase');
+      await openOnly(page, open);
+      await expect(page.locator('.portfolio-table tr.study'), what).toHaveCount(inGroup(open).length);
+      table = await shownTable(page);
+      expect(table.rows.map((r) => [r.kind, r.label]), `${what}: grouped rows, ${open} open`).toEqual([
+        ['total', 'Portfolio total'],
+        ...labels.flatMap((l) => [['bucket', l], ...(l === open ? inGroup(l).map((s) => ['study', s.StudyID]) : [])]),
+      ]);
+      await expectRow(page, table, 'Portfolio total', members);
+      for (const label of labels) {
+        expect(table.rows.find((r) => r.kind === 'bucket' && r.label === label)?.count, `${what}: ${label}`).toBe(String(inGroup(label).length));
+        await expectRow(page, table, label, inGroup(label));
+      }
+
+
+    }
+  });
+});
+
+test('22.06: the Product filter, alone and with the phase and study filters, limits the table to the selected products\' studies that pass the other filters, its totals pool exactly those studies, and the selection survives a reload and a study report\'s back link until Clear filters or Reset (#22)', async ({ app, page }) => {
+  test.setTimeout(240_000);
+  const byProduct = [...studiesBy(studies, 'product')].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+  const [[first, firstStudies], [second, secondStudies]] = byProduct;
+  expect(firstStudies.length, 'the largest product has more than one study').toBeGreaterThan(1);
+  const selected = [...firstStudies, ...secondStudies].sort((a, b) => a.StudyID.localeCompare(b.StudyID));
+  const phase = firstStudies[0].params.phase;
+  const outside = studies.find((s) => s.params.product !== first && s.params.product !== second);
+  expect(outside, 'a study of another product').toBeDefined();
+  /** @type {Array<[string, StudyEntry[], (() => Promise<void>) | null]>} */
+  const cases = [
+    ['alone', selected, null],
+    ['with a phase filter', selected.filter((s) => s.params.phase === phase), () => control(page, `button[data-filter="phase"][data-value="${phase}"]`).click()],
+    ['with the study filter', [firstStudies[0]], async () => {
+      for (const id of [firstStudies[0].StudyID, /** @type {StudyEntry} */ (outside).StudyID]) await control(page, `input[data-filter="study"][data-value="${id}"]`).check();
+    }],
+  ];
+  const pick = async () => {
+    for (const product of [first, second]) await control(page, `button[data-filter="product"][data-value="${product}"]`).click();
+  };
+  for (const [what, members, also] of cases) {
+    await openEnrolled(app, page);
+    await pick();
+    if (also) await also();
+    const ids = members.map((s) => s.StudyID).sort();
+    await expect(page.locator('.portfolio-table tr.study'), what).toHaveCount(members.length);
+    let table = await shownTable(page);
+    expect(table.rows.map((r) => [r.kind, r.label]), `${what}: ungrouped rows`).toEqual([['total', 'Portfolio total'], ...ids.map((id) => ['study', id])]);
+    await expectRow(page, table, 'Portfolio total', members);
+
+    const groups = studiesBy(members, 'product');
+    const labels = [...groups.keys()].sort((a, b) => a.localeCompare(b));
+    const inGroup = (/** @type {string} */ label) => /** @type {StudyEntry[]} */ (groups.get(label));
+    const open = labels[0];
+    await control(page, 'select[data-groupby]').selectOption('product');
+    await openOnly(page, open);
+    await expect(page.locator('.portfolio-table tr.study'), what).toHaveCount(inGroup(open).length);
+    table = await shownTable(page);
+    expect(table.rows.map((r) => [r.kind, r.label]), `${what}: grouped rows, ${open} open`).toEqual([
+      ['total', 'Portfolio total'],
+      ...labels.flatMap((l) => [['bucket', l], ...(l === open ? inGroup(l).map((s) => ['study', s.StudyID]) : [])]),
+    ]);
+    await expectRow(page, table, 'Portfolio total', members);
+    for (const label of labels) {
+      expect(table.rows.find((r) => r.kind === 'bucket' && r.label === label)?.count, `${what}: ${label}`).toBe(String(inGroup(label).length));
+      await expectRow(page, table, label, inGroup(label));
+    }
+  }
+
+  await openEnrolled(app, page);
+  await pick();
+  const rows = () => page.locator('.portfolio-table tr.study').evaluateAll((trs) => trs.map((tr) => tr.querySelector('a[data-study]')?.getAttribute('data-study')));
+  const want = selected.map((s) => s.StudyID).sort();
+  expect(await rows(), 'selected').toEqual(want);
+  await page.reload();
+  await page.locator('#app > .layout').waitFor();
+  expect(await rows(), 'after a reload').toEqual(want);
+  await page.locator(`#app .portfolio-table a[data-study="${want[0]}"]`).first().click();
+  await page.locator(`#app > [data-study="${want[0]}"] .card`).first().waitFor();
+  await page.locator('#app a.back').click();
+  await page.locator('#app > .layout').waitFor();
+  expect(await rows(), 'after a study report and its back link').toEqual(want);
+  await control(page, '[data-clear]').click();
+  expect(await rows(), 'after Clear filters').toHaveLength(studies.length);
+  await pick();
+  await control(page, '[data-reset]').click();
+  expect([(await rows()).length, new URL(page.url()).hash.includes('filter.product')], 'after Reset').toEqual([studies.length, false]);
+});
+
+test('the portfolio sits in the app shell: brand, inside the page margins', async ({ app, page }) => {
+  await app.open();
+  const header = page.locator('header.app');
+  await expect(header.locator('h1')).toHaveText('gsm.dash');
+  const shell = await header.boundingBox();
+  const content = await page.locator('#app > .layout').boundingBox();
+  expect(shell && content, 'header and portfolio both laid out').toBeTruthy();
+  expect(Math.round(content?.x ?? 0), 'the portfolio lines up with the header').toBe(Math.round(shell?.x ?? -1));
+  expect(content?.x ?? 0, 'inside the page margins').toBeGreaterThanOrEqual(20);
+});

@@ -1,0 +1,96 @@
+// The shared hover tooltip. One `<div id="gsm-tooltip">` serves the whole page;
+// a component calls attachHoverTooltip(root) once and then emits `data-tip`
+// wherever a rich tooltip is wanted. Native `title` cannot carry markup, cannot
+// be positioned, and cannot be styled — so anything multi-line goes through
+// here, and `title` is left for one-line hints.
+import { esc, displayLabel } from '../util/format.js';
+
+function tooltipEl() {
+  let tip = document.getElementById('gsm-tooltip');
+  if (!tip) {
+    tip = document.createElement('div');
+    tip.id = 'gsm-tooltip';
+    tip.setAttribute('role', 'tooltip');
+    tip.hidden = true;
+    document.body.append(tip);
+  }
+  return tip;
+}
+
+export function hideTooltip() {
+  const tip = document.getElementById('gsm-tooltip');
+  if (tip) tip.hidden = true;
+}
+
+/**
+ * Delegate hover tooltips for every `[data-tip]` inside `host`, and show the same tip while one that can take focus
+ * has keyboard focus (#48); blur or Escape hides it. Idempotent per element, so a component may call it from
+ * connectedCallback without stacking listeners across re-connects.
+ */
+export function attachHoverTooltip(host) {
+  if (host.dataset.tipHost === 'on') return;
+  host.dataset.tipHost = 'on';
+  host.addEventListener('mousemove', (e) => {
+    const target = e.target.closest('[data-tip]');
+    const tip = tooltipEl();
+    if (!target) {
+      tip.hidden = true;
+      return;
+    }
+    tip.innerHTML = target.dataset.tip;
+    tip.hidden = false;
+    const x = Math.min(e.clientX + 14, window.innerWidth - 280);
+    const y = e.clientY + 130 > window.innerHeight ? e.clientY - 110 : e.clientY + 16;
+    tip.style.left = `${x}px`;
+    tip.style.top = `${y}px`;
+  });
+  host.addEventListener('mouseleave', hideTooltip);
+  host.addEventListener('focusin', (e) => {
+    const target = /** @type {HTMLElement | null} */ (/** @type {Element} */ (e.target).closest?.('[data-tip]'));
+    if (!target) return;
+    const tip = tooltipEl();
+    tip.innerHTML = target.dataset.tip ?? '';
+    tip.hidden = false;
+    const box = target.getBoundingClientRect();
+    tip.style.left = `${Math.max(4, Math.min(box.left, window.innerWidth - 280))}px`;
+    tip.style.top = `${box.bottom + 130 > window.innerHeight ? Math.max(4, box.top - 110) : box.bottom + 6}px`;
+  });
+  host.addEventListener('focusout', hideTooltip);
+  host.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') hideTooltip();
+  });
+}
+
+export const REQUIREMENT_URL = (n) => `https://github.com/Gilead-BioStats/gsm.roadmap/issues/${n}`;
+
+/**
+ * A metric's glossary entry as tooltip HTML — name, status, definition,
+ * numerator / denominator, display rule, then the flagging model. Shared so
+ * the program table's column headers and the study page's tile and drill-in
+ * headers all say the same thing (P6). The portfolio passes `technical: false`,
+ * which leaves out the metric's ID and its flagging (score and thresholds) (#20).
+ * @param {any} metric
+ * @param {{ technical?: boolean }} [options]
+ */
+export function metricTip(metric, { technical = true } = {}) {
+  const rows = [
+    ['Definition', metric.Definition != null ? esc(metric.Definition) : '<span class="tip-muted">not yet supplied (Q2)</span>', true],
+    ['Numerator', metric.Numerator],
+    ['Denominator', metric.Denominator],
+    ['Displayed as', displayLabel(metric)],
+    [
+      'Flagging',
+      technical ? [metric.Score, metric.thresholds?.length ? `thresholds ${metric.thresholds.join(', ')}` : metric.Threshold].filter(Boolean).join(' · ') : null,
+    ],
+    [
+      'Accrual',
+      metric.AccrualThreshold != null ? `${metric.AccrualMetric ?? 'Denominator'} ≥ ${metric.AccrualThreshold}` : null,
+    ],
+    ['Note', metric.Note],
+  ].filter(([, v]) => v != null && v !== '');
+  return (
+    `<b>${esc(metric.Metric)}</b><br>` +
+    `<span class="tip-muted mono">${esc(metric.Abbreviation)}${technical ? ` · ${esc(metric.ID ?? metric.MetricID)}` : ''}</span>` +
+    `<dl class="tip-dl">${rows.map(([k, v, raw]) => `<dt>${k}</dt><dd>${raw ? v : esc(v)}</dd>`).join('')}</dl>`
+  );
+}

@@ -1,0 +1,261 @@
+state: drill-in-over-time (reports)
+dom: sha256 4aff7173580b9e2f42d25283720c93e075ad01424cd08e1ec2bb0c69fe67639f (66238 characters)
+tooltip: none
+drill-in: AE · Over time · gsm.viz · timeSeries · AE: charts 1
+  type undefined; labels: 2026-02-28 | 2026-03-31 | 2026-04-30 | 2026-05-31 | 2026-06-30
+  labels hidden through the legend: none
+  dataset 0 scatter "" visible; line none
+      marks: none
+      data: 
+  dataset 1 bar "Green Flag" visible; line none
+      marks: none
+      data: 
+  dataset 2 bar "Amber Flag" visible; line none
+      marks: none
+      data: 
+  dataset 3 bar "Red Flag" visible; line none
+      marks: none
+      data: 
+  dataset 4 bar "No Flag" visible; line none
+      marks: none
+      data: 
+  dataset 5 scatter "" visible; line none
+      marks: backgroundColor=rgba(255, 88, 89, 0.5) borderColor=#FF5859 borderWidth=1 radius=2 pointStyle=circle ×7
+      data: Denominator=1498 Flag=-2 GroupID=SITE0010 GroupLevel=Site Metric=0.007343 MetricID=Analysis_kri0001 Numerator=11 Score=-2.06 SnapshotDate=2026-04-30 StudyID=STUDY001 duplicate=false x=2026-04-30 y=-2.06; Denominator=5043 Flag=2 GroupID=SITE0017 GroupLevel=Site Metric=0.082689 MetricID=Analysis_kri0001 Numerator=417 Score=6.15 SnapshotDate=2026-04-30 StudyID=STUDY001 duplicate=false x=2026-04-30 y=6.15; Denominator=10680 Flag=-2 GroupID=SITE0008 GroupLevel=Site Metric=0.006273 MetricID=Analysis_kri0001 Numerator=67 Score=-2.17 SnapshotDate=2026-05-31 StudyID=STUDY001 duplicate=false x=2026-05-31 y=-2.17; Denominator=7344 Flag=-2 GroupID=SITE0014 GroupLevel=Site Metric=0.006264 MetricID=Analysis_kri0001 Numerator=46 Score=-2.17 SnapshotDate=2026-06-30 StudyID=STUDY001 duplicate=false x=2026-06-30 y=-2.17; Denominator=7899 Flag=-2 GroupID=SITE0009 GroupLevel=Site Metric=0.006963 MetricID=Analysis_kri0001 Numerator=55 Score=-2.09 SnapshotDate=2026-06-30 StudyID=STUDY001 duplicate=false x=2026-06-30 y=-2.09; Denominator=11304 Flag=2 GroupID=SITE0006 GroupLevel=Site Metric=0.05644 MetricID=Analysis_kri0001 Numerator=638 Score=3.37 SnapshotDate=2026-06-30 StudyID=STUDY001 duplicate=false x=2026-06-30 y=3.37; Denominator=11883 Flag=2 GroupID=SITE0007 GroupLevel=Site Metric=0.092822 MetricID=Analysis_kri0001 Numerator=1103 Score=7.39 SnapshotDate=2026-06-30 StudyID=STUDY001 duplicate=false x=2026-06-30 y=7.39
+  dataset 6 scatter "" visible; line none
+      marks: backgroundColor=rgba(254, 170, 2, 0.5) borderColor=#FEAA02 borderWidth=1 radius=2 pointStyle=circle ×20
+      data: Denominator=2417 Flag=-1 GroupID=SITE0008 GroupLevel=Site Metric=0.01324 MetricID=Analysis_kri0001 Numerator=32 Score=-1.44 SnapshotDate=2026-02-28 StudyID=STUDY001 duplicate=false x=2026-02-28 y=-1.44; Denominator=2037 Flag=1 GroupID=SITE0003 GroupLevel=Site Metric=0.046637 MetricID=Analysis_kri0001 Numerator=95 Score=2.15 SnapshotDate=2026-02-28 StudyID=STUDY001 duplicate=false x=2026-02-28 y=2.15; Denominator=3430 Flag=-1 GroupID=SITE0015 GroupLevel=Site Metric=0.012828 MetricID=Analysis_kri0001 Numerator=44 Score=-1.47 SnapshotDate=2026-03-31 StudyID=STUDY001 duplicate=false x=2026-03-31 y=-1.47; Denominator=3427 Flag=-1 GroupID=SITE0011 GroupLevel=Site Metric=0.013131 MetricID=Analysis_kri0001 Numerator=45 Score=-1.44 SnapshotDate=2026-03-31 StudyID=STUDY001 duplicate=false x=2026-03-31 y=-1.44; Denominator=4414 Flag=-1 GroupID=SITE0008 GroupLevel=Site Metric=0.015632 MetricID=Analysis_kri0001 Numerator=69 Score=-1.17 SnapshotDate=2026-03-31 StudyID=STUDY001 duplicate=false x=2026-03-31 y=-1.17; Denominator=3081 Flag=-1 GroupID=SITE0001 GroupLevel=Site Metric=0.016228 MetricID=Analysis_kri0001 Numerator=50 Score=-1.1 SnapshotDate=2026-03-31 StudyID=STUDY001 duplicate=false x=2026-03-31 y=-1.1; Denominator=3090 Flag=1 GroupID=SITE0007 GroupLevel=Site Metric=0.046602 MetricID=Analysis_kri0001 Numerator=144 Score=2.18 SnapshotDate=2026-03-31 StudyID=STUDY001 duplicate=false x=2026-03-31 y=2.18; Denominator=2325 Flag=1 GroupID=SITE0013 GroupLevel=Site Metric=0.047312 MetricID=Analysis_kri0001 Numerator=110 Score=2.26 SnapshotDate=2026-03-31 StudyID=STUDY001 duplicate=false x=2026-03-31 y=2.26; Denominator=4515 Flag=-1 GroupID=SITE0009 GroupLevel=Site Metric=0.011074 MetricID=Analysis_kri0001 Numerator=50 Score=-1.65 SnapshotDate=2026-04-30 StudyID=STUDY001 duplicate=false x=2026-04-30 y=-1.65; Denominator=7320 Flag=-1 GroupID=SITE0005 GroupLevel=Site Metric=0.012432 MetricID=Analysis_kri0001 Numerator=91 Score=-1.5 SnapshotDate=2026-04-30 StudyID=STUDY001 duplicate=false x=2026-04-30 y=-1.5; Denominator=6005 Flag=1 GroupID=SITE0001 GroupLevel=Site Metric=0.045296 MetricID=Analysis_kri0001 Numerator=272 Score=2.07 SnapshotDate=2026-04-30 StudyID=STUDY001 duplicate=false x=2026-04-30 y=2.07; Denominator=3797 Flag=1 GroupID=SITE0013 GroupLevel=Site Metric=0.051883 MetricID=Analysis_kri0001 Numerator=197 Score=2.79 SnapshotDate=2026-04-30 StudyID=STUDY001 duplicate=false x=2026-04-30 y=2.79; Denominator=6172 Flag=-1 GroupID=SITE0001 GroupLevel=Site Metric=0.008263 MetricID=Analysis_kri0001 Numerator=51 Score=-1.95 SnapshotDate=2026-05-31 StudyID=STUDY001 duplicate=false x=2026-05-31 y=-1.95; Denominator=5636 Flag=-1 GroupID=SITE0006 GroupLevel=Site Metric=0.008694 MetricID=Analysis_kri0001 Numerator=49 Score=-1.9 SnapshotDate=2026-05-31 StudyID=STUDY001 duplicate=false x=2026-05-31 y=-1.9; Denominator=5086 Flag=-1 GroupID=SITE0009 GroupLevel=Site Metric=0.009634 MetricID=Analysis_kri0001 Numerator=49 Score=-1.8 SnapshotDate=2026-05-31 StudyID=STUDY001 duplicate=false x=2026-05-31 y=-1.8; Denominator=7733 Flag=-1 GroupID=SITE0016 GroupLevel=Site Metric=0.012414 MetricID=Analysis_kri0001 Numerator=96 Score=-1.5 SnapshotDate=2026-05-31 StudyID=STUDY001 duplicate=false x=2026-05-31 y=-1.5; Denominator=9949 Flag=-1 GroupID=SITE0003 GroupLevel=Site Metric=0.014976 MetricID=Analysis_kri0001 Numerator=149 Score=-1.22 SnapshotDate=2026-05-31 StudyID=STUDY001 duplicate=false x=2026-05-31 y=-1.22; Denominator=10841 Flag=-1 GroupID=SITE0005 GroupLevel=Site Metric=0.010608 MetricID=Analysis_kri0001 Numerator=115 Score=-1.69 SnapshotDate=2026-06-30 StudyID=STUDY001 duplicate=false x=2026-06-30 y=-1.69; Denominator=11402 Flag=-1 GroupID=SITE0001 GroupLevel=Site Metric=0.012717 MetricID=Analysis_kri0001 Numerator=145 Score=-1.45 SnapshotDate=2026-06-30 StudyID=STUDY001 duplicate=false x=2026-06-30 y=-1.45; Denominator=10728 Flag=-1 GroupID=SITE0003 GroupLevel=Site Metric=0.015846 MetricID=Analysis_kri0001 Numerator=170 Score=-1.11 SnapshotDate=2026-06-30 StudyID=STUDY001 duplicate=false x=2026-06-30 y=-1.11
+  dataset 7 boxplot "Site Distribution" visible; line none
+      marks: backgroundColor=rgba(0,0,0,0.1) borderColor=rgba(0,0,0,0.1) borderWidth=1 pointStyle=rect ×5
+      data: 0=-1.44 1=-0.84 10=1.52 11=1.62 12=1.81 13=1.97 14=2.15 15=0 16=0 2=-0.55 3=-0.45 4=-0.13 5=-0.06 6=-0.05 7=0.69 8=1.33 9=1.41; 0=-1.47 1=-1.44 10=1.29 11=1.4 12=1.4 13=1.98 14=2.18 15=0 16=2.26 2=-1.17 3=-1.1 4=-0.83 5=-0.58 6=0.15 7=0.57 8=0.61 9=0.89; 0=-2.06 1=-1.65 10=0.2 11=0.61 12=0.69 13=1.03 14=2.07 15=2.79 16=6.15 2=-1.5 3=-0.9 4=-0.83 5=-0.56 6=-0.34 7=-0.32 8=-0.18 9=0.01; 0=-2.17 1=-1.95 10=0.27 11=0.31 12=0.62 13=0.76 14=1.11 15=1.29 16=1.84 2=-1.9 3=-1.8 4=-1.5 5=-1.22 6=-0.58 7=-0.07 8=0.06 9=0.06; 0=-2.17 1=-2.09 10=-0.04 11=0.83 12=1.09 13=1.47 14=1.89 15=3.37 16=7.39 2=-1.69 3=-1.45 4=-1.11 5=-0.94 6=-0.69 7=-0.57 8=-0.42 9=-0.3
+  annotation 0: adjustScaleRange=false borderColor=#FF5859 borderWidth=1 drawTime=beforeDatasetsDraw type=line yMax=-2 yMin=-2 label: 
+  annotation 1: adjustScaleRange=false borderColor=#FEAA02 borderWidth=1 drawTime=beforeDatasetsDraw type=line yMax=-1 yMin=-1 label: 
+  annotation 2: adjustScaleRange=false borderColor=#FEAA02 borderWidth=1 drawTime=beforeDatasetsDraw type=line yMax=2 yMin=2 label: 
+  annotation 3: adjustScaleRange=false borderColor=#FF5859 borderWidth=1 drawTime=beforeDatasetsDraw type=line yMax=3 yMin=3 label: 
+cards:
+  eligibility-status · Analysis_kri0014: breakdowns 3
+  ie-criteria · Analysis_kri0014: breakdowns 7
+  premature-deaths-window · Analysis_kri0015: breakdowns 2
+  premature-deaths-eligibility · Analysis_kri0015: breakdowns 2
+  premature-deaths-related · Analysis_kri0015: breakdowns 3
+  ip-status · Analysis_kri0019: breakdowns 3
+  treatment-disposition · Analysis_kri0007-2: breakdowns 4
+  treatment-discontinuation-reasons · Analysis_kri0007-2: breakdowns 6
+  study-disposition · Analysis_kri0006: breakdowns 7
+  screening-disposition · Analysis_kri0012: breakdowns 2
+  screen-failure-reasons · Analysis_kri0012: breakdowns 5
+  important-pd-categories · Analysis_kri0004: breakdowns 7
+  non-important-pd-categories · Analysis_kri0003: breakdowns 7
+  kri0004 · Analysis_kri0004: flags 4
+  kri0003 · Analysis_kri0003: flags 4
+  kri0002 · Analysis_kri0002: flags 4
+  kri0001 · Analysis_kri0001: flags 4
+  kri0005 · Analysis_kri0005: flags 4
+  kri0008 · Analysis_kri0008: flags 4
+  kri0009 · Analysis_kri0009: flags 4
+  kri0010 · Analysis_kri0010: flags 4
+  kri0011 · Analysis_kri0011: flags 4
+accessibility:
+- link "← Portfolio":
+  - /url: ./portfolio.html
+- text: "STUDY001 ATLAS-1 Virology · Dermatology · P2 · Active · Product A Latest snapshot: 2026-06-30 Eligibility Status 3.7% 37 / 988"
+- group "Eligibility breakdowns":
+  - region "Eligibility status, % of 988 enrolled":
+    - text: Eligibility status %
+    - list:
+      - 'listitem "Eligible: 96.3%, 951 of 988"': Eligible 96.3% (951)
+      - 'listitem "Ineligible: 2.3%, 23 of 988"': Ineligible 2.3% (23)
+      - 'listitem "Potentially Ineligible: 1.4%, 14 of 988"': Potentially Ineligible 1.4% (14)
+- text: Eligibility I/E Criteria 3.7% 37 / 988
+- group "Eligibility breakdowns":
+  - region "Top I/E criteria not met, n of 37 ineligible":
+    - text: Top I/E criteria not met n
+    - list:
+      - 'listitem "EX03: 11 of 37"': EX03 11
+      - 'listitem "IN04: 10 of 37"': IN04 10
+      - 'listitem "IN07: 8 of 37"': IN07 8
+      - 'listitem "EX01: 8 of 37"': EX01 8
+      - 'listitem "IN01: 6 of 37"': IN01 6
+      - 'listitem "+ 3 more: 12 of 37"': + 3 more 12
+      - 'listitem "Not recorded: 3 of 37"': Not recorded 3
+- 'button "Notes: A participant can fall in more than one category, so the counts add up to more than 37. Not recorded: the source value was blank."': "* Notes"
+- text: Premature Deaths – Time Window 1.6% 16 / 988
+- group "Early Deaths (90 days) breakdowns":
+  - region "Deaths by time from randomisation, n of 16 deaths":
+    - text: Deaths by time from randomisation n
+    - list:
+      - 'listitem "31–90 days: 10 of 16"': 31–90 days 10
+      - 'listitem "≤30 days: 6 of 16"': ≤30 days 6
+- text: Premature Deaths – Eligibility 1.6% 16 / 988
+- group "Early Deaths (90 days) breakdowns":
+  - region "Deaths by eligibility, n of 16 deaths":
+    - text: Deaths by eligibility n
+    - list:
+      - 'listitem "Eligible: 13 of 16"': Eligible 13
+      - 'listitem "Ineligible: 3 of 16"': Ineligible 3
+- text: Premature Deaths – Relatedness 1.6% 16 / 988
+- group "Early Deaths (90 days) breakdowns":
+  - region "Deaths by relatedness to treatment, n of 16 deaths":
+    - text: Deaths by relatedness to treatment n
+    - list:
+      - 'listitem "No: 11 of 16"': No 11
+      - 'listitem "Yes: 4 of 16"': Yes 4
+      - 'listitem "Unknown: 1 of 16"': Unknown 1
+- text: IP Status 3.0% 30 / 988
+- group "IP Non-starters breakdowns":
+  - region "IP status, % of 988 enrolled":
+    - text: IP status %
+    - list:
+      - 'listitem "Potential Non-Starter – within window: 2.1%, 21 of 988"': Potential Non-Starter – within window 2.1% (21)
+      - 'listitem "Potential Non-Starter – outside window: 1.5%, 15 of 988"': Potential Non-Starter – outside window 1.5% (15)
+      - 'listitem "Confirmed Non-Starter: 1.5%, 15 of 988"': Confirmed Non-Starter 1.5% (15)
+- text: Treatment Disposition 8.5% 80 / 937
+- group "Premature Treatment Discontinuation Rate breakdowns":
+  - region "IP status, % of 988 enrolled":
+    - text: IP status %
+    - list:
+      - 'listitem "Dosed: 94.8%, 937 of 988"': Dosed 94.8% (937)
+  - region "Treatment disposition, % of 937 dosed":
+    - text: Treatment disposition %
+    - list:
+      - 'listitem "Dosed – treatment complete: 47.5%, 445 of 937"': Dosed – treatment complete 47.5% (445)
+      - 'listitem "Dosed – ongoing: 44.0%, 412 of 937"': Dosed – ongoing 44.0% (412)
+      - 'listitem "Dosed – premature treatment discontinuation: 8.5%, 80 of 937"': Dosed – premature treatment discontinuation 8.5% (80)
+- text: Premature Treatment Discontinuation Reasons 8.5% 80 / 937
+- group "Premature Treatment Discontinuation Rate breakdowns":
+  - region "Reasons for treatment discontinuation, n of 80 discontinued":
+    - text: Reasons for treatment discontinuation n
+    - list:
+      - 'listitem "Withdrawal by Participant: 22 of 80"': Withdrawal by Participant 22
+      - 'listitem "Progressive Disease: 21 of 80"': Progressive Disease 21
+      - 'listitem "Other: 20 of 80"': Other 20
+      - 'listitem "Physician Decision: 19 of 80"': Physician Decision 19
+      - 'listitem "Adverse Event: 16 of 80"': Adverse Event 16
+      - 'listitem "Not recorded: 9 of 80"': Not recorded 9
+- 'button "Notes: A participant can fall in more than one category, so the counts add up to more than 80. Not recorded: the source value was blank."': "* Notes"
+- text: Study Disposition – Enrolled 6.6% 65 / 988
+- group "Study Discontinuation Rate breakdowns":
+  - region "Study disposition, % of 988 enrolled":
+    - text: Study disposition %
+    - list:
+      - 'listitem "Study Completion: 49.9%, 493 of 988"': Study Completion 49.9% (493)
+      - 'listitem "Ongoing: 43.5%, 430 of 988"': Ongoing 43.5% (430)
+      - 'listitem "Death: 1.8%, 18 of 988"': Death 1.8% (18)
+      - 'listitem "Withdrawal by Participant: 1.6%, 16 of 988"': Withdrawal by Participant 1.6% (16)
+      - 'listitem "Lost to Follow-Up: 1.5%, 15 of 988"': Lost to Follow-Up 1.5% (15)
+      - 'listitem "Study Discontinuation: Other: 1.2%, 12 of 988"': "Study Discontinuation: Other 1.2% (12)"
+      - 'listitem "Not recorded: 0.4%, 4 of 988"': Not recorded 0.4% (4)
+- 'button "Notes: Not recorded: the source value was blank."': "* Notes"
+- text: Study Disposition – Screening 26.3% 353 / 1,341
+- group "Screen Failure Rate breakdowns":
+  - region "Screening status, % of 1,341 screened":
+    - text: Screening status %
+    - list:
+      - 'listitem "Enrolled: 73.7%, 988 of 1,341"': Enrolled 73.7% (988)
+      - 'listitem "Screen Failure: 26.3%, 353 of 1,341"': Screen Failure 26.3% (353)
+- text: Screen Failure Reasons 26.3% 353 / 1,341
+- group "Screen Failure Rate breakdowns":
+  - region "Screen failure reasons, n of 353 screen failures":
+    - text: Screen failure reasons n
+    - list:
+      - 'listitem "Inclusion Criteria Not Met: 139 of 353"': Inclusion Criteria Not Met 139
+      - 'listitem "Exclusion Criteria Met: 111 of 353"': Exclusion Criteria Met 111
+      - 'listitem "Withdrawal by Participant: 57 of 353"': Withdrawal by Participant 57
+      - 'listitem "Other: 30 of 353"': Other 30
+      - 'listitem "Not recorded: 16 of 353"': Not recorded 16
+- 'button "Notes: Not recorded: the source value was blank."': "* Notes"
+- text: Important Protocol Deviation Categories 0.05 per 28 days 285 / 5,467.2
+- group "Important Protocol Deviation Rate breakdowns":
+  - region "Top 5 categories, n of 285 deviations":
+    - text: Top 5 categories n
+    - list:
+      - 'listitem "Eligibility Criteria: 61 of 285"': Eligibility Criteria 61
+      - 'listitem "Informed Consent: 60 of 285"': Informed Consent 60
+      - 'listitem "Investigational Product: 49 of 285"': Investigational Product 49
+      - 'listitem "Study Procedures: 43 of 285"': Study Procedures 43
+      - 'listitem "Safety Reporting: 33 of 285"': Safety Reporting 33
+      - 'listitem "+ 2 more: 29 of 285"': + 2 more 29
+      - 'listitem "Not recorded: 10 of 285"': Not recorded 10
+- 'button "Notes: Not recorded: the source value was blank."': "* Notes"
+- text: Non-Important Protocol Deviation Categories 0.41 per 28 days 2,244 / 5,467.2
+- group "Non-Important Protocol Deviation Rate breakdowns":
+  - region "Top 5 categories, n of 2,244 deviations":
+    - text: Top 5 categories n
+    - list:
+      - 'listitem "Visit Schedule: 787 of 2,244"': Visit Schedule 787
+      - 'listitem "Study Procedures: 615 of 2,244"': Study Procedures 615
+      - 'listitem "Investigational Product: 215 of 2,244"': Investigational Product 215
+      - 'listitem "Safety Reporting: 173 of 2,244"': Safety Reporting 173
+      - 'listitem "Informed Consent: 150 of 2,244"': Informed Consent 150
+      - 'listitem "+ 2 more: 243 of 2,244"': + 2 more 243
+      - 'listitem "Not recorded: 61 of 2,244"': Not recorded 61
+- 'button "Notes: Not recorded: the source value was blank."': "* Notes"
+- text: Important Protocol Deviation Rate 0.05 per 28 days 285 / 5,467.2
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 4 23.5%
+  - listitem: Green 13 76.5%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: Non-Important Protocol Deviation Rate 0.41 per 28 days 2,244 / 5,467.2
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 1 5.9%
+  - listitem: Green 16 94.1%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: SAE Reporting Rate 0.14 per 28 days 743 / 5,467.2
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 6 35.3%
+  - listitem: Green 11 64.7%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: AE Reporting Rate 0.86 per 28 days 4,693 / 5,467.2
+- list "Sites by flag":
+  - listitem: Red 4 23.5%
+  - listitem: Amber 3 17.6%
+  - listitem: Green 10 58.8%
+  - listitem: No flag 0 0.0%
+- button "Charts ▴" [expanded]
+- text: AE AE Reporting Rate
+- tablist:
+  - tab "Bar chart"
+  - tab "Scatter plot"
+  - tab "Over time" [selected]
+- button "Close charts": ✕
+- text: gsm.viz · timeSeries · AE G3+ Lab Abnormality Rate 5.0% 873 / 17,509
+- list "Sites by flag":
+  - listitem: Red 1 5.9%
+  - listitem: Amber 3 17.6%
+  - listitem: Green 13 76.5%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: Query Rate 5.2% 13,649 / 260,521
+- list "Sites by flag":
+  - listitem: Red 2 11.8%
+  - listitem: Amber 3 17.6%
+  - listitem: Green 12 70.6%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: Delayed Query Resolution Rate 5.5% 753 / 13,649
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 2 11.8%
+  - listitem: Green 15 88.2%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: Delayed Data Entry Rate 10.4% 3,297 / 31,612
+- list "Sites by flag":
+  - listitem: Red 1 5.9%
+  - listitem: Amber 5 29.4%
+  - listitem: Green 11 64.7%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"
+- text: Data Change Rate 2.1% 5,569 / 260,521
+- list "Sites by flag":
+  - listitem: Red 0 0.0%
+  - listitem: Amber 0 0.0%
+  - listitem: Green 17 100.0%
+  - listitem: No flag 0 0.0%
+- button "Charts ▾"

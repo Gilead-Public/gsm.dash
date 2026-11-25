@@ -1,0 +1,281 @@
+// @ts-check
+// #21: the portfolio table's optional columns (study name, Enrolled, Status), Enrolled against its target, and its View,
+// Overview or Details, which replaced the row density. Defaults come from the configuration (#16); choices travel in the
+// address and Reset restores them.
+import { expect, readData, test } from './fixtures/app.js';
+import { chooseView, control } from './fixtures/controls.js';
+import { visibleLines } from './fixtures/visible.js';
+import { cardMetrics, withCards } from './fixtures/tiles.js';
+import { countText, shownMetrics } from '../test/qual/pooling.js';
+/** @typedef {import('@playwright/test').Page} Page */
+/** @typedef {import('@playwright/test').Locator} Locator */
+
+/** @type {Array<{ StudyID: string, params: Record<string, any> }>} */
+const studies = readData('portfolio.json').studies;
+/** @type {Array<{ StudyID: string, ParticipantCount?: number }>} */
+const counted = readData('summary.json').studies;
+const enrolled = (/** @type {string} */ id) => /** @type {number} */ (counted.find((s) => s.StudyID === id)?.ParticipantCount);
+
+/** @param {Page} page */
+const chip = (page, /** @type {string} */ column) => control(page, `button[data-column="${column}"]`);
+const seenText = async (/** @type {Locator} */ el) => (await visibleLines(el)).join(' ');
+/** @param {Page} page */
+const headers = async (page) =>
+  Promise.all((await page.locator('table.po thead tr.cols th.pop, table.po thead th.status-col').all()).map(async (th) => (await seenText(th)).replace(/\s+/g, '')));
+/**
+ * The text a user sees in a study row's optional columns: its name, its status and its population cells. An absent
+ * column is null.
+ * @param {Page} page
+ * @param {string} id
+ */
+async function rowParts(page, id) {
+  const tr = page.locator(`tbody tr[data-hl="${id}"]`);
+  const optional = async (/** @type {Locator} */ el) => ((await el.count()) ? seenText(el) : null);
+  return {
+    name: await optional(tr.locator('.nick')),
+    status: await optional(tr.locator('td.status-col')),
+    pop: await Promise.all((await tr.locator('td.pop').all()).map(seenText)),
+  };
+}
+
+/**
+ * How the table shows its categories, read from the table itself: 'folded' (Compact, #47) is every category folded to
+ * headline tiles; 'open' (Detailed and Custom) is them all open, with a header per metric. Null when it is neither.
+ * @param {Page} page
+ */
+async function shownView(page) {
+  const table = page.locator('table.po');
+  const [tiles, closed, open, heads] = await Promise.all(
+    ['.otile', 'thead th.bandh.closed', 'thead th.bandh.open', 'thead th[data-sort^="Analysis_"]'].map((s) => table.locator(s).count()),
+  );
+  if (tiles && closed && !open && !heads) return 'folded';
+  if (!tiles && !closed && open && heads) return 'open';
+  return null;
+}
+
+/** The Cell display pressed in Config (#47). @param {Page} page */
+const viewControl = async (page) => control(page, 'button[data-display][aria-pressed="true"]').getAttribute('data-display');
+
+/**
+ * Opens the portfolio with its document changed, then waits for the table.
+ * @param {any} app
+ * @param {Page} page
+ * @param {(doc: any) => void} change
+ * @param {string} [hash]
+ */
+async function openWith(app, page, change, hash = '') {
+  await app.openReport('portfolio', { document: change }, hash);
+  await page.locator('#app > .layout').waitFor();
+}
+
+test.describe('table columns and view', () => {
+  test('21.01: each optional column toggles, the built-in defaults apply, and the choice survives a reload until Reset (#21)', async ({ app, page }) => {
+    await app.open();
+    const [first] = studies;
+    expect(await headers(page)).toEqual(['Enr.n']);
+    for (const [column, pressed] of [['name', 'true'], ['enroll', 'true'], ['status', 'false']]) await expect(chip(page, column).locator).toHaveAttribute('aria-pressed', pressed);
+    expect(await rowParts(page, first.StudyID)).toEqual({ name: first.params.nickname, status: null, pop: [countText(enrolled(first.StudyID))] });
+
+    await chip(page, 'status').click();
+    await chip(page, 'name').click();
+    expect(await headers(page)).toEqual(['Status', 'Enr.n']);
+    for (const s of studies) {
+      expect(await rowParts(page, s.StudyID), s.StudyID).toEqual({ name: null, status: s.params.status, pop: [countText(enrolled(s.StudyID))] });
+    }
+    await expect(page.locator('tbody tr.total td.status-col')).toHaveText('');
+    await chip(page, 'enroll').click();
+    expect(await headers(page), 'Enrolled hidden: no Population band').toEqual(['Status']);
+    await expect(page.locator('table.po thead th.bandh.pop')).toHaveCount(0);
+    expect((await rowParts(page, first.StudyID)).pop).toEqual([]);
+
+    await page.reload();
+    await page.locator('#app > .layout').waitFor();
+    expect(await headers(page)).toEqual(['Status']);
+    expect((await rowParts(page, first.StudyID)).name).toBeNull();
+
+    await control(page, '[data-reset]').click();
+    expect(await headers(page)).toEqual(['Enr.n']);
+    expect((await rowParts(page, first.StudyID)).name).toBe(first.params.nickname);
+    expect(new URL(page.url()).hash).toBe('');
+  });
+
+  test('21.01: the table is folded under Compact, the default, and open under Detailed and Custom, and the choice survives a reload until Reset (#21)', async ({ app, page }) => {
+    await app.open();
+    expect([await viewControl(page), await shownView(page)]).toEqual(['compact', 'folded']);
+    await chooseView(page, 'detailed');
+    expect([await viewControl(page), await shownView(page)]).toEqual(['detailed', 'open']);
+    await chooseView(page, 'custom');
+    expect([await viewControl(page), await shownView(page)]).toEqual(['custom', 'open']);
+    await page.reload();
+    await page.locator('#app > .layout').waitFor();
+    expect([await viewControl(page), await shownView(page)]).toEqual(['custom', 'open']);
+    await control(page, '[data-reset]').click();
+    expect([await viewControl(page), await shownView(page)]).toEqual(['compact', 'folded']);
+    expect(new URL(page.url()).hash).toBe('');
+  });
+
+  test('21.01: configured columns and View are the defaults, and Reset returns to them (#21)', async ({ app, page }) => {
+    await openWith(app, page, (doc) => void (doc.config = { columns: ['enroll', 'status'], view: 'detailed' }));
+    expect(await headers(page)).toEqual(['Status', 'Enr.n']);
+    expect((await rowParts(page, studies[0].StudyID)).name).toBeNull();
+    expect([await viewControl(page), await shownView(page)]).toEqual(['detailed', 'open']);
+    await chip(page, 'status').click();
+    await chooseView(page, 'compact');
+    expect(await headers(page)).toEqual(['Enr.n']);
+    expect(await shownView(page)).toBe('folded');
+    await control(page, '[data-reset]').click();
+    expect(await headers(page)).toEqual(['Status', 'Enr.n']);
+    expect([await viewControl(page), await shownView(page)]).toEqual(['detailed', 'open']);
+  });
+
+  test('21.02: Enrolled reads n / expected for a study with a target, as a number or text, and the count alone otherwise (#21)', async ({ app, page }) => {
+    const [a, b, c, d] = studies;
+    await openWith(
+      app,
+      page,
+      (doc) => {
+        const params = (/** @type {string} */ id) => doc.studies.find((/** @type {any} */ s) => s.StudyID === id).params;
+        params(a.StudyID).ParticipantTarget = 1500;
+        params(b.StudyID).ParticipantTarget = '2400';
+        params(c.StudyID).ParticipantTarget = '0';
+        delete params(d.StudyID).ParticipantTarget;
+      },
+    );
+    const enrolledCell = async (/** @type {string} */ id) => (await rowParts(page, id)).pop[0];
+    expect(await enrolledCell(a.StudyID)).toBe(`${countText(enrolled(a.StudyID))} / 1,500`);
+    expect(await enrolledCell(b.StudyID)).toBe(`${countText(enrolled(b.StudyID))} / 2,400`);
+    expect(await enrolledCell(c.StudyID)).toBe(countText(enrolled(c.StudyID)));
+    expect(await enrolledCell(d.StudyID)).toBe(countText(enrolled(d.StudyID)));
+    const total = counted.reduce((n, s) => n + (s.ParticipantCount ?? 0), 0);
+    expect(await seenText(page.locator('tbody tr.total td.pop').first())).toBe(countText(total));
+  });
+
+  test('21.03: the table in Compact and Detailed, and Config with its Cell display, group checkboxes, Study columns and metric checkboxes, for visual comparison (#21)', async ({ app, page, evidence }) => {
+    await app.open();
+    expect(await shownView(page)).toBe('folded');
+    await evidence.shot(page, 'Compact');
+    await chooseView(page, 'detailed');
+    expect(await shownView(page)).toBe('open');
+    await evidence.shot(page, 'Detailed');
+    await page.locator('#header-controls [data-open="config"]').click();
+    await expect(page.locator('#header-controls [data-pop="config"]')).toBeVisible();
+    await evidence.shot(page, 'Config open');
+  });
+});
+
+test('21.04: each group\'s checkbox is ticked when all its metrics are on, half-ticked when some are, clear when none are; clicking it switches them all on, or off when all are on; a band shows while any of its metrics is on; a group configured hidden starts with its metrics off; the choice survives a reload and a study report\'s back link, and Reset restores the configured defaults (#21)', async ({ app, page }) => {
+  /** @type {any[]} */
+  const catalog = readData('portfolio.json').metrics;
+  const shown = shownMetrics(catalog);
+  const ids = shown.map((m) => m.MetricID);
+  const groups = [{ name: 'Alpha', metrics: ids.slice(0, 4) }, { name: 'Beta', metrics: ids.slice(4, 8), hidden: true }, { name: 'Gamma', metrics: ids.slice(8, 12) }];
+  await app.openReport('portfolio', { document: (/** @type {any} */ doc) => void (doc.config = { groups }), beside: [studies[0].StudyID] });
+  await page.locator('#app > .layout').waitFor();
+  const bands = async () => {
+    const out = [];
+    for (const th of await page.locator('.portfolio-table thead th.bandh[data-band]').all()) {
+      const [name] = await visibleLines(th);
+      out.push([name, await Promise.all((await th.locator('.tlab').all()).map((t) => visibleLines(t).then((l) => l.join(' '))))]);
+    }
+    return out;
+  };
+  const abbr = (/** @type {string} */ id) => /** @type {any} */ (catalog.find((m) => m.MetricID === id)).Abbreviation;
+  const band = (/** @type {string} */ name, /** @type {string[]} */ list) => [name, list.map(abbr)];
+  const rest = ids.slice(12);
+  const box = (/** @type {string} */ name) => control(page, `input[data-group="${name}"]`);
+  /** Each group's checkbox as it reads: ticked, half (indeterminate) or clear. */
+  const boxes = () =>
+    page.locator('#header-controls input[data-group]').evaluateAll((els) =>
+      els.map((e) => { const i = /** @type {HTMLInputElement} */ (e); return [i.dataset.group, i.indeterminate ? 'half' : i.checked ? 'ticked' : 'clear']; }),
+    );
+
+  expect(await bands(), 'Beta configured hidden').toEqual([band('Alpha', ids.slice(0, 4)), band('Gamma', ids.slice(8, 12)), band('Other', rest)]);
+  expect(await boxes()).toEqual([['Alpha', 'ticked'], ['Beta', 'clear'], ['Gamma', 'ticked'], ['Other', 'ticked']]);
+  await page.locator('#header-controls [data-open="config"]').click();
+  const labels = await Promise.all((await page.locator('#header-controls .mgroup-toggle').all()).map((c) => visibleLines(c).then((l) => l.join(' '))));
+  expect(labels, 'the group checkboxes, readable').toEqual(['Alpha', 'Beta', 'Gamma', 'Other']);
+  await page.keyboard.press('Escape');
+
+  await box('Gamma').click();
+  expect(await bands(), 'Gamma switched off: only its band goes').toEqual([band('Alpha', ids.slice(0, 4)), band('Other', rest)]);
+  await control(page, `input[data-metric="${ids[9]}"]`).check();
+  expect(await bands(), 'one of Gamma\'s metrics on: its band, with that metric').toEqual([band('Alpha', ids.slice(0, 4)), band('Gamma', [ids[9]]), band('Other', rest)]);
+  expect((await boxes())[2], 'some on').toEqual(['Gamma', 'half']);
+  await box('Gamma').click();
+  expect((await boxes())[2], 'half: all on').toEqual(['Gamma', 'ticked']);
+  await control(page, `input[data-metric="${ids[9]}"]`).uncheck();
+  await box('Beta').click();
+  await box('Alpha').click();
+  const left = [band('Beta', ids.slice(4, 8)), band('Gamma', [ids[8], ids[10], ids[11]]), band('Other', rest)];
+  expect(await bands(), 'Beta on, Alpha off').toEqual(left);
+
+  await page.reload();
+  await page.locator('#app > .layout').waitFor();
+  expect(await bands(), 'after a reload').toEqual(left);
+  const first = studies[0].StudyID;
+  await page.locator(`#app .portfolio-table a[data-study="${first}"]`).first().click();
+  await page.locator(`#app > [data-study="${first}"] .card`).first().waitFor();
+  expect(await cardMetrics(page), 'the study report\'s cards show exactly the portfolio\'s metrics that have one (16.03)').toEqual(withCards([...ids.slice(4, 8), ids[8], ids[10], ids[11], ...rest].sort(), catalog));
+  await page.locator('#app a.back').click();
+  await page.locator('#app > .layout').waitFor();
+  expect(await bands(), 'after a study report and its back link').toEqual(left);
+
+  await page.locator('#header-controls [data-reset]').click();
+  expect(await bands(), 'after Reset').toEqual([band('Alpha', ids.slice(0, 4)), band('Gamma', ids.slice(8, 12)), band('Other', rest)]);
+  expect((await boxes())[1]).toEqual(['Beta', 'clear']);
+});
+
+
+test('21.05: a group\'s heading counts its metrics selected, "n/total selected", closed or open; with every metric hidden, the page says so, not that no study matches, and Show all metrics switches every metric on (#21)', async ({ app, page }) => {
+  /** @type {Array<{ name: string, metrics: string[] }>} */
+  const groups = readData('config.json').groups;
+  const dq = /** @type {{ name: string, metrics: string[] }} */ (groups.find((g) => g.name === 'Data quality'));
+  const n = dq.metrics.length;
+  const host = page.locator('#header-controls');
+  const head = (/** @type {string} */ name) => host.locator('.mgroup').filter({ has: page.locator(`[data-expand="${name}"]`) }).locator('.mgroup-head');
+  await app.open();
+
+  await control(page, `input[data-metric="${dq.metrics[0]}"]`).uncheck();
+  await host.locator('[data-open="config"]').click();
+  expect(await visibleLines(head('Data quality')), 'one off').toEqual(['Data quality', `${n - 1}/${n} selected`]);
+  await page.keyboard.press('Escape');
+  await control(page, 'input[data-group="Data quality"]').click();
+  await control(page, 'input[data-group="Data quality"]').click();
+  await host.locator('[data-open="config"]').click();
+  expect(await visibleLines(head('Data quality')), 'all off').toEqual(['Data quality', `0/${n} selected`]);
+  await page.keyboard.press('Escape');
+  await expect(page.locator(`.portfolio-table th[data-band="Data quality"]`), 'no band').toHaveCount(0);
+
+  await expect(page.locator('[data-empty]')).toHaveCount(0);
+  for (const g of groups.filter((g) => g.name !== 'Data quality')) await control(page, `input[data-group="${g.name}"]`).click();
+  await expect(page.locator('[data-empty="metrics"]')).toHaveText('All metrics are hidden. Show all metrics');
+  await expect(page.locator('[data-empty="studies"]'), 'not mistaken for no studies').toHaveCount(0);
+  await page.locator('[data-empty="metrics"] button').click();
+  await expect(page.locator('[data-empty]')).toHaveCount(0);
+  await expect(page.locator('.portfolio-table th[data-band]')).toHaveCount(groups.length);
+  await host.locator('[data-open="config"]').click();
+  await expect(host.locator('input[data-metric]:not(:checked), input[data-group]:not(:checked)'), 'every group and metric ticked').toHaveCount(0);
+});
+
+
+test('in Compact, each band\'s label sits at the top of the header, level with POPULATION, and its abbreviations at its foot, level with the column heads', async ({ app, page }) => {
+  await app.open();
+  const head = page.locator('.portfolio-table thead');
+  /** The top of a header cell's own text, its first text node, and the bottom of an element in it. */
+  const textTop = (/** @type {import('@playwright/test').Locator} */ th) =>
+    th.evaluate((el) => {
+      const range = document.createRange();
+      range.selectNodeContents(/** @type {Node} */ ([...el.childNodes].find((n) => n.nodeType === Node.TEXT_NODE && n.textContent?.trim())));
+      return range.getBoundingClientRect().top;
+    });
+  const population = await textTop(head.locator('th.bandh.pop'));
+  const unitBottom = /** @type {{ y: number, height: number }} */ (await head.locator('tr.cols th .u').first().boundingBox());
+  const closed = await head.locator('th.bandh.closed').all();
+  expect(closed.length).toBeGreaterThan(1);
+  for (const th of closed) {
+    const name = await th.getAttribute('data-band');
+    expect(Math.abs((await textTop(th)) - population), `${name}: the label, level with POPULATION`).toBeLessThanOrEqual(2);
+    const tiles = /** @type {{ y: number, height: number }} */ (await th.locator('.otiles').boundingBox());
+    expect(Math.abs(tiles.y + tiles.height - (unitBottom.y + unitBottom.height)), `${name}: the abbreviations, level with the column heads' foot`).toBeLessThanOrEqual(3);
+  }
+});

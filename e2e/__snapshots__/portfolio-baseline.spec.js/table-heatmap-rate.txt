@@ -1,0 +1,420 @@
+state: table-heatmap-rate
+canonical dom: sha256 7c50bf6a6dd05f6bacf80a508b55c9366decf4943868cd76a831e654124a6dba (221320 characters)
+computed styles: sha256 db8fa58edd14e4ef829d2796346f8c10ab12ef418674692268f7f53d53d28f3c (1506 elements)
+tooltip: none
+cell backgrounds: rgb(237, 240, 238) ×2 | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) | rgb(214, 228, 245) ×7 | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) ×3 | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) ×2 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(238, 244, 251) ×3 | rgb(134, 169, 216) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) ×2 | rgb(134, 169, 216) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) ×2 | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(214, 228, 245) ×3 | rgb(179, 203, 233) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(179, 203, 233) ×2 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) ×3 | rgb(214, 228, 245) | rgb(238, 244, 251) ×3 | rgb(214, 228, 245) | rgb(134, 169, 216) ×2 | rgb(179, 203, 233) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(134, 169, 216) ×2 | rgb(238, 244, 251) | rgb(134, 169, 216) ×2 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(134, 169, 216) ×3 | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) ×2 | rgb(238, 244, 251) | rgb(179, 203, 233) ×2 | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(179, 203, 233) | rgb(238, 244, 251) | rgb(214, 228, 245) ×3 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(179, 203, 233) ×2 | rgb(134, 169, 216) ×2 | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(214, 228, 245) ×3 | rgb(238, 244, 251) ×4 | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(134, 169, 216) | rgb(214, 228, 245) | rgb(134, 169, 216) ×2 | rgb(214, 228, 245) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(179, 203, 233) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(238, 244, 251) | rgb(214, 228, 245) | rgb(238, 244, 251) ×2 | rgb(134, 169, 216) ×2 | rgb(214, 228, 245) ×2 | rgb(179, 203, 233) ×2 | rgb(214, 228, 245) | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgb(134, 169, 216) | rgb(238, 244, 251) ×2 | rgb(214, 228, 245) | rgb(238, 244, 251) | rgb(134, 169, 216) | rgb(179, 203, 233) | rgb(134, 169, 216) ×2 | rgb(238, 244, 251) | rgb(214, 228, 245) ×2 | rgb(134, 169, 216) ×2 | rgb(179, 203, 233) | rgb(134, 169, 216) ×3 | rgb(238, 244, 251) | rgb(179, 203, 233) | rgb(238, 244, 251)
+sparklines:
+  none
+accessibility:
+- button "Filters & grouping"
+- button "Config ▾"
+- button "Reset"
+- button "Admin ▾"
+- main:
+  - table:
+    - rowgroup:
+      - row "Study Population Disposition Early events Eligibility & integrity Safety & deviations Data quality":
+        - columnheader "Study"
+        - columnheader "Population"
+        - columnheader "Disposition"
+        - columnheader "Early events"
+        - columnheader "Eligibility & integrity"
+        - columnheader "Safety & deviations"
+        - columnheader "Data quality"
+      - row "Enr. n SF % scr. SDSC n (% enr.) TDSC n (% dosed) PTDSC n (% dosed) WC n (% enr.) LTFU n (% enr.) DTH30 n (% enr.) DTH90 n (% enr.) IPNS n (% enr.) IE n (% enr.) STRAT n (% enr.) PFSC n (% enr.) AE / 28 d SAE / 28 d PD / 28 d IPD / 28 d LB n (%) QRY % OQRY % ODAT % CDAT %":
+        - columnheader "Enr. n"
+        - columnheader "SF % scr."
+        - columnheader "SDSC n (% enr.)"
+        - columnheader "TDSC n (% dosed)"
+        - columnheader "PTDSC n (% dosed)"
+        - columnheader "WC n (% enr.)"
+        - columnheader "LTFU n (% enr.)"
+        - columnheader "DTH30 n (% enr.)"
+        - columnheader "DTH90 n (% enr.)"
+        - columnheader "IPNS n (% enr.)"
+        - columnheader "IE n (% enr.)"
+        - columnheader "STRAT n (% enr.)"
+        - columnheader "PFSC n (% enr.)"
+        - columnheader "AE / 28 d"
+        - columnheader "SAE / 28 d"
+        - columnheader "PD / 28 d"
+        - columnheader "IPD / 28 d"
+        - columnheader "LB n (%)"
+        - columnheader "QRY %"
+        - columnheader "OQRY %"
+        - columnheader "ODAT %"
+        - columnheader "CDAT %"
+    - rowgroup:
+      - row "Portfolio total 8,874 2,771 23.8% 704 7.9% 935 11.1% 754 9.0% 233 2.6% 143 1.6% 69 0.8% 184 2.1% 262 3.0% 279 3.1% 208 2.3% 221 2.5% 64,903 1.20 5,329 0.10 20,112 0.37 3,080 0.06 8,026 4.5% 177,545 6.8% 15,960 9.0% 38,993 11.7% 86,821 3.3%":
+        - cell "Portfolio total"
+        - cell "8,874"
+        - cell "2,771 23.8%"
+        - cell "704 7.9%"
+        - cell "935 11.1%"
+        - cell "754 9.0%"
+        - cell "233 2.6%"
+        - cell "143 1.6%"
+        - cell "69 0.8%"
+        - cell "184 2.1%"
+        - cell "262 3.0%"
+        - cell "279 3.1%"
+        - cell "208 2.3%"
+        - cell "221 2.5%"
+        - cell "64,903 1.20"
+        - cell "5,329 0.10"
+        - cell "20,112 0.37"
+        - cell "3,080 0.06"
+        - cell "8,026 4.5%"
+        - cell "177,545 6.8%"
+        - cell "15,960 9.0%"
+        - cell "38,993 11.7%"
+        - cell "86,821 3.3%"
+      - row "STUDY006FALCON-2 879 144 14.1% 61 6.9% 144 17.3% 40 4.8% 21 2.4% 18 2.0% 10 1.1% 23 2.6% 24 2.7% 31 3.5% 13 1.5% 18 2.0% 7,681 1.34 530 0.09 2,945 0.52 367 0.06 692 3.7% 17,103 6.5% 1,256 7.3% 3,655 10.8% 11,605 4.4%":
+        - cell "STUDY006FALCON-2":
+          - link "STUDY006":
+            - /url: study:STUDY006
+          - text: FALCON-2
+        - cell "879"
+        - cell "144 14.1%"
+        - cell "61 6.9%"
+        - cell "144 17.3%"
+        - cell "40 4.8%"
+        - cell "21 2.4%"
+        - cell "18 2.0%"
+        - cell "10 1.1%"
+        - cell "23 2.6%":
+          - link "23 2.6%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+        - cell "24 2.7%"
+        - cell "31 3.5%"
+        - cell "13 1.5%"
+        - cell "18 2.0%"
+        - cell "7,681 1.34"
+        - cell "530 0.09"
+        - cell "2,945 0.52"
+        - cell "367 0.06"
+        - cell "692 3.7%"
+        - cell "17,103 6.5%"
+        - cell "1,256 7.3%"
+        - cell "3,655 10.8%"
+        - cell "11,605 4.4%"
+      - row "STUDY009IRIS-1 597 111 15.7% 36 6.0% 42 7.4% 74 13.1% 26 4.4% 10 1.7% 5 0.8% 15 2.5% 16 2.7% 25 4.2% 14 2.3% 18 3.0% 4,071 1.15 428 0.12 857 0.24 216 0.06 509 3.9% 7,414 4.1% 664 9.0% 2,127 9.3% 7,499 4.1%":
+        - cell "STUDY009IRIS-1":
+          - link "STUDY009":
+            - /url: study:STUDY009
+          - text: IRIS-1
+        - cell "597"
+        - cell "111 15.7%"
+        - cell "36 6.0%"
+        - cell "42 7.4%"
+        - cell "74 13.1%"
+        - cell "26 4.4%"
+        - cell "10 1.7%"
+        - cell "5 0.8%"
+        - cell "15 2.5%":
+          - link "15 2.5%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+        - cell "16 2.7%"
+        - cell "25 4.2%"
+        - cell "14 2.3%"
+        - cell "18 3.0%"
+        - cell "4,071 1.15"
+        - cell "428 0.12"
+        - cell "857 0.24"
+        - cell "216 0.06"
+        - cell "509 3.9%"
+        - cell "7,414 4.1%"
+        - cell "664 9.0%"
+        - cell "2,127 9.3%"
+        - cell "7,499 4.1%"
+      - row "STUDY002BEACON-1 645 124 16.1% 44 6.8% 72 11.9% 57 9.4% 16 2.5% 9 1.4% 1 0.2% 10 1.6% 23 3.6% 20 3.1% 10 1.6% 13 2.0% 3,418 0.95 269 0.07 1,577 0.44 127 0.04 645 5.6% 11,310 6.7% 998 8.8% 2,203 9.8% 5,834 3.4%":
+        - cell "STUDY002BEACON-1":
+          - link "STUDY002":
+            - /url: study:STUDY002
+          - text: BEACON-1
+        - cell "645"
+        - cell "124 16.1%"
+        - cell "44 6.8%"
+        - cell "72 11.9%"
+        - cell "57 9.4%"
+        - cell "16 2.5%"
+        - cell "9 1.4%"
+        - cell "1 0.2%"
+        - cell "10 1.6%":
+          - link "10 1.6%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+        - cell "23 3.6%"
+        - cell "20 3.1%"
+        - cell "10 1.6%"
+        - cell "13 2.0%"
+        - cell "3,418 0.95"
+        - cell "269 0.07"
+        - cell "1,577 0.44"
+        - cell "127 0.04"
+        - cell "645 5.6%"
+        - cell "11,310 6.7%"
+        - cell "998 8.8%"
+        - cell "2,203 9.8%"
+        - cell "5,834 3.4%"
+      - row "STUDY008HARBOR-2 499 112 18.3% 26 5.2% 43 9.1% 41 8.7% 12 2.4% 7 1.4% 2 0.4% 6 1.2% 14 2.8% 14 2.8% 14 2.8% 10 2.0% 3,899 1.24 293 0.09 748 0.24 72 0.02 217 2.2% 10,658 6.8% 1,432 13.4% 2,214 12.2% 5,397 3.5%":
+        - cell "STUDY008HARBOR-2":
+          - link "STUDY008":
+            - /url: study:STUDY008
+          - text: HARBOR-2
+        - cell "499"
+        - cell "112 18.3%"
+        - cell "26 5.2%"
+        - cell "43 9.1%"
+        - cell "41 8.7%"
+        - cell "12 2.4%"
+        - cell "7 1.4%"
+        - cell "2 0.4%"
+        - cell "6 1.2%":
+          - link "6 1.2%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+        - cell "14 2.8%"
+        - cell "14 2.8%"
+        - cell "14 2.8%"
+        - cell "10 2.0%"
+        - cell "3,899 1.24"
+        - cell "293 0.09"
+        - cell "748 0.24"
+        - cell "72 0.02"
+        - cell "217 2.2%"
+        - cell "10,658 6.8%"
+        - cell "1,432 13.4%"
+        - cell "2,214 12.2%"
+        - cell "5,397 3.5%"
+      - row "STUDY011KESTREL-3 598 182 23.3% 45 7.5% 64 11.2% 48 8.4% 13 2.2% 6 1.0% 4 0.7% 12 2.0% 14 2.3% 12 2.0% 18 3.0% 12 2.0% 6,810 1.78 357 0.09 891 0.23 210 0.05 382 3.1% 7,511 4.3% 936 12.5% 1,353 5.9% 7,128 4.1%":
+        - cell "STUDY011KESTREL-3":
+          - link "STUDY011":
+            - /url: study:STUDY011
+          - text: KESTREL-3
+        - cell "598"
+        - cell "182 23.3%"
+        - cell "45 7.5%"
+        - cell "64 11.2%"
+        - cell "48 8.4%"
+        - cell "13 2.2%"
+        - cell "6 1.0%"
+        - cell "4 0.7%"
+        - cell "12 2.0%":
+          - link "12 2.0%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+        - cell "14 2.3%"
+        - cell "12 2.0%"
+        - cell "18 3.0%"
+        - cell "12 2.0%"
+        - cell "6,810 1.78"
+        - cell "357 0.09"
+        - cell "891 0.23"
+        - cell "210 0.05"
+        - cell "382 3.1%"
+        - cell "7,511 4.3%"
+        - cell "936 12.5%"
+        - cell "1,353 5.9%"
+        - cell "7,128 4.1%"
+      - row "STUDY007GRANITE-3 735 227 23.6% 77 10.5% 92 13.3% 55 7.9% 12 1.6% 7 1.0% 3 0.4% 14 1.9% 26 3.5% 33 4.5% 18 2.4% 11 1.5% 3,688 0.81 433 0.10 1,822 0.40 155 0.03 932 6.0% 23,801 10.9% 1,458 6.1% 4,221 14.9% 10,445 4.8%":
+        - cell "STUDY007GRANITE-3":
+          - link "STUDY007":
+            - /url: study:STUDY007
+          - text: GRANITE-3
+        - cell "735"
+        - cell "227 23.6%"
+        - cell "77 10.5%"
+        - cell "92 13.3%"
+        - cell "55 7.9%"
+        - cell "12 1.6%"
+        - cell "7 1.0%"
+        - cell "3 0.4%"
+        - cell "14 1.9%":
+          - link "14 1.9%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+        - cell "26 3.5%"
+        - cell "33 4.5%"
+        - cell "18 2.4%"
+        - cell "11 1.5%"
+        - cell "3,688 0.81"
+        - cell "433 0.10"
+        - cell "1,822 0.40"
+        - cell "155 0.03"
+        - cell "932 6.0%"
+        - cell "23,801 10.9%"
+        - cell "1,458 6.1%"
+        - cell "4,221 14.9%"
+        - cell "10,445 4.8%"
+      - row "STUDY010JUNIPER-2 857 290 25.3% 64 7.5% 90 11.1% 73 9.0% 23 2.7% 10 1.2% 12 1.4% 27 3.2% 28 3.3% 14 1.6% 29 3.4% 24 2.8% 6,507 1.29 457 0.09 1,124 0.22 402 0.08 792 4.5% 13,321 5.2% 1,462 11.0% 3,646 11.1% 7,538 3.0%":
+        - cell "STUDY010JUNIPER-2":
+          - link "STUDY010":
+            - /url: study:STUDY010
+          - text: JUNIPER-2
+        - cell "857"
+        - cell "290 25.3%"
+        - cell "64 7.5%"
+        - cell "90 11.1%"
+        - cell "73 9.0%"
+        - cell "23 2.7%"
+        - cell "10 1.2%"
+        - cell "12 1.4%"
+        - cell "27 3.2%":
+          - link "27 3.2%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+        - cell "28 3.3%"
+        - cell "14 1.6%"
+        - cell "29 3.4%"
+        - cell "24 2.8%"
+        - cell "6,507 1.29"
+        - cell "457 0.09"
+        - cell "1,124 0.22"
+        - cell "402 0.08"
+        - cell "792 4.5%"
+        - cell "13,321 5.2%"
+        - cell "1,462 11.0%"
+        - cell "3,646 11.1%"
+        - cell "7,538 3.0%"
+      - row "STUDY005EMBER-1 871 297 25.4% 118 13.5% 57 6.9% 69 8.4% 17 2.0% 14 1.6% 7 0.8% 11 1.3% 28 3.2% 19 2.2% 17 2.0% 26 3.0% 7,238 1.41 577 0.11 1,857 0.36 211 0.04 526 2.9% 22,245 8.6% 2,300 10.3% 5,219 15.0% 9,075 3.5%":
+        - cell "STUDY005EMBER-1":
+          - link "STUDY005":
+            - /url: study:STUDY005
+          - text: EMBER-1
+        - cell "871"
+        - cell "297 25.4%"
+        - cell "118 13.5%"
+        - cell "57 6.9%"
+        - cell "69 8.4%"
+        - cell "17 2.0%"
+        - cell "14 1.6%"
+        - cell "7 0.8%"
+        - cell "11 1.3%":
+          - link "11 1.3%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+        - cell "28 3.2%"
+        - cell "19 2.2%"
+        - cell "17 2.0%"
+        - cell "26 3.0%"
+        - cell "7,238 1.41"
+        - cell "577 0.11"
+        - cell "1,857 0.36"
+        - cell "211 0.04"
+        - cell "526 2.9%"
+        - cell "22,245 8.6%"
+        - cell "2,300 10.3%"
+        - cell "5,219 15.0%"
+        - cell "9,075 3.5%"
+      - row "STUDY001ATLAS-1 988 353 26.3% 65 6.6% 111 11.8% 80 8.5% 25 2.5% 26 2.6% 6 0.6% 16 1.6% 30 3.0% 37 3.7% 32 3.2% 32 3.2% 4,693 0.86 743 0.14 2,244 0.41 285 0.05 873 5.0% 13,649 5.2% 753 5.5% 3,297 10.4% 5,569 2.1%":
+        - cell "STUDY001ATLAS-1":
+          - link "STUDY001":
+            - /url: study:STUDY001
+          - text: ATLAS-1
+        - cell "988"
+        - cell "353 26.3%"
+        - cell "65 6.6%"
+        - cell "111 11.8%"
+        - cell "80 8.5%"
+        - cell "25 2.5%"
+        - cell "26 2.6%"
+        - cell "6 0.6%"
+        - cell "16 1.6%":
+          - link "16 1.6%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+        - cell "30 3.0%"
+        - cell "37 3.7%"
+        - cell "32 3.2%"
+        - cell "32 3.2%"
+        - cell "4,693 0.86"
+        - cell "743 0.14"
+        - cell "2,244 0.41"
+        - cell "285 0.05"
+        - cell "873 5.0%"
+        - cell "13,649 5.2%"
+        - cell "753 5.5%"
+        - cell "3,297 10.4%"
+        - cell "5,569 2.1%"
+      - row "STUDY003COBALT-1 722 289 28.6% 67 9.3% 85 12.4% 84 12.2% 20 2.8% 10 1.4% 5 0.7% 12 1.7% 18 2.5% 16 2.2% 14 1.9% 25 3.5% 5,841 1.24 306 0.07 2,052 0.44 250 0.05 996 6.4% 14,232 6.2% 1,854 13.0% 4,219 15.4% 6,417 2.8%":
+        - cell "STUDY003COBALT-1":
+          - link "STUDY003":
+            - /url: study:STUDY003
+          - text: COBALT-1
+        - cell "722"
+        - cell "289 28.6%"
+        - cell "67 9.3%"
+        - cell "85 12.4%"
+        - cell "84 12.2%"
+        - cell "20 2.8%"
+        - cell "10 1.4%"
+        - cell "5 0.7%"
+        - cell "12 1.7%":
+          - link "12 1.7%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+        - cell "18 2.5%"
+        - cell "16 2.2%"
+        - cell "14 1.9%"
+        - cell "25 3.5%"
+        - cell "5,841 1.24"
+        - cell "306 0.07"
+        - cell "2,052 0.44"
+        - cell "250 0.05"
+        - cell "996 6.4%"
+        - cell "14,232 6.2%"
+        - cell "1,854 13.0%"
+        - cell "4,219 15.4%"
+        - cell "6,417 2.8%"
+      - row "STUDY012LUMEN-1 907 374 29.2% 66 7.3% 98 11.3% 92 10.6% 37 4.1% 12 1.3% 8 0.9% 17 1.9% 22 2.4% 47 5.2% 16 1.8% 19 2.1% 5,430 0.96 438 0.08 2,537 0.45 491 0.09 792 4.3% 17,667 6.8% 1,684 9.5% 4,121 11.8% 7,256 2.8%":
+        - cell "STUDY012LUMEN-1":
+          - link "STUDY012":
+            - /url: study:STUDY012
+          - text: LUMEN-1
+        - cell "907"
+        - cell "374 29.2%"
+        - cell "66 7.3%"
+        - cell "98 11.3%"
+        - cell "92 10.6%"
+        - cell "37 4.1%"
+        - cell "12 1.3%"
+        - cell "8 0.9%"
+        - cell "17 1.9%":
+          - link "17 1.9%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+        - cell "22 2.4%"
+        - cell "47 5.2%"
+        - cell "16 1.8%"
+        - cell "19 2.1%"
+        - cell "5,430 0.96"
+        - cell "438 0.08"
+        - cell "2,537 0.45"
+        - cell "491 0.09"
+        - cell "792 4.3%"
+        - cell "17,667 6.8%"
+        - cell "1,684 9.5%"
+        - cell "4,121 11.8%"
+        - cell "7,256 2.8%"
+      - row "STUDY004DELTA-1 576 268 31.8% 35 6.1% 37 6.8% 41 7.5% 11 1.9% 14 2.4% 6 1.0% 21 3.6% 19 3.3% 11 1.9% 13 2.3% 13 2.3% 5,627 1.54 498 0.14 1,458 0.40 294 0.08 670 5.4% 18,634 11.1% 1,163 6.2% 2,718 11.7% 3,058 1.8%":
+        - cell "STUDY004DELTA-1":
+          - link "STUDY004":
+            - /url: study:STUDY004
+          - text: DELTA-1
+        - cell "576"
+        - cell "268 31.8%"
+        - cell "35 6.1%"
+        - cell "37 6.8%"
+        - cell "41 7.5%"
+        - cell "11 1.9%"
+        - cell "14 2.4%"
+        - cell "6 1.0%"
+        - cell "21 3.6%":
+          - link "21 3.6%":
+            - /url: https://gilead-biostats.github.io/gsm.kri/
+        - cell "19 3.3%"
+        - cell "11 1.9%"
+        - cell "13 2.3%"
+        - cell "13 2.3%"
+        - cell "5,627 1.54"
+        - cell "498 0.14"
+        - cell "1,458 0.40"
+        - cell "294 0.08"
+        - cell "670 5.4%"
+        - cell "18,634 11.1%"
+        - cell "1,163 6.2%"
+        - cell "2,718 11.7%"
+        - cell "3,058 1.8%"
+  - text: 12 / 12 studies · 21 / 21 metrics · sorted by SF rate ↑
