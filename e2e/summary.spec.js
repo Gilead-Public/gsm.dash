@@ -103,7 +103,7 @@ test.describe('the portfolio reads the counts-only summary', () => {
     page.on('request', (r) => requests.push(r.url()));
     await app.open('');
     const doc = JSON.parse((await page.locator('#gsm-data').textContent()) ?? '');
-    expect(Object.keys(doc).sort(), 'the portfolio report holds the catalog, the studies and the summary').toEqual(['generated', 'metrics', 'schemaVersion', 'studies', 'summary']);
+    expect(Object.keys(doc).sort(), 'the portfolio report holds the catalog, the studies, the summary and its configuration').toEqual(['config', 'generated', 'metrics', 'schemaVersion', 'studies', 'summary']);
     expect(JSON.stringify(doc), 'no study file rows or file lists').not.toMatch(/"(results|files)":/);
     expect(requests.map((u) => u.replace(/#.*$/, '')), 'requests besides the report itself').toEqual([expect.stringMatching(/\/portfolio\.html$/)]);
     const shownTotal = await shownValue(page, '.total');

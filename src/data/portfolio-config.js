@@ -13,7 +13,7 @@ import { OTHER_CATEGORY } from './catalog.js';
  * @property {string[]} [columns] The table's optional columns shown by default (#21).
  * @property {string} [view] The table's Cell display: compact, detailed or custom.
  * @property {Array<{ name: string, metrics: string[], hidden?: boolean }> | null} [groups] The metric groups, in order,
- *   each with its MetricIDs and whether it starts hidden; null groups by the catalog's Category.
+ *   each with its MetricIDs and whether it starts hidden; null or empty puts every metric in one group.
  */
 
 /** @type {Required<PortfolioConfig>} */
@@ -98,4 +98,5 @@ export function configProblems(config, catalog) {
  * @param {PortfolioConfig} [config]
  * @returns {Required<PortfolioConfig>}
  */
-export const portfolioDefaults = (config = {}) => ({ ...BUILT_IN, ...config });
+// An empty `groups`, as a wrapper may write after trimming every listed metric away, means no groups.
+export const portfolioDefaults = (config = {}) => ({ ...BUILT_IN, ...config, groups: config?.groups?.length ? config.groups : null });

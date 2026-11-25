@@ -12,7 +12,7 @@ test.describe.configure({ timeout: 90_000 });
 const portfolio = readData('portfolio.json');
 /** @type {Array<{ StudyID: string, params: Record<string, string> }>} */
 const studies = portfolio.studies;
-/** @type {Array<{ MetricID: string, GroupLevel: string, Status?: string, Active?: boolean, Category: string }>} */
+/** @type {Array<{ MetricID: string, GroupLevel: string, Status?: string, Active?: boolean }>} */
 const catalog = portfolio.metrics;
 
 
@@ -113,7 +113,8 @@ test('27.05: the table view carries over to a study report, which applies its hi
     ['cfgpanel', 'collapse', 'combine', 'dir', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'hidebygroup', 'hidegroup', 'legend', 'perrow', 'show', 'sort', 'theme', 'view'].sort(),
   );
   // The study report also leaves out the hidden group's metrics (16.03).
-  const dataQuality = catalog.filter((/** @type {any} */ m) => m.Category === 'Data quality').map((/** @type {any} */ m) => m.MetricID);
+  /** @type {string[]} */
+  const dataQuality = readData('config.json').groups.find((/** @type {any} */ g) => g.name === 'Data quality').metrics;
   expect(dataQuality.length).toBeGreaterThan(0);
   await roundTrip(page, page.locator(`#app .portfolio-table a[data-study="${study}"]`), allowed.filter((id) => !dataQuality.includes(id)), async () => {
     const applied = await page.evaluate(() => [document.documentElement.dataset.theme, getComputedStyle(document.documentElement).getPropertyValue('--per-row').trim()]);

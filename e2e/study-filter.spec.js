@@ -13,7 +13,7 @@ test.describe.configure({ timeout: 90_000 });
 const studies = readData('portfolio.json').studies;
 const study = 'STUDY004';
 const hidden = 'Analysis_kri0005';
-const CONFIG = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'] };
+const CONFIG = { ...readData('config.json'), groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'] };
 /** Every setting the address holds, besides one `filter.<param>` per filter the Controls panel offers. */
 const VIEW_KEYS = ['collapse', 'dir', 'group', 'heatmap', 'hide', 'show', 'sort', 'view', 'hidegroup', 'hidebygroup', 'theme', 'perrow', 'cfgpanel', 'legend', 'combine'];
 

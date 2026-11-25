@@ -1,12 +1,14 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { PortfolioStore, currentParams } from '../src/data/store.js';
 import { enrollTarget } from '../src/app/portfolio-table.js';
-import { generatePortfolio } from '../scripts/generate-example-data.mjs';
+import { EXAMPLE_GROUPS, generatePortfolio } from '../scripts/generate-example-data.mjs';
 
 // The Cell display (#47): Compact folds every category to headline tiles; Detailed and Custom open every category.
 
 let store;
-const portfolio = generatePortfolio();
+// Configured as the example reports are, with their metric groups.
+const portfolio = { ...generatePortfolio(), config: { groups: EXAMPLE_GROUPS } };
+const unconfigured = { ...portfolio, config: undefined };
 beforeEach(() => {
   store = new PortfolioStore(portfolio);
 });
@@ -343,14 +345,15 @@ function changeEveryField(s) {
 describe('metric groups (#16, #21)', () => {
   const ids = (/** @type {any[]} */ groups) => groups.map((g) => [g.category, g.metrics.map((/** @type {any} */ m) => m.MetricID)]);
 
-  it('16.05: without `groups`, the groups are the catalog\'s Category groups, in the catalog\'s category order (#16)', () => {
-    const want = [];
-    for (const m of store.supportedMetrics()) {
-      const last = want.at(-1);
-      if (last && last[0] === m.Category) last[1].push(m.MetricID);
-      else want.push([m.Category, [m.MetricID]]);
+  it('16.05: without `groups`, or with an empty list, every metric is in one group, Metrics, in catalog order, with no group to hide (#16)', () => {
+    for (const [label, data] of [['omitted', unconfigured], ['empty', { ...portfolio, config: { groups: [] } }]]) {
+      const bare = new PortfolioStore(data);
+      const all = bare.supportedMetrics().map((m) => m.MetricID);
+      expect(ids(bare.metricCategories(bare.supportedMetrics())), label).toEqual([['Metrics', all]]);
+      expect(bare.groupNames(), label).toEqual([]);
+      bare.applyProgramParams(new URLSearchParams('hidegroup=Metrics&hidegroup=Other'));
+      expect([bare.visibleMetrics().length, bare.programParams().has('hidegroup')], `${label}: an address hiding a group changes nothing`).toEqual([all.length, false]);
     }
-    expect(ids(store.metricCategories(store.supportedMetrics()))).toEqual(want);
   });
 
   it('16.05: with `groups`, each group holds its metrics in its order, unlisted metrics trail in an Other group, and a hidden group starts hidden (#16)', () => {

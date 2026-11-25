@@ -17,7 +17,8 @@ const catalog = portfolio.metrics;
 /** @type {Array<{ StudyID: string, params: Record<string, string> }>} */
 const studies = portfolio.studies;
 const eligible = catalog.filter((m) => m.Active !== false && m.GroupLevel === 'Site').map((m) => m.MetricID);
-const CONFIG = { groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'], view: 'custom' };
+// The example data's configuration (its metric groups), with every other key moved from its built-in default.
+const CONFIG = { ...readData('config.json'), groupBy: 'phase', heatmap: 'rate', show: ['den', 'trend'], metrics: ['Analysis_kri0003', 'Analysis_kri0004'], view: 'custom' };
 const study = 'STUDY004';
 const studyParams = /** @type {{ params: Record<string, string> }} */ (studies.find((s) => s.StudyID === study)).params;
 
@@ -68,7 +69,7 @@ async function customChips(page) {
 }
 
 test('16.01: with every setting configured away from its built-in default, the portfolio opens on the configured view (#16)', async ({ app, page }) => {
-  // The same view reached through the controls, without configuration.
+  // The same view reached through the controls, under the example data's own configuration.
   await app.openReport('portfolio');
   await control(page, 'select[data-groupby]').selectOption('phase');
   await chooseHeatmap(page, 'rate');
@@ -211,6 +212,7 @@ async function groupsShown(page) {
   const bands = await bandsSeen(page);
   const host = page.locator('#header-controls');
   await host.locator('[data-open="config"]').click();
+  const control = await host.locator('.ctl').filter({ has: page.locator('label', { hasText: /^Groups$/ }) }).count();
   const chips = await Promise.all((await host.locator('button[data-group]').all()).map(async (c) => [(await visibleLines(c)).join(' '), await c.getAttribute('aria-pressed')]));
   const list = [];
   for (const g of await host.locator('.metric-list .mgroup').all()) {
@@ -218,10 +220,10 @@ async function groupsShown(page) {
     list.push([name, await g.locator('input[data-metric]').evaluateAll((els) => els.map((i) => i.getAttribute('data-metric')))]);
   }
   await closeControls(page);
-  return { bands, chips, list };
+  return { bands, control, chips, list };
 }
 
-test('16.05: the table\'s bands and Config\'s group chips and metric list follow the configured groups, a group configured hidden starts hidden, unlisted metrics trail in Other, and without groups the catalog\'s Category groups apply (#16)', async ({ app, page }) => {
+test('16.05: the table\'s bands and Config\'s group chips and metric list follow the configured groups, a group configured hidden starts hidden, unlisted metrics trail in Other, and without groups, or with an empty list, every metric is in one band, Metrics, with no group chips (#16)', async ({ app, page }) => {
   /** @type {any[]} */
   const shown = shownMetrics(portfolio.metrics);
   const abbr = (/** @type {string} */ id) => /** @type {any} */ (catalog.find((m) => m.MetricID === id)).Abbreviation;
@@ -229,23 +231,16 @@ test('16.05: the table\'s bands and Config\'s group chips and metric list follow
   const groups = [{ name: 'Safety first', metrics: [a, b] }, { name: 'Parked', metrics: [c, d], hidden: true }, { name: 'Lone', metrics: [e] }];
   const rest = shown.map((m) => m.MetricID).filter((id) => ![a, b, c, d, e].includes(id));
 
-  await app.openReport('portfolio');
-  /** @type {Array<[string, string[]]>} */
-  const byCategory = [];
-  for (const m of shown) {
-    const last = byCategory.at(-1);
-    if (last && last[0] === m.Category) last[1].push(m.MetricID);
-    else byCategory.push([m.Category, [m.MetricID]]);
+  const all = shown.map((m) => m.MetricID);
+  for (const [label, config] of /** @type {Array<[string, object]>} */ ([['without groups', {}], ['with an empty list', { groups: [] }]])) {
+    await app.openReport('portfolio', configured(config));
+    expect(await groupsShown(page), label).toEqual({ bands: [['Metrics', all.map(abbr)]], control: 0, chips: [], list: [['Metrics', all]] });
   }
-  expect(await groupsShown(page)).toEqual({
-    bands: byCategory.map(([name, ids]) => [name, ids.map(abbr)]),
-    chips: byCategory.map(([name]) => [name, 'true']),
-    list: byCategory,
-  });
 
   await app.openReport('portfolio', configured({ groups }));
   expect(await groupsShown(page)).toEqual({
     bands: [['Safety first', [a, b].map(abbr)], ['Lone', [e].map(abbr)], ['Other', rest.map(abbr)]],
+    control: 1,
     chips: [['Safety first', 'true'], ['Parked', 'false'], ['Lone', 'true'], ['Other', 'true']],
     list: [['Safety first', [a, b]], ['Parked', [c, d]], ['Lone', [e]], ['Other', rest]],
   });

@@ -24,8 +24,8 @@ function rng(seed) {
 const R = rng(53);
 
 // The CTQ Oversight Dashboard metric glossary (gsm.roadmap#53 design
-// artifact): names, numerator/denominator text, display rule, status and
-// category come from the tracker. IDs kri0001–0015 are the released gsm.kri
+// artifact): names, numerator/denominator text, display rule and status come
+// from the tracker. IDs kri0001–0015 are the released gsm.kri
 // catalog; `ctq*` IDs are placeholders for Planned metrics whose workflows
 // are owned by other roadmap Requirements. Every number is simulated.
 //
@@ -34,37 +34,47 @@ const R = rng(53);
 // site populations so the population columns and the metrics reconcile.
 const GLOSSARY = [
   // Disposition
-  { id: 'kri0012', abbr: 'SF', name: 'Screen Failure Rate', cat: 'Disposition', status: 'Released', display: 'pct', pop: 'Screened', num: 'Number of screen failed participants', den: 'Total screened participants', denKey: 'screened', derived: 'sf', base: 0.18, note: 'The tracker also lists a Planned "Screen Failure" divided by all enrolled (open question Q1).' },
-  { id: 'kri0006', abbr: 'SDSC', name: 'Study Discontinuation Rate', cat: 'Disposition', status: 'Released', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants with premature study discontinuation', den: 'All enrolled', denKey: 'enrolled', base: 0.08, req: 61 },
-  { id: 'kri0007', abbr: 'TDSC', name: 'Treatment Discontinuation Rate', cat: 'Disposition', status: 'Released', display: 'count_pct', pop: 'Dosed', num: 'Number of participants with premature treatment discontinuation', den: 'All dosed', denKey: 'dosed', base: 0.11, req: 90, note: 'Tracker: changed-in-dev (denominator moves to all dosed).' },
-  { id: 'kri0007-2', abbr: 'PTDSC', name: 'Premature Treatment Discontinuation Rate', cat: 'Disposition', status: 'Planned', display: 'count_pct', pop: 'Dosed', num: 'Number of participants with premature treatment discontinuation', den: 'All dosed', denKey: 'dosed', base: 0.09 },
-  { id: 'ctq0001', abbr: 'WC', name: 'Withdrawal of Consent', cat: 'Disposition', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants who withdrew consent from the study', den: 'All enrolled', denKey: 'enrolled', base: 0.03, req: 61 },
-  { id: 'ctq0002', abbr: 'LTFU', name: 'Lost to Follow Up', cat: 'Disposition', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants lost to follow-up', den: 'All enrolled', denKey: 'enrolled', base: 0.015, req: 61 },
+  { id: 'kri0012', abbr: 'SF', name: 'Screen Failure Rate', status: 'Released', display: 'pct', pop: 'Screened', num: 'Number of screen failed participants', den: 'Total screened participants', denKey: 'screened', derived: 'sf', base: 0.18, note: 'The tracker also lists a Planned "Screen Failure" divided by all enrolled (open question Q1).' },
+  { id: 'kri0006', abbr: 'SDSC', name: 'Study Discontinuation Rate', status: 'Released', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants with premature study discontinuation', den: 'All enrolled', denKey: 'enrolled', base: 0.08, req: 61 },
+  { id: 'kri0007', abbr: 'TDSC', name: 'Treatment Discontinuation Rate', status: 'Released', display: 'count_pct', pop: 'Dosed', num: 'Number of participants with premature treatment discontinuation', den: 'All dosed', denKey: 'dosed', base: 0.11, req: 90, note: 'Tracker: changed-in-dev (denominator moves to all dosed).' },
+  { id: 'kri0007-2', abbr: 'PTDSC', name: 'Premature Treatment Discontinuation Rate', status: 'Planned', display: 'count_pct', pop: 'Dosed', num: 'Number of participants with premature treatment discontinuation', den: 'All dosed', denKey: 'dosed', base: 0.09 },
+  { id: 'ctq0001', abbr: 'WC', name: 'Withdrawal of Consent', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants who withdrew consent from the study', den: 'All enrolled', denKey: 'enrolled', base: 0.03, req: 61 },
+  { id: 'ctq0002', abbr: 'LTFU', name: 'Lost to Follow Up', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants lost to follow-up', den: 'All enrolled', denKey: 'enrolled', base: 0.015, req: 61 },
   // Early events
-  { id: 'ctq0003', abbr: 'DTH30', name: 'Early Deaths (30 days)', cat: 'Early events', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants who died within 30 days from randomization', den: 'All enrolled', denKey: 'enrolled', derived: 'dth30', base: 0.006, req: 121 },
-  { id: 'kri0015', abbr: 'DTH90', name: 'Early Deaths (90 days)', cat: 'Early events', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants who died within 90 days from randomization', den: 'All enrolled', denKey: 'enrolled', base: 0.018, req: 121 },
-  { id: 'kri0019', abbr: 'IPNS', name: 'IP Non-starters', cat: 'Early events', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of IP non-starters, confirmed or potential outside the window', den: 'All enrolled', denKey: 'enrolled', derived: 'ipns', base: 0.02, req: 56 },
+  { id: 'ctq0003', abbr: 'DTH30', name: 'Early Deaths (30 days)', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants who died within 30 days from randomization', den: 'All enrolled', denKey: 'enrolled', derived: 'dth30', base: 0.006, req: 121 },
+  { id: 'kri0015', abbr: 'DTH90', name: 'Early Deaths (90 days)', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants who died within 90 days from randomization', den: 'All enrolled', denKey: 'enrolled', base: 0.018, req: 121 },
+  { id: 'kri0019', abbr: 'IPNS', name: 'IP Non-starters', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of IP non-starters, confirmed or potential outside the window', den: 'All enrolled', denKey: 'enrolled', derived: 'ipns', base: 0.02, req: 56 },
   // Eligibility & integrity
-  { id: 'kri0014', abbr: 'IE', name: 'Eligibility', cat: 'Eligibility & integrity', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of ineligible participants', den: 'All enrolled', denKey: 'enrolled', base: 0.03, req: 49 },
-  { id: 'strat0001', abbr: 'STRAT', name: 'Stratification', cat: 'Eligibility & integrity', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of confirmed mis-stratified participants', den: 'All enrolled', denKey: 'enrolled', base: 0.02, req: 49 },
-  { id: 'ctq0006', abbr: 'PFSC', name: 'Premature Censoring for PFS', cat: 'Eligibility & integrity', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants at very high risk for premature censoring for PFS', den: 'All enrolled', denKey: 'enrolled', base: 0.025, req: 261 },
+  { id: 'kri0014', abbr: 'IE', name: 'Eligibility', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of ineligible participants', den: 'All enrolled', denKey: 'enrolled', base: 0.03, req: 49 },
+  { id: 'strat0001', abbr: 'STRAT', name: 'Stratification', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of confirmed mis-stratified participants', den: 'All enrolled', denKey: 'enrolled', base: 0.02, req: 49 },
+  { id: 'ctq0006', abbr: 'PFSC', name: 'Premature Censoring for PFS', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants at very high risk for premature censoring for PFS', den: 'All enrolled', denKey: 'enrolled', base: 0.025, req: 261 },
   // Safety & deviations
-  { id: 'kri0001', abbr: 'AE', name: 'AE Reporting Rate', cat: 'Safety & deviations', status: 'New', display: 'per_28d', num: 'Number of AEs reported', den: 'Exposure in days', denKey: 'exposureDays', base: 1.1 / 28 },
-  { id: 'kri0002', abbr: 'SAE', name: 'SAE Reporting Rate', cat: 'Safety & deviations', status: 'New', display: 'per_28d', num: 'Number of SAEs reported', den: 'Exposure in days', denKey: 'exposureDays', base: 0.09 / 28 },
-  { id: 'kri0003', abbr: 'PD', name: 'Non-Important Protocol Deviation Rate', cat: 'Safety & deviations', status: 'New', display: 'per_28d', num: 'Number of non-important PDs', den: 'Exposure in days', denKey: 'exposureDays', base: 0.32 / 28 },
-  { id: 'kri0004', abbr: 'IPD', name: 'Important Protocol Deviation Rate', cat: 'Safety & deviations', status: 'New', display: 'per_28d', num: 'Number of important PDs', den: 'Exposure in days', denKey: 'exposureDays', base: 0.05 / 28 },
-  { id: 'kri0005', abbr: 'LB', name: 'G3+ Lab Abnormality Rate', cat: 'Safety & deviations', status: 'Released', display: 'count_pct', num: 'Number of G3+ abnormal lab samples', den: 'Total # lab samples', denKey: 'labSamples', base: 0.04 },
+  { id: 'kri0001', abbr: 'AE', name: 'AE Reporting Rate', status: 'New', display: 'per_28d', num: 'Number of AEs reported', den: 'Exposure in days', denKey: 'exposureDays', base: 1.1 / 28 },
+  { id: 'kri0002', abbr: 'SAE', name: 'SAE Reporting Rate', status: 'New', display: 'per_28d', num: 'Number of SAEs reported', den: 'Exposure in days', denKey: 'exposureDays', base: 0.09 / 28 },
+  { id: 'kri0003', abbr: 'PD', name: 'Non-Important Protocol Deviation Rate', status: 'New', display: 'per_28d', num: 'Number of non-important PDs', den: 'Exposure in days', denKey: 'exposureDays', base: 0.32 / 28 },
+  { id: 'kri0004', abbr: 'IPD', name: 'Important Protocol Deviation Rate', status: 'New', display: 'per_28d', num: 'Number of important PDs', den: 'Exposure in days', denKey: 'exposureDays', base: 0.05 / 28 },
+  { id: 'kri0005', abbr: 'LB', name: 'G3+ Lab Abnormality Rate', status: 'Released', display: 'count_pct', num: 'Number of G3+ abnormal lab samples', den: 'Total # lab samples', denKey: 'labSamples', base: 0.04 },
   // Data quality
-  { id: 'kri0008', abbr: 'QRY', name: 'Query Rate', cat: 'Data quality', status: 'Released', display: 'pct', num: 'Total # queries', den: 'Total # data points', denKey: 'dataPoints', derived: 'qry', base: 0.06 },
-  { id: 'kri0009', abbr: 'OQRY', name: 'Delayed Query Resolution Rate', cat: 'Data quality', status: 'Released', display: 'pct', num: '# queries ever open > 30 days', den: 'Total # queries', denKey: 'queries', base: 0.09 },
-  { id: 'kri0010', abbr: 'ODAT', name: 'Delayed Data Entry Rate', cat: 'Data quality', status: 'Released', display: 'pct', num: 'Total # data pages entered > 10 days', den: 'Total # data pages', denKey: 'dataPages', base: 0.11 },
-  { id: 'kri0011', abbr: 'CDAT', name: 'Data Change Rate', cat: 'Data quality', status: 'Released', display: 'pct', num: 'Total # data points with > 1 change', den: 'Total # data points', denKey: 'dataPoints', base: 0.03 },
+  { id: 'kri0008', abbr: 'QRY', name: 'Query Rate', status: 'Released', display: 'pct', num: 'Total # queries', den: 'Total # data points', denKey: 'dataPoints', derived: 'qry', base: 0.06 },
+  { id: 'kri0009', abbr: 'OQRY', name: 'Delayed Query Resolution Rate', status: 'Released', display: 'pct', num: '# queries ever open > 30 days', den: 'Total # queries', denKey: 'queries', base: 0.09 },
+  { id: 'kri0010', abbr: 'ODAT', name: 'Delayed Data Entry Rate', status: 'Released', display: 'pct', num: 'Total # data pages entered > 10 days', den: 'Total # data pages', denKey: 'dataPages', base: 0.11 },
+  { id: 'kri0011', abbr: 'CDAT', name: 'Data Change Rate', status: 'Released', display: 'pct', num: 'Total # data points with > 1 change', den: 'Total # data points', denKey: 'dataPoints', base: 0.03 },
   // Not in the CTQ tracker (open question Q7): kept to exercise catalog handling.
-  { id: 'kri0013', abbr: 'PK', name: 'PK Collection Compliance Rate', cat: 'Data quality', display: 'pct', num: 'PK samples collected', den: 'PK samples expected', denKey: 'labSamples', base: 0.06, active: false },
+  { id: 'kri0013', abbr: 'PK', name: 'PK Collection Compliance Rate', display: 'pct', num: 'PK samples collected', den: 'PK samples expected', denKey: 'labSamples', base: 0.06, active: false },
   // One study-level metric (a QTL) to exercise the hold-back path: the
   // dashboard's core input is site-level metrics; other levels are a future release.
-  { id: 'qtl0001', abbr: 'QTL-DC', name: 'Discontinuation QTL', cat: 'Disposition', display: 'pct', num: 'Participants discontinued', den: 'All enrolled', denKey: 'enrolled', base: 0.12, level: 'Study' },
+  { id: 'qtl0001', abbr: 'QTL-DC', name: 'Discontinuation QTL', display: 'pct', num: 'Participants discontinued', den: 'All enrolled', denKey: 'enrolled', base: 0.12, level: 'Study' },
 ];
+
+// The portfolio's metric groups (#16's `groups`), written as the example configuration: the groups shown at the 24 Nov
+// demo, until the stakeholders say which metrics leave Disposition. Moving a metric is a change here, not in code.
+export const EXAMPLE_GROUPS = [
+  ['Disposition', ['kri0012', 'kri0006', 'kri0007', 'kri0007-2', 'ctq0001', 'ctq0002']],
+  ['Early events', ['ctq0003', 'kri0015', 'kri0019']],
+  ['Eligibility & integrity', ['kri0014', 'strat0001', 'ctq0006']],
+  ['Safety & deviations', ['kri0001', 'kri0002', 'kri0003', 'kri0004', 'kri0005']],
+  ['Data quality', ['kri0008', 'kri0009', 'kri0010', 'kri0011']],
+].map(([name, ids]) => ({ name, metrics: ids.map((id) => `Analysis_${id}`) }));
 
 export const METRICS = GLOSSARY.map((g, i) => ({
   MetricID: `Analysis_${g.id}`,
@@ -90,8 +100,6 @@ export const METRICS = GLOSSARY.map((g, i) => ({
   ...(g.req && { RequirementID: g.req }),
   ...(g.note && { Note: g.note }),
   Definition: null, // the tracker's Definition column is empty (open question Q2)
-  // Shared by the study page tile rows and the program table column bands.
-  Category: g.cat,
   ...(DISTRIBUTION_CONFIG[g.id] && { Widget: 'distribution-bar' }),
   ...(g.abbr === 'DTH90' && { ReportLink: 'https://gilead-biostats.github.io/gsm.kri/' }),
   // generator-only; stripped before writing
@@ -372,13 +380,14 @@ export function generatePortfolio() {
   return { manifest, snapshots, summary: buildSummary(manifest, snapshots, cycle), records };
 }
 
-/** Writes the example data (manifest, portfolio summary and one file per study snapshot) into `outDir`, replacing what was there. */
+/** Writes the example data (manifest, portfolio summary, configuration and one file per study snapshot) into `outDir`, replacing what was there. */
 export function writeExampleData(outDir = OUT) {
   const { manifest, snapshots, summary } = generatePortfolio();
   rmSync(outDir, { recursive: true, force: true });
   mkdirSync(outDir, { recursive: true });
   writeFileSync(join(outDir, 'portfolio.json'), JSON.stringify(manifest, null, 1));
   writeFileSync(join(outDir, 'summary.json'), JSON.stringify(summary));
+  writeFileSync(join(outDir, 'config.json'), JSON.stringify({ groups: EXAMPLE_GROUPS }, null, 1));
   for (const snap of snapshots) {
     const dir = join(outDir, 'studies', snap.StudyID);
     mkdirSync(dir, { recursive: true });

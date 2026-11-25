@@ -1,5 +1,5 @@
 state: drill-in-scatter-plot (reports)
-dom: sha256 a99d3ccaedb86b28e3b1e926ca1637101c9d8775cbd117c7468bcb359b3b2fdd (66737 characters)
+dom: sha256 eb25761935608904a31e587264bce854ab3c4bf1506b70db0adc2043fa538a90 (66239 characters)
 tooltip: none
 drill-in: AE · Scatter plot · gsm.viz · scatterPlot · AE: charts 1
   type undefined; labels: 

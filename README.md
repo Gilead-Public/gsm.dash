@@ -176,9 +176,11 @@ portfolio's initial grouping (`groupBy`), heatmap (`heatmap`), cell values (`sho
 hidden metrics (`metrics`, MetricIDs), optional table columns (`columns`: `name`, `enroll`,
 `status`; #21), view (`view`: `overview` or `details`) and metric groups (`groups`: an
 ordered list of `{ "name", "metrics", "hidden" }`, each metric in one group; metrics no group
-lists trail in an "Other" group, a reserved name; without it, the catalog's `Category` groups
-apply; #21's Config chips show or hide each group, and a study report opened from the
-portfolio leaves out the metrics a hidden group hides); every key is optional.
+lists trail in an "Other" group, a reserved name; without it, or with an empty list, every metric sits in one band,
+"Metrics", with no group chips; #21's Config chips show or hide each group, and a study report
+opened from the portfolio leaves out the metrics a hidden group hides); every key is optional.
+Metrics carry no group of their own: the wrapper supplies the default groups, and the example
+data writes its own `config.json` with the groups shown at the 24 Nov demo.
 The Enrolled column shows a study's count against its `ParticipantTarget` parameter when
 the study has one. It travels in the portfolio
 document, so one template serves any configuration. Its values are checked against the

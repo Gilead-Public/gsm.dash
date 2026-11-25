@@ -2,7 +2,7 @@ import { orderMetrics, normalizeMetric, pivotGroups, indexResults } from './norm
 import { selectLatestSnapshots, poolResults, bucketStudies, filterStudies } from './rollup.js';
 import { indexSummary, poolSummary, POPULATIONS } from './summary.js';
 import { nextSort } from './sort.js';
-import { CATEGORY_ORDER, groupAsConfigured, groupByCategory } from './catalog.js';
+import { groupAsConfigured, ungrouped } from './catalog.js';
 import { COLUMN_OPTIONS, GROUP_BY_OPTIONS, HEATMAPS, VIEWS, SHOW_OPTIONS } from '../app/portfolio-controls.js';
 import { readAdmin, writeAdmin } from '../app/admin-settings.js';
 import { POP_COLUMNS } from '../app/portfolio-table.js';
@@ -119,7 +119,6 @@ export class PortfolioStore extends EventTarget {
       collapsed: new Set(), // group-by buckets closed by the user; every group opens by default (#47)
       sort: { key: null, dir: null }, // key: 'label' | 'meta' | a MetricID
       detail: { metricId: null, tab: 'viz-bar' }, // study-page drill-in panel (W4)
-      groupByCategory: false, // study page: the grouped layout, unwired since the 19 Nov design review (#35)
       asOf: null, // view the portfolio as of this date; the study page's visit scrubber drives it
       admin: readAdmin(new URLSearchParams()), // the Admin panel's settings (#46)
       // StudyID marked in the table. Unwired since the 19 Nov 2026 design review (#35): nothing sets it, and the address
@@ -167,14 +166,14 @@ export class PortfolioStore extends EventTarget {
     );
   }
 
-  /** Metrics banded into groups: as configured (#16's `groups`), or by glossary Category in catalog category order. */
+  /** Metrics banded into groups: as configured (#16's `groups`), or all in one. */
   metricCategories(metrics = this.visibleMetrics()) {
-    return this.#defaults.groups ? groupAsConfigured(metrics, this.#defaults.groups) : groupByCategory(metrics, CATEGORY_ORDER);
+    return this.#defaults.groups ? groupAsConfigured(metrics, this.#defaults.groups) : ungrouped(metrics);
   }
 
-  /** Every group's name, in order, whatever is hidden. */
+  /** Every configured group's name, in order, whatever is hidden; none without `groups`, so there is nothing to hide. */
   groupNames() {
-    return this.metricCategories(this.supportedMetrics()).map((g) => g.category);
+    return this.#defaults.groups ? this.metricCategories(this.supportedMetrics()).map((g) => g.category) : [];
   }
 
   #hiddenGroupDefaults() {

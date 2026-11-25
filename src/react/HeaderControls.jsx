@@ -133,19 +133,21 @@ function ConfigPanel({ store }) {
             </div>
           </>
         )}
-        <div className="ctl">
-          <label>Groups</label>
-          <div className="chips">
-            {store.groupNames().map((/** @type {string} */ name) => {
-              const shown = !state.hiddenGroups.has(name);
-              return (
-                <button key={name} type="button" className={`chip ${shown ? 'on' : ''}`} data-group={name} aria-pressed={shown} onClick={() => store.toggleGroupHidden(name)}>
-                  {name}
-                </button>
-              );
-            })}
+        {store.groupNames().length > 0 && (
+          <div className="ctl">
+            <label>Groups</label>
+            <div className="chips">
+              {store.groupNames().map((/** @type {string} */ name) => {
+                const shown = !state.hiddenGroups.has(name);
+                return (
+                  <button key={name} type="button" className={`chip ${shown ? 'on' : ''}`} data-group={name} aria-pressed={shown} onClick={() => store.toggleGroupHidden(name)}>
+                    {name}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <div className="cfg-col" data-sec="metrics">
         <div className="ctl">

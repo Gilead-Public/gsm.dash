@@ -14,8 +14,13 @@ const portfolio = readData('portfolio.json');
 /** @type {StudyEntry[]} */
 const studies = portfolio.studies;
 const catalog = shownMetrics(portfolio.metrics);
-const categories = [...new Set(catalog.map((m) => m.Category ?? 'Other'))];
-const bands = categories.map((category) => ({ category, metrics: catalog.filter((m) => (m.Category ?? 'Other') === category) }));
+/** @type {Array<{ name: string, metrics: string[] }>} */
+const groups = readData('config.json').groups;
+const listed = new Set(groups.flatMap((g) => g.metrics));
+const bands = [
+  ...groups.map((g) => ({ category: g.name, metrics: catalog.filter((m) => g.metrics.includes(m.MetricID)).sort((a, b) => g.metrics.indexOf(a.MetricID) - g.metrics.indexOf(b.MetricID)) })),
+  { category: 'Other', metrics: catalog.filter((m) => !listed.has(m.MetricID)) },
+].filter((b) => b.metrics.length);
 
 /**
  * @typedef {object} ShownTable

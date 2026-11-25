@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { fmtInt, fmtRate, fmtMetric, metricUnit, ndLine, displayRate } from '../src/util/format.js';
-import { groupByCategory, CATEGORY_ORDER, OTHER_CATEGORY } from '../src/data/catalog.js';
+import { configProblems } from '../src/data/portfolio-config.js';
 import { normalizeMetric } from '../src/data/normalize.js';
 import { PortfolioStore } from '../src/data/store.js';
-import { generatePortfolio } from '../scripts/generate-example-data.mjs';
+import { EXAMPLE_GROUPS, generatePortfolio } from '../scripts/generate-example-data.mjs';
 import { stripScale, axisLabel } from '../src/scales/strip.js';
 
 // Glossary display rules (P2): the rule only changes formatting; the rate is
@@ -46,18 +46,14 @@ describe('metric display rules', () => {
   });
 });
 
-describe('groupByCategory', () => {
-  it('orders buckets by the catalog, keeps metric order, and drops empty buckets', () => {
-    const groups = groupByCategory([
-      { id: 1, Category: 'Data quality' },
-      { id: 2, Category: 'Disposition' },
-      { id: 3, Category: 'Mystery' },
-      { id: 4, Category: 'Disposition' },
-      { id: 5 },
-    ]);
-    expect(groups.map((g) => g.category)).toEqual(['Disposition', 'Data quality', OTHER_CATEGORY]);
-    expect(groups[0].metrics.map((m) => m.id)).toEqual([2, 4]);
-    expect(groups[2].metrics.map((m) => m.id)).toEqual([3, 5]);
+describe('the example configuration\'s metric groups', () => {
+  it('is a valid configuration that places every portfolio column, in catalog order, so nothing trails in Other', () => {
+    const portfolio = generatePortfolio();
+    expect(configProblems({ groups: EXAMPLE_GROUPS }, portfolio.manifest.metrics)).toEqual([]);
+    const s = new PortfolioStore({ ...portfolio, config: { groups: EXAMPLE_GROUPS } });
+    const bands = s.metricCategories(s.supportedMetrics());
+    expect(bands.map((g) => g.category)).toEqual(EXAMPLE_GROUPS.map((g) => g.name));
+    expect(bands.flatMap((g) => g.metrics.map((m) => m.MetricID))).toEqual(s.supportedMetrics().map((m) => m.MetricID));
   });
 });
 
@@ -67,10 +63,10 @@ describe('catalog in the example portfolio', () => {
     store = new PortfolioStore(generatePortfolio());
   });
 
-  it('assigns every site-level metric a known category and status', () => {
+  it('assigns every site-level metric a known status, and no metric a group of its own', () => {
     for (const m of store.supportedMetrics()) {
-      expect(CATEGORY_ORDER).toContain(m.Category);
       expect(['Released', 'New', 'Planned']).toContain(m.Status);
+      expect(m).not.toHaveProperty('Category');
     }
   });
 

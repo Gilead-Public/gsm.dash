@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import Ajv from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import { init } from 'es-module-lexer';
-import { writeExampleData } from '../scripts/generate-example-data.mjs';
+import { EXAMPLE_GROUPS, writeExampleData } from '../scripts/generate-example-data.mjs';
 import { assertNoImports, flatten, packagePage, readData, REPORTS } from '../scripts/package-reports.mjs';
 import { inject, PLACEHOLDER } from '../scripts/inject.mjs';
 import { buildStudyDocument } from '../scripts/study-document.mjs';
@@ -255,10 +255,11 @@ describe('the portfolio document', () => {
   });
 
   it('16.01: the portfolio report\'s document is written with the configuration from config.json in the data folder, and without one when there is none (#16)', () => {
-    expect(readData(dir).config).toBeUndefined();
+    expect(readData(dir).config, 'the example data\'s own').toEqual({ groups: EXAMPLE_GROUPS });
     const withConfig = mkdtempSync(join(tmpdir(), 'gsm-dash-config-'));
     try {
       for (const file of ['portfolio.json', 'summary.json']) writeFileSync(join(withConfig, file), readFileSync(join(dir, file)));
+      expect(readData(withConfig).config, 'none').toBeUndefined();
       writeFileSync(join(withConfig, 'config.json'), JSON.stringify({ heatmap: 'rate' }));
       const [[, doc]] = REPORTS.find((r) => r.template === 'portfolio.html').reports(readData(withConfig));
       expect(doc.config).toEqual({ heatmap: 'rate' });

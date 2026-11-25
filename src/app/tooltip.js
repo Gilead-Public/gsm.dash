@@ -90,9 +90,7 @@ export function metricTip(metric, { technical = true } = {}) {
   ].filter(([, v]) => v != null && v !== '');
   return (
     `<b>${esc(metric.Metric)}</b><br>` +
-    `<span class="tip-muted mono">${esc(metric.Abbreviation)}${technical ? ` · ${esc(metric.ID ?? metric.MetricID)}` : ''}${
-      metric.Category ? ` · ${esc(metric.Category)}` : ''
-    }</span>` +
+    `<span class="tip-muted mono">${esc(metric.Abbreviation)}${technical ? ` · ${esc(metric.ID ?? metric.MetricID)}` : ''}</span>` +
     `<dl class="tip-dl">${rows.map(([k, v, raw]) => `<dt>${k}</dt><dd>${raw ? v : esc(v)}</dd>`).join('')}</dl>`
   );
 }
