@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "a69f95b046ee8feb6e5a598da1392fd9a1a913f4b45a1c47613a9b24bb19438e",
+  "hash": "69b80d77431e723bd2cf11a7d705b184d0a417a9c4e81ee031060f35143175d2",
   "issues": [
     {
       "number": 8,
@@ -44,42 +44,42 @@
           "text": "On the fixture, for numerator distributions, `Total` equals the metric's Numerator (per metric × group). This is a gsm.roadmap#617 acceptance check.",
           "sha256": "28c46062dc5b96c66a3bdd21e028b940c89a095172dad224611848732fe90749",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "9.02",
           "text": "On the fixture, for denominator distributions, `Total` equals the metric's Denominator. This is a gsm.roadmap#617 acceptance check.",
           "sha256": "3b2c50e17aca7891902b3ab491faa59704377becc786ce251b38c3ffe0f3c7c6",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "9.03",
           "text": "On the fixture, for single-value variables, the sum of `Count` over categories equals `Total`. This is a gsm.roadmap#617 acceptance check.",
           "sha256": "be8b009fcad351729421e06b11b69c135e271087499f7ebe6e00deaf2d013ceb",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "9.04",
           "text": "In each study's latest snapshot, every site in `results` for a configured metric has distribution rows.",
           "sha256": "cadf993ecf71f1e364f8fbbdf2e3892a070e15bfe132720c21b56df42ff5b927",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "9.05",
           "text": "The generated files validate against the #8 schema.",
           "sha256": "b916b84a0b3fb53e9132fad27a5b69c4b0e21d9cb05fcd7b29e1b616e82b233b",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "9.06",
           "text": "On the fixture (widget 4's interim columns), for each site and window, `window_eligibility`'s counts for that window sum to `death_window`'s count, and for each status they sum over the windows to `eligibility_status`'s count; the same holds for `window_treatment_related` and `treatment_related` (test).",
           "sha256": "ff854dd4779780cd547c9fa99571faa42a9c70a99957897037de3653275505b0",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         }
       ]
     },
@@ -95,77 +95,77 @@
           "text": "The widget renders from the #9 fixture for every configured tracker widget (1, 3–9).",
           "sha256": "e2489b708eb369a019656a258f4a2ff3421435db5de6fffc7709ed314ddb0c22",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.02",
           "text": "Displayed percentages (status sections), counts (reason sections) and hover values (n of N) equal independently summed fixture values (test).",
           "sha256": "b334d39000d2cb68aef95cba37c99f022c331116ed3f49aeddf7e91bf4c864c7",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.03",
           "text": "The site-to-study summing sits in one tested function, so it can be qualified as dashboard logic (gsm.roadmap#625).",
           "sha256": "d3f33887991c31e5beb5b907655fc5aef86628d4f9152a2644393783cdf9840c",
           "kind": "unit",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.04",
           "text": "No user-facing text contains \"Numerator\" or \"Denominator\" (test).",
           "sha256": "a0f13552f8488a0de83d9f703d2b7bbd26ab6d74e8ea727de85d30c07a6db6b7",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.05",
           "text": "There's no total row that repeats the header value.",
           "sha256": "7c6650c30d4db5a07d019b0a725e45b17d7a415ad1e987276651c1f04e51f1ff",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.06",
           "text": "Status colours come from configuration, and the neutral fallback applies when none are given (test).",
           "sha256": "b6a077ef4151e1f3c0b674bb67ed8827e739bdee8a7483c643bd6c8bd163132e",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.07",
           "text": "Sorting, top-N collapsing, \"Not recorded\" placement, the footnotes, and the empty and missing states are tested.",
           "sha256": "f3df7a10bcc0f5528d8769189d395745e34316f406021c4c50c712647f478dd7",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.08",
           "text": "A reviewer compares the rendered widget with the Layout A design, as changed by this issue's Scope, and accepts it (visual comparison).",
           "sha256": "fb7b91e6b66085f8bc7f136ce5a1c33ecfa477d0c42f11eee3ec162e8142b6ed",
           "kind": "visual",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.09",
           "text": "Reason sections' bars show a count, never a percentage; each section's heading reads % or n, and its hover names its population and total (test).",
           "sha256": "af8adde5bcc095a6e3293196f43fa92ec921b5542a4bf4f9793aa2809f126be5",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.10",
           "text": "Each card specified in Scope appears exactly once with its specified breakdown. Widget 5 produces separate IP-status and treatment-disposition cards, in that order; widget 4 produces time-window, eligibility and relatedness cards, in that order (test).",
           "sha256": "a897adad8eb153c751f413b68205042bec62575ab669853eb45ffed66bc4a3eb",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "10.11",
           "text": "The counts on each of widget 4's three cards equal an independent recount of the fixture's simulated death records (`test/qual/distributions.js`), on #9's interim columns (test).",
           "sha256": "d1f7154faf33315a3948b79bf656d6d4b74c05be2b899effd698d73289c4d492",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         }
       ]
     },
@@ -530,28 +530,28 @@
           "text": "Each column toggles and its default applies, and the table is folded under Compact and open under Detailed and Custom (#47) (tests).",
           "sha256": "c8dd2e7bfff17f543265589065f62e8ea4acec52d366ec4b6a47625f4865eb80",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "21.02",
           "text": "n / expected renders when a target exists, and the count alone renders when it doesn't (tests).",
           "sha256": "e19d529f91500f761b81a972d99f4e107c1f746c6d9eda4e3701a691d73924f4",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "21.03",
           "text": "A reviewer compares the table in Compact and Detailed, and Config with its Cell display, group chips, Column grouping and metric checkboxes, with this issue's Scope and accepts them (visual check).",
           "sha256": "3e202c59f53736cb7583eb8bed31825ce88147f92da0d2ae7667981e12846a80",
           "kind": "visual",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "21.04",
           "text": "Each group chip hides and shows its whole band and nothing else; a metric unchecked in Config stays hidden when its group is shown again; a group configured hidden starts hidden; the choice survives a reload and a study report's back link, and Reset restores the configured defaults (test).",
           "sha256": "7bf114d3ade19e1759abb39cca2a45449e3c417ed1b853a018470017f55e09de",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         }
       ]
     },
@@ -655,21 +655,21 @@
           "text": "A reviewer compares both reports' headers, and the portfolio's status line, with this issue's Scope and accepts them (visual check).",
           "sha256": "f6a20cbb83099cfaa57098603caad3a17d50ca882e1f658fadf53be2973ff7a1",
           "kind": "visual",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "24.02",
           "text": "Each report's header shows the logo and the document's title, or \"gsm.dash\" when it has none, with no page tag and no metadata line. The browser tab shows the same title, after the StudyID on a study report (\"STUDY001 · CtQ Dashboard\"). The portfolio's header also holds Filters, with the number of active filters, Config, Reset and Admin, and the study report's header holds Admin. The status line sits below the table and reads as Scope gives it (test).",
           "sha256": "731a4983e8a3f29e618410e63ffba147da2523a8b6ab6a0c6d631e0ef267c612",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         },
         {
           "id": "24.03",
           "text": "Both document schemas accept an optional `title`, a non-blank string of at most 60 characters, and refuse any other value; a document whose `title` fails shows the 27.04 error state (test).",
           "sha256": "ee60578163c233cc92678e9adadefe723e5a13382ce1b6caa7fd79b2a7cc6a84",
           "kind": "e2e",
-          "reviewed": false
+          "reviewed": true
         }
       ]
     },
