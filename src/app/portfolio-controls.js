@@ -10,7 +10,7 @@ export const GROUP_BY_OPTIONS = [
   ['product', 'Product'],
 ];
 /** @type {Record<string, string>} */
-export const FILTER_LABELS = { therapeutic_area: 'Therapeutic area', phase: 'Phase', status: 'Status', study: 'Study' };
+export const FILTER_LABELS = { therapeutic_area: 'Therapeutic area', phase: 'Phase', status: 'Status', product: 'Product', study: 'Study' };
 export const HEATMAPS = [['none', 'None'], ['num', 'Numerator'], ['den', 'Denominator'], ['rate', 'Rate']];
 /** The table's optional columns (#21), under Config's Column grouping (#47). */
 export const COLUMN_OPTIONS = [['name', 'Study name'], ['enroll', 'Enrolled'], ['status', 'Status']];

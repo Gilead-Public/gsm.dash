@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { selectLatestSnapshots, poolResults, flagDistribution, bucketStudies, filterStudies } from '../src/data/rollup.js';
+import { selectLatestSnapshots, poolResults, flagDistribution, bucketStudies, filterStudies, studyValue } from '../src/data/rollup.js';
+import { PortfolioStore } from '../src/data/store.js';
+import { generatePortfolio } from '../scripts/generate-example-data.mjs';
 
 describe('selectLatestSnapshots', () => {
   const studies = [
@@ -78,5 +80,40 @@ describe('filterStudies + bucketStudies', () => {
     const buckets = bucketStudies(studies, 'phase');
     expect(buckets.map((b) => b.value)).toEqual(['P1', 'P3']);
     expect(buckets[1].studies.map((s) => s.StudyID)).toEqual(['B', 'C']);
+  });
+});
+
+describe('a study value that is missing or blank (#22)', () => {
+  const studies = [
+    { StudyID: 'A', params: { product: ' Product A ' } },
+    { StudyID: 'B', params: { product: '' } },
+    { StudyID: 'C', params: { product: '   ' } },
+    { StudyID: 'D', params: { product: null } },
+    { StudyID: 'E', params: {} },
+    { StudyID: 'F', params: { product: 'Product A' } },
+  ];
+
+  it('22.07: is absent, as missing, null, empty or spaces; any other value is trimmed (#22)', () => {
+    expect(studies.map((st) => studyValue(st, 'product'))).toEqual(['Product A', null, null, null, null, 'Product A']);
+    expect(studyValue(studies[0], 'study')).toBe('A');
+  });
+
+  it('22.07: never matches a filter, and groups under (missing) (#22)', () => {
+    expect(filterStudies(studies, { product: new Set(['Product A']) }).map((st) => st.StudyID)).toEqual(['A', 'F']);
+    expect(bucketStudies(studies, 'product').map((b) => [b.value, b.studies.map((st) => st.StudyID)])).toEqual([
+      ['(missing)', ['B', 'C', 'D', 'E']],
+      ['Product A', ['A', 'F']],
+    ]);
+  });
+
+  it('22.07: is no filter choice, so a field absent from every study offers none (#22)', () => {
+    const portfolio = generatePortfolio();
+    const withProducts = (/** @type {(i: number) => unknown} */ value) => {
+      const studiesWith = portfolio.manifest.studies.map((st, i) => ({ ...st, params: { ...st.params, product: value(i) } }));
+      return new PortfolioStore({ ...portfolio, manifest: { ...portfolio.manifest, studies: studiesWith } }).filterOptions().product;
+    };
+    expect(withProducts(() => undefined), 'omitted').toEqual([]);
+    expect(withProducts((i) => (i % 2 ? '' : '  ')), 'blank').toEqual([]);
+    expect(withProducts((i) => (i < 3 ? ` P${i} ` : i < 6 ? null : '')), 'partly blank').toEqual(['P0', 'P1', 'P2']);
   });
 });

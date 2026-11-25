@@ -231,6 +231,75 @@ test.describe('portfolio view numbers', () => {
   });
 });
 
+test('22.06: the Product filter, alone and with the phase and study filters, limits the table to the selected products\' studies that pass the other filters, its totals pool exactly those studies, and the selection survives a reload and a study report\'s back link until Clear filters or Reset (#22)', async ({ app, page }) => {
+  test.setTimeout(240_000);
+  const byProduct = [...studiesBy(studies, 'product')].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+  const [[first, firstStudies], [second, secondStudies]] = byProduct;
+  expect(firstStudies.length, 'the largest product has more than one study').toBeGreaterThan(1);
+  const selected = [...firstStudies, ...secondStudies].sort((a, b) => a.StudyID.localeCompare(b.StudyID));
+  const phase = firstStudies[0].params.phase;
+  const outside = studies.find((s) => s.params.product !== first && s.params.product !== second);
+  expect(outside, 'a study of another product').toBeDefined();
+  /** @type {Array<[string, StudyEntry[], (() => Promise<void>) | null]>} */
+  const cases = [
+    ['alone', selected, null],
+    ['with a phase filter', selected.filter((s) => s.params.phase === phase), () => control(page, `button[data-filter="phase"][data-value="${phase}"]`).click()],
+    ['with the study filter', [firstStudies[0]], async () => {
+      for (const id of [firstStudies[0].StudyID, /** @type {StudyEntry} */ (outside).StudyID]) await control(page, `input[data-filter="study"][data-value="${id}"]`).check();
+    }],
+  ];
+  const pick = async () => {
+    for (const product of [first, second]) await control(page, `button[data-filter="product"][data-value="${product}"]`).click();
+  };
+  for (const [what, members, also] of cases) {
+    await openEnrolled(app, page);
+    await pick();
+    if (also) await also();
+    const ids = members.map((s) => s.StudyID).sort();
+    await expect(page.locator('.portfolio-table tr.study'), what).toHaveCount(members.length);
+    let table = await shownTable(page);
+    expect(table.rows.map((r) => [r.kind, r.label]), `${what}: ungrouped rows`).toEqual([['total', 'Portfolio total'], ...ids.map((id) => ['study', id])]);
+    await expectRow(page, table, 'Portfolio total', members);
+
+    const groups = studiesBy(members, 'product');
+    const labels = [...groups.keys()].sort((a, b) => a.localeCompare(b));
+    const inGroup = (/** @type {string} */ label) => /** @type {StudyEntry[]} */ (groups.get(label));
+    const open = labels[0];
+    await control(page, 'select[data-groupby]').selectOption('product');
+    await openOnly(page, open);
+    await expect(page.locator('.portfolio-table tr.study'), what).toHaveCount(inGroup(open).length);
+    table = await shownTable(page);
+    expect(table.rows.map((r) => [r.kind, r.label]), `${what}: grouped rows, ${open} open`).toEqual([
+      ['total', 'Portfolio total'],
+      ...labels.flatMap((l) => [['bucket', l], ...(l === open ? inGroup(l).map((s) => ['study', s.StudyID]) : [])]),
+    ]);
+    await expectRow(page, table, 'Portfolio total', members);
+    for (const label of labels) {
+      expect(table.rows.find((r) => r.kind === 'bucket' && r.label === label)?.count, `${what}: ${label}`).toBe(String(inGroup(label).length));
+      await expectRow(page, table, label, inGroup(label));
+    }
+  }
+
+  await openEnrolled(app, page);
+  await pick();
+  const rows = () => page.locator('.portfolio-table tr.study').evaluateAll((trs) => trs.map((tr) => tr.querySelector('a[data-study]')?.getAttribute('data-study')));
+  const want = selected.map((s) => s.StudyID).sort();
+  expect(await rows(), 'selected').toEqual(want);
+  await page.reload();
+  await page.locator('#app > .layout').waitFor();
+  expect(await rows(), 'after a reload').toEqual(want);
+  await page.locator(`#app .portfolio-table a[data-study="${want[0]}"]`).first().click();
+  await page.locator(`#app > [data-study="${want[0]}"] .card`).first().waitFor();
+  await page.locator('#app a.back').click();
+  await page.locator('#app > .layout').waitFor();
+  expect(await rows(), 'after a study report and its back link').toEqual(want);
+  await control(page, '[data-clear]').click();
+  expect(await rows(), 'after Clear filters').toHaveLength(studies.length);
+  await pick();
+  await control(page, '[data-reset]').click();
+  expect([(await rows()).length, new URL(page.url()).hash.includes('filter.product')], 'after Reset').toEqual([studies.length, false]);
+});
+
 test('the portfolio sits in the app shell: brand, inside the page margins', async ({ app, page }) => {
   await app.open();
   const header = page.locator('header.app');

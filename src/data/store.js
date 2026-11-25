@@ -1,5 +1,5 @@
 import { orderMetrics, normalizeMetric, pivotGroups, indexResults } from './normalize.js';
-import { selectLatestSnapshots, poolResults, bucketStudies, filterStudies } from './rollup.js';
+import { selectLatestSnapshots, poolResults, bucketStudies, filterStudies, studyValue } from './rollup.js';
 import { indexSummary, poolSummary, POPULATIONS } from './summary.js';
 import { nextSort } from './sort.js';
 import { groupAsConfigured, ungrouped } from './catalog.js';
@@ -113,7 +113,7 @@ export class PortfolioStore extends EventTarget {
       view: this.#defaults.view, // the Cell display (#47): 'compact' (headline tiles) | 'detailed' (as defined) | 'custom' (`show` and the heatmap)
       heatmap: this.#defaults.heatmap, // 'none' | 'num' | 'den' | 'rate'; applies under Custom only (activeHeatmap)
       groupBy: this.#defaults.groupBy, // 'none' (one row per study) | a study param
-      filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set(), study: new Set() },
+      filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set(), product: new Set(), study: new Set() },
       hiddenMetrics: new Set(this.#defaults.metrics), // MetricIDs the user has switched off
       hiddenGroups: new Set(this.#hiddenGroupDefaults()), // metric groups whose band is hidden (#21), independent of hiddenMetrics
       collapsed: new Set(), // group-by buckets closed by the user; every group opens by default (#47)
@@ -338,12 +338,12 @@ export class PortfolioStore extends EventTarget {
     this.#emit();
   }
 
-  /** Distinct values per filterable param, for building filter controls. */
+  /** Distinct values per filterable param, for building filter controls; a missing or blank value is no choice. */
   filterOptions() {
     const out = {};
     for (const param of Object.keys(this.state.filters)) {
-      const values = this.studies.map((s) => String(param === 'study' ? s.StudyID : s.params?.[param]));
-      out[param] = [...new Set(values.filter((v) => v !== 'undefined'))].sort();
+      const values = this.studies.map((s) => studyValue(s, param));
+      out[param] = [...new Set(values.filter((v) => v !== null))].sort();
     }
     return out;
   }

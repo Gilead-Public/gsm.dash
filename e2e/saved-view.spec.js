@@ -1,7 +1,7 @@
 // @ts-check
 // The portfolio's view saved in the browser as a backup of its address: restored silently when a report opens with no
 // view in its address, kept per reports folder, without the Admin settings. Regression tests, untraced.
-import { expect, test } from './fixtures/app.js';
+import { expect, readData, test } from './fixtures/app.js';
 import { chooseAdmin, control } from './fixtures/controls.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
@@ -41,6 +41,16 @@ test('a portfolio opened with no view in its address restores the last view, wit
   expect([address(page).getAll('filter.phase'), address(page).get('group')]).toEqual([[], 'phase']);
   await reopen(page, app);
   expect([address(page).getAll('filter.phase'), address(page).get('group')], 'the address\'s view is now the saved one').toEqual([[], 'phase']);
+});
+
+test('a saved view restores a Product filter selection', async ({ app, page }) => {
+  /** @type {string} */
+  const product = readData('portfolio.json').studies[0].params.product;
+  await app.open();
+  await control(page, `button[data-filter="product"][data-value="${product}"]`).click();
+  await reopen(page, app);
+  expect(address(page).getAll('filter.product')).toEqual([product]);
+  await expect(page.locator('.portfolio-table tr.study').first()).toBeVisible();
 });
 
 test('a study report opened with no view in its address applies the saved view\'s hidden metrics, and its back link carries the view', async ({ app, page }) => {

@@ -131,6 +131,8 @@ header.app h1 { font-family: "Archivo", "Segoe UI", system-ui, sans-serif; font-
 .fchip::after, .hbtn[data-open="config"]::after { content: "▾"; font-size: 10px; opacity: 0.7; }
 .filter-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
 .filter-bar[hidden] { display: none; }
+/* Group rows by arranges the rows the filters choose; it sits after them, apart, and isn't a filter (#22). */
+.fbar-group { display: inline-flex; align-items: center; gap: 6px; margin-left: 4px; padding-left: 10px; border-left: 1px solid var(--line-2); font-size: 12px; color: var(--ink-2); white-space: nowrap; }
 .fchip { display: inline-flex; align-items: center; gap: 5px; }
 .fchip[aria-expanded="true"] { border-color: var(--accent); color: var(--accent); }
 .popwrap { position: relative; }
@@ -159,6 +161,8 @@ header.app h1 { font-family: "Archivo", "Segoe UI", system-ui, sans-serif; font-
 .heat-scale .hot3 { background: var(--ramp3); }
 .heat-scale .hot4 { background: var(--ramp4); }
 .cfg-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+/* Config's two sections, named for what they change (#47). */
+.cfg-sec { margin: 0; padding-bottom: 6px; border-bottom: 1px solid var(--line); font: 700 15px "Archivo", sans-serif; color: var(--ink); }
 .cfg-col .seg { display: flex; }
 .cfg-col .seg button { flex: 1; padding-left: 5px; padding-right: 5px; font-size: 12px; white-space: nowrap; }
 .view-toggle { align-self: flex-start; }
@@ -491,6 +495,7 @@ tr.study.sel td.grp { box-shadow: inset 4px 0 0 var(--accent), inset 0 1.5px 0 v
 .chip .cnt { margin-left: 5px; font-size: 12px; opacity: 0.7; }
 .mgroup { margin-bottom: 6px; }
 .mgroup-head { display: flex; align-items: baseline; gap: 8px; font-size: 12px; font-weight: 700; color: var(--ink); margin: 6px 0 2px; }
+.mgroup-toggle { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
 .mgroup-head .cnt { margin-left: auto; font: 400 12px "IBM Plex Mono", monospace; color: var(--ink-3); }
 .metric-opt { grid-template-columns: auto 44px 1fr; }
 

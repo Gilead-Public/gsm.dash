@@ -69,13 +69,26 @@ function withShare(d) {
 }
 
 /**
+ * A study's value for one param (`study` is its StudyID), trimmed, or null when it's missing or blank. Filters, their
+ * choices and Group rows by all read values through it, so a blank value is never a choice and never matches.
+ * @param {{ StudyID: string, params?: Record<string, unknown> }} study
+ * @param {string} param
+ * @returns {string | null}
+ */
+export function studyValue(study, param) {
+  const raw = param === 'study' ? study.StudyID : study.params?.[param];
+  const text = raw == null ? '' : String(raw).trim();
+  return text || null;
+}
+
+/**
  * Group filtered studies into buckets by one study param, preserving a stable
  * sorted order. Returns [{value, studies}] plus the full set as `all`.
  */
 export function bucketStudies(studies, param) {
   const buckets = new Map();
   for (const study of studies) {
-    const value = study.params?.[param] ?? '(missing)';
+    const value = studyValue(study, param) ?? '(missing)';
     if (!buckets.has(value)) buckets.set(value, []);
     buckets.get(value).push(study);
   }
@@ -88,7 +101,7 @@ export function bucketStudies(studies, param) {
 export function filterStudies(studies, filters) {
   return studies.filter((study) =>
     Object.entries(filters).every(
-      ([param, values]) => values.size === 0 || values.has(String(param === 'study' ? study.StudyID : study.params?.[param]))
+      ([param, values]) => values.size === 0 || values.has(studyValue(study, param))
     )
   );
 }

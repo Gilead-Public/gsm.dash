@@ -204,26 +204,25 @@ async function bandsSeen(page) {
 }
 
 /**
- * What the page shows of the groups, as a user reads them: the bands, Config's chips (with whether each is on) and
- * Config's metric list by group.
+ * What the page shows of the groups, as a user reads them: the bands, Config's group checkboxes (with whether each is
+ * ticked) and Config's metric list by group.
  * @param {Page} page
  */
 async function groupsShown(page) {
   const bands = await bandsSeen(page);
   const host = page.locator('#header-controls');
   await host.locator('[data-open="config"]').click();
-  const control = await host.locator('.ctl').filter({ has: page.locator('label', { hasText: /^Groups$/ }) }).count();
-  const chips = await Promise.all((await host.locator('button[data-group]').all()).map(async (c) => [(await visibleLines(c)).join(' '), await c.getAttribute('aria-pressed')]));
+  const checkboxes = await host.locator('input[data-group]').evaluateAll((els) => els.map((i) => [i.getAttribute('data-group'), String(/** @type {HTMLInputElement} */ (i).checked)]));
   const list = [];
   for (const g of await host.locator('.metric-list .mgroup').all()) {
     const [name] = await visibleLines(g.locator('.mgroup-head'));
     list.push([name, await g.locator('input[data-metric]').evaluateAll((els) => els.map((i) => i.getAttribute('data-metric')))]);
   }
   await closeControls(page);
-  return { bands, control, chips, list };
+  return { bands, checkboxes, list };
 }
 
-test('16.05: the table\'s bands and Config\'s group chips and metric list follow the configured groups, a group configured hidden starts hidden, unlisted metrics trail in Other, and without groups, or with an empty list, every metric is in one band, Metrics, with no group chips (#16)', async ({ app, page }) => {
+test('16.05: the table\'s bands and Config\'s group checkboxes and metric list follow the configured groups, a group configured hidden starts hidden, unlisted metrics trail in Other, and without groups, or with an empty list, every metric is in one band, Metrics, with no group checkboxes (#16)', async ({ app, page }) => {
   /** @type {any[]} */
   const shown = shownMetrics(portfolio.metrics);
   const abbr = (/** @type {string} */ id) => /** @type {any} */ (catalog.find((m) => m.MetricID === id)).Abbreviation;
@@ -234,14 +233,13 @@ test('16.05: the table\'s bands and Config\'s group chips and metric list follow
   const all = shown.map((m) => m.MetricID);
   for (const [label, config] of /** @type {Array<[string, object]>} */ ([['without groups', {}], ['with an empty list', { groups: [] }]])) {
     await app.openReport('portfolio', configured(config));
-    expect(await groupsShown(page), label).toEqual({ bands: [['Metrics', all.map(abbr)]], control: 0, chips: [], list: [['Metrics', all]] });
+    expect(await groupsShown(page), label).toEqual({ bands: [['Metrics', all.map(abbr)]], checkboxes: [], list: [['Metrics', all]] });
   }
 
   await app.openReport('portfolio', configured({ groups }));
   expect(await groupsShown(page)).toEqual({
     bands: [['Safety first', [a, b].map(abbr)], ['Lone', [e].map(abbr)], ['Other', rest.map(abbr)]],
-    control: 1,
-    chips: [['Safety first', 'true'], ['Parked', 'false'], ['Lone', 'true'], ['Other', 'true']],
+    checkboxes: [['Safety first', 'true'], ['Parked', 'false'], ['Lone', 'true'], ['Other', 'true']],
     list: [['Safety first', [a, b]], ['Parked', [c, d]], ['Lone', [e]], ['Other', rest]],
   });
 });

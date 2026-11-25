@@ -150,7 +150,7 @@ test.describe('table columns and view', () => {
     expect(await seenText(page.locator('tbody tr.total td.pop').first())).toBe(countText(total));
   });
 
-  test('21.03: the table in Compact and Detailed, and Config with its Cell display, group chips, Column grouping and metric checkboxes, for visual comparison (#21)', async ({ app, page, evidence }) => {
+  test('21.03: the table in Compact and Detailed, and Config with its Cell display, group checkboxes, Study columns and metric checkboxes, for visual comparison (#21)', async ({ app, page, evidence }) => {
     await app.open();
     expect(await shownView(page)).toBe('folded');
     await evidence.shot(page, 'Compact');
@@ -163,7 +163,7 @@ test.describe('table columns and view', () => {
   });
 });
 
-test('21.04: each group chip hides and shows its whole band and nothing else, a metric unchecked in Config stays hidden when its group is shown again, a group configured hidden starts hidden, and the choice survives a reload and a study report\'s back link until Reset restores the configured defaults (#21)', async ({ app, page }) => {
+test('21.04: each group\'s checkbox hides and shows its whole band and nothing else, a metric unchecked in Config stays hidden when its group is shown again, a group configured hidden starts hidden, and the choice survives a reload and a study report\'s back link until Reset restores the configured defaults (#21)', async ({ app, page }) => {
   /** @type {any[]} */
   const catalog = readData('portfolio.json').metrics;
   const shown = shownMetrics(catalog);
@@ -182,18 +182,19 @@ test('21.04: each group chip hides and shows its whole band and nothing else, a 
   const abbr = (/** @type {string} */ id) => /** @type {any} */ (catalog.find((m) => m.MetricID === id)).Abbreviation;
   const band = (/** @type {string} */ name, /** @type {string[]} */ list) => [name, list.map(abbr)];
   const rest = ids.slice(12);
-  const chip = (/** @type {string} */ name) => control(page, `button[data-group="${name}"]`);
+  const chip = (/** @type {string} */ name) => control(page, `input[data-group="${name}"]`);
+  const ticked = (/** @type {string} */ name) => chip(name).locator.isChecked();
 
   expect(await bands(), 'Beta configured hidden').toEqual([band('Alpha', ids.slice(0, 4)), band('Gamma', ids.slice(8, 12)), band('Other', rest)]);
-  expect(await chip('Beta').getAttribute('aria-pressed')).toBe('false');
+  expect(await ticked('Beta')).toBe(false);
   await page.locator('#header-controls [data-open="config"]').click();
-  const chipsSeen = await Promise.all((await page.locator('#header-controls button[data-group]').all()).map((c) => visibleLines(c).then((l) => l.join(' '))));
-  expect(chipsSeen, 'the group chips, readable').toEqual(['Alpha', 'Beta', 'Gamma', 'Other']);
+  const chipsSeen = await Promise.all((await page.locator('#header-controls .mgroup-toggle').all()).map((c) => visibleLines(c).then((l) => l.join(' '))));
+  expect(chipsSeen, 'the group checkboxes, readable').toEqual(['Alpha', 'Beta', 'Gamma', 'Other']);
   await page.keyboard.press('Escape');
 
   await chip('Gamma').click();
   expect(await bands(), 'Gamma hidden: only its band goes').toEqual([band('Alpha', ids.slice(0, 4)), band('Other', rest)]);
-  expect(await chip('Gamma').getAttribute('aria-pressed')).toBe('false');
+  expect(await ticked('Gamma')).toBe(false);
   await control(page, `input[data-metric="${ids[9]}"]`).uncheck();
   await chip('Gamma').click();
   expect(await bands(), 'Gamma shown again, without the metric unchecked').toEqual([band('Alpha', ids.slice(0, 4)), band('Gamma', [ids[8], ids[10], ids[11]]), band('Other', rest)]);
@@ -215,5 +216,5 @@ test('21.04: each group chip hides and shows its whole band and nothing else, a 
 
   await page.locator('#header-controls [data-reset]').click();
   expect(await bands(), 'after Reset').toEqual([band('Alpha', ids.slice(0, 4)), band('Gamma', ids.slice(8, 12)), band('Other', rest)]);
-  expect(await chip('Beta').getAttribute('aria-pressed')).toBe('false');
+  expect(await ticked('Beta')).toBe(false);
 });

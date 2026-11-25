@@ -71,10 +71,13 @@ To share a build for feedback without releasing it: every CI run that passes als
   document (gsm.viz inlined into study reports). Hovering a metric's header
   shows its definition from `Reporting_Metrics` (#20). The portfolio's
   controls sit in its header (#22, #24): **Filters**, a chip bar collapsed on
-  load with the study filter first; **Config**, with Group rows by, the Cell
-  display (Compact, Detailed, or Custom with its cell contents and heatmap;
-  #47), the metric groups, the optional columns under Column grouping (study
-  name, **Enrolled**, on by default, Status; #21) and each metric's checkbox; **Reset**; and
+  load (Study, Product, Therapeutic area, Phase, Status; a field no study has a
+  value for gets no chip, and a blank value is no value), then Group rows by;
+  **Config**, by what it changes: Cells (the Cell display: Compact, Detailed,
+  or Custom with its cell contents and heatmap; #47) and Columns (Study
+  columns: study name, **Enrolled**, on by default, Status, #21; and the
+  metrics, each configured group's heading with a checkbox for its band);
+  **Reset**; and
   **Admin**, a demo tool for the theme, the study grid's cards per row, Config
   as a popover or side panel, and a heatmap legend (#46). Enrolled, the
   Population band's one column, is the summary's `ParticipantCount`, summed
@@ -176,9 +179,10 @@ portfolio's initial grouping (`groupBy`), heatmap (`heatmap`), cell values (`sho
 hidden metrics (`metrics`, MetricIDs), optional table columns (`columns`: `name`, `enroll`,
 `status`; #21), view (`view`: `overview` or `details`) and metric groups (`groups`: an
 ordered list of `{ "name", "metrics", "hidden" }`, each metric in one group; metrics no group
-lists trail in an "Other" group, a reserved name; without it, or with an empty list, every metric sits in one band,
-"Metrics", with no group chips; #21's Config chips show or hide each group, and a study report
-opened from the portfolio leaves out the metrics a hidden group hides); every key is optional.
+lists trail in an "Other" group, a reserved name; without it, or with an empty list, every metric
+sits in one band, "Metrics", with no group checkboxes; #21's group checkboxes in Config show or
+hide each band, and a study report opened from the portfolio leaves out the metrics a hidden
+group hides); every key is optional.
 Metrics carry no group of their own: the wrapper supplies the default groups, and the example
 data writes its own `config.json` with the groups shown at the 24 Nov demo.
 The Enrolled column shows a study's count against its `ParticipantTarget` parameter when

@@ -114,6 +114,8 @@ const TAS = ['Cardiology', 'Immunology', 'Neurology', 'Oncology', 'Virology'];
 const INDICATIONS = ['Dermatology', 'Hematology', 'Respiratory', 'Solid Tumors'];
 const PHASES = ['P1', 'P2', 'P3'];
 const STATUSES = ['Active', 'Completed', 'Enrolling'];
+// A product is a programme of studies in one therapeutic area; Cardiology runs two.
+const PRODUCTS = { Cardiology: ['Product D', 'Product E'], Immunology: ['Product F'], Neurology: ['Product C'], Oncology: ['Product B'], Virology: ['Product A'] };
 const NICKNAMES = ['ATLAS', 'BEACON', 'COBALT', 'DELTA', 'EMBER', 'FALCON', 'GRANITE', 'HARBOR', 'IRIS', 'JUNIPER', 'KESTREL', 'LUMEN'];
 
 function pick(arr) {
@@ -127,15 +129,17 @@ export function generateStudies(n = 12) {
     const nSnaps = R() < 0.25 ? SNAPSHOT_DATES.length - 1 : SNAPSHOT_DATES.length;
     const nSites = 8 + Math.floor(R() * 12);
     const sites = Array.from({ length: nSites }, (_, s) => `SITE${String(i * 100 + s + 1).padStart(4, '0')}`);
+    const nickname = `${NICKNAMES[i]}-${1 + Math.floor(R() * 3)}`; // Mapped_STUDY carries a protocol nickname
+    const therapeuticArea = pick(TAS);
     return {
       StudyID,
       params: {
-        nickname: `${NICKNAMES[i]}-${1 + Math.floor(R() * 3)}`, // Mapped_STUDY carries a protocol nickname
-        therapeutic_area: pick(TAS),
+        nickname,
+        therapeutic_area: therapeuticArea,
         protocol_indication: pick(INDICATIONS),
         phase: pick(PHASES),
         status: pick(STATUSES),
-        product: `Product ${'ABCDEFGHIJKL'[i]}`,
+        product: PRODUCTS[therapeuticArea][i % PRODUCTS[therapeuticArea].length],
       },
       snapshots: SNAPSHOT_DATES.slice(SNAPSHOT_DATES.length - nSnaps),
       sites,

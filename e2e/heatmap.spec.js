@@ -108,7 +108,7 @@ for (const [configuration, config] of /** @type {const} */ ([['the built-in defa
           return { kind, selector: `[data-filter="${kind}"][data-value="${e.getAttribute('data-value')}"]` };
         }),
       );
-    expect([...new Set(filters.map((f) => f.kind))].sort(), 'every kind of filter').toEqual(['phase', 'status', 'study', 'therapeutic_area']);
+    expect([...new Set(filters.map((f) => f.kind))].sort(), 'every kind of filter').toEqual(['phase', 'product', 'status', 'study', 'therapeutic_area']);
     for (const { selector: filter } of filters) {
       await control(page, filter).click();
       await expectKept(`${filter} changed`);
@@ -154,7 +154,7 @@ test('23.03: the Controls panel offers no heatmap colour choice (#23)', async ({
     await page.locator('#header-controls [data-open="config"]').click();
     const box = page.locator('#header-controls [data-pop="config"]');
     const labels = await box.locator('.ctl > label').allTextContents();
-    expect(labels, `heatmap ${heatmap}: the Config controls`).toEqual(['Group rows by', 'Cell display', 'Show in each cell', 'Heatmap (also drives column sort)', 'Groups', 'Column grouping', 'Metrics']);
+    expect(labels, `heatmap ${heatmap}: the Config controls`).toEqual(['Cell display', 'Show in each cell', 'Heatmap (also drives column sort)', 'Study columns', 'Metrics']);
     expect(await box.innerText(), `heatmap ${heatmap}: the panel's text`).not.toMatch(/colou?r|palette|\b(blue|teal|purple|gr[ae]y)\b/i);
     await expect(control(page, '[data-seg="ramp"], [data-ramp]').locator, `heatmap ${heatmap}: old markup`).toHaveCount(0);
     await expect(page.locator('[data-ramp]'), `heatmap ${heatmap}: no palette on the page`).toHaveCount(0);

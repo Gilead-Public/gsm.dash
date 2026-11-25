@@ -6,7 +6,7 @@ import { AdminMenu } from './AdminPanel.jsx';
 import { useDismiss } from './parts.jsx';
 
 /** The study filter comes first (#22). */
-const FILTER_ORDER = ['study', 'therapeutic_area', 'phase', 'status'];
+const FILTER_ORDER = ['study', 'product', 'therapeutic_area', 'phase', 'status'];
 
 /**
  * The side panel is modal (#46): while it's open, focus moves into it and Tab stays inside it, and when it closes,
@@ -78,26 +78,19 @@ function FilterChoices({ store, param, values }) {
 }
 
 /**
- * Config (#47): on the left, Group rows by, the Cell display with Custom's own choices under it, and a chip per metric
- * group showing or hiding its band; on the right, the optional columns and which metrics are shown.
+ * Config (#47), by what it changes: on the left the cells, the Cell display with Custom's own choices under it; on the
+ * right the columns, the optional study columns (#21) and the metrics, each configured group's heading carrying a
+ * checkbox that shows or hides its band.
  * @param {{ store: any }} props
  */
 function ConfigPanel({ store }) {
   const { state } = store;
   const supported = store.supportedMetrics();
+  const toggleable = new Set(store.groupNames());
   return (
     <>
-      <div className="cfg-col" data-sec="config">
-        <div className="ctl">
-          <label>Group rows by</label>
-          <select data-groupby="" value={state.groupBy} onChange={(e) => store.set('groupBy', e.target.value)}>
-            {GROUP_BY_OPTIONS.map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className="cfg-col" data-sec="cells">
+        <h3 className="cfg-sec">Cells</h3>
         <div className="ctl">
           <label>Cell display</label>
           <div className="seg" role="group" aria-label="Cell display">
@@ -133,25 +126,11 @@ function ConfigPanel({ store }) {
             </div>
           </>
         )}
-        {store.groupNames().length > 0 && (
-          <div className="ctl">
-            <label>Groups</label>
-            <div className="chips">
-              {store.groupNames().map((/** @type {string} */ name) => {
-                const shown = !state.hiddenGroups.has(name);
-                return (
-                  <button key={name} type="button" className={`chip ${shown ? 'on' : ''}`} data-group={name} aria-pressed={shown} onClick={() => store.toggleGroupHidden(name)}>
-                    {name}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
       </div>
-      <div className="cfg-col" data-sec="metrics">
+      <div className="cfg-col" data-sec="columns">
+        <h3 className="cfg-sec">Columns</h3>
         <div className="ctl">
-          <label>Column grouping</label>
+          <label>Study columns</label>
           <div className="chips">
             {COLUMN_OPTIONS.map(([k, label]) => (
               <button key={k} type="button" className={`chip ${state.columns.has(k) ? 'on' : ''}`} data-column={k} aria-pressed={state.columns.has(k)} onClick={() => store.toggleColumn(k)}>
@@ -169,7 +148,14 @@ function ConfigPanel({ store }) {
             return (
               <div key={g.category} className="mgroup">
                 <div className="mgroup-head">
-                  <span>{g.category}</span>
+                  {toggleable.has(g.category) ? (
+                    <label className="mgroup-toggle">
+                      <input type="checkbox" data-group={g.category} checked={!state.hiddenGroups.has(g.category)} onChange={() => store.toggleGroupHidden(g.category)} />
+                      <span>{g.category}</span>
+                    </label>
+                  ) : (
+                    <span>{g.category}</span>
+                  )}
                   <span className="cnt">
                     {on}/{g.metrics.length}
                   </span>
@@ -192,7 +178,7 @@ function ConfigPanel({ store }) {
 
 /**
  * The portfolio's controls in the page header (#22, #24): Filters, collapsed whenever the report opens, then Config and
- * Reset. Opened, Filters shows a chip per filter, each opening its choices. One popover is open at a time; a click
+ * Reset. Opened, Filters shows a chip per filter that has choices, each opening them, then Group rows by. One popover is open at a time; a click
  * elsewhere or Escape closes it. Every control stays in the page while hidden, so the view's state is all there.
  * @param {{ store: any }} props
  */
@@ -212,7 +198,7 @@ function Controls({ store }) {
   return (
     <div className="hctl" ref={ref}>
       <div className="filter-bar" role="group" aria-label="Filters" hidden={!filtersShown}>
-        {FILTER_ORDER.map((param) => {
+        {FILTER_ORDER.filter((param) => options[param].length > 0).map((param) => {
           const n = state.filters[param].size;
           const name = `filter:${param}`;
           return (
@@ -232,6 +218,16 @@ function Controls({ store }) {
             Clear filters
           </button>
         )}
+        <label className="fbar-group">
+          Group rows by
+          <select data-groupby="" value={state.groupBy} onChange={(e) => store.set('groupBy', e.target.value)}>
+            {GROUP_BY_OPTIONS.map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
       <button
         type="button"

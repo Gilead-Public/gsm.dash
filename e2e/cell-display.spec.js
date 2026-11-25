@@ -18,17 +18,22 @@ const TABLE = '.portfolio-table table.po';
 const address = (page) => new URL(page.url()).hash;
 
 /**
- * Config's two columns as their labels read, and whether the left one sits left of the right.
+ * Config's two sections as they read, each heading then its controls' labels; whether the left one sits left of the
+ * right; and whether Config holds a Group rows by control.
  * @param {Page} page
  */
 async function configColumns(page) {
   await page.locator('#header-controls [data-open="config"]').click();
   const pop = page.locator('#header-controls [data-pop="config"]');
-  const left = await pop.locator('[data-sec="config"] > .ctl > label').allTextContents();
-  const right = await pop.locator('[data-sec="metrics"] > .ctl > label').allTextContents();
-  const [l, r] = await Promise.all(['[data-sec="config"]', '[data-sec="metrics"]'].map((s) => pop.locator(s).boundingBox()));
+  const read = async (/** @type {string} */ sec) => [
+    (await pop.locator(`[data-sec="${sec}"] > .cfg-sec`).textContent())?.trim(),
+    ...(await pop.locator(`[data-sec="${sec}"] > .ctl > label`).allTextContents()),
+  ];
+  const [left, right] = [await read('cells'), await read('columns')];
+  const [l, r] = await Promise.all(['[data-sec="cells"]', '[data-sec="columns"]'].map((s) => pop.locator(s).boundingBox()));
+  const groupBy = await pop.locator('select[data-groupby]').count();
   await closeControls(page);
-  return { left, right, sideBySide: /** @type {any} */ (l).x + /** @type {any} */ (l).width <= /** @type {any} */ (r).x + 0.5 };
+  return { left, right, sideBySide: /** @type {any} */ (l).x + /** @type {any} */ (l).width <= /** @type {any} */ (r).x + 0.5, groupBy };
 }
 
 /**
@@ -47,16 +52,19 @@ const tableShows = (page) =>
 /** @param {Page} page */
 const pressed = (page) => control(page, 'button[data-display][aria-pressed="true"]').locator.evaluateAll((els) => els.map((e) => e.getAttribute('data-display')));
 
-test('47.01: Config\'s left column holds Group rows by, Cell display and Groups, with Show in each cell and Heatmap only under Custom; its right column holds Column grouping, then Metrics (#47)', async ({ app, page }) => {
+test('47.01: Config\'s left section, Cells, holds Cell display, with Show in each cell and Heatmap only under Custom; its right section, Columns, holds Study columns, then Metrics; Group rows by is in Filters, not Config (#47)', async ({ app, page }) => {
   await app.open();
   for (const view of /** @type {const} */ (['compact', 'detailed', 'custom'])) {
     await chooseView(page, view);
     const seen = await configColumns(page);
     const custom = view === 'custom' ? ['Show in each cell', 'Heatmap (also drives column sort)'] : [];
-    expect(seen, view).toEqual({ left: ['Group rows by', 'Cell display', ...custom, 'Groups'], right: ['Column grouping', 'Metrics'], sideBySide: true });
+    expect(seen, view).toEqual({ left: ['Cells', 'Cell display', ...custom], right: ['Columns', 'Study columns', 'Metrics'], sideBySide: true, groupBy: 0 });
   }
   await page.locator('#header-controls [data-open="config"]').click();
-  expect(await page.locator('#header-controls button[data-column]').allTextContents(), 'Column grouping holds the table\'s columns').toEqual(['Study name', 'Enrolled', 'Status']);
+  expect(await page.locator('#header-controls button[data-column]').allTextContents(), 'Study columns holds the table\'s columns').toEqual(['Study name', 'Enrolled', 'Status']);
+  await closeControls(page);
+  const filters = await page.locator('#header-controls .filter-bar').evaluate((bar) => [...bar.children].map((el) => el.querySelector('select[data-groupby]') ? 'group rows by' : el.textContent?.trim()));
+  expect(filters.at(-1), 'Group rows by closes the Filters bar').toBe('group rows by');
 });
 
 test('47.02: Cell display has three buttons, one pressed, Compact by default: Compact shows one rate per metric, Detailed the open cells as defined with no trend or shading, Custom its Show and Heatmap choices; columns sort by the active heatmap, otherwise by rate (#47)', async ({ app, page }) => {

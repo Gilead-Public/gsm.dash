@@ -105,7 +105,7 @@ test('27.05: the table view carries over to a study report, which applies its hi
   await chooseHeatmap(page, 'rate');
   await control(page, 'button[data-show="den"]').click();
   await control(page, 'button[data-show="num"]').click();
-  await control(page, 'button[data-group="Data quality"]').click();
+  await control(page, 'input[data-group="Data quality"]').click();
   for (const [key, value] of [['theme', 'dark'], ['perrow', '3'], ['cfgpanel', 'side'], ['legend', 'on'], ['combine', 'on']]) await chooseAdmin(page, key, value);
 
   const keys = [...new Set(new URLSearchParams(new URL(page.url()).hash.slice(1)).keys())].sort();
