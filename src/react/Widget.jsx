@@ -24,7 +24,8 @@ export function Widget({ def, store, studyId, metricId, config, version, classNa
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const result = def.render(el, resolveData(def.dataSpec, { store, studyId, metricId }), config ?? {});
+    const leadMetricId = /** @type {any} */ (config)?.lead?.metricId;
+    const result = def.render(el, resolveData(def.dataSpec, { store, studyId, metricId, leadMetricId }), config ?? {});
     report.current?.(result);
     el.dispatchEvent(new Event('widget-drawn', { bubbles: true }));
     return () => result?.chart?.destroy?.();

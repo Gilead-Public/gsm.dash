@@ -185,7 +185,10 @@ function sitePopulations(study, snapIndex, siteRate) {
     const sf = Math.min(0.8, siteRate('SF', s));
     p.screened = p.enrolled + sround((p.enrolled * sf) / (1 - sf));
     p.ipns = Math.min(p.enrolled, sround(p.enrolled * siteRate('IPNS', s)));
-    p.dosed = p.enrolled - p.ipns;
+    // Potential non-starters haven't started treatment either (gsm.kri's IP Monitoring classification), so the dosed
+    // are the enrolled less every non-starter: the population IP status's Dosed and treatment disposition both count.
+    p.potentialNonStarters = Math.round((p.enrolled - p.ipns) * 0.035);
+    p.dosed = p.enrolled - p.ipns - p.potentialNonStarters;
     p.exposureDays = Math.round(p.dosed * (30 + 26 * months) * jitter());
     p.labSamples = Math.round(p.dosed * (4 + 3 * months) * jitter());
     p.dataPoints = Math.round(p.enrolled * (60 + 40 * months) * jitter());
@@ -326,6 +329,7 @@ function generateDistributions(study, snapshotDate, snapIndex, metrics, results,
         numerator: result.Numerator,
         denominator: result.Denominator,
         participants: p.enrolled,
+        potential: p.potentialNonStarters,
         early: spec.id === 'kri0015' ? p.dth30 : 0,
         progress,
       }, rand);

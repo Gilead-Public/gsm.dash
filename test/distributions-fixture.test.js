@@ -135,6 +135,23 @@ describe('simulated distributions for the #617 metrics', () => {
     expect(latest.some((snap) => snap.distributions.some((d) => d.Variable === 'window_eligibility' && d.Category?.startsWith('≤30') && d.Count > 0))).toBe(true);
   });
 
+  it('IP status\'s Dosed equals the dosed population at every site: treatment disposition\'s total and the dosed metrics\' denominator, potential non-starters being undosed (gsm.kri\'s IP Monitoring classification)', () => {
+    const results = resultIndex();
+    const sum = (/** @type {{ Count: number }[]} */ rows) => rows.reduce((a, r) => a + r.Count, 0);
+    let checked = 0;
+    for (const snap of latest) {
+      for (const [site, rows] of Map.groupBy(snap.distributions, (d) => d.GroupID)) {
+        const dosed = sum(rows.filter((r) => r.MetricID === 'Analysis_kri0019' && r.Category === 'Dosed'));
+        const disposition = sum(rows.filter((r) => r.MetricID === 'Analysis_kri0007-2' && r.Variable === 'drv_drg_completion'));
+        const where = `${snap.StudyID} ${site}`;
+        expect([dosed, disposition], where).toEqual([results.get(`${snap.StudyID}|${site}|Analysis_kri0007-2`).Denominator, results.get(`${snap.StudyID}|${site}|Analysis_kri0007-2`).Denominator]);
+        checked++;
+      }
+    }
+    expect(checked).toBeGreaterThan(0);
+    expect(latest.some((snap) => snap.distributions.some((d) => d.Category?.startsWith('Potential Non-Starter') && d.Count > 0)), 'some potential non-starters').toBe(true);
+  });
+
   it('the fixture covers multi-value variables, blank categories and zero rows', () => {
     const rows = latest.flatMap((s) => s.distributions);
     expect(rows.some((r) => r.Category === null && r.Count > 0)).toBe(true);

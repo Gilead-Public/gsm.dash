@@ -39,7 +39,7 @@ function shownTable(page) {
     };
     return {
       bands: [...table.querySelectorAll('thead th.bandh:not(.pop)')].map((th) => ({
-        category: th.classList.contains('closed') ? text(th, 'button, .u, .otiles') : `(open) ${text(th, 'button, .tw')}`,
+        category: th.classList.contains('closed') ? text(th, 'button, .otiles') : `(open) ${text(th, 'button')}`,
         abbrs: [...th.querySelectorAll('.tlab')].map((t) => text(t)),
       })),
       populationHeadings: [...table.querySelectorAll('thead tr.cols th.pop')].map((th) => text(th, '.u, .si')),
@@ -72,12 +72,12 @@ async function expectHeadings(page, table) {
   expect(table.bands, 'category headings and their metric labels, from the catalog').toEqual(
     bands.map((b) => ({ category: b.category, abbrs: b.metrics.map((m) => m.Abbreviation) })),
   );
-  expect(table.populationHeadings).toEqual(['Scr.', 'Enr.']);
+  expect(table.populationHeadings).toEqual(['Enr.']);
   const head = page.locator('.portfolio-table table.po thead');
   await expectEachVisible(head.locator('th.bandh:not(.pop)'), bands.length, 'category heading');
   await expectEachVisible(head.locator('th.bandh .tlab'), catalog.length, 'metric heading');
   await expectEachVisible(head.locator('th.bandh.pop'), 1, 'population heading');
-  await expectEachVisible(head.locator('tr.cols th.pop'), 2, 'population column heading');
+  await expectEachVisible(head.locator('tr.cols th.pop'), 1, 'population column heading');
 }
 
 /**
@@ -91,14 +91,11 @@ async function expectRow(page, table, label, members) {
   const index = table.rows.findIndex((r) => r.label === label);
   expect(index, `a row labelled ${label}`).toBeGreaterThanOrEqual(0);
   const row = table.rows[index];
-  expect(row.population, `${label}: Scr., Enr.`).toEqual([
-    countText(population(readData, members, 'ScreenedCount')),
-    countText(population(readData, members, 'ParticipantCount')),
-  ]);
+  expect(row.population, `${label}: Enr.`).toEqual([countText(population(readData, members, 'ParticipantCount'))]);
   expect(row.tiles.map((t) => t.length), `${label}: values under each category`).toEqual(bands.map((b) => b.metrics.length));
   const tr = page.locator('.portfolio-table table.po tbody tr').nth(index);
   await expectSeen(tr.locator(row.kind === 'study' ? 'td.grp a[data-study]' : 'td.grp'), `${label}: row label`);
-  await expectEachVisible(tr.locator('td.pop'), 2, `${label}: population`);
+  await expectEachVisible(tr.locator('td.pop'), 1, `${label}: population`);
   if (row.count) await expectSeen(tr.locator('td.nstud'), `${label}: study count`);
   const cells = tr.locator('td.cat');
   const tooltip = page.locator('#gsm-tooltip');
@@ -121,13 +118,15 @@ async function expectRow(page, table, label, members) {
 }
 
 /**
- * Opens the portfolio with its Enrolled column on: it is off by default (#21), and these tests read it.
+ * Opens the portfolio at its defaults, Reset clearing any view saved in the browser, its Population band showing
+ * Enrolled.
  * @param {any} app
  * @param {Page} page
  */
 async function openEnrolled(app, page) {
   await app.open();
-  await control(page, 'button[data-column="enroll"]').click();
+  await control(page, '[data-reset]').click();
+  await expect(control(page, 'button[data-column="enroll"]').locator).toHaveAttribute('aria-pressed', 'true');
 }
 
 test.describe('portfolio view numbers', () => {

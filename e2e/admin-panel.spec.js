@@ -420,6 +420,8 @@ test('46.07: neither report shows a metric status tag, a planned hover, muted pl
     }, planned.map((m) => m.MetricID));
     expect(new Set(colours).size, `${view}: planned and other values share one colour`).toBe(1);
   }
+  // Back to the defaults, so no view saved in the browser fills a study address that carries none.
+  await control(page, '[data-reset]').click();
   // A study report keeps the portfolio's view in its address and back link, without the retired parameter (#47's
   // rewrite of an old View included), and an Admin change there doesn't bring it back.
   const hidden = /** @type {{ MetricID: string }} */ (catalog.find((m) => m.ID === 'kri0005')).MetricID;

@@ -19,8 +19,10 @@ export const tile = (page, metricId) => page.locator(`.card[data-metric-id="${me
 /**
  * The cards the tracker requests, in its order (gsm.roadmap#617, as #10 and #32 specify them): written out here rather
  * than read from the card list, so a change to the list fails the tests. `kind` is what the card's body shows, and
- * `section` the breakdown it shows ('Source:Variable').
- * @type {Array<{ id: string, title: string, metric: string, kind: 'bars' | 'kri', section: string }>}
+ * `section` the breakdown it shows ('Source:Variable'). `exclude` names categories the card leaves out of it, and
+ * `lead` another metric's section whose named categories come first, as their own section: after the 24 Nov demo, Dosed
+ * moved from IP Status to lead Treatment Disposition.
+ * @type {Array<{ id: string, title: string, metric: string, kind: 'bars' | 'kri', section: string, exclude?: string[], lead?: { metric: string, section: string, categories: string[] } }>}
  */
 export const TRACKER_CARDS = [
   { id: 'eligibility-status', title: 'Eligibility Status', metric: 'kri0014', kind: 'bars', section: 'Denominator:eligibility_status' },
@@ -28,8 +30,15 @@ export const TRACKER_CARDS = [
   { id: 'premature-deaths-window', title: 'Premature Deaths – Time Window', metric: 'kri0015', kind: 'bars', section: 'Numerator:death_window' },
   { id: 'premature-deaths-eligibility', title: 'Premature Deaths – Eligibility', metric: 'kri0015', kind: 'bars', section: 'Numerator:eligibility_status' },
   { id: 'premature-deaths-related', title: 'Premature Deaths – Relatedness', metric: 'kri0015', kind: 'bars', section: 'Numerator:treatment_related' },
-  { id: 'ip-status', title: 'IP Status', metric: 'kri0019', kind: 'bars', section: 'Denominator:drv_ip_nonstarter_status' },
-  { id: 'treatment-disposition', title: 'Treatment Disposition', metric: 'kri0007-2', kind: 'bars', section: 'Denominator:drv_drg_completion' },
+  { id: 'ip-status', title: 'IP Status', metric: 'kri0019', kind: 'bars', section: 'Denominator:drv_ip_nonstarter_status', exclude: ['Dosed'] },
+  {
+    id: 'treatment-disposition',
+    title: 'Treatment Disposition',
+    metric: 'kri0007-2',
+    kind: 'bars',
+    section: 'Denominator:drv_drg_completion',
+    lead: { metric: 'kri0019', section: 'Denominator:drv_ip_nonstarter_status', categories: ['Dosed'] },
+  },
   { id: 'treatment-discontinuation-reasons', title: 'Premature Treatment Discontinuation Reasons', metric: 'kri0007-2', kind: 'bars', section: 'Numerator:drv_premature_discontinuation_reason' },
   { id: 'study-disposition', title: 'Study Disposition – Enrolled', metric: 'kri0006', kind: 'bars', section: 'Denominator:drv_study_disposition' },
   { id: 'screening-disposition', title: 'Study Disposition – Screening', metric: 'kri0012', kind: 'bars', section: 'Denominator:drv_study_disposition' },

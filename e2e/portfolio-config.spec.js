@@ -135,6 +135,8 @@ const LEFT_IN = { 'as configured': 'custom', 'changed to other values': 'detaile
 test('16.03: under a configuration, the portfolio comes back as it was left after a reload and after a study report and its back link, and the study report shows exactly the metrics the portfolio showed (#16)', async ({ app, page }) => {
   for (const [what, change] of Object.entries(CHANGES)) {
     await app.openReport('portfolio', configured(CONFIG));
+    // Each change starts from the configured defaults, not from the view the last one left saved in the browser.
+    await control(page, '[data-reset]').click();
     await change(page);
     const groupBy = await control(page, 'select[data-groupby]').inputValue();
     // Groups open by default (#47): close one other than the study's, so the study's link stays in view.

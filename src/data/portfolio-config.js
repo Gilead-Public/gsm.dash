@@ -17,7 +17,7 @@ import { OTHER_CATEGORY } from './catalog.js';
  */
 
 /** @type {Required<PortfolioConfig>} */
-const BUILT_IN = { groupBy: 'none', heatmap: 'none', show: ['num', 'rate'], metrics: [], columns: ['name'], view: 'compact', groups: null };
+const BUILT_IN = { groupBy: 'none', heatmap: 'none', show: ['num', 'rate'], metrics: [], columns: ['name', 'enroll'], view: 'compact', groups: null };
 
 /**
  * The MetricIDs a portfolio column can show: active, site-level metrics in the catalog.

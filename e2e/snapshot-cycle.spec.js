@@ -82,7 +82,7 @@ test.describe('the snapshot cycle', () => {
     await expectAsRecorded('table-compact');
     await chooseView(page, 'detailed');
     await expectAsRecorded('table-detailed');
-    await app.open();
+    await control(page, '[data-reset]').click();
     await control(page, 'select[data-groupby]').selectOption('phase');
     await expectAsRecorded('rows-grouped');
   });

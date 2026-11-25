@@ -22,10 +22,8 @@ import { metricTip } from './tooltip.js';
  * @property {Row[]} [children]
  */
 
-export const POP_COLUMNS = [
-  { key: 'pop:screened', short: 'Scr.', long: 'Screened', param: 'ScreenedCount', cls: '' },
-  { key: 'enroll', short: 'Enr.', long: 'Enrolled', param: 'ParticipantCount', cls: 'pop-last' },
-];
+/** The Population band's columns: enrolled participants, on by default; screened shows in the hovers only. */
+export const POP_COLUMNS = [{ key: 'enroll', short: 'Enr.', long: 'Enrolled', param: 'ParticipantCount', cls: 'pop-last' }];
 
 /**
  * @param {any} pop

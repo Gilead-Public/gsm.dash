@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import { applyAdmin, readAdmin, writeAdmin } from '../app/admin-settings.js';
 import { PortfolioStore, currentParams } from '../data/store.js';
+import { browserStorage, openingParams, readView, viewKey, viewParams, writeView } from '../app/saved-view.js';
 import '../widgets/index.js';
 import { readPortfolioDocument, readStudyDocument } from './document.js';
 import { ErrorState } from './ErrorState.jsx';
@@ -23,23 +24,31 @@ function portfolioStoreFor(doc) {
   return new PortfolioStore({ manifest, snapshots: [], summary: doc.summary, config: doc.config });
 }
 
+const hashParams = () => new URLSearchParams(location.hash.slice(1));
+const savedView = () => readView(browserStorage(), viewKey(location.pathname));
+
 /**
- * The portfolio keeps its view in the URL's hash, rewritten in place on every change so the history is not filled.
+ * The portfolio keeps its view in the URL's hash, rewritten in place on every change so the history is not filled,
+ * and saves it in the browser, which restores it when the portfolio opens with no view in its address.
  * @param {PortfolioStore} store
  */
 function syncHash(store) {
+  const storage = browserStorage();
+  const key = viewKey(location.pathname);
+  const defaults = viewParams(store.programParams()).toString();
   const write = () => {
-    const params = store.programParams().toString();
-    const url = `${location.href.split('#')[0]}${params ? `#${params}` : ''}`;
+    const params = store.programParams();
+    const hash = params.toString();
+    const url = `${location.href.split('#')[0]}${hash ? `#${hash}` : ''}`;
     if (url !== location.href) history.replaceState(null, '', url);
+    writeView(storage, key, viewParams(params), defaults);
     applyAdmin(store.state.admin);
   };
-  store.applyProgramParams(new URLSearchParams(location.hash.slice(1)));
+  store.applyProgramParams(openingParams(hashParams(), readView(storage, key), currentParams));
   write();
   store.addEventListener('change', write);
 }
 
-const hashParams = () => new URLSearchParams(location.hash.slice(1));
 /** @param {URLSearchParams} params */
 const writeHash = (params) => {
   const hash = params.toString();
@@ -94,8 +103,9 @@ export function mount(el) {
   const { StudyID } = doc.study;
   const store = storeFor(doc);
   document.title = `${StudyID} · ${title}`;
-  // The portfolio's view rides on in the address and the back link, in its current form (#46, #47).
-  const current = currentParams(hashParams());
+  // The portfolio's view rides on in the address and the back link, in its current form (#46, #47); with none in the
+  // address, the view saved in the browser.
+  const current = currentParams(openingParams(hashParams(), savedView(), currentParams));
   if (current.toString() !== hashParams().toString()) writeHash(current);
   store.applyMetricParams(current);
   root.render(<StudyReport store={store} studyId={StudyID} />);

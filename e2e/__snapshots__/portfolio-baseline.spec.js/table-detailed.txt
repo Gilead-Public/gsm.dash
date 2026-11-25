@@ -1,6 +1,6 @@
 state: table-detailed
-canonical dom: sha256 0a6038cd5c19e8625a390d163dac543418a990b07b3fbf34e98a0a12b73a9eac (199638 characters)
-computed styles: sha256 ba83de78daa12e7962f6a7b00cffbbcfce74e4aa90fa99418e4a0723e67888a7 (1355 elements)
+canonical dom: sha256 b8a09c3275b767d4cc9576b491b5700f980d3d31204df5531b9d242bd43d2a8f (199210 characters)
+computed styles: sha256 ccdd2b7dc501bd0fe50c5ad9370adadb9c179f531af2d7788b53af6baac1859e (1350 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×23 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) ×21
 sparklines:
@@ -13,16 +13,16 @@ accessibility:
 - main:
   - table:
     - rowgroup:
-      - row "Study Population Disposition6 Early events3 Eligibility & integrity3 Safety & deviations5 Data quality4":
+      - row "Study Population Disposition Early events Eligibility & integrity Safety & deviations Data quality":
         - columnheader "Study"
         - columnheader "Population"
-        - columnheader "Disposition6"
-        - columnheader "Early events3"
-        - columnheader "Eligibility & integrity3"
-        - columnheader "Safety & deviations5"
-        - columnheader "Data quality4"
-      - row "Scr. n SF % scr. SDSC n (% enr.) TDSC n (% dosed) PTDSC n (% dosed) WC n (% enr.) LTFU n (% enr.) DTH30 n (% enr.) DTH90 n (% enr.) IPNS n (% enr.) IE n (% enr.) STRAT n (% enr.) PFSC n (% enr.) AE / 28 d SAE / 28 d PD / 28 d IPD / 28 d LB n (%) QRY % OQRY % ODAT % CDAT %":
-        - columnheader "Scr. n"
+        - columnheader "Disposition"
+        - columnheader "Early events"
+        - columnheader "Eligibility & integrity"
+        - columnheader "Safety & deviations"
+        - columnheader "Data quality"
+      - row "Enr. n SF % scr. SDSC n (% enr.) TDSC n (% dosed) PTDSC n (% dosed) WC n (% enr.) LTFU n (% enr.) DTH30 n (% enr.) DTH90 n (% enr.) IPNS n (% enr.) IE n (% enr.) STRAT n (% enr.) PFSC n (% enr.) AE / 28 d SAE / 28 d PD / 28 d IPD / 28 d LB n (%) QRY % OQRY % ODAT % CDAT %":
+        - columnheader "Enr. n"
         - columnheader "SF % scr."
         - columnheader "SDSC n (% enr.)"
         - columnheader "TDSC n (% dosed)"
@@ -45,13 +45,13 @@ accessibility:
         - columnheader "ODAT %"
         - columnheader "CDAT %"
     - rowgroup:
-      - row "Portfolio total 11,645 23.8% 704 (7.9%) 984 (11.3%) 787 (9.0%) 233 (2.6%) 143 (1.6%) 69 (0.8%) 184 (2.1%) 159 (1.8%) 279 (3.1%) 208 (2.3%) 221 (2.5%) 1.20 0.10 0.37 0.06 8,320 (4.5%) 6.8% 9.0% 11.7% 3.3%":
+      - row "Portfolio total 8,874 23.8% 704 (7.9%) 935 (11.1%) 754 (9.0%) 233 (2.6%) 143 (1.6%) 69 (0.8%) 184 (2.1%) 159 (1.8%) 279 (3.1%) 208 (2.3%) 221 (2.5%) 1.20 0.10 0.37 0.06 8,026 (4.5%) 6.8% 9.0% 11.7% 3.3%":
         - cell "Portfolio total"
-        - cell "11,645"
+        - cell "8,874"
         - cell "23.8%"
         - cell "704 (7.9%)"
-        - cell "984 (11.3%)"
-        - cell "787 (9.0%)"
+        - cell "935 (11.1%)"
+        - cell "754 (9.0%)"
         - cell "233 (2.6%)"
         - cell "143 (1.6%)"
         - cell "69 (0.8%)"
@@ -64,21 +64,21 @@ accessibility:
         - cell "0.10"
         - cell "0.37"
         - cell "0.06"
-        - cell "8,320 (4.5%)"
+        - cell "8,026 (4.5%)"
         - cell "6.8%"
         - cell "9.0%"
         - cell "11.7%"
         - cell "3.3%"
-      - row "STUDY001ATLAS-1 1,341 26.3% 65 (6.6%) 119 (12.2%) 84 (8.6%) 25 (2.5%) 26 (2.6%) 6 (0.6%) 16 (1.6%) 15 (1.5%) 37 (3.7%) 32 (3.2%) 32 (3.2%) 0.86 0.14 0.41 0.05 907 (5.0%) 5.2% 5.5% 10.4% 2.1%":
+      - row "STUDY001ATLAS-1 988 26.3% 65 (6.6%) 111 (11.8%) 80 (8.5%) 25 (2.5%) 26 (2.6%) 6 (0.6%) 16 (1.6%) 15 (1.5%) 37 (3.7%) 32 (3.2%) 32 (3.2%) 0.86 0.14 0.41 0.05 873 (5.0%) 5.2% 5.5% 10.4% 2.1%":
         - cell "STUDY001ATLAS-1":
           - link "STUDY001":
             - /url: study:STUDY001
           - text: ATLAS-1
-        - cell "1,341"
+        - cell "988"
         - cell "26.3%"
         - cell "65 (6.6%)"
-        - cell "119 (12.2%)"
-        - cell "84 (8.6%)"
+        - cell "111 (11.8%)"
+        - cell "80 (8.5%)"
         - cell "25 (2.5%)"
         - cell "26 (2.6%)"
         - cell "6 (0.6%)"
@@ -93,21 +93,21 @@ accessibility:
         - cell "0.14"
         - cell "0.41"
         - cell "0.05"
-        - cell "907 (5.0%)"
+        - cell "873 (5.0%)"
         - cell "5.2%"
         - cell "5.5%"
         - cell "10.4%"
         - cell "2.1%"
-      - row "STUDY002BEACON-1 769 16.1% 44 (6.8%) 74 (11.7%) 62 (9.8%) 16 (2.5%) 9 (1.4%) 1 (0.2%) 10 (1.6%) 15 (2.3%) 20 (3.1%) 10 (1.6%) 13 (2.0%) 0.95 0.07 0.44 0.04 669 (5.6%) 6.7% 8.8% 9.8% 3.4%":
+      - row "STUDY002BEACON-1 645 16.1% 44 (6.8%) 72 (11.9%) 57 (9.4%) 16 (2.5%) 9 (1.4%) 1 (0.2%) 10 (1.6%) 15 (2.3%) 20 (3.1%) 10 (1.6%) 13 (2.0%) 0.95 0.07 0.44 0.04 645 (5.6%) 6.7% 8.8% 9.8% 3.4%":
         - cell "STUDY002BEACON-1":
           - link "STUDY002":
             - /url: study:STUDY002
           - text: BEACON-1
-        - cell "769"
+        - cell "645"
         - cell "16.1%"
         - cell "44 (6.8%)"
-        - cell "74 (11.7%)"
-        - cell "62 (9.8%)"
+        - cell "72 (11.9%)"
+        - cell "57 (9.4%)"
         - cell "16 (2.5%)"
         - cell "9 (1.4%)"
         - cell "1 (0.2%)"
@@ -122,21 +122,21 @@ accessibility:
         - cell "0.07"
         - cell "0.44"
         - cell "0.04"
-        - cell "669 (5.6%)"
+        - cell "645 (5.6%)"
         - cell "6.7%"
         - cell "8.8%"
         - cell "9.8%"
         - cell "3.4%"
-      - row "STUDY003COBALT-1 1,011 28.6% 67 (9.3%) 91 (12.8%) 86 (12.1%) 20 (2.8%) 10 (1.4%) 5 (0.7%) 12 (1.7%) 11 (1.5%) 16 (2.2%) 14 (1.9%) 25 (3.5%) 1.24 0.06 0.44 0.05 1,032 (6.4%) 6.2% 13.0% 15.4% 2.8%":
+      - row "STUDY003COBALT-1 722 28.6% 67 (9.3%) 85 (12.4%) 84 (12.2%) 20 (2.8%) 10 (1.4%) 5 (0.7%) 12 (1.7%) 11 (1.5%) 16 (2.2%) 14 (1.9%) 25 (3.5%) 1.24 0.07 0.44 0.05 996 (6.4%) 6.2% 13.0% 15.4% 2.8%":
         - cell "STUDY003COBALT-1":
           - link "STUDY003":
             - /url: study:STUDY003
           - text: COBALT-1
-        - cell "1,011"
+        - cell "722"
         - cell "28.6%"
         - cell "67 (9.3%)"
-        - cell "91 (12.8%)"
-        - cell "86 (12.1%)"
+        - cell "85 (12.4%)"
+        - cell "84 (12.2%)"
         - cell "20 (2.8%)"
         - cell "10 (1.4%)"
         - cell "5 (0.7%)"
@@ -148,24 +148,24 @@ accessibility:
         - cell "14 (1.9%)"
         - cell "25 (3.5%)"
         - cell "1.24"
-        - cell "0.06"
+        - cell "0.07"
         - cell "0.44"
         - cell "0.05"
-        - cell "1,032 (6.4%)"
+        - cell "996 (6.4%)"
         - cell "6.2%"
         - cell "13.0%"
         - cell "15.4%"
         - cell "2.8%"
-      - row "STUDY004DELTA-1 844 31.8% 35 (6.1%) 39 (6.9%) 44 (7.8%) 11 (1.9%) 14 (2.4%) 6 (1.0%) 21 (3.6%) 13 (2.3%) 11 (1.9%) 13 (2.3%) 13 (2.3%) 1.55 0.14 0.40 0.08 693 (5.4%) 11.1% 6.2% 11.7% 1.8%":
+      - row "STUDY004DELTA-1 576 31.8% 35 (6.1%) 37 (6.8%) 41 (7.5%) 11 (1.9%) 14 (2.4%) 6 (1.0%) 21 (3.6%) 13 (2.3%) 11 (1.9%) 13 (2.3%) 13 (2.3%) 1.54 0.14 0.40 0.08 670 (5.4%) 11.1% 6.2% 11.7% 1.8%":
         - cell "STUDY004DELTA-1":
           - link "STUDY004":
             - /url: study:STUDY004
           - text: DELTA-1
-        - cell "844"
+        - cell "576"
         - cell "31.8%"
         - cell "35 (6.1%)"
-        - cell "39 (6.9%)"
-        - cell "44 (7.8%)"
+        - cell "37 (6.8%)"
+        - cell "41 (7.5%)"
         - cell "11 (1.9%)"
         - cell "14 (2.4%)"
         - cell "6 (1.0%)"
@@ -176,25 +176,25 @@ accessibility:
         - cell "11 (1.9%)"
         - cell "13 (2.3%)"
         - cell "13 (2.3%)"
-        - cell "1.55"
+        - cell "1.54"
         - cell "0.14"
         - cell "0.40"
         - cell "0.08"
-        - cell "693 (5.4%)"
+        - cell "670 (5.4%)"
         - cell "11.1%"
         - cell "6.2%"
         - cell "11.7%"
         - cell "1.8%"
-      - row "STUDY005EMBER-1 1,168 25.4% 118 (13.5%) 60 (7.0%) 74 (8.7%) 17 (2.0%) 14 (1.6%) 7 (0.8%) 11 (1.3%) 17 (2.0%) 19 (2.2%) 17 (2.0%) 26 (3.0%) 1.41 0.11 0.36 0.04 544 (2.9%) 8.6% 10.3% 15.0% 3.5%":
+      - row "STUDY005EMBER-1 871 25.4% 118 (13.5%) 57 (6.9%) 69 (8.4%) 17 (2.0%) 14 (1.6%) 7 (0.8%) 11 (1.3%) 17 (2.0%) 19 (2.2%) 17 (2.0%) 26 (3.0%) 1.41 0.11 0.36 0.04 526 (2.9%) 8.6% 10.3% 15.0% 3.5%":
         - cell "STUDY005EMBER-1":
           - link "STUDY005":
             - /url: study:STUDY005
           - text: EMBER-1
-        - cell "1,168"
+        - cell "871"
         - cell "25.4%"
         - cell "118 (13.5%)"
-        - cell "60 (7.0%)"
-        - cell "74 (8.7%)"
+        - cell "57 (6.9%)"
+        - cell "69 (8.4%)"
         - cell "17 (2.0%)"
         - cell "14 (1.6%)"
         - cell "7 (0.8%)"
@@ -209,21 +209,21 @@ accessibility:
         - cell "0.11"
         - cell "0.36"
         - cell "0.04"
-        - cell "544 (2.9%)"
+        - cell "526 (2.9%)"
         - cell "8.6%"
         - cell "10.3%"
         - cell "15.0%"
         - cell "3.5%"
-      - row "STUDY006FALCON-2 1,023 14.1% 61 (6.9%) 150 (17.3%) 42 (4.9%) 21 (2.4%) 18 (2.0%) 10 (1.1%) 23 (2.6%) 14 (1.6%) 31 (3.5%) 13 (1.5%) 18 (2.0%) 1.34 0.09 0.52 0.06 720 (3.7%) 6.5% 7.3% 10.8% 4.4%":
+      - row "STUDY006FALCON-2 879 14.1% 61 (6.9%) 144 (17.3%) 40 (4.8%) 21 (2.4%) 18 (2.0%) 10 (1.1%) 23 (2.6%) 14 (1.6%) 31 (3.5%) 13 (1.5%) 18 (2.0%) 1.34 0.09 0.52 0.06 692 (3.7%) 6.5% 7.3% 10.8% 4.4%":
         - cell "STUDY006FALCON-2":
           - link "STUDY006":
             - /url: study:STUDY006
           - text: FALCON-2
-        - cell "1,023"
+        - cell "879"
         - cell "14.1%"
         - cell "61 (6.9%)"
-        - cell "150 (17.3%)"
-        - cell "42 (4.9%)"
+        - cell "144 (17.3%)"
+        - cell "40 (4.8%)"
         - cell "21 (2.4%)"
         - cell "18 (2.0%)"
         - cell "10 (1.1%)"
@@ -238,21 +238,21 @@ accessibility:
         - cell "0.09"
         - cell "0.52"
         - cell "0.06"
-        - cell "720 (3.7%)"
+        - cell "692 (3.7%)"
         - cell "6.5%"
         - cell "7.3%"
         - cell "10.8%"
         - cell "4.4%"
-      - row "STUDY007GRANITE-3 962 23.6% 77 (10.5%) 95 (13.2%) 56 (7.8%) 12 (1.6%) 7 (1.0%) 3 (0.4%) 14 (1.9%) 16 (2.2%) 33 (4.5%) 18 (2.4%) 11 (1.5%) 0.81 0.10 0.40 0.03 965 (6.0%) 10.9% 6.1% 14.9% 4.8%":
+      - row "STUDY007GRANITE-3 735 23.6% 77 (10.5%) 92 (13.3%) 55 (7.9%) 12 (1.6%) 7 (1.0%) 3 (0.4%) 14 (1.9%) 16 (2.2%) 33 (4.5%) 18 (2.4%) 11 (1.5%) 0.81 0.10 0.40 0.03 932 (6.0%) 10.9% 6.1% 14.9% 4.8%":
         - cell "STUDY007GRANITE-3":
           - link "STUDY007":
             - /url: study:STUDY007
           - text: GRANITE-3
-        - cell "962"
+        - cell "735"
         - cell "23.6%"
         - cell "77 (10.5%)"
-        - cell "95 (13.2%)"
-        - cell "56 (7.8%)"
+        - cell "92 (13.3%)"
+        - cell "55 (7.9%)"
         - cell "12 (1.6%)"
         - cell "7 (1.0%)"
         - cell "3 (0.4%)"
@@ -267,21 +267,21 @@ accessibility:
         - cell "0.10"
         - cell "0.40"
         - cell "0.03"
-        - cell "965 (6.0%)"
+        - cell "932 (6.0%)"
         - cell "10.9%"
         - cell "6.1%"
         - cell "14.9%"
         - cell "4.8%"
-      - row "STUDY008HARBOR-2 611 18.3% 26 (5.2%) 45 (9.2%) 43 (8.8%) 12 (2.4%) 7 (1.4%) 2 (0.4%) 6 (1.2%) 8 (1.6%) 14 (2.8%) 14 (2.8%) 10 (2.0%) 1.24 0.09 0.24 0.02 225 (2.2%) 6.8% 13.4% 12.2% 3.5%":
+      - row "STUDY008HARBOR-2 499 18.3% 26 (5.2%) 43 (9.1%) 41 (8.7%) 12 (2.4%) 7 (1.4%) 2 (0.4%) 6 (1.2%) 8 (1.6%) 14 (2.8%) 14 (2.8%) 10 (2.0%) 1.24 0.09 0.24 0.02 217 (2.2%) 6.8% 13.4% 12.2% 3.5%":
         - cell "STUDY008HARBOR-2":
           - link "STUDY008":
             - /url: study:STUDY008
           - text: HARBOR-2
-        - cell "611"
+        - cell "499"
         - cell "18.3%"
         - cell "26 (5.2%)"
-        - cell "45 (9.2%)"
-        - cell "43 (8.8%)"
+        - cell "43 (9.1%)"
+        - cell "41 (8.7%)"
         - cell "12 (2.4%)"
         - cell "7 (1.4%)"
         - cell "2 (0.4%)"
@@ -296,21 +296,21 @@ accessibility:
         - cell "0.09"
         - cell "0.24"
         - cell "0.02"
-        - cell "225 (2.2%)"
+        - cell "217 (2.2%)"
         - cell "6.8%"
         - cell "13.4%"
         - cell "12.2%"
         - cell "3.5%"
-      - row "STUDY009IRIS-1 708 15.7% 36 (6.0%) 42 (7.2%) 77 (13.1%) 26 (4.4%) 10 (1.7%) 5 (0.8%) 15 (2.5%) 10 (1.7%) 25 (4.2%) 14 (2.3%) 18 (3.0%) 1.15 0.12 0.24 0.06 529 (3.9%) 4.1% 9.0% 9.3% 4.1%":
+      - row "STUDY009IRIS-1 597 15.7% 36 (6.0%) 42 (7.4%) 74 (13.1%) 26 (4.4%) 10 (1.7%) 5 (0.8%) 15 (2.5%) 10 (1.7%) 25 (4.2%) 14 (2.3%) 18 (3.0%) 1.15 0.12 0.24 0.06 509 (3.9%) 4.1% 9.0% 9.3% 4.1%":
         - cell "STUDY009IRIS-1":
           - link "STUDY009":
             - /url: study:STUDY009
           - text: IRIS-1
-        - cell "708"
+        - cell "597"
         - cell "15.7%"
         - cell "36 (6.0%)"
-        - cell "42 (7.2%)"
-        - cell "77 (13.1%)"
+        - cell "42 (7.4%)"
+        - cell "74 (13.1%)"
         - cell "26 (4.4%)"
         - cell "10 (1.7%)"
         - cell "5 (0.8%)"
@@ -325,21 +325,21 @@ accessibility:
         - cell "0.12"
         - cell "0.24"
         - cell "0.06"
-        - cell "529 (3.9%)"
+        - cell "509 (3.9%)"
         - cell "4.1%"
         - cell "9.0%"
         - cell "9.3%"
         - cell "4.1%"
-      - row "STUDY010JUNIPER-2 1,147 25.3% 64 (7.5%) 95 (11.3%) 76 (9.1%) 23 (2.7%) 10 (1.2%) 12 (1.4%) 27 (3.2%) 18 (2.1%) 14 (1.6%) 29 (3.4%) 24 (2.8%) 1.29 0.09 0.22 0.08 821 (4.6%) 5.2% 11.0% 11.1% 3.0%":
+      - row "STUDY010JUNIPER-2 857 25.3% 64 (7.5%) 90 (11.1%) 73 (9.0%) 23 (2.7%) 10 (1.2%) 12 (1.4%) 27 (3.2%) 18 (2.1%) 14 (1.6%) 29 (3.4%) 24 (2.8%) 1.29 0.09 0.22 0.08 792 (4.5%) 5.2% 11.0% 11.1% 3.0%":
         - cell "STUDY010JUNIPER-2":
           - link "STUDY010":
             - /url: study:STUDY010
           - text: JUNIPER-2
-        - cell "1,147"
+        - cell "857"
         - cell "25.3%"
         - cell "64 (7.5%)"
-        - cell "95 (11.3%)"
-        - cell "76 (9.1%)"
+        - cell "90 (11.1%)"
+        - cell "73 (9.0%)"
         - cell "23 (2.7%)"
         - cell "10 (1.2%)"
         - cell "12 (1.4%)"
@@ -354,21 +354,21 @@ accessibility:
         - cell "0.09"
         - cell "0.22"
         - cell "0.08"
-        - cell "821 (4.6%)"
+        - cell "792 (4.5%)"
         - cell "5.2%"
         - cell "11.0%"
         - cell "11.1%"
         - cell "3.0%"
-      - row "STUDY011KESTREL-3 780 23.3% 45 (7.5%) 68 (11.5%) 49 (8.3%) 13 (2.2%) 6 (1.0%) 4 (0.7%) 12 (2.0%) 9 (1.5%) 12 (2.0%) 18 (3.0%) 12 (2.0%) 1.78 0.09 0.23 0.05 394 (3.1%) 4.3% 12.5% 5.9% 4.1%":
+      - row "STUDY011KESTREL-3 598 23.3% 45 (7.5%) 64 (11.2%) 48 (8.4%) 13 (2.2%) 6 (1.0%) 4 (0.7%) 12 (2.0%) 9 (1.5%) 12 (2.0%) 18 (3.0%) 12 (2.0%) 1.78 0.09 0.23 0.05 382 (3.1%) 4.3% 12.5% 5.9% 4.1%":
         - cell "STUDY011KESTREL-3":
           - link "STUDY011":
             - /url: study:STUDY011
           - text: KESTREL-3
-        - cell "780"
+        - cell "598"
         - cell "23.3%"
         - cell "45 (7.5%)"
-        - cell "68 (11.5%)"
-        - cell "49 (8.3%)"
+        - cell "64 (11.2%)"
+        - cell "48 (8.4%)"
         - cell "13 (2.2%)"
         - cell "6 (1.0%)"
         - cell "4 (0.7%)"
@@ -383,21 +383,21 @@ accessibility:
         - cell "0.09"
         - cell "0.23"
         - cell "0.05"
-        - cell "394 (3.1%)"
+        - cell "382 (3.1%)"
         - cell "4.3%"
         - cell "12.5%"
         - cell "5.9%"
         - cell "4.1%"
-      - row "STUDY012LUMEN-1 1,281 29.2% 66 (7.3%) 106 (11.9%) 94 (10.5%) 37 (4.1%) 12 (1.3%) 8 (0.9%) 17 (1.9%) 13 (1.4%) 47 (5.2%) 16 (1.8%) 19 (2.1%) 0.96 0.08 0.45 0.09 821 (4.3%) 6.8% 9.5% 11.8% 2.8%":
+      - row "STUDY012LUMEN-1 907 29.2% 66 (7.3%) 98 (11.3%) 92 (10.6%) 37 (4.1%) 12 (1.3%) 8 (0.9%) 17 (1.9%) 13 (1.4%) 47 (5.2%) 16 (1.8%) 19 (2.1%) 0.96 0.08 0.45 0.09 792 (4.3%) 6.8% 9.5% 11.8% 2.8%":
         - cell "STUDY012LUMEN-1":
           - link "STUDY012":
             - /url: study:STUDY012
           - text: LUMEN-1
-        - cell "1,281"
+        - cell "907"
         - cell "29.2%"
         - cell "66 (7.3%)"
-        - cell "106 (11.9%)"
-        - cell "94 (10.5%)"
+        - cell "98 (11.3%)"
+        - cell "92 (10.6%)"
         - cell "37 (4.1%)"
         - cell "12 (1.3%)"
         - cell "8 (0.9%)"
@@ -412,7 +412,7 @@ accessibility:
         - cell "0.08"
         - cell "0.45"
         - cell "0.09"
-        - cell "821 (4.3%)"
+        - cell "792 (4.3%)"
         - cell "6.8%"
         - cell "9.5%"
         - cell "11.8%"

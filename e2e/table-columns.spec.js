@@ -72,26 +72,29 @@ test.describe('table columns and view', () => {
   test('21.01: each optional column toggles, the built-in defaults apply, and the choice survives a reload until Reset (#21)', async ({ app, page }) => {
     await app.open();
     const [first] = studies;
-    expect(await headers(page)).toEqual(['Scr.n']);
-    for (const [column, pressed] of [['name', 'true'], ['enroll', 'false'], ['status', 'false']]) await expect(chip(page, column).locator).toHaveAttribute('aria-pressed', pressed);
-    expect(await rowParts(page, first.StudyID)).toEqual({ name: first.params.nickname, status: null, pop: [expect.any(String)] });
+    expect(await headers(page)).toEqual(['Enr.n']);
+    for (const [column, pressed] of [['name', 'true'], ['enroll', 'true'], ['status', 'false']]) await expect(chip(page, column).locator).toHaveAttribute('aria-pressed', pressed);
+    expect(await rowParts(page, first.StudyID)).toEqual({ name: first.params.nickname, status: null, pop: [countText(enrolled(first.StudyID))] });
 
-    await chip(page, 'enroll').click();
     await chip(page, 'status').click();
     await chip(page, 'name').click();
-    expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
+    expect(await headers(page)).toEqual(['Status', 'Enr.n']);
     for (const s of studies) {
-      expect(await rowParts(page, s.StudyID), s.StudyID).toEqual({ name: null, status: s.params.status, pop: [expect.any(String), countText(enrolled(s.StudyID))] });
+      expect(await rowParts(page, s.StudyID), s.StudyID).toEqual({ name: null, status: s.params.status, pop: [countText(enrolled(s.StudyID))] });
     }
     await expect(page.locator('tbody tr.total td.status-col')).toHaveText('');
+    await chip(page, 'enroll').click();
+    expect(await headers(page), 'Enrolled hidden: no Population band').toEqual(['Status']);
+    await expect(page.locator('table.po thead th.bandh.pop')).toHaveCount(0);
+    expect((await rowParts(page, first.StudyID)).pop).toEqual([]);
 
     await page.reload();
     await page.locator('#app > .layout').waitFor();
-    expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
+    expect(await headers(page)).toEqual(['Status']);
     expect((await rowParts(page, first.StudyID)).name).toBeNull();
 
     await control(page, '[data-reset]').click();
-    expect(await headers(page)).toEqual(['Scr.n']);
+    expect(await headers(page)).toEqual(['Enr.n']);
     expect((await rowParts(page, first.StudyID)).name).toBe(first.params.nickname);
     expect(new URL(page.url()).hash).toBe('');
   });
@@ -113,15 +116,15 @@ test.describe('table columns and view', () => {
 
   test('21.01: configured columns and View are the defaults, and Reset returns to them (#21)', async ({ app, page }) => {
     await openWith(app, page, (doc) => void (doc.config = { columns: ['enroll', 'status'], view: 'detailed' }));
-    expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
+    expect(await headers(page)).toEqual(['Status', 'Enr.n']);
     expect((await rowParts(page, studies[0].StudyID)).name).toBeNull();
     expect([await viewControl(page), await shownView(page)]).toEqual(['detailed', 'open']);
     await chip(page, 'status').click();
     await chooseView(page, 'compact');
-    expect(await headers(page)).toEqual(['Scr.n', 'Enr.n']);
+    expect(await headers(page)).toEqual(['Enr.n']);
     expect(await shownView(page)).toBe('folded');
     await control(page, '[data-reset]').click();
-    expect(await headers(page)).toEqual(['Status', 'Scr.n', 'Enr.n']);
+    expect(await headers(page)).toEqual(['Status', 'Enr.n']);
     expect([await viewControl(page), await shownView(page)]).toEqual(['detailed', 'open']);
   });
 
@@ -137,15 +140,14 @@ test.describe('table columns and view', () => {
         params(c.StudyID).ParticipantTarget = '0';
         delete params(d.StudyID).ParticipantTarget;
       },
-      '#cols=name&cols=enroll',
     );
-    const enrolledCell = async (/** @type {string} */ id) => (await rowParts(page, id)).pop[1];
+    const enrolledCell = async (/** @type {string} */ id) => (await rowParts(page, id)).pop[0];
     expect(await enrolledCell(a.StudyID)).toBe(`${countText(enrolled(a.StudyID))} / 1,500`);
     expect(await enrolledCell(b.StudyID)).toBe(`${countText(enrolled(b.StudyID))} / 2,400`);
     expect(await enrolledCell(c.StudyID)).toBe(countText(enrolled(c.StudyID)));
     expect(await enrolledCell(d.StudyID)).toBe(countText(enrolled(d.StudyID)));
     const total = counted.reduce((n, s) => n + (s.ParticipantCount ?? 0), 0);
-    expect(await seenText(page.locator('tbody tr.total td.pop').nth(1))).toBe(countText(total));
+    expect(await seenText(page.locator('tbody tr.total td.pop').first())).toBe(countText(total));
   });
 
   test('21.03: the table in Compact and Detailed, and Config with its Cell display, group chips, Column grouping and metric checkboxes, for visual comparison (#21)', async ({ app, page, evidence }) => {

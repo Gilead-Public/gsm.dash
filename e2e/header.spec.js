@@ -153,8 +153,6 @@ test('24.02: the status line names every active sort and its direction, marking 
   expect(await named(), 'unsorted').toBeNull();
   await sortBy('label', 'Study');
   await sortBy('label', 'Study');
-  await sortBy('pop:screened', 'Screened');
-  await control(page, 'button[data-column="enroll"]').click();
   let dir = await sortBy('enroll', 'Enrolled');
   await control(page, 'button[data-column="enroll"]').click();
   expect(await named(), 'Enrolled hidden').toBe(`Enrolled (hidden) ${dir}`);

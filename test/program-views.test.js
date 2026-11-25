@@ -256,8 +256,8 @@ describe('the study filter and Reset (#22)', () => {
 });
 
 describe('table columns and view (#21)', () => {
-  it('21.01: by default the table shows the study name, without Enrolled or Status, in Compact; a configuration sets both (#21)', () => {
-    expect([[...store.state.columns], store.state.view]).toEqual([['name'], 'compact']);
+  it('21.01: by default the table shows the study name and Enrolled, without Status, in Compact; a configuration sets both (#21)', () => {
+    expect([[...store.state.columns], store.state.view]).toEqual([['name', 'enroll'], 'compact']);
     expect(store.programParams().toString()).toBe('');
     const s = new PortfolioStore({ ...portfolio, config: { columns: ['enroll', 'status'], view: 'detailed' } });
     expect([[...s.state.columns].sort(), s.state.view]).toEqual([['enroll', 'status'], 'detailed']);
@@ -265,7 +265,6 @@ describe('table columns and view (#21)', () => {
   });
 
   it('21.01: the columns and view travel in the address, an emptied choice included, and unknown values are dropped (#21)', () => {
-    store.toggleColumn('enroll');
     store.toggleColumn('status');
     store.set('view', 'detailed');
     const params = store.programParams();
@@ -281,7 +280,14 @@ describe('table columns and view (#21)', () => {
     empty.applyProgramParams(new URLSearchParams(other.programParams().toString()));
     expect([...empty.state.columns]).toEqual([]);
     empty.applyProgramParams(new URLSearchParams('cols=site&view=mixed'));
-    expect([[...empty.state.columns], empty.state.view]).toEqual([['name'], 'compact']);
+    expect([[...empty.state.columns], empty.state.view]).toEqual([['name', 'enroll'], 'compact']);
+  });
+
+  it('an old address sorting by Screened, which the table no longer shows, opens unsorted and writes no sort', () => {
+    const s = new PortfolioStore(portfolio);
+    s.applyProgramParams(new URLSearchParams('sort=pop:screened&dir=asc'));
+    expect(s.state.sort).toEqual({ key: null, dir: null });
+    expect(s.programParams().has('sort')).toBe(false);
   });
 
   it('21.02: a study\'s enrollment target is its ParticipantTarget above zero, as a number or as text, and none otherwise (#21)', () => {

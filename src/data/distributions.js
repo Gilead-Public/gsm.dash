@@ -65,15 +65,19 @@ export function scopeTotals({ study, siteRows, groupId = null }) {
  * snapshot publishes no distributions at all (`rows` undefined; they cover the latest snapshot only), or none
  * for this metric or group. Header and percentages use the same scope as the rows (`groupId` or the study).
  * A card shows one section (`only`, a list of 'Source:Variable' keys) or a joint-count table (`joint`, #10). `maxBars`
- * caps each section's category bars below its top-N, so a breakdown fits its card (#32).
- * @param {{ rows: any[] | undefined, metric: any, study: any, siteRows?: any[], config: any, groupId?: string | null, only?: string[] | null, joint?: { rows: string, columns: string[] } | null, maxBars?: number }} input
+ * caps each section's category bars below its top-N, so a breakdown fits its card (#32). `exclude` leaves categories out
+ * of a section and `include` keeps only those named; either way each share stays of the section's whole total.
+ * @param {{ rows: any[] | undefined, metric: any, study: any, siteRows?: any[], config: any, groupId?: string | null, only?: string[] | null, joint?: { rows: string, columns: string[] } | null, exclude?: string[] | null, include?: string[] | null, maxBars?: number }} input
  */
-export function buildDistributionModel({ rows, metric, study, siteRows, config, groupId = null, only = null, joint = null, maxBars = Infinity }) {
+export function buildDistributionModel({ rows, metric, study, siteRows, config, groupId = null, only = null, joint = null, exclude = null, include = null, maxBars = Infinity }) {
   if (!config) return { state: 'missing' };
   const totals = scopeTotals({ study, siteRows, groupId });
   if (rows === undefined) return { state: 'empty', reason: 'not-published', header: header(metric, totals) };
   const wanted = joint ? [joint.rows, ...joint.columns] : only;
-  const sections = sumSitesToStudy(rows, { groupId }).filter((s) => !wanted || wanted.includes(sectionKey(s.Source, s.Variable)));
+  const keep = (/** @type {any} */ c) => (!exclude || !exclude.includes(c.Category)) && (!include || include.includes(c.Category));
+  const sections = sumSitesToStudy(rows, { groupId })
+    .filter((s) => !wanted || wanted.includes(sectionKey(s.Source, s.Variable)))
+    .map((s) => (exclude || include ? { ...s, categories: s.categories.filter(keep) } : s));
   if (!sections.length) return { state: 'empty', reason: 'no-rows', header: header(metric, totals) };
   if (joint) return { state: 'ok', header: header(metric, totals), joint: jointTable(sections, joint, config) };
 

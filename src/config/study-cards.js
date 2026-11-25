@@ -5,9 +5,12 @@
 // card names the widget, the metric, its title and, for a breakdown, the one section it shows (`section`), or the
 // sections of a joint-count table (`joint`: the rows' section, then one section per column group, whose categories
 // read "<row> | <column>"). A standard KRI declares its card by being in a KRI group (src/config/kri-groups.js).
-// Widgets 4 and 7 follow #617's current proposal and widget 8 is a reduced interim (#9).
+// Widgets 4 and 7 follow #617's current proposal and widget 8 is a reduced interim (#9). A breakdown can leave
+// categories out of its section (`exclude`), or lead with categories of another metric's section, as their own
+// section (`lead`): after the 24 Nov demo, Dosed moved from IP Status to lead Treatment Disposition.
 
-/** @typedef {{ id: string, widget: string, metric: string, title?: string, section?: string, joint?: { rows: string, columns: string[] } }} CardSpec */
+/** @typedef {{ metric: string, section: string, categories: string[] }} LeadSpec */
+/** @typedef {{ id: string, widget: string, metric: string, title?: string, section?: string, exclude?: string[], lead?: LeadSpec, joint?: { rows: string, columns: string[] } }} CardSpec */
 
 /** @type {CardSpec[]} */
 export const STUDY_CARDS = [
@@ -16,8 +19,15 @@ export const STUDY_CARDS = [
   { id: 'premature-deaths-window', widget: 'distribution-bar', metric: 'kri0015', title: 'Premature Deaths – Time Window', section: 'Numerator:death_window' },
   { id: 'premature-deaths-eligibility', widget: 'distribution-bar', metric: 'kri0015', title: 'Premature Deaths – Eligibility', section: 'Numerator:eligibility_status' },
   { id: 'premature-deaths-related', widget: 'distribution-bar', metric: 'kri0015', title: 'Premature Deaths – Relatedness', section: 'Numerator:treatment_related' },
-  { id: 'ip-status', widget: 'distribution-bar', metric: 'kri0019', title: 'IP Status', section: 'Denominator:drv_ip_nonstarter_status' },
-  { id: 'treatment-disposition', widget: 'distribution-bar', metric: 'kri0007-2', title: 'Treatment Disposition', section: 'Denominator:drv_drg_completion' },
+  { id: 'ip-status', widget: 'distribution-bar', metric: 'kri0019', title: 'IP Status', section: 'Denominator:drv_ip_nonstarter_status', exclude: ['Dosed'] },
+  {
+    id: 'treatment-disposition',
+    widget: 'distribution-bar',
+    metric: 'kri0007-2',
+    title: 'Treatment Disposition',
+    section: 'Denominator:drv_drg_completion',
+    lead: { metric: 'kri0019', section: 'Denominator:drv_ip_nonstarter_status', categories: ['Dosed'] },
+  },
   { id: 'treatment-discontinuation-reasons', widget: 'distribution-bar', metric: 'kri0007-2', title: 'Premature Treatment Discontinuation Reasons', section: 'Numerator:drv_premature_discontinuation_reason' },
   { id: 'study-disposition', widget: 'distribution-bar', metric: 'kri0006', title: 'Study Disposition – Enrolled', section: 'Denominator:drv_study_disposition' },
   { id: 'screening-disposition', widget: 'distribution-bar', metric: 'kri0012', title: 'Study Disposition – Screening', section: 'Denominator:drv_study_disposition' },

@@ -22,8 +22,9 @@ const value = (bar, s) => (s.display === 'percent' ? `${fmtPct(bar.percent)} <sp
 /** What a section's values are out of, its total named: "% of 366 enrolled", "n of 37 ineligible" (#48). */
 export const descriptor = (s) => `${s.display === 'percent' ? '%' : 'n'} of ${fmtInt(s.total)}${s.population ? ` ${s.population}` : ''}`;
 
+// A share is drawn as long as the share; a count, against the section's largest.
 function rowHtml(bar, s, max) {
-  const width = max > 0 ? ((bar.count / max) * 100).toFixed(1) : '0';
+  const width = s.display === 'percent' && bar.percent != null ? Math.min(100, bar.percent * 100).toFixed(1) : max > 0 ? ((bar.count / max) * 100).toFixed(1) : '0';
   const style = bar.colour ? ` style="width:${width}%;background:${esc(bar.colour)}"` : ` style="width:${width}%"`;
   const nOfN = `${fmtInt(bar.count)} of ${fmtInt(s.total)}`;
   const aria = s.display === 'percent' ? `${bar.label}: ${fmtPct(bar.percent)}, ${nOfN}` : `${bar.label}: ${nOfN}`;
@@ -42,7 +43,7 @@ const headTip = (s) =>
 // card's footer.
 function sectionHtml(s) {
   const max = Math.max(0, ...s.bars.map((b) => b.count));
-  return `<section class="dist-sec" data-source="${esc(s.source)}" data-variable="${esc(s.variable)}" data-display="${s.display}" aria-label="${esc(`${s.title}, ${descriptor(s)}`)}">
+  return `<section class="dist-sec"${s.lead ? ' data-lead=""' : ''} data-source="${esc(s.source)}" data-variable="${esc(s.variable)}" data-display="${s.display}" aria-label="${esc(`${s.title}, ${descriptor(s)}`)}">
     <div class="sec-head" data-tip="${esc(headTip(s))}"><div class="sub-h">${esc(s.title)}</div><div class="dist-cols">${s.display === 'percent' ? '%' : 'n'}</div></div>
     <div class="dist-bars" role="list">${s.bars.map((b) => rowHtml(b, s, max)).join('')}</div>
   </section>`;
@@ -87,8 +88,10 @@ const overflowsAcross = (el) => el.isConnected && el.clientWidth > 0 && el.scrol
  * returns the breakdown's notes, which the card shows in its footer (#48).
  */
 export function renderDistribution(el, data, config = {}) {
-  const { only = null, joint = null, ...options } = /** @type {any} */ (config);
+  const { only = null, joint = null, exclude = null, lead = null, ...options } = /** @type {any} */ (config);
   const merged = distributionConfig(data.metric, options);
+  const { only: _only, joint: _joint, ...leadOptions } = lead?.config ?? {};
+  const leadConfig = lead ? distributionConfig(data.leadMetric, leadOptions) : null;
   const draw = (maxBars) => {
     const model = buildDistributionModel({
       rows: data.distributions,
@@ -99,8 +102,14 @@ export function renderDistribution(el, data, config = {}) {
       groupId: options.groupId ?? null,
       only,
       joint,
+      exclude,
       maxBars,
     });
+    // A lead from another metric's section comes first, as its own section (src/config/study-cards.js).
+    if (lead && leadConfig && model.state === 'ok' && model.sections) {
+      const first = buildDistributionModel({ rows: data.leadDistributions, metric: data.leadMetric, study: null, config: leadConfig, only: [lead.section], include: lead.categories });
+      if (first.state === 'ok' && first.sections) model.sections = [...first.sections.map((s) => ({ ...s, lead: true })), ...model.sections];
+    }
     el.dataset.state = model.state;
     el.innerHTML = html(model);
     return model;

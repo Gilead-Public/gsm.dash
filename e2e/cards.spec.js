@@ -45,7 +45,8 @@ const breakdowns = TRACKER_CARDS.filter((c) => c.kind === 'bars').map((c) => {
   const snapshot = readData(study.files[study.snapshots.at(-1) ?? '']);
   const rows = snapshot.distributions.filter((/** @type {any} */ d) => d.MetricID === m.MetricID && `${d.Source}:${d.Variable}` === c.section);
   const [section] = expectedView(rows, CONFIG[m.ID]);
-  return { id: c.id, bars: section.bars.filter((/** @type {any} */ b) => b.kind === 'category').length };
+  const own = section.bars.filter((/** @type {any} */ b) => b.kind === 'category' && !(c.exclude ?? []).includes(b.label)).length;
+  return { id: c.id, bars: own + (c.lead?.categories.length ?? 0) };
 });
 
 /**

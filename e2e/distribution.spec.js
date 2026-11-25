@@ -16,6 +16,8 @@ import { ROOM_FOR_EVERY_BAR, styleFromStart, TRACKER_CARDS } from './fixtures/ti
  * @property {string} [Display]
  * @property {string} card
  * @property {string} section
+ * @property {string[]} exclude Categories the card leaves out of its section.
+ * @property {{ metric: string, section: string, categories: string[] } | null} lead Another metric's categories it leads with.
  */
 /**
  * @typedef {object} Row
@@ -55,7 +57,7 @@ const study = portfolio.studies[0];
 const snapshot = readData(study.files[study.snapshots.at(-1)]);
 const CONFIG = /** @type {Record<string, { statusVariables?: string[]; sections: Record<string, { title?: string; topN?: number; of?: string }> }>} */ (DISTRIBUTION_CONFIG);
 /** @type {Metric[]} */
-const configured = TRACKER_CARDS.filter((c) => c.kind === 'bars').map((c) => ({ ...portfolio.metrics.find((/** @type {any} */ m) => m.ID === c.metric), card: c.id, section: c.section }));
+const configured = TRACKER_CARDS.filter((c) => c.kind === 'bars').map((c) => ({ ...portfolio.metrics.find((/** @type {any} */ m) => m.ID === c.metric), card: c.id, section: c.section, exclude: c.exclude ?? [], lead: c.lead ?? null }));
 
 /**
  * @param {number | null} x
@@ -93,7 +95,20 @@ function expectedFor(m) {
   const config = CONFIG[m.ID];
   /** @type {Row[]} */
   const rows = snapshot.distributions.filter((d) => d.MetricID === m.MetricID && `${d.Source}:${d.Variable}` === m.section);
-  const sections = /** @type {Section[]} */ (expectedView(rows, config));
+  // A card may leave categories out of its section, each share still of the whole total, and lead with another metric's
+  // categories as their own section, out of that metric's population.
+  const own = /** @type {Section[]} */ (expectedView(rows, config)).map((s) => ({ ...s, population: m.Population, statusVariables: config.statusVariables ?? [], bars: s.bars.filter((b) => !(b.kind === 'category' && m.exclude.includes(b.label))) }));
+  const leadMetric = m.lead ? portfolio.metrics.find((/** @type {any} */ x) => x.ID === m.lead?.metric) : null;
+  const lead = m.lead && leadMetric
+    ? /** @type {Section[]} */ (expectedView(snapshot.distributions.filter((d) => d.MetricID === leadMetric.MetricID && `${d.Source}:${d.Variable}` === m.lead?.section), CONFIG[leadMetric.ID])).map((s) => ({
+        ...s,
+        population: leadMetric.Population,
+        statusVariables: CONFIG[leadMetric.ID].statusVariables ?? [],
+        bars: s.bars.filter((b) => b.kind === 'category' && m.lead?.categories.includes(b.label)),
+        notes: { ...s.notes, notRecorded: false },
+      }))
+    : [];
+  const sections = [...lead, ...own];
   // Per 28 days (the PD cards' metrics), the rate is n ÷ exposure days × 28 and N is exposure days ÷ 28 (#32).
   const per28 = m.Display === 'per_28d';
   return {
@@ -105,14 +120,15 @@ function expectedFor(m) {
       // total (#48): a status section's population from the fixture's metric, a reason section's from configuration.
       const heading = s.display === 'percent' ? '%' : 'n';
       const outOf = s.display === 'percent'
-        ? `% of ${int(s.Total)} ${String(m.Population).toLowerCase()}`
+        ? `% of ${int(s.Total)} ${String(s.population).toLowerCase()}`
         : `n of ${int(s.Total)} ${config.sections?.[`${s.Source}:${s.Variable}`]?.of ?? ''}`.trim();
       return {
         title: s.title,
         variable: s.Variable,
         source: s.Source,
         display: s.display,
-        isStatus: (config.statusVariables ?? []).includes(s.Variable),
+        isStatus: s.statusVariables.includes(s.Variable),
+        population: s.population,
         headings: [heading],
         outOf,
         rows: s.bars.map((bar) => ({
@@ -268,7 +284,7 @@ test.describe('Layout A distribution widget', () => {
         // from the fixture's metric, not from the widget configuration; its total from the fixture's rows.
         expect(s.headings, where).toEqual([source === 'Denominator' ? '%' : 'n']);
         expect(s.hover, `${where}: the header's hover`).toEqual([title, want.sections[i].outOf, source === 'Denominator' ? 'Each bar: its share, then its count' : 'Each bar: its count']);
-        expect(s.hover[1], where).toMatch(source === 'Denominator' ? new RegExp(`^% of [\\d,]+ ${String(m.Population).toLowerCase()}$`) : /^n of [\d,]+ \S/);
+        expect(s.hover[1], where).toMatch(source === 'Denominator' ? new RegExp(`^% of [\\d,]+ ${String(want.sections[i].population).toLowerCase()}$`) : /^n of [\d,]+ \S/);
         for (const row of s.rows) {
           const shown = Object.values(row.values);
           expect(shown, `${where} ${row.label}: one value cell`).toHaveLength(1);
@@ -361,6 +377,23 @@ test.describe('Layout A distribution widget', () => {
     for (const bar of await reasons.all()) expect(await bar.getAttribute('style')).not.toMatch(/background/);
   });
 
+  test('10.06: a breakdown that leads with another metric\'s categories takes their colours and section title from that metric\'s configuration (#10)', async ({ app, page }) => {
+    const title = 'Participants by IP status';
+    await app.openStudy(study.StudyID, {
+      portfolio: (p) => {
+        const ip = p.metrics.find((x) => x.ID === 'kri0019');
+        ip.WidgetConfigs = {
+          ...ip.WidgetConfigs,
+          'distribution-bar': { colours: { Dosed: 'rgb(21, 101, 192)' }, sections: { 'Denominator:drv_ip_nonstarter_status': { title, of: 'enrolled' } } },
+        };
+      },
+    });
+    const lead = body(page, cardById('treatment-disposition')).locator('.dist-sec[data-lead]');
+    await expect(lead.locator('.dist-row[data-category="Dosed"] .b')).toHaveCSS('background-color', 'rgb(21, 101, 192)');
+    await expect(lead.locator('.sub-h')).toHaveText(title);
+    await expect(body(page, cardById('ip-status')).locator('.dist-sec .sub-h')).toHaveText(title);
+  });
+
   test('10.07: on every breakdown card, bars sort and collapse as expected, Not recorded comes last, and the footnotes show behind the footer\'s marker (#10)', async ({ app, page }) => {
     await openStudy(app, page);
     for (const m of configured) {
@@ -397,14 +430,43 @@ test.describe('Layout A distribution widget', () => {
     await evidence.shot(page, 'study view with distribution widgets');
   });
 
+  test('a status bar is as long as its share of the section\'s population; a reason bar is as long as its count against the section\'s largest', async ({ app, page }) => {
+    await openStudy(app, page);
+    const lengths = await page.locator('.study-page .dist-sec').evaluateAll((secs) =>
+      secs.map((sec) => ({
+        percent: sec.getAttribute('data-display') === 'percent',
+        bars: [...sec.querySelectorAll('.dist-row')].map((r) => {
+          const track = /** @type {Element} */ (r.querySelector('.btrack')).getBoundingClientRect().width;
+          const value = r.querySelector('.v')?.textContent ?? '';
+          return {
+            filled: /** @type {Element} */ (r.querySelector('.b')).getBoundingClientRect().width / track,
+            share: Number(value.match(/^([\d.]+)%/)?.[1] ?? NaN) / 100,
+            count: Number((value.match(/\(([\d,]+)\)/)?.[1] ?? value).replace(/,/g, '')),
+          };
+        }),
+      })),
+    );
+    let shares = 0;
+    for (const { percent, bars } of lengths) {
+      const max = Math.max(...bars.map((b) => b.count));
+      for (const b of bars) {
+        if (percent) shares++;
+        expect(Math.abs(b.filled - (percent ? b.share : b.count / max)), JSON.stringify(b)).toBeLessThan(0.01);
+      }
+    }
+    expect(shares, 'status bars checked').toBeGreaterThan(0);
+  });
+
   test('10.10: each card in Scope appears once with its specified breakdown; widget 5 gives IP status then treatment disposition; widget 4 gives time window, eligibility then relatedness (#10)', async ({ app, page }) => {
     await openStudy(app, page);
     const order = await page.locator('.card').evaluateAll((els) => els.map((e) => [e.getAttribute('data-card'), e.getAttribute('data-metric-id')]));
     for (const c of TRACKER_CARDS.filter((x) => x.kind !== 'kri')) {
       expect(order.filter(([id]) => id === c.id), c.id).toHaveLength(1);
       const shown = page.locator(`.card[data-card="${c.id}"] .tile-body`);
-      expect(await shown.locator('.dist-sec').evaluateAll((els) => els.map((e) => `${e.getAttribute('data-source')}:${e.getAttribute('data-variable')}`)), c.id).toEqual([c.section]);
-      await expect(shown.locator('.dist-sec'), c.id).toBeVisible();
+      const keys = (/** @type {string} */ sel) => shown.locator(sel).evaluateAll((els) => els.map((e) => `${e.getAttribute('data-source')}:${e.getAttribute('data-variable')}`));
+      expect(await keys('.dist-sec:not([data-lead])'), c.id).toEqual([c.section]);
+      expect(await keys('.dist-sec[data-lead]'), `${c.id}: its lead`).toEqual(c.lead ? [c.lead.section] : []);
+      await expect(shown.locator('.dist-sec:not([data-lead])'), c.id).toBeVisible();
       await expect(shown.locator('table.dist-joint'), c.id).toHaveCount(0);
     }
     const at = (/** @type {string} */ id) => order.findIndex(([x]) => x === id);

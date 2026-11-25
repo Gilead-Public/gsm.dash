@@ -74,10 +74,11 @@ To share a build for feedback without releasing it: every CI run that passes als
   load with the study filter first; **Config**, with Group rows by, the Cell
   display (Compact, Detailed, or Custom with its cell contents and heatmap;
   #47), the metric groups, the optional columns under Column grouping (study
-  name, **Enrolled**, Status; #21) and each metric's checkbox; **Reset**; and
+  name, **Enrolled**, on by default, Status; #21) and each metric's checkbox; **Reset**; and
   **Admin**, a demo tool for the theme, the study grid's cards per row, Config
-  as a popover or side panel, and a heatmap legend (#46). Enrolled is the
-  summary's `ParticipantCount`, summed over the row's studies. The study page
+  as a popover or side panel, and a heatmap legend (#46). Enrolled, the
+  Population band's one column, is the summary's `ParticipantCount`, summed
+  over the row's studies; screened shows in the hovers. The study page
   is one grid of same-size cards, one per widget the tracker requests, in its
   order (#32), at the study's latest snapshot (#48). Each card's header gives
   the metric's title, and on its right the value and n / N, whose hover names
@@ -88,6 +89,10 @@ To share a build for feedback without releasing it: every CI run that passes als
   nothing is clipped. Its back link reads
   "← Portfolio". Links
   between reports are relative and carry the portfolio's view in the hash.
+  The browser also keeps the view, without the Admin settings, per reports
+  folder: a report opened with no view in its address restores it, and Reset
+  or a return to the defaults forgets it. Where the browser refuses storage,
+  the reports work from the address alone.
   `src/app/` holds the rules and text both pages share.
 - `src/widgets/` — the **widget framework** (see the Widget Framework
   proposal artifact): a build-time registry of small composable views. Each

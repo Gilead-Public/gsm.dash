@@ -89,23 +89,23 @@ export function PortfolioTable({ store }) {
           Status
         </th>
       )}
-      <th colSpan={popColumns.length} className="bandh pop gs">
-        Population
-      </th>
+      {popColumns.length ? (
+        <th colSpan={popColumns.length} className="bandh pop gs">
+          Population
+        </th>
+      ) : null}
       {groups.map((/** @type {any} */ g) => {
         const n = g.metrics.length;
         if (!g.collapsed) {
           return (
             <th key={g.category} colSpan={n} className="bandh gs open" data-band={g.category}>
               {g.category}
-              <span className="tw">{n}</span>
             </th>
           );
         }
         return (
           <th key={g.category} rowSpan={2} className="bandh gs closed" data-band={g.category}>
             {g.category}
-            <span className="u">{`${n} metric${n === 1 ? '' : 's'}`}</span>
             <span className="otiles">
               {g.metrics.map((/** @type {any} */ m) => (
                 <span key={m.MetricID} className="tlab" data-abbr={m.Abbreviation} data-tip={metricTip(m, { technical: false })}>
@@ -121,7 +121,7 @@ export function PortfolioTable({ store }) {
 
   const colRow = (
     <tr className="cols">
-      {popColumns.map((col) =>
+      {popColumns.map((col, i) =>
         th({
           k: col.key,
           label: (
@@ -130,7 +130,7 @@ export function PortfolioTable({ store }) {
               <span className="u">n</span>
             </>
           ),
-          classes: `pop ${col.cls} ${col.key === 'pop:screened' ? 'gs' : ''}`,
+          classes: `pop ${col.cls} ${i === 0 ? 'gs' : ''}`,
           tip: popHeadTip(col),
         }),
       )}
@@ -168,10 +168,10 @@ export function PortfolioTable({ store }) {
     const tip = popTip(row.label, pop, row.studies.filter((s) => latest.has(s.StudyID)).length);
     // A study's enrolled count is shown against its target when it has one; groups and the total show the count alone.
     const target = row.kind === 'study' ? enrollTarget(row.study) : null;
-    return popColumns.map(({ key, cls }) => {
+    return popColumns.map(({ key, cls }, i) => {
       const v = popValue(pop, key);
       return (
-        <td key={key} className={`pop ${cls} ${key === 'pop:screened' ? 'gs' : ''}`} data-tip={tip}>
+        <td key={key} className={`pop ${cls} ${i === 0 ? 'gs' : ''}`} data-tip={tip}>
           {v == null ? <span className="muted">—</span> : key === 'enroll' && target != null ? `${fmtInt(v)} / ${fmtInt(target)}` : fmtInt(v)}
         </td>
       );

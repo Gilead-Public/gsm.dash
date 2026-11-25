@@ -52,7 +52,17 @@ export function studyCards({ metrics, inactive, visible, cards = STUDY_CARDS }) 
     }
     if (!shown.has(metric.MetricID)) continue;
     const own = metric.WidgetConfigs?.[spec.widget] ?? (spec.widget === metric.Widget ? metric.WidgetConfig : undefined);
-    card.config = spec.joint ? { ...own, joint: spec.joint } : spec.section ? { ...own, only: [spec.section] } : own;
+    const leadMetric = spec.lead ? byId(metrics, spec.lead.metric) : null;
+    // A lead keeps its own metric's settings (colours, titles), chosen as a card's are.
+    const leadOwn = leadMetric && (leadMetric.WidgetConfigs?.[spec.widget] ?? (spec.widget === leadMetric.Widget ? leadMetric.WidgetConfig : undefined));
+    const lead = spec.lead && leadMetric
+      ? { section: spec.lead.section, categories: spec.lead.categories, metricId: leadMetric.MetricID, config: leadOwn ?? {} }
+      : null;
+    card.config = spec.joint
+      ? { ...own, joint: spec.joint }
+      : spec.section
+        ? { ...own, only: [spec.section], ...(spec.exclude && { exclude: spec.exclude }), ...(lead && { lead }) }
+        : own;
     card.hidden = kri && kriSettings(metric).hidden;
     const declared = kri ? kriSettings(metric).group != null : metric.Widget === spec.widget;
     const view = resolveView(spec.widget, metric, card.config);

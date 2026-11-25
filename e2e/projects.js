@@ -39,6 +39,7 @@ export const SPEC_ARTIFACTS = {
   'e2e/portfolio-baseline.spec.js': ['reports'],
   'e2e/study-baseline.spec.js': ['reports'],
   'e2e/admin-panel.spec.js': ['reports'],
+  'e2e/saved-view.spec.js': ['reports'],
   'e2e/cell-display.spec.js': ['reports'],
   'e2e/study-view.spec.js': ['reports'],
   'e2e/references.spec.js': ['reports'],

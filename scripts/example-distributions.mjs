@@ -85,9 +85,14 @@ export const DISTRIBUTION_SPECS = [
     variables: [
       { Source: 'Denominator', Variable: 'drv_ip_nonstarter_status', categories: ['Dosed', 'Potential Non-Starter – within window', 'Potential Non-Starter – outside window', 'Confirmed Non-Starter', NR] },
     ],
-    assign(rec, rand) {
+    // The site's potential non-starters follow its confirmed ones (two thirds within the window); everyone else is
+    // dosed, so Dosed equals the dosed population treatment disposition covers.
+    assign(rec, rand, ctx) {
       if (rec.inNumerator) return { drv_ip_nonstarter_status: 'Confirmed Non-Starter' };
-      return { drv_ip_nonstarter_status: weighted(rand, [['Dosed', 955], ['Potential Non-Starter – within window', 30], ['Potential Non-Starter – outside window', 15]]) };
+      const after = rec.index - ctx.numerator;
+      if (after < Math.round((ctx.potential * 2) / 3)) return { drv_ip_nonstarter_status: 'Potential Non-Starter – within window' };
+      if (after < ctx.potential) return { drv_ip_nonstarter_status: 'Potential Non-Starter – outside window' };
+      return { drv_ip_nonstarter_status: 'Dosed' };
     },
   },
   {
@@ -165,8 +170,8 @@ export const DISTRIBUTION_SPECS = [
  * first `numerator` of them in the numerator. Deviation metrics have one record per deviation, each owned
  * by one of the site's `participants`.
  */
-export function simulateRecords(spec, { numerator, denominator, participants, early = 0, progress = 0 }, rand) {
-  const ctx = { early, progress };
+export function simulateRecords(spec, { numerator, denominator, participants, potential = 0, early = 0, progress = 0 }, rand) {
+  const ctx = { early, progress, numerator, potential };
   const n = spec.unit === 'deviation' ? numerator : denominator;
   return Array.from({ length: n }, (_, index) => {
     const rec = {

@@ -114,7 +114,8 @@ test('48.04: each breakdown section\'s title and its unit, % or n, share a row, 
   const counted = { Numerator: 0, Denominator: 0 };
   for (const c of BREAKDOWNS) {
     const want = sectionFor(c);
-    const sec = card(page, c.id).locator('.dist-sec');
+    // The card's own section: a lead from another metric's section is out of that metric's population.
+    const sec = card(page, c.id).locator('.dist-sec:not([data-lead])');
     const [title, unit] = await Promise.all([sec.locator('.sub-h').boundingBox(), sec.locator('.dist-cols').boundingBox()]);
     const t = /** @type {{ x: number, y: number, width: number, height: number }} */ (title);
     const u = /** @type {{ x: number, y: number, width: number, height: number }} */ (unit);

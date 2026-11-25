@@ -1,15 +1,15 @@
 state: second-study (reports)
-dom: sha256 d00a69ff7720eda5d64dcb7284872c0e3079000cf8244eae2c728311db53b55a (64181 characters)
+dom: sha256 c824dcdba9514239e42e083a8ef76288b35e34a1df103b4c6b111190ae0f0794 (65090 characters)
 tooltip: none
 drill-in: closed
 cards:
   eligibility-status · Analysis_kri0014: breakdowns 3
-  ie-criteria · Analysis_kri0014: breakdowns 6
+  ie-criteria · Analysis_kri0014: breakdowns 7
   premature-deaths-window · Analysis_kri0015: breakdowns 2
   premature-deaths-eligibility · Analysis_kri0015: breakdowns 2
   premature-deaths-related · Analysis_kri0015: breakdowns 3
-  ip-status · Analysis_kri0019: breakdowns 4
-  treatment-disposition · Analysis_kri0007-2: breakdowns 3
+  ip-status · Analysis_kri0019: breakdowns 3
+  treatment-disposition · Analysis_kri0007-2: breakdowns 4
   treatment-discontinuation-reasons · Analysis_kri0007-2: breakdowns 6
   study-disposition · Analysis_kri0006: breakdowns 7
   screening-disposition · Analysis_kri0012: breakdowns 2
@@ -34,20 +34,21 @@ accessibility:
     - text: Eligibility status %
     - list:
       - 'listitem "Eligible: 96.5%, 848 of 879"': Eligible 96.5% (848)
-      - 'listitem "Ineligible: 2.0%, 18 of 879"': Ineligible 2.0% (18)
-      - 'listitem "Potentially Ineligible: 1.5%, 13 of 879"': Potentially Ineligible 1.5% (13)
+      - 'listitem "Ineligible: 1.8%, 16 of 879"': Ineligible 1.8% (16)
+      - 'listitem "Potentially Ineligible: 1.7%, 15 of 879"': Potentially Ineligible 1.7% (15)
 - text: Eligibility I/E Criteria 3.5% 31 / 879
 - group "Eligibility breakdowns":
   - region "Top I/E criteria not met, n of 31 ineligible":
     - text: Top I/E criteria not met n
     - list:
-      - 'listitem "IN07: 7 of 31"': IN07 7
-      - 'listitem "IN01: 6 of 31"': IN01 6
+      - 'listitem "IN01: 8 of 31"': IN01 8
+      - 'listitem "EX01: 6 of 31"': EX01 6
       - 'listitem "EX06: 6 of 31"': EX06 6
-      - 'listitem "EX01: 5 of 31"': EX01 5
+      - 'listitem "IN07: 5 of 31"': IN07 5
       - 'listitem "EX03: 5 of 31"': EX03 5
-      - 'listitem "+ 3 more: 12 of 31"': + 3 more 12
-- 'button "Notes: A participant can fall in more than one category, so the counts add up to more than 31."': "* Notes"
+      - 'listitem "+ 3 more: 11 of 31"': + 3 more 11
+      - 'listitem "Not recorded: 2 of 31"': Not recorded 2
+- 'button "Notes: A participant can fall in more than one category, so the counts add up to more than 31. Not recorded: the source value was blank."': "* Notes"
 - text: Premature Deaths – Time Window 2.6% 23 / 879
 - group "Early Deaths (90 days) breakdowns":
   - region "Deaths by time from randomisation, n of 23 deaths":
@@ -60,45 +61,48 @@ accessibility:
   - region "Deaths by eligibility, n of 23 deaths":
     - text: Deaths by eligibility n
     - list:
-      - 'listitem "Eligible: 20 of 23"': Eligible 20
-      - 'listitem "Ineligible: 3 of 23"': Ineligible 3
+      - 'listitem "Eligible: 19 of 23"': Eligible 19
+      - 'listitem "Ineligible: 4 of 23"': Ineligible 4
 - text: Premature Deaths – Relatedness 2.6% 23 / 879
 - group "Early Deaths (90 days) breakdowns":
   - region "Deaths by relatedness to treatment, n of 23 deaths":
     - text: Deaths by relatedness to treatment n
     - list:
-      - 'listitem "No: 16 of 23"': No 16
-      - 'listitem "Yes: 5 of 23"': Yes 5
-      - 'listitem "Unknown: 2 of 23"': Unknown 2
+      - 'listitem "No: 13 of 23"': No 13
+      - 'listitem "Yes: 10 of 23"': Yes 10
+      - 'listitem "Unknown: 0 of 23"': Unknown 0
 - text: IP Status 1.6% 14 / 879
 - group "IP Non-starters breakdowns":
   - region "IP status, % of 879 enrolled":
     - text: IP status %
     - list:
-      - 'listitem "Dosed: 93.9%, 825 of 879"': Dosed 93.9% (825)
-      - 'listitem "Potential Non-Starter – within window: 2.8%, 25 of 879"': Potential Non-Starter – within window 2.8% (25)
-      - 'listitem "Potential Non-Starter – outside window: 1.7%, 15 of 879"': Potential Non-Starter – outside window 1.7% (15)
+      - 'listitem "Potential Non-Starter – within window: 2.4%, 21 of 879"': Potential Non-Starter – within window 2.4% (21)
       - 'listitem "Confirmed Non-Starter: 1.6%, 14 of 879"': Confirmed Non-Starter 1.6% (14)
-- text: Treatment Disposition 4.9% 42 / 865
+      - 'listitem "Potential Non-Starter – outside window: 1.1%, 10 of 879"': Potential Non-Starter – outside window 1.1% (10)
+- text: Treatment Disposition 4.8% 40 / 834
 - group "Premature Treatment Discontinuation Rate breakdowns":
-  - region "Treatment disposition, % of 865 dosed":
+  - region "IP status, % of 879 enrolled":
+    - text: IP status %
+    - list:
+      - 'listitem "Dosed: 94.9%, 834 of 879"': Dosed 94.9% (834)
+  - region "Treatment disposition, % of 834 dosed":
     - text: Treatment disposition %
     - list:
-      - 'listitem "Dosed – treatment complete: 55.5%, 480 of 865"': Dosed – treatment complete 55.5% (480)
-      - 'listitem "Dosed – ongoing: 39.7%, 343 of 865"': Dosed – ongoing 39.7% (343)
-      - 'listitem "Dosed – premature treatment discontinuation: 4.9%, 42 of 865"': Dosed – premature treatment discontinuation 4.9% (42)
-- text: Premature Treatment Discontinuation Reasons 4.9% 42 / 865
+      - 'listitem "Dosed – treatment complete: 55.0%, 459 of 834"': Dosed – treatment complete 55.0% (459)
+      - 'listitem "Dosed – ongoing: 40.2%, 335 of 834"': Dosed – ongoing 40.2% (335)
+      - 'listitem "Dosed – premature treatment discontinuation: 4.8%, 40 of 834"': Dosed – premature treatment discontinuation 4.8% (40)
+- text: Premature Treatment Discontinuation Reasons 4.8% 40 / 834
 - group "Premature Treatment Discontinuation Rate breakdowns":
-  - region "Reasons for treatment discontinuation, n of 42 discontinued":
+  - region "Reasons for treatment discontinuation, n of 40 discontinued":
     - text: Reasons for treatment discontinuation n
     - list:
-      - 'listitem "Physician Decision: 13 of 42"': Physician Decision 13
-      - 'listitem "Other: 13 of 42"': Other 13
-      - 'listitem "Progressive Disease: 11 of 42"': Progressive Disease 11
-      - 'listitem "Withdrawal by Participant: 8 of 42"': Withdrawal by Participant 8
-      - 'listitem "Adverse Event: 5 of 42"': Adverse Event 5
-      - 'listitem "Not recorded: 2 of 42"': Not recorded 2
-- 'button "Notes: A participant can fall in more than one category, so the counts add up to more than 42. Not recorded: the source value was blank."': "* Notes"
+      - 'listitem "Progressive Disease: 19 of 40"': Progressive Disease 19
+      - 'listitem "Other: 10 of 40"': Other 10
+      - 'listitem "Physician Decision: 8 of 40"': Physician Decision 8
+      - 'listitem "Withdrawal by Participant: 8 of 40"': Withdrawal by Participant 8
+      - 'listitem "Adverse Event: 7 of 40"': Adverse Event 7
+      - 'listitem "Not recorded: 2 of 40"': Not recorded 2
+- 'button "Notes: A participant can fall in more than one category, so the counts add up to more than 40. Not recorded: the source value was blank."': "* Notes"
 - text: Study Disposition – Enrolled 6.9% 61 / 879
 - group "Study Discontinuation Rate breakdowns":
   - region "Study disposition, % of 879 enrolled":
@@ -124,67 +128,67 @@ accessibility:
   - region "Screen failure reasons, n of 144 screen failures":
     - text: Screen failure reasons n
     - list:
-      - 'listitem "Inclusion Criteria Not Met: 64 of 144"': Inclusion Criteria Not Met 64
-      - 'listitem "Exclusion Criteria Met: 33 of 144"': Exclusion Criteria Met 33
-      - 'listitem "Withdrawal by Participant: 24 of 144"': Withdrawal by Participant 24
-      - 'listitem "Other: 11 of 144"': Other 11
-      - 'listitem "Not recorded: 12 of 144"': Not recorded 12
+      - 'listitem "Inclusion Criteria Not Met: 63 of 144"': Inclusion Criteria Not Met 63
+      - 'listitem "Exclusion Criteria Met: 40 of 144"': Exclusion Criteria Met 40
+      - 'listitem "Withdrawal by Participant: 22 of 144"': Withdrawal by Participant 22
+      - 'listitem "Other: 12 of 144"': Other 12
+      - 'listitem "Not recorded: 7 of 144"': Not recorded 7
 - 'button "Notes: Not recorded: the source value was blank."': "* Notes"
-- text: Important Protocol Deviation Categories 0.06 per 28 days 380 / 5,928.3
+- text: Important Protocol Deviation Categories 0.06 per 28 days 367 / 5,714.8
 - group "Important Protocol Deviation Rate breakdowns":
-  - region "Top 5 categories, n of 380 deviations":
+  - region "Top 5 categories, n of 367 deviations":
     - text: Top 5 categories n
     - list:
-      - 'listitem "Informed Consent: 83 of 380"': Informed Consent 83
-      - 'listitem "Investigational Product: 72 of 380"': Investigational Product 72
-      - 'listitem "Eligibility Criteria: 71 of 380"': Eligibility Criteria 71
-      - 'listitem "Study Procedures: 64 of 380"': Study Procedures 64
-      - 'listitem "Visit Schedule: 35 of 380"': Visit Schedule 35
-      - 'listitem "+ 2 more: 45 of 380"': + 2 more 45
-      - 'listitem "Not recorded: 10 of 380"': Not recorded 10
+      - 'listitem "Eligibility Criteria: 80 of 367"': Eligibility Criteria 80
+      - 'listitem "Informed Consent: 77 of 367"': Informed Consent 77
+      - 'listitem "Investigational Product: 65 of 367"': Investigational Product 65
+      - 'listitem "Study Procedures: 52 of 367"': Study Procedures 52
+      - 'listitem "Safety Reporting: 36 of 367"': Safety Reporting 36
+      - 'listitem "+ 2 more: 48 of 367"': + 2 more 48
+      - 'listitem "Not recorded: 9 of 367"': Not recorded 9
 - 'button "Notes: Not recorded: the source value was blank."': "* Notes"
-- text: Non-Important Protocol Deviation Categories 0.52 per 28 days 3,055 / 5,928.3
+- text: Non-Important Protocol Deviation Categories 0.52 per 28 days 2,945 / 5,714.8
 - group "Non-Important Protocol Deviation Rate breakdowns":
-  - region "Top 5 categories, n of 3,055 deviations":
+  - region "Top 5 categories, n of 2,945 deviations":
     - text: Top 5 categories n
     - list:
-      - 'listitem "Visit Schedule: 1,065 of 3,055"': Visit Schedule 1,065
-      - 'listitem "Study Procedures: 891 of 3,055"': Study Procedures 891
-      - 'listitem "Investigational Product: 301 of 3,055"': Investigational Product 301
-      - 'listitem "Safety Reporting: 244 of 3,055"': Safety Reporting 244
-      - 'listitem "Other: 196 of 3,055"': Other 196
-      - 'listitem "+ 2 more: 273 of 3,055"': + 2 more 273
-      - 'listitem "Not recorded: 85 of 3,055"': Not recorded 85
+      - 'listitem "Visit Schedule: 1,042 of 2,945"': Visit Schedule 1,042
+      - 'listitem "Study Procedures: 868 of 2,945"': Study Procedures 868
+      - 'listitem "Investigational Product: 280 of 2,945"': Investigational Product 280
+      - 'listitem "Safety Reporting: 228 of 2,945"': Safety Reporting 228
+      - 'listitem "Other: 181 of 2,945"': Other 181
+      - 'listitem "+ 2 more: 262 of 2,945"': + 2 more 262
+      - 'listitem "Not recorded: 84 of 2,945"': Not recorded 84
 - 'button "Notes: Not recorded: the source value was blank."': "* Notes"
-- text: Important Protocol Deviation Rate 0.06 per 28 days 380 / 5,928.3
+- text: Important Protocol Deviation Rate 0.06 per 28 days 367 / 5,714.8
 - list "Sites by flag":
   - listitem: Red 0 0.0%
   - listitem: Amber 4 23.5%
   - listitem: Green 13 76.5%
   - listitem: No flag 0 0.0%
 - button "Charts ▾"
-- text: Non-Important Protocol Deviation Rate 0.52 per 28 days 3,055 / 5,928.3
+- text: Non-Important Protocol Deviation Rate 0.52 per 28 days 2,945 / 5,714.8
 - list "Sites by flag":
   - listitem: Red 2 11.8%
   - listitem: Amber 0 0.0%
   - listitem: Green 15 88.2%
   - listitem: No flag 0 0.0%
 - button "Charts ▾"
-- text: SAE Reporting Rate 0.09 per 28 days 551 / 5,928.3
+- text: SAE Reporting Rate 0.09 per 28 days 530 / 5,714.8
 - list "Sites by flag":
   - listitem: Red 1 5.9%
   - listitem: Amber 4 23.5%
   - listitem: Green 12 70.6%
   - listitem: No flag 0 0.0%
 - button "Charts ▾"
-- text: AE Reporting Rate 1.34 per 28 days 7,967 / 5,928.3
+- text: AE Reporting Rate 1.34 per 28 days 7,681 / 5,714.8
 - list "Sites by flag":
   - listitem: Red 0 0.0%
   - listitem: Amber 1 5.9%
   - listitem: Green 16 94.1%
   - listitem: No flag 0 0.0%
 - button "Charts ▾"
-- text: G3+ Lab Abnormality Rate 3.7% 720 / 19,324
+- text: G3+ Lab Abnormality Rate 3.7% 692 / 18,634
 - list "Sites by flag":
   - listitem: Red 0 0.0%
   - listitem: Amber 0 0.0%

@@ -9,9 +9,10 @@ import { reportLink } from '../app/report-links.js';
 
 /**
  * @param {object} dataSpec
- * @param {{ store: import('../data/store.js').PortfolioStore, studyId: string, metricId?: string }} ctx
+ * @param {{ store: import('../data/store.js').PortfolioStore, studyId: string, metricId?: string, leadMetricId?: string }} ctx
+ *   `leadMetricId`: another metric whose distributions a breakdown leads with.
  */
-export function resolveData(dataSpec, { store, studyId, metricId }) {
+export function resolveData(dataSpec, { store, studyId, metricId, leadMetricId }) {
   const date = store.latestDate(studyId);
   const data = { studyId, date };
 
@@ -28,6 +29,10 @@ export function resolveData(dataSpec, { store, studyId, metricId }) {
   }
 
   if (dataSpec.distributions === 'self' && metricId) data.distributions = store.distributionRows(studyId, date, metricId);
+  if (dataSpec.distributions === 'self' && leadMetricId) {
+    data.leadMetric = store.metrics.find((m) => m.MetricID === leadMetricId) ?? null;
+    data.leadDistributions = store.distributionRows(studyId, date, leadMetricId);
+  }
   if (dataSpec.bounds === 'self' && metricId) data.bounds = store.boundsRows(studyId, date, metricId);
   if (dataSpec.groups === 'self') data.groups = store.groupRows(studyId, date);
   if (dataSpec.history === 'self' && metricId) {
