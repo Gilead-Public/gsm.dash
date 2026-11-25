@@ -171,3 +171,26 @@ test('24.02: the status line names every active sort and its direction, marking 
   await control(page, 'select[data-groupby]').selectOption('none');
   expect(await named(), 'ungrouped').toBe(`Studies (hidden) ${dir}`);
 });
+
+test('the header\'s buttons, Admin included, stay on the title\'s row at any width; the open filter bar sits beside them when there\'s room and on a row beneath them when there isn\'t; and opening Admin closes Config', async ({ app, page }) => {
+  for (const [width, beside] of /** @type {Array<[number, boolean]>} */ ([[1900, true], [1100, false], [700, false]])) {
+    await page.setViewportSize({ width, height: 600 });
+    await page.goto('about:blank');
+    await app.open();
+    await page.locator('#header-controls [data-open="filters"]').click();
+    const middle = (/** @type {string} */ s) => page.locator(s).first().evaluate((e) => { const r = e.getBoundingClientRect(); return r.top + r.height / 2; });
+    const title = await middle('header.app .logo');
+    for (const button of ['[data-open="filters"]', '[data-open="config"]', '[data-reset]', '[data-open="admin"]']) {
+      expect(Math.abs((await middle(`#header-controls ${button}`)) - title), `${width}px: ${button} level with the title`).toBeLessThanOrEqual(2);
+    }
+    const bar = /** @type {{ y: number }} */ (await page.locator('#header-controls .filter-bar').boundingBox());
+    const buttons = /** @type {{ y: number, height: number }} */ (await page.locator('#header-controls .hbtns').boundingBox());
+    expect(beside ? Math.abs(bar.y + 0 - buttons.y) <= buttons.height : bar.y >= buttons.y + buttons.height, `${width}px: the bar ${beside ? 'beside' : 'beneath'} the buttons`).toBe(true);
+  }
+  const host = page.locator('#header-controls');
+  await host.locator('[data-open="config"]').click();
+  await expect(host.locator('[data-pop="config"]')).toBeVisible();
+  await host.locator('[data-open="admin"]').click();
+  await expect(host.locator('[data-pop="admin"]')).toBeVisible();
+  await expect(host.locator('[data-pop="config"]'), 'one popover at a time').toBeHidden();
+});

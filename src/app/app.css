@@ -111,7 +111,8 @@ body[data-page="study"] .wrap { max-width: 1720px; }
 .content { min-width: 0; }
 header.app {
   display: flex;
-  align-items: center;
+  /* Top-aligned, so the title stays level with the buttons when the filter bar drops to a row beneath them. */
+  align-items: flex-start;
   gap: 14px;
   flex-wrap: wrap;
   padding: 18px 0 14px;
@@ -122,8 +123,11 @@ header.app .logo { display: block; height: 32px; width: auto; margin-right: -4px
 header.app h1 { font-family: "Archivo", "Segoe UI", system-ui, sans-serif; font-size: 22px; font-weight: 700; margin: 0; }
 
 /* header controls: Filters (a chip bar, collapsed on load), Config and Reset, pulled right */
-#header-controls { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-.hctl { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+/* The controls take the room beside the title, never less than the buttons need, and wrap inside it. */
+#header-controls { flex: 1 1 0; margin-left: auto; min-height: 32px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+/* The bar comes first, so it wraps first: with too little room, it moves to a line beneath the buttons (wrap-reverse). */
+.hctl { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap-reverse; gap: 8px; }
+.hbtns { display: flex; align-items: center; gap: 8px; flex: none; min-height: 32px; }
 /* Config opens from the header controls' right edge, not its button's, so it stays inside the window at any width or
    zoom. */
 #header-controls { position: relative; }
@@ -133,7 +137,7 @@ header.app h1 { font-family: "Archivo", "Segoe UI", system-ui, sans-serif; font-
 .hbtn.on { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
 .hbtn .badge { font: 600 12px "IBM Plex Mono", monospace; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 10px; background: var(--accent); color: var(--on-accent); display: inline-flex; align-items: center; justify-content: center; }
 .fchip::after, .hbtn[data-open="config"]::after { content: "▾"; font-size: 10px; opacity: 0.7; }
-.filter-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.filter-bar { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 6px; }
 .filter-bar[hidden] { display: none; }
 /* Group rows by arranges the rows the filters choose; it sits after them, apart, and isn't a filter (#22). */
 .fbar-group { display: inline-flex; align-items: center; gap: 6px; margin-left: 4px; padding-left: 10px; border-left: 1px solid var(--line-2); font-size: 12px; color: var(--ink-2); white-space: nowrap; }
@@ -470,9 +474,10 @@ div:where(.portfolio-table) { display: block; }
 
 /* bands: a category's header, folded to headline tiles in Overview */
 table.po thead tr.band th.open { box-shadow: inset 0 3px 0 var(--accent); }
-table.po thead tr.band th.closed { text-align: left; vertical-align: bottom; padding: 6px 9px 7px; border-bottom: 2px solid var(--line-2); }
+/* The label sits at the top, level with POPULATION, and the abbreviations at the bottom, level with the columns' heads. */
+table.po thead tr.band th.closed { text-align: left; vertical-align: top; padding: 6px 9px 30px; border-bottom: 2px solid var(--line-2); }
 table.po thead tr.band th.closed .u { text-transform: none; font-weight: 400; margin-top: 3px; }
-table.po thead tr.band th.closed .otiles { display: flex; margin-top: 5px; }
+table.po thead tr.band th.closed .otiles { display: flex; position: absolute; left: 9px; bottom: 7px; }
 
 /* Overview tiles: one headline value per metric */
 table.po .otiles { display: inline-flex; gap: 2px; vertical-align: middle; }
@@ -500,6 +505,7 @@ tr.study.sel td.grp { box-shadow: inset 4px 0 0 var(--accent), inset 0 1.5px 0 v
 .mgroup { margin-bottom: 6px; }
 .mgroup-head { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--ink); margin: 6px 0 2px; }
 .mgroup-toggle { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.mgroup-toggle input { flex: none; margin: 0; accent-color: var(--accent); }
 /* A configured group's metrics sit behind its caret (#47). */
 /* At least 24px square, the minimum comfortable target; the checkbox beside it is a separate action. */
 .mgroup-caret { flex: none; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; border-radius: 5px; background: none; font-size: 14px; line-height: 1; color: var(--ink-2); cursor: pointer; }
@@ -507,12 +513,11 @@ tr.study.sel td.grp { box-shadow: inset 4px 0 0 var(--accent), inset 0 1.5px 0 v
 .mgroup-caret[aria-expanded="true"]::before { content: "▾"; }
 .mgroup-caret:hover { color: var(--accent); background: var(--accent-soft); }
 .mgroup-body.nested { padding-left: 32px; }
-.mgroup-all { flex: none; white-space: nowrap; font-size: 12px; }
 /* In a narrow window or at high zoom, Config's two sections stack. */
 @media (max-width: 640px) { .config-pop { grid-template-columns: minmax(0, 1fr); } }
 /* The table has no studies or no metrics: say which, with the action that brings them back (#21, #22). */
 .empty-notes p { margin: 0 0 10px; padding: 10px 12px; border: 1px solid var(--line-2); border-radius: 8px; background: var(--panel); font-size: 14px; color: var(--ink); }
-/* A long group name wraps; the caret, checkbox, count and Select all keep their size. */
+/* A long group name wraps; the caret, checkbox and count keep their size. */
 .mgroup-toggle > span { overflow-wrap: anywhere; }
 .mgroup-head .cnt { white-space: nowrap; flex: none; margin-left: auto; font: 400 12px "IBM Plex Mono", monospace; color: var(--ink-3); }
 .metric-opt { grid-template-columns: auto 44px 1fr; }

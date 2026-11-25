@@ -110,7 +110,7 @@ test('27.05: the table view carries over to a study report, which applies its hi
 
   const keys = [...new Set(new URLSearchParams(new URL(page.url()).hash.slice(1)).keys())].sort();
   expect(keys, 'every setting moved from its default').toEqual(
-    ['cfgpanel', 'collapse', 'combine', 'dir', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'hidebygroup', 'hidegroup', 'legend', 'perrow', 'show', 'sort', 'theme', 'view'].sort(),
+    ['cfgpanel', 'collapse', 'combine', 'dir', 'filter.phase', 'filter.status', 'group', 'heatmap', 'hide', 'legend', 'perrow', 'show', 'sort', 'theme', 'view'].sort(),
   );
   // The study report also leaves out the hidden group's metrics (16.03).
   /** @type {string[]} */

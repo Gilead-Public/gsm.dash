@@ -104,7 +104,8 @@ export function PortfolioTable({ store }) {
           );
         }
         return (
-          <th key={g.category} rowSpan={2} className="bandh gs closed" data-band={g.category}>
+          // The abbreviations sit at the cell's foot, out of its flow, so its width is theirs: 46px tiles, 2px apart, 9px in.
+          <th key={g.category} rowSpan={2} className="bandh gs closed" data-band={g.category} style={{ minWidth: 48 * n + 16 }}>
             {g.category}
             <span className="otiles">
               {g.metrics.map((/** @type {any} */ m) => (

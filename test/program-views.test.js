@@ -152,30 +152,29 @@ describe('URL params', () => {
     expect([...b.state.filters.therapeutic_area]).toEqual(['Cardiology, Renal']);
   });
 
-  it('27.05: a study report\'s store takes only the hidden metrics, those its hidden groups hide included (#27)', () => {
+  it('27.05: a study report\'s store takes only the hidden metrics, a group switched off included (#27)', () => {
     changeEveryField(store);
     const study = new PortfolioStore(portfolio);
     study.applyMetricParams(store.programParams());
     const { hiddenMetrics } = viewState(store);
-    const byGroup = store.metricCategories(store.supportedMetrics()).filter((g) => store.state.hiddenGroups.has(g.category)).flatMap((g) => g.metrics.map((m) => m.MetricID));
-    expect(byGroup.length).toBeGreaterThan(0);
-    expect(viewState(study)).toEqual({ ...viewState(new PortfolioStore(portfolio)), hiddenMetrics: [...new Set([...hiddenMetrics, ...byGroup])].sort() });
+    const lastGroup = store.metricCategories(store.supportedMetrics()).at(-1).metrics.map((m) => m.MetricID);
+    expect(hiddenMetrics, 'the group switched off').toEqual(expect.arrayContaining(lastGroup));
+    expect(viewState(study)).toEqual({ ...viewState(new PortfolioStore(portfolio)), hiddenMetrics });
   });
 
-  it('16.03: a study report shows exactly the metrics the portfolio shows, with groups hidden, while the portfolio keeps its checkboxes as they were (#16)', () => {
+  it('16.03: a study report shows exactly the metrics the portfolio shows, groups switched on and off included, and the portfolio comes back with the same checkboxes (#16)', () => {
     const groups = [{ name: 'One', metrics: store.supportedMetrics().slice(0, 3).map((m) => m.MetricID), hidden: true }];
     const s = new PortfolioStore({ ...portfolio, config: { groups } });
     s.toggleMetric(s.supportedMetrics()[5].MetricID);
-    s.toggleGroupHidden('Other');
-    s.toggleGroupHidden('One');
-    s.toggleGroupHidden('One');
+    s.toggleGroup('One');
+    s.toggleMetric(groups[0].metrics[0]);
     const params = s.programParams();
     const study = new PortfolioStore(portfolio);
     study.applyMetricParams(new URLSearchParams(params.toString()));
     expect(study.visibleMetrics().map((m) => m.MetricID)).toEqual(s.visibleMetrics().map((m) => m.MetricID));
     const back = new PortfolioStore({ ...portfolio, config: { groups } });
     back.applyProgramParams(new URLSearchParams(params.toString()));
-    expect([...back.state.hiddenMetrics], 'the portfolio\'s checkboxes').toEqual([s.supportedMetrics()[5].MetricID]);
+    expect([...back.state.hiddenMetrics].sort(), 'the portfolio\'s checkboxes').toEqual([groups[0].metrics[0], s.supportedMetrics()[5].MetricID].sort());
     expect(back.visibleMetrics().map((m) => m.MetricID)).toEqual(s.visibleMetrics().map((m) => m.MetricID));
   });
 });
@@ -312,7 +311,6 @@ function viewState(s) {
     heatmap: state.heatmap,
     filters: Object.fromEntries(Object.entries(state.filters).map(([k, v]) => [k, sorted(v)])),
     hiddenMetrics: sorted(state.hiddenMetrics),
-    hiddenGroups: sorted(state.hiddenGroups),
     columns: sorted(state.columns),
     admin: state.admin,
   };
@@ -337,7 +335,7 @@ function changeEveryField(s) {
   s.setAdmin('legend', 'on');
   s.setAdmin('combine', 'on');
   s.toggleMetric(s.supportedMetrics()[1].MetricID);
-  s.toggleGroupHidden(s.groupNames().at(-1));
+  s.toggleGroup(s.groupNames().at(-1));
   s.toggleColumn('name');
   s.toggleColumn('status');
 }
@@ -365,40 +363,39 @@ describe('metric groups (#16, #21)', () => {
     expect([lone.visibleMetrics().length, lone.programParams().has('hidegroup')], 'an address hiding it changes nothing').toEqual([all.length, false]);
   });
 
-  it('16.05: with `groups`, each group holds its metrics in its order, unlisted metrics trail in an Other group, and a hidden group starts hidden (#16)', () => {
+  it('16.05: with `groups`, each group holds its metrics in its order, unlisted metrics trail in an Other group, and a group configured hidden starts with its metrics off (#16)', () => {
     const all = new PortfolioStore(portfolio).supportedMetrics().map((m) => m.MetricID);
     const [a, b, c, d] = [all[5], all[0], all[9], all[2]];
     const groups = [{ name: 'Second', metrics: [a, b] }, { name: 'First', metrics: [c], hidden: true }, { name: 'Third', metrics: [d] }];
     const s = new PortfolioStore({ ...portfolio, config: { groups } });
     const rest = all.filter((id) => ![a, b, c, d].includes(id));
     expect(ids(s.metricCategories(s.supportedMetrics()))).toEqual([['Second', [a, b]], ['First', [c]], ['Third', [d]], ['Other', rest]]);
-    expect([...s.state.hiddenGroups]).toEqual(['First']);
-    expect(s.visibleMetrics().map((m) => m.MetricID)).not.toContain(c);
-    // A study report has no configuration, so the address names the metrics a hidden group hides even at the default.
-    expect([...s.programParams()]).toEqual([['hidebygroup', c]]);
+    expect([...s.state.hiddenMetrics]).toEqual([c]);
+    expect(s.metricCategories().map((g) => g.category), 'its band').not.toContain('First');
+    // A study report has no configuration, so the address names the hidden metrics even at the default.
+    expect([...s.programParams()]).toEqual([['hide', c]]);
   });
 
-  it('21.04: a hidden group hides its metrics from the table without touching their checkboxes, travels in the address, and Reset restores the configured default (#21)', () => {
+  it('21.04: a group\'s checkbox switches all its metrics on, or off when all are on; its band shows while any is on; old addresses hiding groups open with their metrics off; Reset restores a group configured hidden (#21)', () => {
     const groups = [{ name: 'One', metrics: store.supportedMetrics().slice(0, 3).map((m) => m.MetricID), hidden: true }];
     const s = new PortfolioStore({ ...portfolio, config: { groups } });
-    const [x, y] = groups[0].metrics;
-    s.toggleGroupHidden('One');
-    s.toggleMetric(x);
-    expect(s.visibleMetrics().map((m) => m.MetricID)).toEqual(expect.arrayContaining([y]));
-    expect(s.visibleMetrics().map((m) => m.MetricID)).not.toContain(x);
-    s.toggleGroupHidden('Other');
-    expect(s.visibleMetrics().map((m) => m.MetricID)).toEqual(groups[0].metrics.filter((id) => id !== x));
-    expect([...s.state.hiddenMetrics]).toEqual([x]);
-    const params = s.programParams();
-    expect(params.getAll('hidegroup')).toEqual(['Other']);
-    const other = new PortfolioStore({ ...portfolio, config: { groups } });
-    other.applyProgramParams(new URLSearchParams(params.toString()));
-    expect([...other.state.hiddenGroups]).toEqual(['Other']);
-    other.applyProgramParams(new URLSearchParams('hidegroup=Nope'));
-    expect([...other.state.hiddenGroups], 'unknown names are dropped').toEqual(['One']);
+    const one = groups[0].metrics;
+    const offInOne = () => [...s.state.hiddenMetrics].filter((id) => one.includes(id)).sort();
+    const bands = () => s.metricCategories().map((g) => g.category);
+    expect([offInOne(), bands().includes('One')], 'configured hidden').toEqual([[...one].sort(), false]);
+    s.toggleMetric(one[0]);
+    expect(bands(), 'one metric on shows its band').toContain('One');
+    s.toggleGroup('One');
+    expect(offInOne(), 'some on: all on').toEqual([]);
+    s.toggleGroup('One');
+    expect([offInOne(), bands().includes('One')], 'all on: all off').toEqual([[...one].sort(), false]);
+    expect([s.programParams().has('hidegroup'), s.programParams().has('hidebygroup')]).toEqual([false, false]);
+    const old = new PortfolioStore({ ...portfolio, config: { groups } });
+    old.applyProgramParams(new URLSearchParams('hide=&hidegroup=Other&hidegroup=Nope'));
+    expect(old.visibleMetrics().map((m) => m.MetricID), 'an old address: Other\'s metrics off, unknown names dropped').toEqual(one);
+    s.toggleGroup('One');
     s.reset();
-    expect([...s.state.hiddenGroups]).toEqual(['One']);
-    expect([...s.programParams()]).toEqual(groups[0].metrics.map((id) => ['hidebygroup', id]));
+    expect(offInOne()).toEqual([...one].sort());
   });
 });
 

@@ -114,8 +114,7 @@ export class PortfolioStore extends EventTarget {
       heatmap: this.#defaults.heatmap, // 'none' | 'num' | 'den' | 'rate'; applies under Custom only (activeHeatmap)
       groupBy: this.#defaults.groupBy, // 'none' (one row per study) | a study param
       filters: { therapeutic_area: new Set(), phase: new Set(), status: new Set(), product: new Set(), study: new Set() },
-      hiddenMetrics: new Set(this.#defaults.metrics), // MetricIDs the user has switched off
-      hiddenGroups: new Set(this.#hiddenGroupDefaults()), // metric groups whose band is hidden (#21), independent of hiddenMetrics
+      hiddenMetrics: new Set(this.#defaultHidden()), // MetricIDs switched off; a band shows while any of its metrics is on
       collapsed: new Set(), // group-by buckets closed by the user; every group opens by default (#47)
       sort: { key: null, dir: null }, // key: 'label' | 'meta' | a MetricID
       detail: { metricId: null, tab: 'viz-bar' }, // study-page drill-in panel (W4)
@@ -154,16 +153,9 @@ export class PortfolioStore extends EventTarget {
     return this.metrics.filter((m) => m.GroupLevel === 'Site');
   }
 
-  /** Supported catalog minus user-hidden metrics and the metrics of hidden groups — what views should render. */
+  /** Supported catalog minus the metrics switched off — what views should render. */
   visibleMetrics() {
-    const hiddenGroup = new Set(
-      this.metricCategories(this.supportedMetrics())
-        .filter((g) => this.state.hiddenGroups.has(g.category))
-        .flatMap((g) => g.metrics.map((m) => m.MetricID)),
-    );
-    return this.supportedMetrics().filter(
-      (m) => !this.state.hiddenMetrics.has(m.MetricID) && !hiddenGroup.has(m.MetricID)
-    );
+    return this.supportedMetrics().filter((m) => !this.state.hiddenMetrics.has(m.MetricID));
   }
 
   /** Metrics banded into groups: as configured (#16's `groups`), or all in one. */
@@ -180,15 +172,26 @@ export class PortfolioStore extends EventTarget {
     return names.length > 1 ? names : [];
   }
 
-  #hiddenGroupDefaults() {
-    const names = this.groupNames();
-    return (this.#defaults.groups ?? []).filter((g) => g.hidden && names.includes(g.name)).map((g) => g.name);
+  /** The MetricIDs of the named groups, among those with a checkbox (`groupNames`). @param {string[]} names */
+  #metricsOfGroups(names) {
+    const offered = this.groupNames();
+    return this.metricCategories(this.supportedMetrics())
+      .filter((g) => offered.includes(g.category) && names.includes(g.category))
+      .flatMap((g) => g.metrics.map((/** @type {any} */ m) => m.MetricID));
   }
 
-  /** Show or hide one group's band; its metrics' own checkboxes are left as they are. */
-  toggleGroupHidden(name) {
-    const set = this.state.hiddenGroups;
-    set.has(name) ? set.delete(name) : set.add(name);
+  /** The metrics off by default: those the configuration hides, and those of a group it marks hidden (#16). */
+  #defaultHidden() {
+    const hiddenGroups = (this.#defaults.groups ?? []).filter((g) => g.hidden).map((g) => g.name);
+    return [...new Set([...this.#defaults.metrics, ...this.#metricsOfGroups(hiddenGroups)])];
+  }
+
+  /** A group's checkbox (#21): with all its metrics on, switches them all off; otherwise switches them all on. */
+  toggleGroup(name) {
+    const ids = this.#metricsOfGroups([name]);
+    const set = this.state.hiddenMetrics;
+    const allOn = ids.every((id) => !set.has(id));
+    for (const id of ids) allOn ? set.add(id) : set.delete(id);
     this.#emit();
   }
 
@@ -222,18 +225,7 @@ export class PortfolioStore extends EventTarget {
     const hidden = this.metrics.map((m) => m.MetricID).filter((id) => state.hiddenMetrics.has(id));
     // Written even when it equals the configured default: a study report has no configuration, and takes the hidden
     // metrics from the link.
-    if (hidden.length || this.#defaults.metrics.length) addSet('hide', hidden);
-    const groups = this.groupNames();
-    const hiddenGroups = groups.filter((g) => state.hiddenGroups.has(g));
-    const defaultHidden = this.#hiddenGroupDefaults();
-    if (groups.some((g) => state.hiddenGroups.has(g) !== defaultHidden.includes(g))) addSet('hidegroup', hiddenGroups);
-    // A study report has no groups or configuration: it takes the metrics a hidden group hides as a list of its own,
-    // written even at the configured default and apart from `hide`, so the portfolio's checkboxes keep their own state
-    // (16.03).
-    const groupHidden = this.metricCategories(this.supportedMetrics())
-      .filter((g) => state.hiddenGroups.has(g.category))
-      .flatMap((g) => g.metrics.map((m) => m.MetricID));
-    add('hidebygroup', groupHidden);
+    if (hidden.length || this.#defaultHidden().length) addSet('hide', hidden);
     return writeAdmin(params, state.admin);
   }
 
@@ -254,24 +246,26 @@ export class PortfolioStore extends EventTarget {
     state.columns = new Set(chosen(params, 'cols', COLUMN_PARTS, this.#defaults.columns));
     const options = this.filterOptions();
     for (const param of Object.keys(state.filters)) state.filters[param] = new Set(known(params.getAll(`filter.${param}`), options[param]));
-    state.hiddenGroups = new Set(chosen(params, 'hidegroup', this.groupNames(), this.#hiddenGroupDefaults()));
-    this.#applyMetricParams(params);
+    this.#applyMetricParams(params, this.#defaultHidden());
+    // An older address or saved view hid whole groups apart from their metrics; it opens with those metrics off.
+    for (const id of this.#metricsOfGroups(params.getAll('hidegroup'))) state.hiddenMetrics.add(id);
     this.#emit();
   }
 
   /**
-   * What a study report takes from the portfolio's params: the hidden metrics, those its hidden groups hide included.
-   * One 'change'.
+   * What a study report takes from the portfolio's params: the hidden metrics, and those an older link's hidden groups
+   * hid (`hidebygroup`). One 'change'.
    */
   applyMetricParams(params) {
-    this.#applyMetricParams(params);
+    this.#applyMetricParams(params, this.#defaults.metrics);
     const ids = this.metrics.map((m) => m.MetricID);
     for (const id of params.getAll('hidebygroup')) if (ids.includes(id)) this.state.hiddenMetrics.add(id);
     this.#emit();
   }
 
-  #applyMetricParams(params) {
-    this.state.hiddenMetrics = new Set(chosen(params, 'hide', this.metrics.map((m) => m.MetricID), this.#defaults.metrics));
+  /** @param {URLSearchParams} params @param {string[]} fallback */
+  #applyMetricParams(params, fallback) {
+    this.state.hiddenMetrics = new Set(chosen(params, 'hide', this.metrics.map((m) => m.MetricID), fallback));
   }
 
   #bucketValues() {
@@ -284,16 +278,9 @@ export class PortfolioStore extends EventTarget {
     this.#emit();
   }
 
-  /** Ticks every metric given, e.g. a group's when none of them is selected. @param {string[]} metricIds */
-  selectMetrics(metricIds) {
-    for (const id of metricIds) this.state.hiddenMetrics.delete(id);
-    this.#emit();
-  }
-
-  /** Shows every metric: none unticked and no group hidden. */
+  /** Shows every metric. */
   showAllMetrics() {
     this.state.hiddenMetrics.clear();
-    this.state.hiddenGroups.clear();
     this.#emit();
   }
 

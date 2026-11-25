@@ -79,9 +79,10 @@ function FilterChoices({ store, param, values }) {
 
 /**
  * Config (#47), by what it changes: on the left the cells, the Cell display with Custom's own choices under it; on the
- * right the columns, the optional study columns (#21) and the metrics, each configured group's heading carrying a
- * checkbox that shows or hides its band. Configured groups start closed behind a caret, so the two sides balance; which
- * are open isn't part of the view.
+ * right the columns, the optional study columns (#21) and the metrics. Each configured group's heading carries a checkbox
+ * over its metrics' own: ticked when all are on, half-ticked when some are, clear when none are; its band shows while
+ * any is on. Configured groups start closed behind a caret, so the two sides balance; which are open isn't part of the
+ * view.
  * @param {{ store: any }} props
  */
 function ConfigPanel({ store }) {
@@ -163,7 +164,13 @@ function ConfigPanel({ store }) {
                   )}
                   {grouped ? (
                     <label className="mgroup-toggle">
-                      <input type="checkbox" data-group={g.category} checked={!state.hiddenGroups.has(g.category)} onChange={() => store.toggleGroupHidden(g.category)} />
+                      <input
+                        type="checkbox"
+                        data-group={g.category}
+                        checked={on === g.metrics.length}
+                        ref={(el) => void (el && (el.indeterminate = on > 0 && on < g.metrics.length))}
+                        onChange={() => store.toggleGroup(g.category)}
+                      />
                       <span>{g.category}</span>
                     </label>
                   ) : (
@@ -172,11 +179,6 @@ function ConfigPanel({ store }) {
                   <span className="cnt">
                     {on}/{g.metrics.length} selected
                   </span>
-                  {on === 0 && (
-                    <button type="button" className="linkbtn mgroup-all" data-select-all={g.category} onClick={() => store.selectMetrics(g.metrics.map((/** @type {any} */ m) => m.MetricID))}>
-                      Select all
-                    </button>
-                  )}
                 </div>
                 <div className={`mgroup-body ${grouped ? 'nested' : ''}`} id={`mgroup-${i}`} hidden={!open}>
                   {g.metrics.map((/** @type {any} */ m) => (
@@ -197,9 +199,11 @@ function ConfigPanel({ store }) {
 }
 
 /**
- * The portfolio's controls in the page header (#22, #24): Filters, collapsed whenever the report opens, then Config and
- * Reset. Opened, Filters shows a chip per filter that has choices, each opening them, then Group rows by. One popover is open at a time; a click
- * elsewhere or Escape closes it. Every control stays in the page while hidden, so the view's state is all there.
+ * The portfolio's controls in the page header (#22, #24): the Filters & grouping bar, collapsed whenever the report
+ * opens, then one group of buttons that never splits: Filters & grouping, Config, Reset and Admin (#46). The bar sits
+ * beside the buttons when there's room and drops to its own row beneath them when there isn't. Opened, it shows a chip
+ * per filter that has choices, each opening them, then Group rows by. One popover is open at a time; a click elsewhere
+ * or Escape closes it. Every control stays in the page while hidden, so the view's state is all there.
  * @param {{ store: any }} props
  */
 function Controls({ store }) {
@@ -249,44 +253,47 @@ function Controls({ store }) {
           </select>
         </label>
       </div>
-      <button
-        type="button"
-        className={`hbtn ${active ? 'on' : ''}`}
-        data-open="filters"
-        aria-expanded={filtersShown}
-        onClick={() => {
-          setFiltersShown((v) => !v);
-          setOpen(null);
-        }}
-      >
-        Filters &amp; grouping
-        {active > 0 && <span className="badge">{active}</span>}
-      </button>
-      <div className="popwrap cfgwrap">
-        <button type="button" className="hbtn" data-open="config" aria-expanded={open === 'config'} ref={configButton} onClick={() => toggle('config')}>
-          Config
-        </button>
-        {side && open === 'config' && <div className="drawer-scrim" data-scrim="" onClick={() => setOpen(null)} />}
-        <div
-          className={`hpop config-pop ${side ? 'drawer' : ''}`}
-          data-pop="config"
-          role={side ? 'dialog' : 'group'}
-          aria-modal={side ? 'true' : undefined}
-          aria-label="Config"
-          hidden={open !== 'config'}
-          ref={configPop}
+      <div className="hbtns">
+        <button
+          type="button"
+          className={`hbtn ${active ? 'on' : ''}`}
+          data-open="filters"
+          aria-expanded={filtersShown}
+          onClick={() => {
+            setFiltersShown((v) => !v);
+            setOpen(null);
+          }}
         >
-          {side && (
-            <button type="button" className="drawer-close" data-close="config" aria-label="Close Config" onClick={() => setOpen(null)}>
-              ×
-            </button>
-          )}
-          <ConfigPanel store={store} />
+          Filters &amp; grouping
+          {active > 0 && <span className="badge">{active}</span>}
+        </button>
+        <div className="popwrap cfgwrap">
+          <button type="button" className="hbtn" data-open="config" aria-expanded={open === 'config'} ref={configButton} onClick={() => toggle('config')}>
+            Config
+          </button>
+          {side && open === 'config' && <div className="drawer-scrim" data-scrim="" onClick={() => setOpen(null)} />}
+          <div
+            className={`hpop config-pop ${side ? 'drawer' : ''}`}
+            data-pop="config"
+            role={side ? 'dialog' : 'group'}
+            aria-modal={side ? 'true' : undefined}
+            aria-label="Config"
+            hidden={open !== 'config'}
+            ref={configPop}
+          >
+            {side && (
+              <button type="button" className="drawer-close" data-close="config" aria-label="Close Config" onClick={() => setOpen(null)}>
+                ×
+              </button>
+            )}
+            <ConfigPanel store={store} />
+          </div>
         </div>
+        <button type="button" className="hbtn" data-reset="" title="Return the whole view to its defaults" onClick={() => store.reset()}>
+          Reset
+        </button>
+        <AdminMenu admin={state.admin} onChange={(key, value) => store.setAdmin(key, value)} onOpen={() => setOpen(null)} />
       </div>
-      <button type="button" className="hbtn" data-reset="" title="Return the whole view to its defaults" onClick={() => store.reset()}>
-        Reset
-      </button>
     </div>
   );
 }
@@ -299,10 +306,7 @@ export function HeaderControls({ store }) {
   const host = typeof document === 'undefined' ? null : document.getElementById('header-controls');
   return host
     ? createPortal(
-        <>
-          <Controls store={store} />
-          <AdminMenu admin={store.state.admin} onChange={(key, value) => store.setAdmin(key, value)} />
-        </>,
+        <Controls store={store} />,
         host,
       )
     : null;

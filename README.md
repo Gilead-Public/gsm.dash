@@ -78,8 +78,9 @@ To share a build for feedback without releasing it: every CI run that passes als
   **Config**, by what it changes: Cells (the Cell display: Compact, Detailed,
   or Custom with its cell contents and heatmap; #47) and Columns (Study
   columns: study name, **Enrolled**, on by default, Status, #21; and the
-  metrics, each configured group's heading with a checkbox for its band and
-  a caret, closed by default, for its metrics);
+  metrics, each configured group's heading with a checkbox over its metrics,
+  ticked, half-ticked or clear, and a caret, closed by default, that shows
+  them; a band shows while any of its metrics is on);
   **Reset**; and
   **Admin**, a demo tool for the theme, the study grid's cards per row, Config
   as a popover or side panel, and a heatmap legend (#46). Enrolled, the
@@ -181,11 +182,12 @@ Portfolio defaults (#16): an optional `config.json` beside `portfolio.json` sets
 portfolio's initial grouping (`groupBy`), heatmap (`heatmap`), cell values (`show`),
 hidden metrics (`metrics`, MetricIDs), optional table columns (`columns`: `name`, `enroll`,
 `status`; #21), view (`view`: `overview` or `details`) and metric groups (`groups`: an
-ordered list of `{ "name", "metrics", "hidden" }`, each metric in one group; metrics no group
+ordered list of `{ "name", "metrics", "hidden" }`, each metric in one group, `hidden` starting
+its metrics off; metrics no group
 lists trail in an "Other" group, a reserved name; without it, or with an empty list, every metric
-sits in one band, "Metrics", with no group checkboxes; #21's group checkboxes in Config show or
-hide each band, and a study report opened from the portfolio leaves out the metrics a hidden
-group hides); every key is optional.
+sits in one band, "Metrics", with no group checkboxes; #21's group checkboxes in Config switch
+a group's metrics on or off, and a study report opened from the portfolio leaves out the
+metrics switched off); every key is optional.
 Metrics carry no group of their own: the wrapper supplies the default groups, and the example
 data writes its own `config.json` with the groups shown at the 24 Nov demo.
 The Enrolled column shows a study's count against its `ParticipantTarget` parameter when
