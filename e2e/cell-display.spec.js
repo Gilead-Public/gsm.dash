@@ -3,6 +3,7 @@
 // change, and the columns beside the metrics; grouped rows open by default.
 import { expect, readData, test } from './fixtures/app.js';
 import { chooseAdmin, chooseHeatmap, chooseView, closeControls, control } from './fixtures/controls.js';
+import { visibleLines } from './fixtures/visible.js';
 /** @typedef {import('@playwright/test').Page} Page */
 
 const portfolio = readData('portfolio.json');
@@ -52,7 +53,7 @@ const tableShows = (page) =>
 /** @param {Page} page */
 const pressed = (page) => control(page, 'button[data-display][aria-pressed="true"]').locator.evaluateAll((els) => els.map((e) => e.getAttribute('data-display')));
 
-test('47.01: Config\'s left section, Cells, holds Cell display, with Show in each cell and Heatmap only under Custom; its right section, Columns, holds Study columns, then Metrics; Group rows by is in Filters, not Config (#47)', async ({ app, page }) => {
+test('47.01: Config\'s left section, Cells, holds Cell display, with Show in each cell and Heatmap only under Custom; its right section, Columns, holds Study columns, then Metrics; Group rows by is in Filters, not Config; configured metric groups start closed behind a caret, a 24px button the keyboard works, and stay as left while Config closes and reopens; with no groups, or one, the list is open (#47)', async ({ app, page }) => {
   await app.open();
   for (const view of /** @type {const} */ (['compact', 'detailed', 'custom'])) {
     await chooseView(page, view);
@@ -65,6 +66,49 @@ test('47.01: Config\'s left section, Cells, holds Cell display, with Show in eac
   await closeControls(page);
   const filters = await page.locator('#header-controls .filter-bar').evaluate((bar) => [...bar.children].map((el) => el.querySelector('select[data-groupby]') ? 'group rows by' : el.textContent?.trim()));
   expect(filters.at(-1), 'Group rows by closes the Filters bar').toBe('group rows by');
+
+  // Each configured group starts closed behind its caret, which opens that group alone; with no groups, the list is open.
+  const pop = page.locator('#header-controls [data-pop="config"]');
+  const groupsSeen = () =>
+    pop.locator('.mgroup').evaluateAll((gs) => gs.map((g) => [g.querySelector('[data-expand]')?.getAttribute('aria-expanded') ?? 'no caret', /** @type {HTMLElement} */ (g.querySelector('.mgroup-body')).hidden]));
+  /** @type {string[]} */
+  const names = readData('config.json').groups.map((/** @type {{ name: string }} */ g) => g.name);
+  await page.locator('#header-controls [data-open="config"]').click();
+  expect(await groupsSeen(), 'every configured group closed').toEqual(names.map(() => ['false', true]));
+  const heading = await visibleLines(pop.locator('.mgroup').first().locator('.mgroup-head'));
+  expect(heading, 'a closed group\'s heading').toEqual([names[0], expect.stringMatching(/^\d+\/\d+ selected$/)]);
+  await pop.locator(`[data-expand="${names[1]}"]`).click();
+  expect(await groupsSeen(), 'a caret opens its own group').toEqual(names.map((_, i) => (i === 1 ? ['true', false] : ['false', true])));
+  await expect(pop.locator('.mgroup').nth(1).locator('input[data-metric]').first()).toBeVisible();
+  // The caret is a comfortable target the keyboard works; groups stay as left when Config closes and reopens, and start
+  // closed again after a reload.
+  const caret = pop.locator(`[data-expand="${names[2]}"]`);
+  const target = /** @type {{ width: number, height: number }} */ (await caret.boundingBox());
+  expect(Math.min(target.width, target.height), 'the caret\'s target, in px').toBeGreaterThanOrEqual(24);
+  await caret.focus();
+  await page.keyboard.press('Enter');
+  await expect(caret, 'Enter opens it').toHaveAttribute('aria-expanded', 'true');
+  await page.keyboard.press('Space');
+  await expect(caret, 'Space closes it').toHaveAttribute('aria-expanded', 'false');
+  await page.keyboard.press('Space');
+  await closeControls(page);
+  await page.locator('#header-controls [data-open="config"]').click();
+  expect(await groupsSeen(), 'Config closed and reopened: as left').toEqual(names.map((_, i) => (i === 1 || i === 2 ? ['true', false] : ['false', true])));
+  await closeControls(page);
+  await page.reload();
+  await page.locator('#app > .layout').waitFor();
+  await page.locator('#header-controls [data-open="config"]').click();
+  expect(await groupsSeen(), 'after a reload').toEqual(names.map(() => ['false', true]));
+  await closeControls(page);
+  for (const [label, config] of /** @type {Array<[string, object]>} */ ([
+    ['no groups configured', {}],
+    ['a single group', { groups: [{ name: 'All of them', metrics: readData('portfolio.json').metrics.filter((/** @type {any} */ m) => m.GroupLevel === 'Site' && m.Active !== false).map((/** @type {any} */ m) => m.MetricID) }] }],
+  ])) {
+    await app.openReport('portfolio', { document: (/** @type {any} */ doc) => void (doc.config = config) });
+    await page.locator('#header-controls [data-open="config"]').click();
+    expect(await groupsSeen(), label).toEqual([['no caret', false]]);
+    await closeControls(page);
+  }
 });
 
 test('47.02: Cell display has three buttons, one pressed, Compact by default: Compact shows one rate per metric, Detailed the open cells as defined with no trend or shading, Custom its Show and Heatmap choices; columns sort by the active heatmap, otherwise by rate (#47)', async ({ app, page }) => {
@@ -171,5 +215,20 @@ test('47.05: Config under each Cell display, as a popover and as a side panel, f
       await evidence.shot(page, `Config as a ${panel === 'side' ? 'side panel' : 'popover'}, ${view}`);
       await closeControls(page);
     }
+  }
+});
+
+test('47.06: Config stays inside the window when it is narrow or zoomed in, at 760 and 480 px wide, and below 640 px its two sections stack (#47)', async ({ app, page }) => {
+  for (const width of [760, 480]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto('about:blank');
+    await app.open();
+    await page.locator('#header-controls [data-open="config"]').click();
+    const pop = page.locator('#header-controls [data-pop="config"]');
+    const box = /** @type {{ x: number, width: number }} */ (await pop.boundingBox());
+    expect([Math.round(box.x) >= 0, box.x + box.width <= width + 0.5], `${width}px: inside the window`).toEqual([true, true]);
+    const [cells, columns] = /** @type {Array<{ y: number, height: number }>} */ (await Promise.all(['cells', 'columns'].map((s) => pop.locator(`[data-sec="${s}"]`).boundingBox())));
+    expect(cells.y + cells.height <= columns.y + 0.5, `${width}px: the sections stacked`).toBe(width < 640);
+    await closeControls(page);
   }
 });

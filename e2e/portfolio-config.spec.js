@@ -222,7 +222,7 @@ async function groupsShown(page) {
   return { bands, checkboxes, list };
 }
 
-test('16.05: the table\'s bands and Config\'s group checkboxes and metric list follow the configured groups, a group configured hidden starts hidden, unlisted metrics trail in Other, and without groups, or with an empty list, every metric is in one band, Metrics, with no group checkboxes (#16)', async ({ app, page }) => {
+test('16.05: the table\'s bands and Config\'s group checkboxes and metric list follow the configured groups, a group configured hidden starts hidden, unlisted metrics trail in Other, and without groups, or with an empty list, every metric is in one band, Metrics, with no group checkboxes, and a single group holding every metric is one band under its name, shown even if configured hidden (#16)', async ({ app, page }) => {
   /** @type {any[]} */
   const shown = shownMetrics(portfolio.metrics);
   const abbr = (/** @type {string} */ id) => /** @type {any} */ (catalog.find((m) => m.MetricID === id)).Abbreviation;
@@ -235,6 +235,8 @@ test('16.05: the table\'s bands and Config\'s group checkboxes and metric list f
     await app.openReport('portfolio', configured(config));
     expect(await groupsShown(page), label).toEqual({ bands: [['Metrics', all.map(abbr)]], checkboxes: [], list: [['Metrics', all]] });
   }
+  await app.openReport('portfolio', configured({ groups: [{ name: 'All of them', metrics: all, hidden: true }] }));
+  expect(await groupsShown(page), 'a single group holding every metric, configured hidden').toEqual({ bands: [['All of them', all.map(abbr)]], checkboxes: [], list: [['All of them', all]] });
 
   await app.openReport('portfolio', configured({ groups }));
   expect(await groupsShown(page)).toEqual({

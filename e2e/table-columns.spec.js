@@ -218,3 +218,39 @@ test('21.04: each group\'s checkbox hides and shows its whole band and nothing e
   expect(await bands(), 'after Reset').toEqual([band('Alpha', ids.slice(0, 4)), band('Gamma', ids.slice(8, 12)), band('Other', rest)]);
   expect(await ticked('Beta')).toBe(false);
 });
+
+test('21.05: a group\'s count reads how many of its metrics are selected, whether its band is shown or not; a shown group with none selected says so and offers Select all, which brings its band back; with every metric hidden, the page says so, and Show all metrics shows every group and metric (#21)', async ({ app, page }) => {
+  /** @type {Array<{ name: string, metrics: string[] }>} */
+  const groups = readData('config.json').groups;
+  const dq = /** @type {{ name: string, metrics: string[] }} */ (groups.find((g) => g.name === 'Data quality'));
+  const n = dq.metrics.length;
+  const host = page.locator('#header-controls');
+  const head = (/** @type {string} */ name) => host.locator('.mgroup').filter({ has: page.locator(`[data-expand="${name}"]`) }).locator('.mgroup-head');
+  const band = (/** @type {string} */ name) => page.locator(`.portfolio-table th[data-band="${name}"]`);
+  await app.open();
+
+  await control(page, 'input[data-group="Data quality"]').uncheck();
+  await host.locator('[data-open="config"]').click();
+  expect(await visibleLines(head('Data quality')), 'hidden, its metrics still selected').toEqual(['Data quality', `${n}/${n} selected`]);
+  await page.keyboard.press('Escape');
+  await control(page, 'input[data-group="Data quality"]').check();
+  for (const id of dq.metrics) await control(page, `input[data-metric="${id}"]`).uncheck();
+  await expect(band('Data quality'), 'shown, none selected: no band').toHaveCount(0);
+  await host.locator('[data-open="config"]').click();
+  expect(await visibleLines(head('Data quality')), 'none selected, said with the group closed').toEqual(['Data quality', `0/${n} selected`, 'Select all']);
+  await host.locator('[data-select-all="Data quality"]').click();
+  expect(await visibleLines(head('Data quality')), 'after Select all').toEqual(['Data quality', `${n}/${n} selected`]);
+  await page.keyboard.press('Escape');
+  await expect(band('Data quality'), 'Select all brings the band back').toHaveCount(1);
+
+  await expect(page.locator('[data-empty]')).toHaveCount(0);
+  await control(page, `input[data-metric="${groups[0].metrics[0]}"]`).uncheck();
+  for (const g of groups) await control(page, `input[data-group="${g.name}"]`).uncheck();
+  await expect(page.locator('[data-empty="metrics"]')).toHaveText('All metrics are hidden. Show all metrics');
+  await expect(page.locator('[data-empty="studies"]'), 'not mistaken for no studies').toHaveCount(0);
+  await page.locator('[data-empty="metrics"] button').click();
+  await expect(page.locator('[data-empty]')).toHaveCount(0);
+  await expect(page.locator('.portfolio-table th[data-band]')).toHaveCount(groups.length);
+  await host.locator('[data-open="config"]').click();
+  await expect(host.locator('input[data-metric]:not(:checked), input[data-group]:not(:checked)'), 'every group and metric ticked').toHaveCount(0);
+});

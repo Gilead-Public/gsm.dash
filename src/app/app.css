@@ -124,6 +124,10 @@ header.app h1 { font-family: "Archivo", "Segoe UI", system-ui, sans-serif; font-
 /* header controls: Filters (a chip bar, collapsed on load), Config and Reset, pulled right */
 #header-controls { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 .hctl { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+/* Config opens from the header controls' right edge, not its button's, so it stays inside the window at any width or
+   zoom. */
+#header-controls { position: relative; }
+.popwrap.cfgwrap { position: static; }
 .hbtn { font: 600 13px "Archivo", sans-serif; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 8px; background: var(--panel); color: var(--ink-2); cursor: pointer; }
 .hbtn:hover, .hbtn[aria-expanded="true"] { color: var(--accent); border-color: var(--accent); }
 .hbtn.on { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
@@ -139,7 +143,7 @@ header.app h1 { font-family: "Archivo", "Segoe UI", system-ui, sans-serif; font-
 .hpop { position: absolute; top: calc(100% + 6px); right: 0; z-index: 30; background: var(--panel); border: 1px solid var(--line-2); border-radius: 10px; box-shadow: 0 10px 30px rgb(0 0 0 / 0.14); padding: 12px 14px; }
 .hpop[hidden] { display: none; }
 .filter-pop { left: 0; right: auto; min-width: 220px; max-width: 360px; }
-.config-pop { width: min(720px, 92vw); max-height: 72vh; overflow-y: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 18px; }
+.config-pop { width: min(720px, calc(100vw - 32px)); max-height: 72vh; overflow-y: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 18px; }
 /* Config's Custom choices sit under the Cell display they belong to (#47). */
 .ctl.sub { margin-left: 4px; padding-left: 10px; border-left: 2px solid var(--line-2); }
 /* Config as a side panel, an Admin setting (#46). */
@@ -494,9 +498,23 @@ tr.study.sel td.grp { box-shadow: inset 4px 0 0 var(--accent), inset 0 1.5px 0 v
 .sb-hint { font-size: 12px; color: var(--ink-3); margin: 5px 0 0; line-height: 1.35; }
 .chip .cnt { margin-left: 5px; font-size: 12px; opacity: 0.7; }
 .mgroup { margin-bottom: 6px; }
-.mgroup-head { display: flex; align-items: baseline; gap: 8px; font-size: 12px; font-weight: 700; color: var(--ink); margin: 6px 0 2px; }
+.mgroup-head { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--ink); margin: 6px 0 2px; }
 .mgroup-toggle { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
-.mgroup-head .cnt { margin-left: auto; font: 400 12px "IBM Plex Mono", monospace; color: var(--ink-3); }
+/* A configured group's metrics sit behind its caret (#47). */
+/* At least 24px square, the minimum comfortable target; the checkbox beside it is a separate action. */
+.mgroup-caret { flex: none; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; border-radius: 5px; background: none; font-size: 14px; line-height: 1; color: var(--ink-2); cursor: pointer; }
+.mgroup-caret::before { content: "▸"; }
+.mgroup-caret[aria-expanded="true"]::before { content: "▾"; }
+.mgroup-caret:hover { color: var(--accent); background: var(--accent-soft); }
+.mgroup-body.nested { padding-left: 32px; }
+.mgroup-all { flex: none; white-space: nowrap; font-size: 12px; }
+/* In a narrow window or at high zoom, Config's two sections stack. */
+@media (max-width: 640px) { .config-pop { grid-template-columns: minmax(0, 1fr); } }
+/* The table has no studies or no metrics: say which, with the action that brings them back (#21, #22). */
+.empty-notes p { margin: 0 0 10px; padding: 10px 12px; border: 1px solid var(--line-2); border-radius: 8px; background: var(--panel); font-size: 14px; color: var(--ink); }
+/* A long group name wraps; the caret, checkbox, count and Select all keep their size. */
+.mgroup-toggle > span { overflow-wrap: anywhere; }
+.mgroup-head .cnt { white-space: nowrap; flex: none; margin-left: auto; font: 400 12px "IBM Plex Mono", monospace; color: var(--ink-3); }
 .metric-opt { grid-template-columns: auto 44px 1fr; }
 
 /* tiles */

@@ -70,13 +70,16 @@ To share a build for feedback without releasing it: every CI run that passes als
   portfolio and a study, with one React root rendering it from one injected
   document (gsm.viz inlined into study reports). Hovering a metric's header
   shows its definition from `Reporting_Metrics` (#20). The portfolio's
-  controls sit in its header (#22, #24): **Filters**, a chip bar collapsed on
+  controls sit in its header (#22, #24): **Filters & grouping**, a chip bar collapsed on
   load (Study, Product, Therapeutic area, Phase, Status; a field no study has a
   value for gets no chip, and a blank value is no value), then Group rows by;
+  a table with no studies or no metrics says which, with Clear filters or Show
+  all metrics;
   **Config**, by what it changes: Cells (the Cell display: Compact, Detailed,
   or Custom with its cell contents and heatmap; #47) and Columns (Study
   columns: study name, **Enrolled**, on by default, Status, #21; and the
-  metrics, each configured group's heading with a checkbox for its band);
+  metrics, each configured group's heading with a checkbox for its band and
+  a caret, closed by default, for its metrics);
   **Reset**; and
   **Admin**, a demo tool for the theme, the study grid's cards per row, Config
   as a popover or side panel, and a heatmap legend (#46). Enrolled, the

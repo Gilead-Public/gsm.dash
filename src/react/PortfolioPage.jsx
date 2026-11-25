@@ -30,6 +30,36 @@ function CycleNotice({ cycle }) {
   );
 }
 
+/**
+ * Why the table has no studies or no metrics, each with the one action that brings them back (#21, #22).
+ * @param {{ store: any }} props
+ */
+function EmptyNotice({ store }) {
+  const noStudies = store.activeFilterCount() > 0 && store.filteredStudies().length === 0;
+  const noMetrics = store.supportedMetrics().length > 0 && store.visibleMetrics().length === 0;
+  if (!noStudies && !noMetrics) return null;
+  return (
+    <div className="empty-notes" role="status">
+      {noStudies && (
+        <p data-empty="studies">
+          No studies match these filters.{' '}
+          <button type="button" className="linkbtn" onClick={() => store.clearFilters()}>
+            Clear filters
+          </button>
+        </p>
+      )}
+      {noMetrics && (
+        <p data-empty="metrics">
+          All metrics are hidden.{' '}
+          <button type="button" className="linkbtn" onClick={() => store.showAllMetrics()}>
+            Show all metrics
+          </button>
+        </p>
+      )}
+    </div>
+  );
+}
+
 /** @param {{ store: any }} props */
 export function PortfolioPage({ store }) {
   useStore(store);
@@ -38,6 +68,7 @@ export function PortfolioPage({ store }) {
       <HeaderControls store={store} />
       <div className="content">
         <CycleNotice cycle={store.cycle} />
+        <EmptyNotice store={store} />
         <PortfolioTable store={store} />
       </div>
     </div>

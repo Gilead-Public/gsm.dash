@@ -1,6 +1,6 @@
 {
   "repo": "Gilead-Public/gsm.dash",
-  "hash": "b234925366e779576d03399809ca912c91f6e6476b0bd39e3a69e5545c42411b",
+  "hash": "2c63b63c4fad724f928e396e12f99dd57920924619c0e716c7aa5034a4ae2255",
   "issues": [
     {
       "number": 8,
@@ -331,42 +331,42 @@
       "title": "Move portfolio defaults into a configuration file",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": false,
-      "scopeSection": "**In:**\n- The portfolio's initial view takes these defaults from configuration. Every key is optional, and an absent key keeps today's built-in default:\n  - `groupBy`: one of the Group rows by choices (`none`, `therapeutic_area`, `protocol_indication`, `phase`, `status`, `product`). Built in: `none`.\n  - `heatmap`: one of the Heatmap choices (`none`, `num`, `den`, `rate`), applied under Custom cell display (#47). Built in: `none`.\n  - `show`: what custom cells show, any of `num`, `den`, `rate` and `trend`. Built in: `num` and `rate`.\n  - `metrics`: the MetricIDs hidden by default. Only metrics eligible for a portfolio column count: active, site-level metrics in the catalog. Built in: none hidden.\n  - `view`: the table's Cell display (#47): `compact` (each category folded to one headline value per metric), `detailed` (every category open, each metric as defined) or `custom` (every category open, with `show` and `heatmap`). Built in: `compact`.\n  - `groups`: the metric groups, in order, each `{ \"name\", \"metrics\", \"hidden\" }`: its name, its MetricIDs in order, and whether its band starts hidden (#21). An eligible metric no group lists goes into a trailing \"Other\" group, so a new metric shows without a configuration change. The name \"Other\" is reserved: that group always comes last, holds exactly the metrics no group lists, and starts shown. Built in: none, as is an empty list; every metric sits in one band, \"Metrics\", with no group chips. Metrics carry no group of their own; the wrapper supplies the default groups.\n- The configuration is set at injection, not at build. For the prototype it's a JSON file that the portfolio document builder writes into the portfolio document, so one built template serves any configuration and the R injector is unchanged. #624 places the production defaults in the portfolio repository's YAML.\n- Values are validated against the Controls panel's choices, and `metrics` against the metrics eligible for a portfolio column, when the portfolio document is built and when the report loads. Any other catalog ID, such as a study-level metric, is refused. `groups` also refuses a metric listed twice, a repeated group name and a group named \"Other\".\n- A setting held in the address's hash overrides its configured default. A setting the hash doesn't hold takes its configured default.\n- Under any configuration, the view carries over to a study report and back as 27.05 describes, and the study report's cards show exactly the metrics the portfolio showed, of those that have a card (#32).\n\n**Out:**\n- The production configuration's location, and the job that writes it.\n- Defaults for the other settings (sorting, filters and the highlighted study), which stay built in.\n- The heatmap colour, which #23 reduces to one.\n- The `columns` default, which #21 adds.",
+      "scopeSection": "**In:**\n- The portfolio's initial view takes these defaults from configuration. Every key is optional, and an absent key keeps today's built-in default:\n  - `groupBy`: one of the Group rows by choices (`none`, `therapeutic_area`, `protocol_indication`, `phase`, `status`, `product`). Built in: `none`.\n  - `heatmap`: one of the Heatmap choices (`none`, `num`, `den`, `rate`), applied under Custom cell display (#47). Built in: `none`.\n  - `show`: what custom cells show, any of `num`, `den`, `rate` and `trend`. Built in: `num` and `rate`.\n  - `metrics`: the MetricIDs hidden by default. Only metrics eligible for a portfolio column count: active, site-level metrics in the catalog. Built in: none hidden.\n  - `view`: the table's Cell display (#47): `compact` (each category folded to one headline value per metric), `detailed` (every category open, each metric as defined) or `custom` (every category open, with `show` and `heatmap`). Built in: `compact`.\n  - `groups`: the metric groups, in order, each `{ \"name\", \"metrics\", \"hidden\" }`: its name, its MetricIDs in order, and whether its band starts hidden (#21). An eligible metric no group lists goes into a trailing \"Other\" group, so a new metric shows without a configuration change. The name \"Other\" is reserved: that group always comes last, holds exactly the metrics no group lists, and starts shown. Built in: none, as is an empty list; every metric sits in one band, \"Metrics\", with no group checkboxes. Metrics carry no group of their own; the wrapper supplies the default groups.\n- The configuration is set at injection, not at build. For the prototype it's a JSON file that the portfolio document builder writes into the portfolio document, so one built template serves any configuration and the R injector is unchanged. #624 places the production defaults in the portfolio repository's YAML.\n- Values are validated against the Controls panel's choices, and `metrics` against the metrics eligible for a portfolio column, when the portfolio document is built and when the report loads. Any other catalog ID, such as a study-level metric, is refused. `groups` also refuses a metric listed twice, a repeated group name and a group named \"Other\".\n- A setting held in the address's hash overrides its configured default. A setting the hash doesn't hold takes its configured default.\n- Under any configuration, the view carries over to a study report and back as 27.05 describes, and the study report's cards show exactly the metrics the portfolio showed, of those that have a card (#32).\n\n**Out:**\n- The production configuration's location, and the job that writes it.\n- Defaults for the other settings (sorting, filters and the highlighted study), which stay built in.\n- The heatmap colour, which #23 reduces to one.\n- The `columns` default, which #21 adds.",
       "criteria": [
         {
           "id": "16.01",
           "text": "With a configuration that sets each key in Scope to a value other than its built-in default, `portfolio.html` opened with no hash shows that view: the Cell display and Group rows by controls, Custom's Heatmap control and Show in each cell chips, and the metric checkboxes hold the configured values, and the table is in that Cell display, grouped and shaded accordingly, with every eligible metric's column except the configured hidden ones (test).",
           "sha256": "f523ab2d3b66b97b21c6106ccdba1d1f4a12f77f5298779cd9e20826f39b30c2",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "16.02",
           "text": "A configuration with an unknown key, a value outside the Controls panel's choices (such as a `view` other than `compact`, `detailed` or `custom`), a `groups` entry that lists a metric twice, repeats a group's name or is named \"Other\", or a MetricID that isn't eligible for a portfolio column (one the catalog doesn't have, or an inactive or study-level metric) is refused when the portfolio document is built, with a message naming the key, the value and the allowed values (test).",
           "sha256": "5e211ae0f1a8f3e4c1dd94cd00ef7ef952791ba621a5fdec87823e5e4dcaef3e",
           "kind": "unit",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "16.03",
           "text": "Under the configuration of 16.01, with each configured setting changed, including back to its built-in default (Compact, Heatmap None, no grouping, every metric shown): a reload returns the portfolio as it was left; so does following a study link and that report's back link; and the study report's cards show exactly the metrics the portfolio showed, of those that have a card (#32) (test).",
           "sha256": "45d1cc3566a61db4ada08873c170dc5e65ca4ecb3ead1cc205a8d98b41724d8e",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "16.04",
           "text": "A portfolio document whose configuration fails 16.02's check, including a study-level or inactive MetricID in `metrics`, shows the 27.04 error state, naming the key, instead of a portfolio (test).",
           "sha256": "69f84b88fcaf9183ca3d6bfb195cf3c343b7221d6c7d00bd7bd1f7d597476865",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "16.05",
-          "text": "With `groups` configured, the table's bands and Config's group chips and metric checkboxes follow its order and membership, a group configured hidden starts hidden, and an eligible metric no group lists is in a trailing Other group. Without `groups`, or with an empty list, every metric is in one band, \"Metrics\", and Config shows no group chips (test).",
-          "sha256": "c862ea8f34a30b409baf4fe3f5e76d713c3fcd909c7374d1777ab240a62eebae",
+          "text": "With `groups` configured, the table's bands and Config's group checkboxes and metric checkboxes follow its order and membership, a group configured hidden starts hidden, and an eligible metric no group lists is in a trailing Other group. Without `groups`, or with an empty list, every metric is in one band, \"Metrics\", and Config shows no group checkboxes (test).",
+          "sha256": "b0c08284f7be1ae04e0bca46c121421be80ff7e5d7bee16dc6cdb958158a0aa0",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         }
       ]
     },
@@ -523,35 +523,35 @@
       "title": "Add column options and an Overview / Details View to the portfolio table",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": true,
-      "scopeSection": "**In:**\n- A column chooser, Column grouping in Config (#47): study name (default on), enrolled (default on), status (default off). Enrolled is the Population band's only column; screened shows in the hovers only.\n- Enrolled shown as n / expected when the data carries an enrollment target.\n- The table's View follows Config's Cell display (#47): Compact (Overview) folds every group to one headline value per metric, its rate; Detailed and Custom (Details) open every group. It replaces the view tabs, per-category folding and the roomy/condensed toggle FB-016 asked for, by the design review's decision; a band header is a label.\n- Config also has a chip for each metric group (#16's `groups`) that shows or hides the group's band, and each metric's checkbox, listed under its group. A group's chip is independent of its metrics' checkboxes: a group shown again shows its metrics as they were. Both travel in the address, and Reset returns to the configured defaults.\n- The columns' and the View's defaults read from the portfolio configuration (#16).\n\n**Out:** adding the enrollment target to the data contract (a separate data change).",
+      "scopeSection": "**In:**\n- A column chooser, Study columns in Config (#47): study name (default on), enrolled (default on), status (default off). Enrolled is the Population band's only column; screened shows in the hovers only.\n- Enrolled shown as n / expected when the data carries an enrollment target.\n- The table's View follows Config's Cell display (#47): Compact (Overview) folds every group to one headline value per metric, its rate; Detailed and Custom (Details) open every group. It replaces the view tabs, per-category folding and the roomy/condensed toggle FB-016 asked for, by the design review's decision; a band header is a label.\n- Config's metric list gives each metric group (#16's `groups`) a checkbox on its heading that shows or hides the group's band, with each metric's checkbox listed under its group. A group's checkbox is independent of its metrics' checkboxes: a group shown again shows its metrics as they were. Both travel in the address, and Reset returns to the configured defaults.\n- The columns' and the View's defaults read from the portfolio configuration (#16).\n\n**Out:** adding the enrollment target to the data contract (a separate data change).",
       "criteria": [
         {
           "id": "21.01",
           "text": "Each column toggles and its default applies, and the table is folded under Compact and open under Detailed and Custom (#47) (tests).",
           "sha256": "c8dd2e7bfff17f543265589065f62e8ea4acec52d366ec4b6a47625f4865eb80",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "21.02",
           "text": "n / expected renders when a target exists, and the count alone renders when it doesn't (tests).",
           "sha256": "e19d529f91500f761b81a972d99f4e107c1f746c6d9eda4e3701a691d73924f4",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "21.03",
-          "text": "A reviewer compares the table in Compact and Detailed, and Config with its Cell display, group chips, Column grouping and metric checkboxes, with this issue's Scope and accepts them (visual check).",
-          "sha256": "3e202c59f53736cb7583eb8bed31825ce88147f92da0d2ae7667981e12846a80",
+          "text": "A reviewer compares the table in Compact and Detailed, and Config with its Cell display, group checkboxes, Study columns and metric checkboxes, with this issue's Scope and accepts them (visual check).",
+          "sha256": "e02877415adf58e365c4a19eaa0dd48dbc5f08a98b5df1e73361c7146f80192d",
           "kind": "visual",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "21.04",
-          "text": "Each group chip hides and shows its whole band and nothing else; a metric unchecked in Config stays hidden when its group is shown again; a group configured hidden starts hidden; the choice survives a reload and a study report's back link, and Reset restores the configured defaults (test).",
-          "sha256": "7bf114d3ade19e1759abb39cca2a45449e3c417ed1b853a018470017f55e09de",
+          "text": "Each group's checkbox hides and shows its whole band and nothing else; a metric unchecked in Config stays hidden when its group is shown again; a group configured hidden starts hidden; the choice survives a reload and a study report's back link, and Reset restores the configured defaults (test).",
+          "sha256": "55787a90b9f9ee0d6d0a84226b1e94ed73634bcdebbca9f6327042f9ffad6335",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         }
       ]
     },
@@ -560,42 +560,56 @@
       "title": "Add a study filter and a full Reset to the portfolio",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": true,
-      "scopeSection": "**In:**\n- A multi-select study filter, the first of the filters, listing every study in the portfolio by StudyID and nickname. It combines with the other filters as they combine with each other, so it limits the table's rows, the Portfolio total and group totals to the selected studies.\n- The study filter counts as an active filter, Clear filters clears it, and it is kept in the address, so it survives a reload and the trip to a study report and back.\n- A Reset control. Afterwards, the view and its address equal those of the report opened with no hash, under the configured defaults (#16). That covers everything the address holds: the Cell display and its Custom choices (#47), the group chips (#21), grouping and closed groups, sorting, heatmap, columns, filters, hidden metrics and the Admin panel's settings (#46). Whether Filters or Config is open is not part of the view and stays as it is.\n- The filters sit in the portfolio's header, pulled right, collapsed whenever the report opens, including after a reload and a study report's back link, to a Filters button that shows the number of active filters. Opened, they show one chip per filter, the study filter first, then therapeutic area, phase and status. Each chip opens its choices and shows how many are selected; Clear filters follows them while any filter is on. Config and Reset sit beside Filters (#24).\n\n**Out:** how the status filter matches (FB-010: whether \"Active\" includes \"Enrolling\"). Statuses stay matched exactly until that is decided, since it changes which studies are pooled.",
+      "scopeSection": "**In:**\n- A multi-select study filter, the first of the filters, listing every study in the portfolio by StudyID and nickname. It combines with the other filters as they combine with each other, so it limits the table's rows, the Portfolio total and group totals to the selected studies.\n- The study filter counts as an active filter, Clear filters clears it, and it is kept in the address, so it survives a reload and the trip to a study report and back.\n- A Reset control. Afterwards, the view and its address equal those of the report opened with no hash, under the configured defaults (#16). That covers everything the address holds: the Cell display and its Custom choices (#47), the hidden groups (#21), grouping and closed groups, sorting, heatmap, columns, filters, hidden metrics and the Admin panel's settings (#46). Whether Filters or Config is open is not part of the view and stays as it is.\n- The filters sit in the portfolio's header, pulled right, collapsed whenever the report opens, including after a reload and a study report's back link, to a Filters button that shows the number of active filters. Opened, they show one chip per filter, the study filter first, then product, therapeutic area, phase and status, then Group rows by, which arranges the rows rather than choosing them, so it isn't counted and Clear filters leaves it. Each chip opens its choices and shows how many are selected; Clear filters follows them while any filter is on. A study's value is absent when it's missing or blank (empty or spaces): an absent value is no choice and never matches a selection, Group rows by puts it under \"(missing)\", and a filter with no values isn't shown. Config and Reset sit beside Filters (#24).\n\n**Out:** how the status filter matches (FB-010: whether \"Active\" includes \"Enrolling\"). Statuses stay matched exactly until that is decided, since it changes which studies are pooled.",
       "criteria": [
         {
           "id": "22.01",
           "text": "With studies selected in the study filter, alone and together with a phase filter: the table (ungrouped, and grouped with a group open) lists exactly the selected studies that pass the other filters; and the Portfolio total and each group's total equal the values pooled from those studies by `test/qual/pooling.js` (test).",
           "sha256": "ad8c0abbfa70db40735883e18ba9a01a98a3c6112802da3666e8c29b4348db06",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "22.02",
           "text": "After every setting the address holds (listed in Scope) has been changed, including the study filter, clicking Reset leaves the address and the page, including the Controls panel's values, equal to those of the report opened with no hash, under the default configuration and under a non-default one (#16) (test).",
           "sha256": "f304e7fc244df175063238129dc568bf070dba2b6169dbc7b83ce69078f029f0",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "22.03",
           "text": "A reviewer compares the study filter and Reset with this issue's Scope and accepts them (visual comparison).",
           "sha256": "55dbbe21329c82d884bbd097af70d21554a30935d390be420024cae5659b6bea",
           "kind": "visual",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "22.04",
           "text": "A study-filter selection survives a reload, and a study link followed by that report's back link; Clear filters clears it with the other filters (test).",
           "sha256": "0557b527482e92eecdacddf31ed4a0f2de2f4836d1f3165e0284ace097e4269c",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "22.05",
-          "text": "The filters are collapsed when the portfolio opens, after a reload and after a study report's back link, and Filters shows the number of active filters. Opened, they show one chip per filter, the study filter first, each opening its choices and showing how many are selected, and every filter value the panel offered before is there (test).",
-          "sha256": "178c970da42f4b5b650807a74e91970912a4d408cda247351e51488268f5f15b",
+          "text": "The filters are collapsed when the portfolio opens, after a reload and after a study report's back link, and Filters shows the number of active filters. Opened, they show one chip per filter, in order Study, Product, Therapeutic area, Phase and Status, each opening its choices and showing how many are selected, and every filter value the panel offered before is there; Group rows by follows them, isn't counted, and Clear filters leaves it (test).",
+          "sha256": "089bfde973229981913033225a9b7f2a2a53dc0ab2787c10e50bd8a0bf885da2",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
+        },
+        {
+          "id": "22.06",
+          "text": "With products selected in the Product filter, alone and together with the phase and study filters: the table (ungrouped, and grouped with a group open) lists exactly the studies of the selected products that pass the other filters; the Portfolio total and each group's total equal the values pooled from those studies by `test/qual/pooling.js`. The selection survives a reload, and a study link followed by that report's back link; Clear filters and Reset clear it (test).",
+          "sha256": "297e795f6044cb733fbd2731ed3a3cab224fe490442463973046bf5cf03e0fac",
+          "kind": null,
+          "reviewed": false
+        },
+        {
+          "id": "22.07",
+          "text": "Filters offer only values some study has. A field missing from every study, or blank (empty or spaces) in every study, has no chip. A field blank in some studies offers only the others' values, and selecting one leaves out the studies where it's blank. Group rows by puts blank and missing values under \"(missing)\" (test).",
+          "sha256": "16297bb3ea182c11d7ffec047472a060aa188d6420339768b94538af95b9fe3d",
+          "kind": null,
+          "reviewed": false
         }
       ]
     },
@@ -648,28 +662,28 @@
       "title": "Update the reports' headers",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": true,
-      "scopeSection": "**In:**\n- Both reports' headers show the gismo logo and the dashboard's title, with no page tag. The gismo logo replaces the RBQM logo FB-007 asked for, by the design review's decision.\n- The title is the data document's optional `title`, which the render step sets (for example \"CtQ Dashboard\"); it is \"gsm.dash\" when the document has none. The browser tab shows it too: the title alone on the portfolio, and \"<StudyID> · <title>\" on a study report, so open studies can be told apart. The portfolio and study document schemas gain the optional `title` (portfolio-document 1.1.0, study-document 2.1.0).\n- Remove the metadata line.\n- The portfolio header holds, on the right: Filters, collapsed by default, with the number of active filters (#22); Config, a popover or side panel with Cell display, group chips, Column grouping, metric checkboxes and display settings (#21, #47); Reset (#22); and Admin (#46). The study report's header holds Admin.\n- The status line sits below the table and reads \"n / N studies · n / N metrics\", then any active sort: its column (Study or Group, Studies, Enrolled, or a metric with its measure) and direction, marked hidden when that column isn't shown.\n- The theme is an Admin panel setting (#46); #35 removed the earlier theme switch.",
+      "scopeSection": "**In:**\n- Both reports' headers show the gismo logo and the dashboard's title, with no page tag. The gismo logo replaces the RBQM logo FB-007 asked for, by the design review's decision.\n- The title is the data document's optional `title`, which the render step sets (for example \"CtQ Dashboard\"); it is \"gsm.dash\" when the document has none. The browser tab shows it too: the title alone on the portfolio, and \"<StudyID> · <title>\" on a study report, so open studies can be told apart. The portfolio and study document schemas gain the optional `title` (portfolio-document 1.1.0, study-document 2.1.0).\n- Remove the metadata line.\n- The portfolio header holds, on the right: Filters, collapsed by default, with the number of active filters, and Group rows by after the filters (#22); Config, a popover or side panel with Cells (the Cell display and its settings) and Columns (Study columns, and the metrics with each group's checkbox) (#21, #47); Reset (#22); and Admin (#46). The study report's header holds Admin.\n- The status line sits below the table and reads \"n / N studies · n / N metrics\", then any active sort: its column (Study or Group, Studies, Enrolled, or a metric with its measure) and direction, marked hidden when that column isn't shown.\n- The theme is an Admin panel setting (#46); #35 removed the earlier theme switch.",
       "criteria": [
         {
           "id": "24.01",
           "text": "A reviewer compares both reports' headers, and the portfolio's status line, with this issue's Scope and accepts them (visual check).",
           "sha256": "f6a20cbb83099cfaa57098603caad3a17d50ca882e1f658fadf53be2973ff7a1",
           "kind": "visual",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "24.02",
           "text": "Each report's header shows the logo and the document's title, or \"gsm.dash\" when it has none, with no page tag and no metadata line. The browser tab shows the same title, after the StudyID on a study report (\"STUDY001 · CtQ Dashboard\"). The portfolio's header also holds Filters, with the number of active filters, Config, Reset and Admin, and the study report's header holds Admin. The status line sits below the table and reads as Scope gives it (test).",
           "sha256": "731a4983e8a3f29e618410e63ffba147da2523a8b6ab6a0c6d631e0ef267c612",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "24.03",
           "text": "Both document schemas accept an optional `title`, a non-blank string of at most 60 characters, and refuse any other value; a document whose `title` fails shows the 27.04 error state (test).",
           "sha256": "ee60578163c233cc92678e9adadefe723e5a13382ce1b6caa7fd79b2a7cc6a84",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         }
       ]
     },
@@ -754,10 +768,10 @@
         },
         {
           "id": "27.05",
-          "text": "The portfolio view state carries over to a study report and back: the Cell display (Compact, Detailed or Custom, with Custom's Show and heatmap) and the group chips, grouping and closed groups, sorting, study filters, hidden metrics and the Admin panel's settings. The study report applies the hidden metrics and the Admin panel's settings.",
-          "sha256": "6bf98e3a9298a6b7362cfa680dd45c2f418e67de4100c5d555c7269170991b52",
+          "text": "The portfolio view state carries over to a study report and back: the Cell display (Compact, Detailed or Custom, with Custom's Show and heatmap) and the hidden groups, grouping and closed groups, sorting, study filters, hidden metrics and the Admin panel's settings. The study report applies the hidden metrics and the Admin panel's settings.",
+          "sha256": "dbf23875adc5e7d02586adc8514a8b4a70626ef8980c71acb85fdf095e75aeaf",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         }
       ]
     },
@@ -991,42 +1005,42 @@
       "title": "Reorganise the portfolio's Config: Cell display presets, Column grouping, and groups open by default",
       "parent": "Gilead-BioStats/gsm.roadmap#624",
       "userTest": true,
-      "scopeSection": "**In:**\n- **Cell display:** one control of three buttons, with exactly one pressed.\n  - **Compact** (the default): the folded table, one headline value per metric, its rate. Earlier issues call it Overview.\n  - **Detailed:** the open table, each metric as its glossary defines it, with no trend and no heatmap. Earlier issues call it Details.\n  - **Custom:** the open table with two controls that appear only under Custom: Show in each cell (Numerator, Denominator, Rate, Trend) and Heatmap (None, Numerator, Denominator, Rate).\n\n  Cell display replaces the Collapse all / Expand all toggle and the As defined / Custom switch. Metric columns sort by the active heatmap's measure, otherwise by rate.\n- **Config's layout:**\n  - On the left: Group rows by, then Cell display (with Custom's Show in each cell and Heatmap under it), then Groups.\n  - On the right: Column grouping (the Study name, Enrolled and Status columns, formerly Columns), then Metrics.\n- **Grouped rows open:** choosing a grouping opens every group.\n  - A click on a group row closes or reopens it.\n  - The address carries the closed groups (`collapse`).\n  - Changing the grouping, or Reset, opens them all again.\n- **Configuration (#16):** `view` takes `compact`, `detailed` or `custom`, with `compact` built in. Any other value, `overview` and `details` included, is refused. `show` and `heatmap` set Custom's choices.\n- **Old addresses:**\n  - `view=overview` opens Compact.\n  - `view=details` opens Detailed.\n  - `view=details` with `cell=custom` opens Custom.\n  - `expand` is ignored.\n\n  The address is then rewritten in the new form.\n\n**Out:** the cell contents of Detailed (each metric's display rule) and of Custom (#16's `show`), which are unchanged.",
+      "scopeSection": "**In:**\n- **Cell display:** one control of three buttons, with exactly one pressed.\n  - **Compact** (the default): the folded table, one headline value per metric, its rate. Earlier issues call it Overview.\n  - **Detailed:** the open table, each metric as its glossary defines it, with no trend and no heatmap. Earlier issues call it Details.\n  - **Custom:** the open table with two controls that appear only under Custom: Show in each cell (Numerator, Denominator, Rate, Trend) and Heatmap (None, Numerator, Denominator, Rate).\n\n  Cell display replaces the Collapse all / Expand all toggle and the As defined / Custom switch. Metric columns sort by the active heatmap's measure, otherwise by rate.\n- **Config's layout,** by what it changes:\n  - On the left, Cells: Cell display, with Custom's Show in each cell and Heatmap under it.\n  - On the right, Columns: Study columns (the Study name, Enrolled and Status columns, formerly Column grouping), then Metrics, where each metric group's heading carries its checkbox (#21).\n  - Group rows by sits in the Filters bar (#22).\n- **Grouped rows open:** choosing a grouping opens every group.\n  - A click on a group row closes or reopens it.\n  - The address carries the closed groups (`collapse`).\n  - Changing the grouping, or Reset, opens them all again.\n- **Configuration (#16):** `view` takes `compact`, `detailed` or `custom`, with `compact` built in. Any other value, `overview` and `details` included, is refused. `show` and `heatmap` set Custom's choices.\n- **Old addresses:**\n  - `view=overview` opens Compact.\n  - `view=details` opens Detailed.\n  - `view=details` with `cell=custom` opens Custom.\n  - `expand` is ignored.\n\n  The address is then rewritten in the new form.\n\n**Out:** the cell contents of Detailed (each metric's display rule) and of Custom (#16's `show`), which are unchanged.",
       "criteria": [
         {
           "id": "47.01",
-          "text": "Config's left column holds, in order, Group rows by, Cell display and Groups, with Show in each cell and Heatmap shown only under Custom. Its right column holds Column grouping, then Metrics (test).",
-          "sha256": "781d1e9d2b9c0a48357ed055888bdbd4a022769238dd20189285d077681260af",
+          "text": "Config's left section, Cells, holds Cell display, with Show in each cell and Heatmap shown only under Custom. Its right section, Columns, holds Study columns, then Metrics. Group rows by is in the Filters bar, not Config (test).",
+          "sha256": "8edcbec26d2074607311b2e246d02ce08d482b76c4eba481cc32146cdab4d296",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "47.02",
           "text": "Cell display has three buttons, exactly one pressed, with Compact by default. Compact shows one rate per metric; Detailed shows the open table as defined, with no trend and no shading, even when `show` includes the trend or `heatmap` is set; Custom applies Show in each cell and Heatmap. Metric columns sort by the active heatmap's measure, otherwise by rate (test).",
           "sha256": "7ee11ea27da300a9f5e38a44f598a46b3dd1e3ea3cc2d5e4f8125787a00c53f9",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "47.03",
           "text": "Choosing a grouping opens every group, and clicking a group row closes or reopens it. The closed groups survive a reload, a study link and its back link. Changing the grouping, or Reset, opens them all (test).",
           "sha256": "9740b23e59f8c3b92727aea82c58488b66a3b9be1c7b2a573fad4b6843168123",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "47.04",
           "text": "Configuration `view` accepts `compact`, `detailed` and `custom`, and refuses any other value, `overview` and `details` included, both when the portfolio document is built and when it loads. An address with `view=overview` opens Compact, `view=details` opens Detailed, and `view=details` with `cell=custom` opens Custom. `expand` is ignored, and the address is rewritten in the new form (test).",
           "sha256": "444c51d2c045ccde9e25e5e68a393cedda9118f17aa734987fbea0e99c0d3a3f",
           "kind": "e2e",
-          "reviewed": true
+          "reviewed": false
         },
         {
           "id": "47.05",
           "text": "A reviewer compares Config in each preset, as a popover and as a side panel (#46), with this issue's Scope and accepts it (visual comparison).",
           "sha256": "ba400a32059eba130e4d7fd23ee5258a1cae9f866820a68e7bef21c3bb4a3674",
           "kind": "visual",
-          "reviewed": true
+          "reviewed": false
         }
       ]
     },

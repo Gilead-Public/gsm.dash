@@ -51,7 +51,7 @@ test('24.02: each report\'s header shows the logo and the document\'s title, or 
   for (const [title, shown] of /** @type {const} */ ([[undefined, 'gsm.dash'], ['CtQ Dashboard', 'CtQ Dashboard']])) {
     await openTitled(app, page, 'portfolio', title);
     await page.locator('#app > .layout').waitFor();
-    expect(await header(page), `portfolio, title ${title}`).toEqual({ text: [shown, 'Filters', 'Config', 'Reset', 'Admin'], logo });
+    expect(await header(page), `portfolio, title ${title}`).toEqual({ text: [shown, 'Filters & grouping', 'Config', 'Reset', 'Admin'], logo });
     expect(await page.title(), `portfolio tab, title ${title}`).toBe(shown);
     await openTitled(app, page, study, title);
     await page.locator('#app .tile').first().waitFor();

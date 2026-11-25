@@ -8,7 +8,9 @@
 const HOST = '#header-controls';
 
 /**
- * Opens whatever holds `target`: the Filters bar and the filter's chip, or Config.
+ * Opens whatever holds `target`: the Filters bar and the filter's chip, or Config, and in Config the metric group whose
+ * caret hides it. Returns that group's name, so the caller can close it again: which groups are open isn't part of the
+ * view, so a test leaves them as it found them.
  * @param {Page} page
  * @param {Locator} target
  */
@@ -25,6 +27,12 @@ async function reveal(page, target) {
   if (!pop) return;
   const opener = host.locator(`[data-open="${pop}"]`);
   if ((await opener.getAttribute('aria-expanded')) !== 'true') await opener.click();
+  const closedGroup = await target.evaluate((el) => {
+    const body = /** @type {HTMLElement | null} */ (el.closest('.mgroup-body'));
+    return body?.hidden ? (body.closest('.mgroup')?.querySelector('[data-expand]')?.getAttribute('data-expand') ?? null) : null;
+  });
+  if (closedGroup) await host.locator(`[data-expand="${closedGroup}"]`).click();
+  return closedGroup;
 }
 
 /**
@@ -39,8 +47,9 @@ export function control(page, selector) {
    * @param {(target: Locator, ...args: A) => Promise<unknown>} action
    */
   const act = (action) => async (/** @type {A} */ ...args) => {
-    await reveal(page, locator.first());
+    const opened = await reveal(page, locator.first());
     await action(locator, ...args);
+    if (opened) await page.locator(HOST).locator(`[data-expand="${opened}"]`).click();
     await page.keyboard.press('Escape');
   };
   return {

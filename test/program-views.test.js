@@ -356,6 +356,15 @@ describe('metric groups (#16, #21)', () => {
     }
   });
 
+  it('16.05: a single group holding every metric is one band under its name, shown even if configured hidden, with no group to hide (#16)', () => {
+    const all = new PortfolioStore(unconfigured).supportedMetrics().map((m) => m.MetricID);
+    const lone = new PortfolioStore({ ...portfolio, config: { groups: [{ name: 'All of them', metrics: all, hidden: true }] } });
+    expect(ids(lone.metricCategories(lone.supportedMetrics()))).toEqual([['All of them', all]]);
+    expect([lone.groupNames(), lone.visibleMetrics().length]).toEqual([[], all.length]);
+    lone.applyProgramParams(new URLSearchParams('hidegroup=All+of+them'));
+    expect([lone.visibleMetrics().length, lone.programParams().has('hidegroup')], 'an address hiding it changes nothing').toEqual([all.length, false]);
+  });
+
   it('16.05: with `groups`, each group holds its metrics in its order, unlisted metrics trail in an Other group, and a hidden group starts hidden (#16)', () => {
     const all = new PortfolioStore(portfolio).supportedMetrics().map((m) => m.MetricID);
     const [a, b, c, d] = [all[5], all[0], all[9], all[2]];

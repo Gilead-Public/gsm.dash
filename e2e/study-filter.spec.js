@@ -143,7 +143,7 @@ test('22.05: the filters are collapsed on load, after a reload and after a study
   const collapsed = async (what, count) => {
     await expect(filters, what).toHaveAttribute('aria-expanded', 'false');
     await expect(bar, what).toBeHidden();
-    expect(await visibleLines(filters), `${what}: the Filters button`).toEqual(count ? ['Filters', count] : ['Filters']);
+    expect(await visibleLines(filters), `${what}: the Filters button`).toEqual(count ? ['Filters & grouping', count] : ['Filters & grouping']);
   };
   await collapsed('on load', '');
 
@@ -179,11 +179,11 @@ test('22.05: the filters are collapsed on load, after a reload and after a study
   expect(await chip('study'), 'the study chip').toEqual(['Study', '2']);
   expect(await chip('phase'), 'the phase chip').toEqual(['Phase', '1']);
   expect(await chip('status'), 'the status chip').toEqual(['Status']);
-  expect(await visibleLines(filters), 'the Filters button').toEqual(['Filters', '3']);
+  expect(await visibleLines(filters), 'the Filters button').toEqual(['Filters & grouping', '3']);
   const lastInBar = await bar.evaluate((el) => (el.lastElementChild?.querySelector('select[data-groupby]') ? 'group rows by' : el.lastElementChild?.textContent));
   expect(lastInBar, 'Group rows by follows the chips').toBe('group rows by');
   await control(page, 'select[data-groupby]').selectOption('phase');
-  expect(await visibleLines(filters), 'Group rows by isn\'t a filter').toEqual(['Filters', '3']);
+  expect(await visibleLines(filters), 'Group rows by isn\'t a filter').toEqual(['Filters & grouping', '3']);
 
   await page.reload();
   await page.locator('#app > .layout').waitFor();
@@ -194,7 +194,7 @@ test('22.05: the filters are collapsed on load, after a reload and after a study
   await page.locator('#app > .layout').waitFor();
   await collapsed('after the back link', '3');
   await control(page, '[data-clear]').click();
-  expect([await visibleLines(filters), await control(page, 'select[data-groupby]').locator.inputValue()], 'Clear filters keeps the grouping').toEqual([['Filters'], 'phase']);
+  expect([await visibleLines(filters), await control(page, 'select[data-groupby]').locator.inputValue()], 'Clear filters keeps the grouping').toEqual([['Filters & grouping'], 'phase']);
 });
 
 test('22.07: Filters offer only values some study has: a field missing or blank in every study has no chip; one blank in some studies offers only the others\' values, a selection leaves the blank ones out, and Group rows by puts them under (missing) (#22)', async ({ app, page }) => {
@@ -232,4 +232,21 @@ test('22.07: Filters offer only values some study has: a field missing or blank 
   await control(page, 'select[data-groupby]').selectOption('product');
   const buckets = await page.locator('.portfolio-table tr[data-bucket]').evaluateAll((trs) => trs.map((tr) => tr.getAttribute('data-bucket')));
   expect(buckets, 'Group rows by Product').toEqual(['(missing)', ...products]);
+});
+
+test('22.08: when no study passes the filters, the page says so, apart from hidden metrics, and its Clear filters brings every study back (#22)', async ({ app, page }) => {
+  const products = [...new Set(studies.map((s) => s.params.product))];
+  const areas = [...new Set(studies.map((s) => s.params.therapeutic_area))];
+  const pair = products.flatMap((p) => areas.map((a) => [p, a])).find(([p, a]) => !studies.some((s) => s.params.product === p && s.params.therapeutic_area === a));
+  expect(pair, 'a product and an area no study shares').toBeDefined();
+  const [product, area] = /** @type {string[]} */ (pair);
+  await app.open();
+  await control(page, `button[data-filter="product"][data-value="${product}"]`).click();
+  await control(page, `button[data-filter="therapeutic_area"][data-value="${area}"]`).click();
+  await expect(page.locator('[data-empty="studies"]')).toHaveText('No studies match these filters. Clear filters');
+  await expect(page.locator('[data-empty="metrics"]'), 'not mistaken for hidden metrics').toHaveCount(0);
+  await expect(page.locator('.portfolio-table tr.study')).toHaveCount(0);
+  await page.locator('[data-empty="studies"] button').click();
+  await expect(page.locator('[data-empty]')).toHaveCount(0);
+  await expect(page.locator('.portfolio-table tr.study')).toHaveCount(studies.length);
 });

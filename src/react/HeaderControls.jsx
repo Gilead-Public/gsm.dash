@@ -80,13 +80,21 @@ function FilterChoices({ store, param, values }) {
 /**
  * Config (#47), by what it changes: on the left the cells, the Cell display with Custom's own choices under it; on the
  * right the columns, the optional study columns (#21) and the metrics, each configured group's heading carrying a
- * checkbox that shows or hides its band.
+ * checkbox that shows or hides its band. Configured groups start closed behind a caret, so the two sides balance; which
+ * are open isn't part of the view.
  * @param {{ store: any }} props
  */
 function ConfigPanel({ store }) {
   const { state } = store;
   const supported = store.supportedMetrics();
   const toggleable = new Set(store.groupNames());
+  const [opened, setOpened] = useState(() => new Set());
+  const toggleOpen = (/** @type {string} */ name) =>
+    setOpened((was) => {
+      const next = new Set(was);
+      next.has(name) ? next.delete(name) : next.add(name);
+      return next;
+    });
   return (
     <>
       <div className="cfg-col" data-sec="cells">
@@ -143,12 +151,17 @@ function ConfigPanel({ store }) {
           <label>Metrics</label>
         </div>
         <div className="metric-list">
-          {store.metricCategories(supported).map((/** @type {any} */ g) => {
+          {store.metricCategories(supported).map((/** @type {any} */ g, /** @type {number} */ i) => {
             const on = g.metrics.filter((/** @type {any} */ m) => !state.hiddenMetrics.has(m.MetricID)).length;
+            const grouped = toggleable.has(g.category);
+            const open = !grouped || opened.has(g.category);
             return (
               <div key={g.category} className="mgroup">
                 <div className="mgroup-head">
-                  {toggleable.has(g.category) ? (
+                  {grouped && (
+                    <button type="button" className="mgroup-caret" data-expand={g.category} aria-expanded={open} aria-controls={`mgroup-${i}`} aria-label={`${g.category}'s metrics`} onClick={() => toggleOpen(g.category)} />
+                  )}
+                  {grouped ? (
                     <label className="mgroup-toggle">
                       <input type="checkbox" data-group={g.category} checked={!state.hiddenGroups.has(g.category)} onChange={() => store.toggleGroupHidden(g.category)} />
                       <span>{g.category}</span>
@@ -157,16 +170,23 @@ function ConfigPanel({ store }) {
                     <span>{g.category}</span>
                   )}
                   <span className="cnt">
-                    {on}/{g.metrics.length}
+                    {on}/{g.metrics.length} selected
                   </span>
+                  {on === 0 && (
+                    <button type="button" className="linkbtn mgroup-all" data-select-all={g.category} onClick={() => store.selectMetrics(g.metrics.map((/** @type {any} */ m) => m.MetricID))}>
+                      Select all
+                    </button>
+                  )}
                 </div>
-                {g.metrics.map((/** @type {any} */ m) => (
-                  <label key={m.MetricID} className="metric-opt" title={m.Metric}>
-                    <input type="checkbox" data-metric={m.MetricID} checked={!state.hiddenMetrics.has(m.MetricID)} onChange={() => store.toggleMetric(m.MetricID)} />
-                    <span className="mono">{m.Abbreviation}</span>
-                    <span className="mname">{m.Metric}</span>
-                  </label>
-                ))}
+                <div className={`mgroup-body ${grouped ? 'nested' : ''}`} id={`mgroup-${i}`} hidden={!open}>
+                  {g.metrics.map((/** @type {any} */ m) => (
+                    <label key={m.MetricID} className="metric-opt" title={m.Metric}>
+                      <input type="checkbox" data-metric={m.MetricID} checked={!state.hiddenMetrics.has(m.MetricID)} onChange={() => store.toggleMetric(m.MetricID)} />
+                      <span className="mono">{m.Abbreviation}</span>
+                      <span className="mname">{m.Metric}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
             );
           })}
@@ -197,7 +217,7 @@ function Controls({ store }) {
   useModalFocus(side && open === 'config', configPop, configButton);
   return (
     <div className="hctl" ref={ref}>
-      <div className="filter-bar" role="group" aria-label="Filters" hidden={!filtersShown}>
+      <div className="filter-bar" role="group" aria-label="Filters and grouping" hidden={!filtersShown}>
         {FILTER_ORDER.filter((param) => options[param].length > 0).map((param) => {
           const n = state.filters[param].size;
           const name = `filter:${param}`;
@@ -239,10 +259,10 @@ function Controls({ store }) {
           setOpen(null);
         }}
       >
-        Filters
+        Filters &amp; grouping
         {active > 0 && <span className="badge">{active}</span>}
       </button>
-      <div className="popwrap">
+      <div className="popwrap cfgwrap">
         <button type="button" className="hbtn" data-open="config" aria-expanded={open === 'config'} ref={configButton} onClick={() => toggle('config')}>
           Config
         </button>

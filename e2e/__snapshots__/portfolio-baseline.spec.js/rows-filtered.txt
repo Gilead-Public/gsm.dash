@@ -1,12 +1,12 @@
 state: rows-filtered
-canonical dom: sha256 1ce8b3c7d54840e2ad16d0cfeb72d6681a0caa0063ce0b56d83ca7d8afb1b100 (70535 characters)
-computed styles: sha256 c69923ed3de279910a1f140c7eb830c42a04b11dfc046711980d9e569807d17d (454 elements)
+canonical dom: sha256 bcd81f6e487953c05b96985894690dc536c6c799f1d8a1e6ba93003d6fbc45e9 (72466 characters)
+computed styles: sha256 18b6de7890229f1a64367a0250280db5a2ad6dbfafffe498a292c5062f612462 (464 elements)
 tooltip: none
 cell backgrounds: rgb(237, 240, 238) ×3 | rgb(255, 255, 255) ×6 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×3 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | rgb(237, 240, 238) | rgb(255, 255, 255) ×5 | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4 | rgb(255, 255, 255) | color(srgb 0.968235 0.973529 0.97) | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×6 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×3 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×5 | rgba(0, 0, 0, 0) | rgb(237, 240, 238) ×4
 sparklines:
   none
 accessibility:
-- button "Filters 1"
+- button "Filters & grouping 1"
 - button "Config ▾"
 - button "Reset"
 - button "Admin ▾"

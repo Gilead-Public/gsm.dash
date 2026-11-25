@@ -171,13 +171,18 @@ export class PortfolioStore extends EventTarget {
     return this.#defaults.groups ? groupAsConfigured(metrics, this.#defaults.groups) : ungrouped(metrics);
   }
 
-  /** Every configured group's name, in order, whatever is hidden; none without `groups`, so there is nothing to hide. */
+  /**
+   * Every group's name, in order, whatever is hidden, when there are groups to choose between: none without `groups`,
+   * and none when one group holds every metric, since hiding the only band would leave the table without metrics.
+   */
   groupNames() {
-    return this.#defaults.groups ? this.metricCategories(this.supportedMetrics()).map((g) => g.category) : [];
+    const names = this.#defaults.groups ? this.metricCategories(this.supportedMetrics()).map((g) => g.category) : [];
+    return names.length > 1 ? names : [];
   }
 
   #hiddenGroupDefaults() {
-    return (this.#defaults.groups ?? []).filter((g) => g.hidden).map((g) => g.name);
+    const names = this.groupNames();
+    return (this.#defaults.groups ?? []).filter((g) => g.hidden && names.includes(g.name)).map((g) => g.name);
   }
 
   /** Show or hide one group's band; its metrics' own checkboxes are left as they are. */
@@ -276,6 +281,19 @@ export class PortfolioStore extends EventTarget {
   toggleMetric(metricId) {
     const set = this.state.hiddenMetrics;
     set.has(metricId) ? set.delete(metricId) : set.add(metricId);
+    this.#emit();
+  }
+
+  /** Ticks every metric given, e.g. a group's when none of them is selected. @param {string[]} metricIds */
+  selectMetrics(metricIds) {
+    for (const id of metricIds) this.state.hiddenMetrics.delete(id);
+    this.#emit();
+  }
+
+  /** Shows every metric: none unticked and no group hidden. */
+  showAllMetrics() {
+    this.state.hiddenMetrics.clear();
+    this.state.hiddenGroups.clear();
     this.#emit();
   }
 
