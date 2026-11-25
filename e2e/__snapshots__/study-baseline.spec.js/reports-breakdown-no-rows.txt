@@ -1,5 +1,5 @@
 state: breakdown-no-rows (reports)
-dom: sha256 01993f7f5e36d7a8c24a2690636259c11da79ad4043cf1ae811553cc49cb9a5d (61506 characters)
+dom: sha256 c0e770a75a3dd8aab301ce9bba6d790b37942234ba2b0164f33e61323a0e7b9a (61572 characters)
 tooltip: none
 drill-in: closed
 cards:
@@ -71,7 +71,7 @@ accessibility:
       - 'listitem "No: 11 of 16"': No 11
       - 'listitem "Yes: 4 of 16"': Yes 4
       - 'listitem "Unknown: 1 of 16"': Unknown 1
-- text: IP Status 1.5% 15 / 988
+- text: IP Status 3.0% 30 / 988
 - group "IP Non-starters breakdowns":
   - region "IP status, % of 988 enrolled":
     - text: IP status %

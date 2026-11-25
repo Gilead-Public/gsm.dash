@@ -1,5 +1,5 @@
 state: tooltip-definition (reports)
-dom: sha256 c824dcdba9514239e42e083a8ef76288b35e34a1df103b4c6b111190ae0f0794 (65090 characters)
+dom: sha256 39aacfd5bed927a486436341ee08fcac44631516434d5e35d1159d6475cf773d (65156 characters)
 tooltip: <b>Screen Failure Rate</b><br><span class="tip-muted mono">SF · kri0012 · Disposition</span><dl class="tip-dl"><dt>Definition</dt><dd><span class="tip-muted">not yet supplied (Q2)</span></dd><dt>Numerator</dt><dd>Number of screen failed participants</dd><dt>Denominator</dt><dd>Total screened participants</dd><dt>Displayed as</dt><dd>percent (n ÷ d)</dd><dt>Flagging</dt><dd>Adjusted Z-Score · thresholds -2, -1, 2, 3</dd><dt>Note</dt><dd>The tracker also lists a Planned "Screen Failure" divided by all enrolled (open question Q1).</dd></dl>
 drill-in: closed
 cards:
@@ -71,7 +71,7 @@ accessibility:
       - 'listitem "No: 13 of 23"': No 13
       - 'listitem "Yes: 10 of 23"': Yes 10
       - 'listitem "Unknown: 0 of 23"': Unknown 0
-- text: IP Status 1.6% 14 / 879
+- text: IP Status 2.7% 24 / 879
 - group "IP Non-starters breakdowns":
   - region "IP status, % of 879 enrolled":
     - text: IP status %

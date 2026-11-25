@@ -1,5 +1,5 @@
 state: drill-in-over-time (reports)
-dom: sha256 c6be92952900b12ea8d04ef465be0f982d216282bed0b25c37410dcc55f1a756 (66670 characters)
+dom: sha256 6667ccb7d6eb0fe285e954d8d2109fd0418397ece4b050a91890d3d874cc2f02 (66736 characters)
 tooltip: none
 drill-in: AE · Over time · gsm.viz · timeSeries · AE: charts 1
   type undefined; labels: 2026-02-28 | 2026-03-31 | 2026-04-30 | 2026-05-31 | 2026-06-30
@@ -101,7 +101,7 @@ accessibility:
       - 'listitem "No: 11 of 16"': No 11
       - 'listitem "Yes: 4 of 16"': Yes 4
       - 'listitem "Unknown: 1 of 16"': Unknown 1
-- text: IP Status 1.5% 15 / 988
+- text: IP Status 3.0% 30 / 988
 - group "IP Non-starters breakdowns":
   - region "IP status, % of 988 enrolled":
     - text: IP status %

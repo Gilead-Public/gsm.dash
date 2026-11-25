@@ -1,5 +1,5 @@
 state: drill-in-bar-chart (reports)
-dom: sha256 0e29d5191e73298e3289dcb2ad3438562893b17b031b04e7a3b0a870e9435271 (66668 characters)
+dom: sha256 9ac0a0bea51905346466d4be2eea9d69afdf884b056823657a03cbcd5735fa45 (66734 characters)
 tooltip: none
 drill-in: AE · Bar chart · gsm.viz · barChart · AE: charts 1
   type undefined; labels: SITE0007 | SITE0006 | SITE0016 | SITE0004 | SITE0011 | SITE0013 | SITE0017 | SITE0008 | SITE0002 | SITE0015 | SITE0010 | SITE0012 | SITE0003 | SITE0001 | SITE0005 | SITE0009 | SITE0014
@@ -92,7 +92,7 @@ accessibility:
       - 'listitem "No: 11 of 16"': No 11
       - 'listitem "Yes: 4 of 16"': Yes 4
       - 'listitem "Unknown: 1 of 16"': Unknown 1
-- text: IP Status 1.5% 15 / 988
+- text: IP Status 3.0% 30 / 988
 - group "IP Non-starters breakdowns":
   - region "IP status, % of 988 enrolled":
     - text: IP status %

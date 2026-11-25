@@ -152,6 +152,25 @@ describe('simulated distributions for the #617 metrics', () => {
     expect(latest.some((snap) => snap.distributions.some((d) => d.Category?.startsWith('Potential Non-Starter') && d.Count > 0)), 'some potential non-starters').toBe(true);
   });
 
+  it('IPNS counts IP status\'s confirmed and outside-window non-starters at every site, not those within the window, over all enrolled (gsm.kri\'s kri0019)', () => {
+    const results = resultIndex();
+    const sum = (/** @type {{ Count: number }[]} */ rows) => rows.reduce((a, r) => a + r.Count, 0);
+    const counted = ['Confirmed Non-Starter', 'Potential Non-Starter – outside window'];
+    let checked = 0;
+    for (const snap of latest) {
+      for (const [site, rows] of Map.groupBy(snap.distributions.filter((d) => d.MetricID === 'Analysis_kri0019'), (d) => d.GroupID)) {
+        const result = results.get(`${snap.StudyID}|${site}|Analysis_kri0019`);
+        expect([sum(rows.filter((r) => counted.includes(r.Category))), sum(rows)], `${snap.StudyID} ${site}`).toEqual([result.Numerator, result.Denominator]);
+        checked++;
+      }
+    }
+    expect(checked).toBeGreaterThan(0);
+    const rows = latest.flatMap((s) => s.distributions);
+    for (const category of [...counted, 'Potential Non-Starter – within window']) {
+      expect(rows.some((d) => d.Category === category && d.Count > 0), category).toBe(true);
+    }
+  });
+
   it('the fixture covers multi-value variables, blank categories and zero rows', () => {
     const rows = latest.flatMap((s) => s.distributions);
     expect(rows.some((r) => r.Category === null && r.Count > 0)).toBe(true);

@@ -43,7 +43,7 @@ const GLOSSARY = [
   // Early events
   { id: 'ctq0003', abbr: 'DTH30', name: 'Early Deaths (30 days)', cat: 'Early events', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants who died within 30 days from randomization', den: 'All enrolled', denKey: 'enrolled', derived: 'dth30', base: 0.006, req: 121 },
   { id: 'kri0015', abbr: 'DTH90', name: 'Early Deaths (90 days)', cat: 'Early events', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of participants who died within 90 days from randomization', den: 'All enrolled', denKey: 'enrolled', base: 0.018, req: 121 },
-  { id: 'kri0019', abbr: 'IPNS', name: 'IP Non-starters', cat: 'Early events', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of confirmed IP non-starters', den: 'All enrolled', denKey: 'enrolled', derived: 'ipns', base: 0.02, req: 56 },
+  { id: 'kri0019', abbr: 'IPNS', name: 'IP Non-starters', cat: 'Early events', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of IP non-starters, confirmed or potential outside the window', den: 'All enrolled', denKey: 'enrolled', derived: 'ipns', base: 0.02, req: 56 },
   // Eligibility & integrity
   { id: 'kri0014', abbr: 'IE', name: 'Eligibility', cat: 'Eligibility & integrity', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of ineligible participants', den: 'All enrolled', denKey: 'enrolled', base: 0.03, req: 49 },
   { id: 'strat0001', abbr: 'STRAT', name: 'Stratification', cat: 'Eligibility & integrity', status: 'Planned', display: 'count_pct', pop: 'Enrolled', num: 'Number of confirmed mis-stratified participants', den: 'All enrolled', denKey: 'enrolled', base: 0.02, req: 49 },
@@ -184,11 +184,12 @@ function sitePopulations(study, snapIndex, siteRate) {
     const p = { site, enrolled: Math.max(3, Math.round(study.siteSize[s] * growth)) };
     const sf = Math.min(0.8, siteRate('SF', s));
     p.screened = p.enrolled + sround((p.enrolled * sf) / (1 - sf));
-    p.ipns = Math.min(p.enrolled, sround(p.enrolled * siteRate('IPNS', s)));
-    // Potential non-starters haven't started treatment either (gsm.kri's IP Monitoring classification), so the dosed
-    // are the enrolled less every non-starter: the population IP status's Dosed and treatment disposition both count.
-    p.potentialNonStarters = Math.round((p.enrolled - p.ipns) * 0.035);
-    p.dosed = p.enrolled - p.ipns - p.potentialNonStarters;
+    // gsm.kri: no non-starter is dosed, and kri0019 counts the confirmed and those outside the window, not those within.
+    p.confirmedNonStarters = Math.min(p.enrolled, sround(p.enrolled * siteRate('IPNS', s)));
+    const potential = Math.round((p.enrolled - p.confirmedNonStarters) * 0.035);
+    p.withinWindow = Math.round((potential * 2) / 3);
+    p.ipns = p.confirmedNonStarters + potential - p.withinWindow;
+    p.dosed = p.enrolled - p.ipns - p.withinWindow;
     p.exposureDays = Math.round(p.dosed * (30 + 26 * months) * jitter());
     p.labSamples = Math.round(p.dosed * (4 + 3 * months) * jitter());
     p.dataPoints = Math.round(p.enrolled * (60 + 40 * months) * jitter());
@@ -329,7 +330,8 @@ function generateDistributions(study, snapshotDate, snapIndex, metrics, results,
         numerator: result.Numerator,
         denominator: result.Denominator,
         participants: p.enrolled,
-        potential: p.potentialNonStarters,
+        confirmed: p.confirmedNonStarters,
+        withinWindow: p.withinWindow,
         early: spec.id === 'kri0015' ? p.dth30 : 0,
         progress,
       }, rand);

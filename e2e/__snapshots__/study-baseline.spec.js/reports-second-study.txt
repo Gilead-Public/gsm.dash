@@ -1,5 +1,5 @@
 state: second-study (reports)
-dom: sha256 c824dcdba9514239e42e083a8ef76288b35e34a1df103b4c6b111190ae0f0794 (65090 characters)
+dom: sha256 39aacfd5bed927a486436341ee08fcac44631516434d5e35d1159d6475cf773d (65156 characters)
 tooltip: none
 drill-in: closed
 cards:
@@ -71,7 +71,7 @@ accessibility:
       - 'listitem "No: 13 of 23"': No 13
       - 'listitem "Yes: 10 of 23"': Yes 10
       - 'listitem "Unknown: 0 of 23"': Unknown 0
-- text: IP Status 1.6% 14 / 879
+- text: IP Status 2.7% 24 / 879
 - group "IP Non-starters breakdowns":
   - region "IP status, % of 879 enrolled":
     - text: IP status %

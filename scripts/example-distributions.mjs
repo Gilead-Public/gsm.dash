@@ -85,13 +85,11 @@ export const DISTRIBUTION_SPECS = [
     variables: [
       { Source: 'Denominator', Variable: 'drv_ip_nonstarter_status', categories: ['Dosed', 'Potential Non-Starter – within window', 'Potential Non-Starter – outside window', 'Confirmed Non-Starter', NR] },
     ],
-    // The site's potential non-starters follow its confirmed ones (two thirds within the window); everyone else is
-    // dosed, so Dosed equals the dosed population treatment disposition covers.
+    // The numerator is the confirmed and outside-window non-starters; within-window ones follow it, and everyone else
+    // is dosed, so Dosed equals the dosed population treatment disposition covers.
     assign(rec, rand, ctx) {
-      if (rec.inNumerator) return { drv_ip_nonstarter_status: 'Confirmed Non-Starter' };
-      const after = rec.index - ctx.numerator;
-      if (after < Math.round((ctx.potential * 2) / 3)) return { drv_ip_nonstarter_status: 'Potential Non-Starter – within window' };
-      if (after < ctx.potential) return { drv_ip_nonstarter_status: 'Potential Non-Starter – outside window' };
+      if (rec.inNumerator) return { drv_ip_nonstarter_status: rec.index < ctx.confirmed ? 'Confirmed Non-Starter' : 'Potential Non-Starter – outside window' };
+      if (rec.index - ctx.numerator < ctx.withinWindow) return { drv_ip_nonstarter_status: 'Potential Non-Starter – within window' };
       return { drv_ip_nonstarter_status: 'Dosed' };
     },
   },
@@ -170,8 +168,8 @@ export const DISTRIBUTION_SPECS = [
  * first `numerator` of them in the numerator. Deviation metrics have one record per deviation, each owned
  * by one of the site's `participants`.
  */
-export function simulateRecords(spec, { numerator, denominator, participants, potential = 0, early = 0, progress = 0 }, rand) {
-  const ctx = { early, progress, numerator, potential };
+export function simulateRecords(spec, { numerator, denominator, participants, confirmed = 0, withinWindow = 0, early = 0, progress = 0 }, rand) {
+  const ctx = { early, progress, numerator, confirmed, withinWindow };
   const n = spec.unit === 'deviation' ? numerator : denominator;
   return Array.from({ length: n }, (_, index) => {
     const rec = {

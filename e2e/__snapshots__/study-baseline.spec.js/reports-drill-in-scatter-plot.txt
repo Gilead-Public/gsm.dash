@@ -1,5 +1,5 @@
 state: drill-in-scatter-plot (reports)
-dom: sha256 a1a1be3dbb44b822be63c05c7aceddafda66fbeade3a2bcd0f147ff9de141f83 (66671 characters)
+dom: sha256 a99d3ccaedb86b28e3b1e926ca1637101c9d8775cbd117c7468bcb359b3b2fdd (66737 characters)
 tooltip: none
 drill-in: AE · Scatter plot · gsm.viz · scatterPlot · AE: charts 1
   type undefined; labels: 
@@ -100,7 +100,7 @@ accessibility:
       - 'listitem "No: 11 of 16"': No 11
       - 'listitem "Yes: 4 of 16"': Yes 4
       - 'listitem "Unknown: 1 of 16"': Unknown 1
-- text: IP Status 1.5% 15 / 988
+- text: IP Status 3.0% 30 / 988
 - group "IP Non-starters breakdowns":
   - region "IP status, % of 988 enrolled":
     - text: IP status %
